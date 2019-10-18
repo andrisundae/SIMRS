@@ -1,0 +1,1 @@
+export const getReferensi = state => state.default.filter.post.referensi

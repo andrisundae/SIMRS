@@ -1,0 +1,49 @@
+import { redux } from '@simrs/common';
+
+const { types, createRequestType, createType } = redux;
+const { REQUEST, SUCCESS, FAILURE } = types;
+const GET_MENU = createRequestType('GET_MENU');
+const SAVE = createRequestType('SAVE');
+const SAVE_DETAIL = createRequestType('SAVE_DETAIL');
+const DELETE_DETAIL = createRequestType('DELETE_DETAIL');
+const DELETE = createRequestType('DELETE');
+
+export default {
+    GET_MENU_REQUEST: GET_MENU[REQUEST],
+    GET_MENU_SUCCESS: GET_MENU[SUCCESS],
+    GET_MENU_FAILURE: GET_MENU[FAILURE],
+
+    SAVE_REQUEST: SAVE[REQUEST],
+    SAVE_SUCCESS: SAVE[SUCCESS],
+    SAVE_FAILURE: SAVE[FAILURE],
+
+    SAVE_DETAIL_REQUEST: SAVE_DETAIL[REQUEST],
+    SAVE_DETAIL_SUCCESS: SAVE_DETAIL[SUCCESS],
+    SAVE_DETAIL_FAILURE: SAVE_DETAIL[FAILURE],
+
+    DELETE_DETAIL_REQUEST: DELETE_DETAIL[REQUEST],
+    DELETE_DETAIL_SUCCESS: DELETE_DETAIL[SUCCESS],
+    DELETE_DETAIL_FAILURE: DELETE_DETAIL[FAILURE],
+
+    DELETE_REQUEST: DELETE[REQUEST],
+    DELETE_SUCCESS: DELETE[SUCCESS],
+    DELETE_FAILURE: DELETE[FAILURE],
+
+    EXPANDED: createType('EXPANDED'),
+    SELECTED: createType('SELECTED'),
+    SELECTED_DETAIL: createType('SELECTED_DETAIL'),
+    CHANGE_INPUT: createType('CHANGE_INPUT'),
+    CHANGE_INPUT_DETAIL: createType('CHANGE_INPUT_DETAIL'),
+    POPULATE_FORM: createType('POPULATE_FORM'),
+    OPEN_FORM: createType('OPEN_FORM'),
+    ADD: createType('ADD'),
+    ADD_DETAIL: createType('ADD_DETAIL'),
+    EDIT: createType('EDIT'),
+    CANCEL: createType('CANCEL'),
+    CANCEL_DETAIL: createType('CANCEL_DETAIL'),
+    READY: createType('READY'),
+    READY_DETAIL: createType('READY_DETAIL'),
+    RESET: createType('RESET'),
+    ON_FOCUS_ELEMENT: createType('ON_FOCUS_ELEMENT'),
+    LOAD_DETAIL: createType('LOAD_DETAIL'),
+}

@@ -1,0 +1,24 @@
+appId: linkar.simrs.main
+productName: SIMRS
+copyright: Copyright © 2017 Lintang Kawuryan, PT.
+
+files: ['build/**/*', 'node_modules/**/*']
+
+directories:
+  buildResources: resource
+  output: output
+
+nsis:
+  perMachine: true
+  deleteAppDataOnUninstall: true
+  menuCategory: true
+
+win:
+  target:
+    -
+      target: nsis
+      arch: [x64, ia32]
+
+  publish:
+    provider: generic
+    url: 'http://domain.com/release/'

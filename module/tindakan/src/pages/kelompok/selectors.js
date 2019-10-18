@@ -1,0 +1,1 @@
+export const getKlasifikasi = state => state.nested.filter.post.klasifikasi

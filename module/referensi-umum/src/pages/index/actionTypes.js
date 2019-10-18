@@ -1,0 +1,15 @@
+import { redux } from '@simrs/common';
+
+const { types, createRequestType, createType } = redux;
+
+const { REQUEST, SUCCESS, FAILURE } = types;
+const GET_OPTIONS_REFERENSI = createRequestType('GET_OPTIONS_REFERENSI');
+
+export default {
+    GET_OPTIONS_REFERENSI_REQUEST: GET_OPTIONS_REFERENSI[REQUEST],
+    GET_OPTIONS_REFERENSI_SUCCESS: GET_OPTIONS_REFERENSI[SUCCESS],
+    GET_OPTIONS_REFERENSI_FAILURE: GET_OPTIONS_REFERENSI[FAILURE],
+
+    POPULATE_FORM: createType('POPULATE_FORM'),
+    CHANGE_REFERENSI: createType('CHANGE_REFERENSI'),
+}

@@ -1,0 +1,1 @@
+export const getPostUploadGambar = state => state.default.uploadGambar.post;

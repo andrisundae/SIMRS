@@ -1,0 +1,53 @@
+{
+  "name": "@simrs/components",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "main:src": "src/index.js",
+  "dependencies": {
+    "@simrs/common": "*",
+    "ag-grid-community": "^21.1.0",
+    "ag-grid-react": "^21.1.0",
+    "classname": "^0.0.0",
+    "immer": "^3.1.3",
+    "mousetrap": "^1.6.3",
+    "rc-tree": "1.14.8",
+    "react": "^16.8.6",
+    "react-contextmenu": "^2.11.0",
+    "react-currency-input": "^1.3.6",
+    "react-datepicker": "^2.8.0",
+    "react-dom": "^16.8.6",
+    "react-redux-toastr": "^7.5.1",
+    "react-scripts": "3.0.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.87.3"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-links": "^5.1.9",
+    "@storybook/addons": "^5.1.9",
+    "@storybook/react": "^5.1.9"
+  }
+}

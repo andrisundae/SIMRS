@@ -1,0 +1,81 @@
+.main-page {
+  height: 100% !important;
+}
+.layout {
+  position: fixed !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  color: #fff;
+  background-color: #2C3E50;
+  padding: 0 !important;
+}
+
+.main-page .layout .logo {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-page .layout .content {
+  background-color: #32c5d2;
+  background: linear-gradient(to right, #5c97bd, #32c5d2);
+  padding: 30px 20px;
+}
+
+.main-page .layout .content .form-title {
+  color: #edf4f8 !important;
+  font-size: 19px !important;
+  font-weight: 400 !important;
+  margin-bottom: 30px;
+}
+
+.main-page .layout .content .form-subtitle {
+  color: #c9dce9 !important;
+  font-size: 17px !important;
+  font-weight: 300 !important;
+  padding-left: 20px;
+}
+
+.content .form-control {
+  background-color: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.content .form-control:focus {
+  box-shadow: 0 0 5px #fff !important;
+  background-color: transparent !important;
+}
+
+.content .form-control::placeholder {
+  color: #bfcad1;
+}
+
+.content .copyright {
+  font-size: 12px;
+  position: absolute;
+  bottom: 30px;
+  width: calc(100% - 40px);
+  text-align: center;
+}
+
+.divider {
+  display: block;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.input-icon>svg {
+    color: white !important;
+}
+
+.portal button {
+  margin-bottom: 5px;
+}
+
+span.error {
+  color: #9f3a38;
+}

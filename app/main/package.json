@@ -1,0 +1,84 @@
+{
+  "name": "@simrs/main",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "main": "public/electron.js",
+  "description": "Simrs Client",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "@babel/runtime-corejs3": "^7.5.4",
+    "@simrs/common": "*",
+    "@simrs/components": "*",
+    "date-fns": "^1.30.1",
+    "dotenv": "^8.0.0",
+    "electron-devtools-installer": "^2.2.4",
+    "electron-is-dev": "^1.1.0",
+    "electron-store": "^4.0.0",
+    "i18next": "^17.0.7",
+    "i18next-electron-language-detector": "^0.0.10",
+    "i18next-fetch-backend": "^2.2.0",
+    "immer": "^3.1.3",
+    "js-sha256": "^0.9.0",
+    "lodash": "^4.17.15",
+    "mousetrap": "^1.6.3",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-datepicker": "^2.8.0",
+    "react-dom": "^16.8.6",
+    "react-i18next": "^10.11.4",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "react-select": "^3.0.4",
+    "reconnecting-websocket": "^4.1.10",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.0.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.87.3"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "desktop": "wait-on http://localhost:9000 && electron .",
+    "precompile": "rimraf dist",
+    "compile": "mkdir dist\\static && concurrently \"babel src -w -d dist\" \"ncp src/static dist/static\"",
+    "build-desktop": "electron-builder --config",
+    "prebuild-desktop": "yarn build",
+    "postbuild": "concurrently \"ncp ../billing/build build/billing\" \"ncp ../system/build build/system\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@domain.com",
+    "url": "https://your-website.com"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "babel-core": "7.0.0-bridge.0",
+    "electron": "^6.0.0",
+    "electron-builder": "^21.0.15",
+    "ncp": "^2.0.0",
+    "react-app-rewired": "^2.1.3",
+    "rimraf": "^2.6.3",
+    "wait-on": "^3.3.0"
+  }
+}

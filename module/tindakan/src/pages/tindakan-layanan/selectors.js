@@ -1,0 +1,1 @@
+export const getReference = state => state.nested.module.reference
