@@ -61,9 +61,9 @@ const post = async (path, data = {}, options) => {
 
     Object.keys(data).map((idx) => {
         let value = data[idx];
-        // if (typeof value === 'object' || value.isArray) {
-        //     value = JSON.stringify(value);
-        // }
+        if ((typeof value === 'object' || value.isArray) && !(value instanceof File)) {
+            value = JSON.stringify(value);
+        }
 
         return formData.append(idx, value);
     });

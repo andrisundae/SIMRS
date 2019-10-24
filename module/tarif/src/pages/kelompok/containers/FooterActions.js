@@ -9,21 +9,20 @@ class FooterActions extends Component {
 
     render() {
         return (
-            <Footer {...this.props} />
+            <Footer {...this.props} permissions={this.props.customPermissions} />
         )
     }
 }
 
-const mapStateToProps = function (state) {
-    const { acl } = state;
+const mapStateToProps = function (state, props) {
     const { post } = state.nested.filter;
     const isNotTempatTidur = post.selectedKlasifikasi ? (post.selectedKlasifikasi.alias !== 'tempat_tidur' ? true : false) : false;
 
     return {
-        permissions: {
-            canAdd: isGranted(acl, 'tambah_kelompok') && isNotTempatTidur,
-            canEdit: isGranted(acl, 'koreksi_kelompok') && isNotTempatTidur,
-            canDelete: isGranted(acl, 'hapus_kelompok') && isNotTempatTidur
+        customPermissions: {
+            canAdd: isGranted(props.permissions, 'tambah_kelompok') && isNotTempatTidur,
+            canEdit: isGranted(props.permissions, 'koreksi_kelompok') && isNotTempatTidur,
+            canDelete: isGranted(props.permissions, 'hapus_kelompok') && isNotTempatTidur
         },
     }
 }
@@ -31,7 +30,8 @@ const mapStateToProps = function (state) {
 FooterActions.propTypes = {
     resource: PropTypes.string.isRequired,
     subResource: PropTypes.string.isRequired,
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     post: PropTypes.object,
 };
 

@@ -49,6 +49,10 @@ class Main extends Component {
                 width: 110
             },
             {
+                headerName: this.props.t(`${this.props.resource}:header.column.st_naik_satu_tingkat`),
+                field: "string_st_naik_satu_tingkat",
+            },
+            {
                 headerName: this.props.t(`${this.props.resource}:header.column.status`),
                 field: "string_aktif",
                 width: 60

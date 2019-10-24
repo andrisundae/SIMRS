@@ -9,7 +9,8 @@ const moduleState = {
         telp: '',
         aktif: 0,
         nama_kelas: '',
-        status_jaminan: ''
+        status_jaminan: '',
+        st_naik_satu_tingkat: 0,
     },
     data: {
         options_kelas: []

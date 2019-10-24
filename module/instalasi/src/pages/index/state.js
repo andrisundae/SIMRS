@@ -8,6 +8,7 @@ const moduleState = {
         jenis_layanan: '',
         kelompok_jenis_layanan: '',
         aktif: 0,
+        st_sebagai_asal_kunjungan: 0,
         nama_jenis_layanan: '',
         nama_kelompok_jenis_layanan: ''
     },

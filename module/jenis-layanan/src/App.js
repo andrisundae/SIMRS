@@ -10,13 +10,14 @@ import Index from './pages/index';
 const storeRedux = createStore();
 
 
-function App({location, resource, t, i18n}) {
+function App({ location, resource, t, i18n, permissions, settings}) {
   return (
     <Provider store={storeRedux}>
       <Router>
         <Fragment>
           <Switch location={location}>
-            <Route path="/" render={(props) => <Index resource={resource} {...props} t={t} i18n={i18n}/>} />
+            <Route path="/" render={(props) => 
+              <Index resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
           </Switch>
           <Toastr />
         </Fragment>
@@ -27,7 +28,8 @@ function App({location, resource, t, i18n}) {
 
 App.propTypes = {
   resource: PropTypes.string.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  permissions: PropTypes.array,
 };
 
 export default App;

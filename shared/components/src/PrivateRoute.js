@@ -11,40 +11,33 @@ const validateToken = async () => {
 }
 
 class PrivateRoute extends Component {
+    _isMounted = false;
 
     constructor(props) {
         super(props);
 
-        this.state = {auth: false, isAuth:false};
+        this.state = {loading: false, isAuth:false};
     }
 
-    async _checkAuthentication() {
-        try {
-            let response = await validateToken();
+    async componentDidMount() {
+        this._isMounted = true;
+        this.setState({ loading: true })
+        let response = await validateToken();
+        if (this._isMounted) {
             if (response.data.isValidToken) {
-                this.setState({ auth: true, isAuth: true })
+                this.setState({ isAuth: true })
             } else {
-                this.setState({ auth: true, isAuth: false })
+                this.setState({ isAuth: false })
             }
-            // res.then(value => {
-            //     if (value.data.isValidToken) {
-            //         this.setState({ auth: true, isAuth: true })
-            //     } else {
-            //         this.setState({ auth: true, isAuth: false })
-            //     }
-            // })
-        } catch (error) {
-            this.setState({ auth: true, isAuth: false });
+            this.setState({ loading: false })
         }
-        
     }
 
     render() {
         const { component: Component, render, ...rest } = this.props;
         return (
             <Route {...rest} render={routeProps => {
-                if (!this.state.auth) {
-                    this._checkAuthentication();
+                if (this.state.loading) {
 
                     return (
                         <PageLoader active={true} />
@@ -62,6 +55,10 @@ class PrivateRoute extends Component {
                 )
             }}/>
         )
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 }
 

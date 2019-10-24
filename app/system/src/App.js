@@ -29,9 +29,9 @@ function Page() {
                   path={router.path}
                   render={(props) =>
                     // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
-                    <Restricted route={router.key} {...props}>
-                      <Component resource={router.key} {...props} />
-                    </Restricted>
+                    <Restricted route={router.key} {...props} render={(permissions) => (
+                      <Component permissions={permissions} resource={router.key} {...props} />
+                    )} />
                   }
                 />
               )

@@ -32,6 +32,10 @@ class Main extends Component {
                 field: "nama_kelompok_jenis_layanan",
             },
             {
+                headerName: this.props.t(`${this.props.resource}:header.column.st_sebagai_asal_kunjungan`),
+                field: "string_st_sebagai_asal_kunjungan",
+            },
+            {
                 headerName: this.props.t(`${this.props.resource}:header.column.status`),
                 field: "string_aktif",
                 width: 60

@@ -11,34 +11,25 @@ const getGranted = async (route) => {
     return response;
 }
 
-const isGranted = async (route, role) => {
-    let result = await getGranted(route);
-    if (result.status) {
-        return result.data.find(permission => permission === role);
-    } else {
-        return false;
-    }
-}
-
 class Restriced extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = { isCheck: false, isGranted: false };
+        this.state = { isCheck: false, isGranted: false, permission: [] };
     }
 
     async _checkPermission() {
         try {
-            let res = isGranted(this.props.route || this._getCurrentRoute(), this.props.role);
-            res.then(isGranted => {
-                this.setState({ isCheck: true, isGranted: isGranted })
-            })
+            // let res = isGranted(this.props.route || this._getCurrentRoute(), this.props.role);
+            // res.then(isGranted => {
+            //     this.setState({ isCheck: true, isGranted: isGranted })
+            // })
 
             let response = await getGranted(this.props.route || this._getCurrentRoute());
             if (response.status) {
                 const isGranted = response.data.find(permission => permission === this.props.role);
-                this.setState({ isCheck: true, isGranted })
+                this.setState({ isCheck: true, isGranted, permission: response.data })
             } else {
                 this.setState({ isCheck: true, isGranted: false })
             }
@@ -49,7 +40,7 @@ class Restriced extends Component {
     }
 
     render() {
-        const { children } = this.props;
+        const { render } = this.props;
 
         if (!this.state.isCheck) {
             this._checkPermission();
@@ -64,7 +55,7 @@ class Restriced extends Component {
                 if (this.state.isGranted) {
                     return (
                         <Fragment>
-                            {children}
+                            {render(this.state.permission)}
                         </Fragment>
                     )
                 } else {

@@ -177,6 +177,11 @@ const routers = [
         path: '/billing/setting/setting-kelas-penjamin',
         component: lazy(() => import('@module/setting-kelas-penjamin'))
     },
+    {
+        key: '_billing_setting_instalasi_kelas_tambahan',
+        path: '/billing/setting/setting-instalasi-kelas-tambahan',
+        component: lazy(() => import('@module/setting-instalasi-kelas-tambahan'))
+    },
 ]
 
 export default routers;

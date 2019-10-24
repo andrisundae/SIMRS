@@ -20,7 +20,7 @@ class SwitchComponent extends Component {
   }
 
   render() {
-    const { location, resource, t, i18n } = this.props;
+    const { location, resource, t, i18n, permissions, settings } = this.props;
     const isLayanan = !!(
       location.state &&
       location.state.layanan &&
@@ -33,7 +33,8 @@ class SwitchComponent extends Component {
           <Fragment>
             <Switch location={isLayanan ? this.previousLocation : location}>
               <Route exact path="/" render={() => <Redirect to="/kelompok" />} />
-              <Route exact path="/kelompok" render={(props) => <Kelompok resource={resource} {...props} t={t} i18n={i18n} />} />
+              <Route exact path="/kelompok" render={(props) =>
+                <Kelompok resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
@@ -41,10 +42,10 @@ class SwitchComponent extends Component {
         {isLayanan &&
           <Provider store={layananStore}>
             <Fragment>
-            <Route path="/layanan/:kelompok" render={(props) => <Layanan resource={resource} t={t} i18n={i18n} {...props} />} />
+            <Route path="/layanan/:kelompok" render={(props) =>
+              <Layanan resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
               <Toastr preventDuplicates={false} />
             </Fragment>
-
           </Provider>
         }
       </Fragment>
@@ -69,10 +70,11 @@ SwitchComponent.propTypes = {
 };
 
 
-function App({ match, t, i18n, resource}) {
+function App({ match, t, i18n, resource, permissions, settings}) {
   return (
     <Router basename={match.url}>
-      <Route render={(props) => <SwitchComponent t={t} i18n={i18n} resource={resource} {...props} />} />
+      <Route render={(props) =>
+        <SwitchComponent {...props} t={t} i18n={i18n} resource={resource} permissions={permissions} settings={settings} />} />
     </Router>
   );
 }

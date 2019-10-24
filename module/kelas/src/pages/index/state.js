@@ -6,6 +6,7 @@ const moduleState = {
         id: '',
         nama: '',
         jenjang: '',
+        kode_mapping_bpjs: '',
         aktif: 0
     }
 }

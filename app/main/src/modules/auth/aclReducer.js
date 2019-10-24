@@ -6,17 +6,17 @@ const initialState = {
     permissions: []
 }
 
-export const isGranted = (state, role) => {
+export const isGranted = (permissions, role) => {
     // let permission = state.get('permissions').find(permission => permission === role);
-    return _.includes(state.permissions, role);
+    return _.includes(permissions, role);
 }
 
-export const getPermissions = (state) => {
+export const getPermissions = (permissions) => {
     return {
-        canAdd: isGranted(state, 'tambah'),
-        canEdit: isGranted(state, 'koreksi'),
-        canDelete: isGranted(state, 'hapus'),
-        canImport: isGranted(state, 'import'),
+        canAdd: isGranted(permissions, 'tambah'),
+        canEdit: isGranted(permissions, 'koreksi'),
+        canDelete: isGranted(permissions, 'hapus'),
+        canImport: isGranted(permissions, 'import'),
     }
 }
 

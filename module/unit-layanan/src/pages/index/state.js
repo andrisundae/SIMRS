@@ -12,6 +12,7 @@ const moduleState = {
         umur2: 0,
         st_asal_kunjungan: 0,
         inisial: '',
+        kode_mapping_bpjs: '',
         jenis_layanan: ''
     },
     data: {

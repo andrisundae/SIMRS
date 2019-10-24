@@ -28,6 +28,10 @@ class Main extends Component {
                 field: "jenjang"
             },
             {
+                headerName: this.props.t(`${this.props.resource}:header.column.kode_mapping_bpjs`),
+                field: "kode_mapping_bpjs",
+            },
+            {
                 headerName: this.props.t(`${this.props.resource}:header.column.status`),
                 field: "string_aktif",
                 width: 60

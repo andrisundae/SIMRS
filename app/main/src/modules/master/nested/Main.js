@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Icon, Header, Grid, Divider } from 'semantic-ui-react';
+import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import { getPermissions } from '../../auth';
 
 import FooterActions from './containers/FooterActions';
 
@@ -83,8 +84,15 @@ class Main extends Component {
     }
 
     _renderFooterActions() {
-        const Footer = this.props.footerActions || <FooterActions i18n={this.props.i18n} t={this.props.t} resource={this.props.resource} subResource={this.props.subResource} />;
-        return Footer;
+        const footer = this.props.footerActions ||
+        <FooterActions
+            i18n={this.props.i18n}
+            t={this.props.t}
+            resource={this.props.resource}
+            subResource={this.props.subResource}
+            permissions={getPermissions(this.props.permissions)}
+        />;
+        return footer;
     }
 }
 
@@ -103,12 +111,13 @@ Main.propTypes = {
     icon: PropTypes.string,
     i18n: PropTypes.object.isRequired,
     subResource: PropTypes.string.isRequired,
+    permissions: PropTypes.array,
 };
 
 Main.defaultProps = {
-    // style: { marginLeft: 0, marginRight: 0 },
     icon: 'list',
-    showFooterActions: true
+    showFooterActions: true,
+    permissions: []
 }
 
 export default Main;

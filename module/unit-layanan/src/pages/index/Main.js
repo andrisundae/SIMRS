@@ -42,6 +42,10 @@ class Main extends Component {
                 field: "inisial",
             },
             {
+                headerName: this.props.t(`${this.props.resource}:header.column.kode_mapping_bpjs`),
+                field: "kode_mapping_bpjs",
+            },
+            {
                 headerName: this.props.t(`${this.props.resource}:header.column.asal_kunjungan`),
                 field: "string_asal_kunjungan",
                 sortable: false,

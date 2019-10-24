@@ -10,8 +10,6 @@ import {
     moduleActions,
     filterActionTypes
 } from '@simrs/main/src/modules/master/default';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { actionTypes, actions } from '../pages/index';
 
 const { getFirstError, getFirstElementError} = commonValidator;
@@ -19,8 +17,6 @@ const validator = commonValidator.default;
 const TABLE_DUPLICATION = 'data_duplication';
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(datatableActions.onInitialize(meta.resource));
     yield put(datatableActions.onInitialize(TABLE_DUPLICATION));
     yield put(actions.populateForm(meta.resource));

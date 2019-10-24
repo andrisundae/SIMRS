@@ -17,6 +17,7 @@ class Create extends Component {
         this.nama = createRef();
         this.jenjang = createRef();
         this.aktif = createRef();
+        this.kode_mapping_bpjs = createRef();
 
         this.formId = 'form-create';
     }
@@ -57,7 +58,23 @@ class Create extends Component {
                                             value={post.jenjang}
                                             disabled={isDisableForm}
                                             onChange={this._handleInputChange}
+                                            onKeyDown={(e) => this._onFocusElement(e, 'kode_mapping_bpjs')}
+                                        />
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row className="form-row">
+                                    <Grid.Column width="5" className="field">
+                                        <label>{t(this._getKey('label.field.kode_mapping_bpjs'))}</label>
+                                    </Grid.Column>
+                                    <Grid.Column width="11" className="field">
+                                        <Input
+                                            name="kode_mapping_bpjs"
+                                            ref={this.kode_mapping_bpjs}
+                                            value={post.kode_mapping_bpjs || ''}
+                                            disabled={isDisableForm}
+                                            onChange={this._handleInputChange}
                                             onKeyDown={(e) => this._onFocusElement(e, 'aktif')}
+                                            maxLength={5}
                                         />
                                     </Grid.Column>
                                 </Grid.Row>

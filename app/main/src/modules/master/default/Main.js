@@ -7,6 +7,7 @@ import {PageLoader} from '@simrs/components';
 
 import { moduleActions } from './actions';
 import FooterActions from './containers/FooterActions';
+import { getPermissions } from '../../auth';
 
 class Main extends Component {
     constructor(props) {
@@ -22,7 +23,14 @@ class Main extends Component {
             return <h1>Something went wrong.</h1>;
         }
 
-        const Footer = this.props.footerActions || <FooterActions i18n={this.props.i18n} t={this.props.t} resource={this.props.resource} />;
+        const {permissions} = this.props;
+        const footer = this.props.footerActions || 
+            <FooterActions
+                i18n={this.props.i18n}
+                t={this.props.t}
+                resource={this.props.resource}
+                permissions={getPermissions(permissions)}
+            />;
         
         return (
             <Segment size="mini">
@@ -53,7 +61,7 @@ class Main extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
-                {Footer}
+                {footer}
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage}/>
             </Segment>
         );
@@ -95,11 +103,13 @@ Main.propTypes = {
     icon: PropTypes.string,
     i18n: PropTypes.object.isRequired,
     loaderMessage: PropTypes.string,
+    permissions: PropTypes.array,
 };
 
 Main.defaultProps = {
     // style: { marginLeft: 0, marginRight: 0 },
-    icon: 'list'
+    icon: 'list',
+    permissions: []
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

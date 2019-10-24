@@ -183,9 +183,9 @@ class FooterActions extends Component {
     }
 
     _isCanAdd() {
-        let { permissions, statusForm} = this.props;
+        let { customPermissions, statusForm} = this.props;
         let isValid = false;
-        if (permissions.canAdd && (statusForm === moduleActionTypes.READY ||
+        if (customPermissions.canAdd && (statusForm === moduleActionTypes.READY ||
             statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
         ) {
             isValid = true;
@@ -195,9 +195,9 @@ class FooterActions extends Component {
     }
 
     _isCanEdit() {
-        let { permissions, statusForm, selectedRow } = this.props;
+        let { customPermissions, statusForm, selectedRow } = this.props;
         let isValid = false;
-        if (permissions.canEdit && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+        if (customPermissions.canEdit && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
         ) {
             isValid = true;
         }
@@ -206,9 +206,9 @@ class FooterActions extends Component {
     }
 
     _isCanDelete() {
-        let { permissions, statusForm, selectedRow } = this.props;
+        let { customPermissions, statusForm, selectedRow } = this.props;
         let isValid = false;
-        if (permissions.canDelete && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+        if (customPermissions.canDelete && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
         ) {
             isValid = true;
         }
@@ -217,9 +217,9 @@ class FooterActions extends Component {
     }
 
     _isCanSave() {
-        let { permissions, statusForm } = this.props;
+        let { customPermissions, statusForm } = this.props;
         let isValid = false;
-        if ((permissions.canAdd || permissions.canEdit) && (statusForm === moduleActionTypes.ADD || statusForm === moduleActionTypes.EDIT)
+        if ((customPermissions.canAdd || customPermissions.canEdit) && (statusForm === moduleActionTypes.ADD || statusForm === moduleActionTypes.EDIT)
         ) {
             isValid = true;
         }
@@ -238,9 +238,9 @@ class FooterActions extends Component {
     }
 
     _isCanDuplication() {
-        let { permissions, statusForm, selectedRow, post } = this.props;
+        let { customPermissions, statusForm, selectedRow, post } = this.props;
         let isValid = false;
-        if (permissions.canDuplication && selectedRow && !post.id_versi_tarif_asal && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+        if (customPermissions.canDuplication && selectedRow && !post.id_versi_tarif_asal && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
         ) {
             isValid = true;
         }
@@ -322,15 +322,15 @@ class FooterActions extends Component {
 
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { module } = state.default;
 
     return {
-        permissions: {
-            canAdd: isGranted(state.acl, 'tambah'),
-            canEdit: isGranted(state.acl, 'koreksi'),
-            canDelete: isGranted(state.acl, 'hapus'),
-            canDuplication: isGranted(state.acl, 'duplikasi'),
+        customPermissions: {
+            canAdd: isGranted(props.permissions, 'tambah'),
+            canEdit: isGranted(props.permissions, 'koreksi'),
+            canDelete: isGranted(props.permissions, 'hapus'),
+            canDuplication: isGranted(props.permissions, 'duplikasi'),
         },
         statusForm: module.statusForm,
         selectedRow: module.selectedRow,
@@ -354,7 +354,8 @@ const mapDispatchToProps = function (dispatch) {
 }
 
 FooterActions.propTypes = {
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     action: PropTypes.object,
     statusForm: PropTypes.string,
     selectedRow: PropTypes.number,

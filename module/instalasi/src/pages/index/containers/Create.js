@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Form, Input, Grid } from 'semantic-ui-react';
+import { Form, Input, Grid, Divider } from 'semantic-ui-react';
 
 import { isDisableForm, moduleActions as actions, moduleActionTypes } from '@simrs/main/src/modules/master/default';
 import { Checkbox, Select } from '@simrs/components';
@@ -19,6 +19,7 @@ class Create extends Component {
 
         this.nama = createRef();
         this.aktif = createRef();
+        this.st_sebagai_asal_kunjungan = createRef();
         this.jenis_layanan = createRef();
         this.kelompok_jenis_layanan = createRef();
 
@@ -94,10 +95,21 @@ class Create extends Component {
                                             checked={post.aktif ? true : false}
                                             disabled={isDisableForm}
                                             onChange={this._handleInputChange}
-                                            onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                                            onKeyDown={(e) => this._onFocusElement(e, 'st_sebagai_asal_kunjungan')}
                                             inputRef={this.aktif}
                                             label={ t(this._getKey('sublabel.field.status'))}
-                                    />
+                                        />
+                                        <Divider fitted style={{ marginTop: 5, marginBottom: 4 }} />
+                                        <Checkbox
+                                            value={post.st_sebagai_asal_kunjungan}
+                                            name="st_sebagai_asal_kunjungan"
+                                            checked={post.st_sebagai_asal_kunjungan ? true : false}
+                                            disabled={isDisableForm}
+                                            onChange={this._handleInputChange}
+                                            onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                                            inputRef={this.st_sebagai_asal_kunjungan}
+                                            label={t(this._getKey('sublabel.field.st_sebagai_asal_kunjungan'))}
+                                        />
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>

@@ -22,6 +22,7 @@ class Create extends Component {
         this.instalasi = createRef();
         this.kategori = createRef();
         this.inisial = createRef();
+        this.kode_mapping_bpjs = createRef();
         this.umur1 = createRef();
         this.umur2 = createRef();
         this.st_asal_kunjungan = createRef();
@@ -111,7 +112,7 @@ class Create extends Component {
                                                 checked={post.st_asal_kunjungan ? true : false}
                                                 disabled={isDisableForm}
                                                 onChange={this._handleInputChange}
-                                                onKeyDown={(e) => this._onFocusElement(e, 'kategori')}
+                                                onKeyDown={(e) => this._onFocusElement(e, 'kode_mapping_bpjs')}
                                                 inputRef={this.st_asal_kunjungan}
                                                 label={t(this._getKey('sublabel.field.asal_kunjungan'))}
                                             />
@@ -123,6 +124,22 @@ class Create extends Component {
                         </Grid.Column>
                         <Grid.Column>
                             <Grid className="form-grid">
+                                <Grid.Row className="form-row">
+                                    <Grid.Column width="4" className="field">
+                                        <label>{t(this._getKey('label.field.kode_mapping_bpjs'))}</label>
+                                    </Grid.Column>
+                                    <Grid.Column width="12" className="field">
+                                        <Input
+                                            name="kode_mapping_bpjs"
+                                            ref={this.kode_mapping_bpjs}
+                                            value={post.kode_mapping_bpjs || ''}
+                                            disabled={isDisableForm}
+                                            onChange={this._handleInputChange}
+                                            onKeyDown={(e) => this._onFocusElement(e, 'kategori')}
+                                            maxLength={5}
+                                        />
+                                    </Grid.Column>
+                                </Grid.Row>
                                 <Grid.Row className="form-row">
                                     <Grid.Column width="4" className="required field">
                                         <label>{t(this._getKey('label.field.kategori'))}</label>
@@ -206,7 +223,7 @@ class Create extends Component {
 
     _isKategoriAnak() {
         const { post } = this.props;
-        return post.kategori !== 'UMUM' && post.kategori !== '' ? true : false;
+        return post.kategori !== 'UMUM' && post.kategori !== 'GERIYATRI' && post.kategori !== '' ? true : false;
     }
 
     _isRawatInap() {
