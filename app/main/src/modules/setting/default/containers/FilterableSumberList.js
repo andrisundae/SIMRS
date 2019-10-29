@@ -8,7 +8,7 @@ import { toastr } from 'react-redux-toastr';
 
 import { DatatableServerSide, constDatatable, datatableActions, confirmation } from '@simrs/components';
 import { validator as commonValidator } from '@simrs/common';
-import { selectors, context } from '../../../setting/aturan-aplikasi';
+import { context } from '../../../setting/aturan-aplikasi';
 import SearchBar from '../components/SearchBar';
 import { sumberActions } from '../actions';
 
@@ -241,8 +241,9 @@ class FilterableSumberList extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const page = state.page;
+    const minCharSearch = props.settings.find(setting => setting.aturan === MIN_CHAR_CONTEXT);
     let isReloadGrid, reloadType;
     if (state.datatable.datatables) {
         if (state.datatable.datatables[TABLE_NAME]) {
@@ -259,7 +260,7 @@ const mapStateToProps = function (state) {
         },
         isReloadGrid,
         reloadType,
-        minCharSearch: parseInt(selectors.get(state, MIN_CHAR_CONTEXT)) || 0,
+        minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0),
         selectedRows: page.sumber.selectedRows,
         focusElement: page.focusElement,
         post: page.post,

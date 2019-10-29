@@ -8,7 +8,7 @@ import { Input, Select, FormField, Grid } from 'semantic-ui-react';
 
 import { Filter as FilterContainer, filterActions } from '@simrs/main/src/modules/master/nested';
 import { Select as Select2 } from '@simrs/components';
-import { selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
+import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 class Filter extends Component {
     constructor(props) {
@@ -166,9 +166,10 @@ class Filter extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { filter, module } = state.nested;
     const selectedRow = module.selectedRow;
+    const minCharSearch = props.settings.find(setting => setting.aturan === context.MINCHARPENCARIANMASTER);
 
     return {
         data: filter.data,
@@ -177,7 +178,7 @@ const mapStateToProps = function (state) {
         isDisableNext: selectedRow < 1,
         isDisablePrev: false,
         selectedRow,
-        minCharSearch: parseInt(selectors.get(state, context.MINCHARPENCARIANMASTER)) || 0
+        minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0)
     }
 }
 

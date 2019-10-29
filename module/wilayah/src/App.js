@@ -26,7 +26,7 @@ class SwitchComponent extends Component {
   }
 
   render() {
-    const { location, resource, t, i18n } = this.props;
+    const { location, resource, t, i18n, permissions, settings } = this.props;
     const isKota = !!(
       location.state &&
       location.state.kota &&
@@ -51,7 +51,8 @@ class SwitchComponent extends Component {
           <Fragment>
             <Switch location={isKota ? this.previousLocation : location}>
               <Route exact path="/" render={() => <Redirect to="/provinsi" />} />
-              <Route exact path="/provinsi" render={(props) => <Provinsi resource={resource} {...props} t={t} i18n={i18n} />} />
+              <Route exact path="/provinsi" render={(props) =>
+                <Provinsi resource={resource} {...props} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
@@ -60,7 +61,8 @@ class SwitchComponent extends Component {
           <Provider store={kotaStore}>
             <Fragment>
               <Switch location={isKecamatan ? this.previousLocationKota : location}>
-                <Route path="/kota/:provinsi" render={(props) => <Kota resource={resource} t={t} i18n={i18n} {...props} />} />
+                <Route path="/kota/:provinsi" render={(props) =>
+                  <Kota {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               </Switch>
               <Toastr preventDuplicates={false} />
             </Fragment>
@@ -72,7 +74,8 @@ class SwitchComponent extends Component {
           <Provider store={kecamatanStore}>
             <Fragment>
               <Switch location={isDesa ? this.previousLocationKecamatan : location}>
-              <Route path="/kecamatan/:kota" render={(props) => <Kecamatan resource={resource} t={t} i18n={i18n} {...props}/>} />
+              <Route path="/kecamatan/:kota" render={(props) =>
+                <Kecamatan {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               </Switch>
               <Toastr preventDuplicates={false} />
             </Fragment>
@@ -82,7 +85,8 @@ class SwitchComponent extends Component {
         {isDesa &&
           <Provider store={desaStore}>
             <Fragment>
-            <Route path="/desa/:kecamatan" render={(props) => <Desa resource={resource} t={t} i18n={i18n} {...props}/>} />
+            <Route path="/desa/:kecamatan" render={(props) =>
+              <Desa {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               <Toastr preventDuplicates={false} />
             </Fragment>
           </Provider>
@@ -123,10 +127,11 @@ SwitchComponent.propTypes = {
 };
 
 
-function App({ match, t, i18n, resource}) {
+function App({ match, t, i18n, resource, permissions, settings}) {
   return (
     <Router basename={match.url}>
-      <Route render={(props) => <SwitchComponent t={t} i18n={i18n} resource={resource} {...props} />} />
+      <Route render={(props) =>
+        <SwitchComponent {...props} t={t} i18n={i18n} resource={resource} permissions={permissions} settings={settings} />} />
     </Router>
   );
 }

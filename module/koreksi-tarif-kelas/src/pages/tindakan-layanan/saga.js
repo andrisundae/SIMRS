@@ -10,16 +10,13 @@ import {
     moduleActions,
     filterActionTypes
 } from '@simrs/main/src/modules/master/nested';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions, selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
+import { selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { actions, actionTypes } from '../tindakan-layanan';
 
 const { getFirstElementError, getFirstError } = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(actions.populateForm.request(meta.resource, meta.subResource));
 }
 

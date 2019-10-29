@@ -5,6 +5,7 @@ import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 
 import { PageLoader} from '@simrs/components';
 import FooterActions from './containers/FooterActions';
+import { getPermissions } from '../auth';
 
 class Main extends Component {
     constructor(props) {
@@ -21,6 +22,7 @@ class Main extends Component {
         }
 
         const {isSocketConnected} = this.props;
+        console.log(this.props.permissions)
         
         return (
             <Segment size="mini">
@@ -43,7 +45,12 @@ class Main extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
-                <FooterActions i18n={this.props.i18n} t={this.props.t} resource={this.props.resource} />
+                <FooterActions
+                    i18n={this.props.i18n}
+                    t={this.props.t}
+                    resource={this.props.resource}
+                    permissions={getPermissions(this.props.permissions)}
+                />
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
             </Segment>
         );
@@ -74,10 +81,12 @@ Main.propTypes = {
     i18n: PropTypes.object.isRequired,
     isLoading: PropTypes.bool,
     loaderMessage: PropTypes.string,
+    permissions: PropTypes.array,
 };
 
 Main.defaultProps = {
-    icon: 'file'
+    icon: 'file',
+    permissions: []
 }
 
 export default connect(mapStateToProps, {})(Main);

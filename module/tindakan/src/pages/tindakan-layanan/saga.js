@@ -10,8 +10,6 @@ import {
     moduleActions,
     filterActionTypes
 } from '@simrs/main/src/modules/master/nested';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { actions, actionTypes, getReference } from '../tindakan-layanan';
 
 const { getFirstError, getFirstElementError } = commonValidator;
@@ -20,8 +18,6 @@ const validator = commonValidator.default;
 const TABLE_KELAS = 'data_kelas';
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(actions.populateForm(meta.resource, meta.subResource));
 }
 

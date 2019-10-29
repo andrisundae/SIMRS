@@ -6,9 +6,9 @@ import MouseTrap from 'mousetrap';
 import { Trans } from 'react-i18next';
 
 import { Input, Select, FormField, Grid } from 'semantic-ui-react';
-import { Filter as FilterContainer, isDisableForm as checkForm, filterActions } from '@simrs/main/src/modules/master/nested';
+import { Filter as FilterContainer, filterActions } from '@simrs/main/src/modules/master/nested';
 import { Select as Select2 } from '@simrs/components';
-import { selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
+import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 class Filter extends Component {
     constructor(props) {
@@ -141,8 +141,9 @@ class Filter extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { filter, module } = state.nested;
+    const minCharSearch = props.settings.find(setting => setting.aturan === context.MINCHARPENCARIANMASTER);
 
     return {
         post: filter.post,
@@ -150,7 +151,7 @@ const mapStateToProps = function (state) {
         isDisableNext: true,
         isDisablePrev: module.post.is_edit_tindakan ? true : false,
         selectedRow: module.selectedRow,
-        minCharSearch: parseInt(selectors.get(state, context.MINCHARPENCARIANMASTER)) || 0
+        minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0)
     }
 }
 

@@ -4,7 +4,6 @@ import _ from 'lodash';
 import {validator as commonValidator, toastr} from '@simrs/common';
 import api from '../services/models/importPasienModel';
 import { actions, actionTypes} from '@simrs/main/src/modules/import';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
 import { state } from '../pages/index';
 
 const { getFirstError, getFirstElementError} = commonValidator;
@@ -66,7 +65,6 @@ function validationFile(files) {
 
 function* openForm({ meta }) {
     yield put(actions.onReset(meta.resource));
-    yield put(aclActions.getGranted.request(meta.resource));
 }
 
 export default function* watchActions() {

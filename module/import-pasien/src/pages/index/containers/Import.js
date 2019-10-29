@@ -18,6 +18,7 @@ class Import extends Component {
 
         return (
             <ImportTemplate
+                {...this.props}
                 resource={this.props.resource}
                 caption="Import Pasien"
                 helpBlockFile={this.props.t(this._getKey('help.field.file'))}
@@ -25,7 +26,6 @@ class Import extends Component {
                 fileRef={this.fileRef}
                 inputRef={this.file}
                 t={this.props.t}
-                {...this.props}
             />
         )
     }

@@ -118,9 +118,9 @@ class FooterActions extends Component {
     }
 
     _isCanEdit() {
-        let { permissions, statusForm } = this.props;
+        let { customPermissions, statusForm } = this.props;
         let isValid = false;
-        if (permissions.canEdit && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY)
+        if (customPermissions.canEdit && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY)
         ) {
             isValid = true;
         }
@@ -129,9 +129,9 @@ class FooterActions extends Component {
     }
 
     _isCanSave() {
-        let { permissions, statusForm } = this.props;
+        let { customPermissions, statusForm } = this.props;
         let isValid = false;
-        if (permissions.canEdit && statusForm === actionTypes.EDIT) {
+        if (customPermissions.canEdit && statusForm === actionTypes.EDIT) {
             isValid = true;
         }
 
@@ -188,11 +188,11 @@ class FooterActions extends Component {
 
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { statusForm, post, focusElement } = state.module;
 
     return {
-        permissions: getPermissions(state.acl),
+        customPermissions: getPermissions(props.permissions),
         statusForm,
         post,
         focusElement,
@@ -214,7 +214,8 @@ const mapDispatchToProps = function (dispatch) {
 }
 
 FooterActions.propTypes = {
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     action: PropTypes.object,
     statusForm: PropTypes.string,
     post: PropTypes.object,

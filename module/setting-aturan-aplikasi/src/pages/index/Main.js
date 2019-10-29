@@ -31,7 +31,7 @@ class Main extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
-                <FooterActions resource={this.props.resource} />
+                <FooterActions resource={this.props.resource} permissions={this.props.permissions} />
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
             </Segment>
         );
@@ -57,6 +57,7 @@ Main.propTypes = {
     resource: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
     i18n: PropTypes.object.isRequired,
+    permissions: PropTypes.array.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

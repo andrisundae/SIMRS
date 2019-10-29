@@ -9,19 +9,18 @@ class FooterActions extends Component {
 
     render() {
         return (
-            <Footer {...this.props} />
+            <Footer {...this.props} permissions={this.props.customPermissions} />
         )
     }
 }
 
-const mapStateToProps = function (state) {
-    const { acl } = state;
+const mapStateToProps = function (state, props) {
 
     return {
-        permissions: {
-            canAdd: isGranted(acl, 'tambah_diagnosis_x'),
-            canEdit: isGranted(acl, 'koreksi_diagnosis_x'),
-            canDelete: isGranted(acl, 'hapus_diagnosis_x')
+        customPermissions: {
+            canAdd: isGranted(props.permissions, 'tambah_diagnosis_x'),
+            canEdit: isGranted(props.permissions, 'koreksi_diagnosis_x'),
+            canDelete: isGranted(props.permissions, 'hapus_diagnosis_x')
         },
     }
 }
@@ -29,7 +28,8 @@ const mapStateToProps = function (state) {
 FooterActions.propTypes = {
     resource: PropTypes.string.isRequired,
     subResource: PropTypes.string.isRequired,
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
 };
 
 export default connect(mapStateToProps)(FooterActions);

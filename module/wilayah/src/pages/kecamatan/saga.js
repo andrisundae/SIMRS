@@ -10,16 +10,10 @@ import {
     moduleActions,
     filterActionTypes
 } from '@simrs/main/src/modules/master/nested';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
-function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
-}
 
 function* loadAll({ payload, meta }) {
     const { successCallback, failCallback, pastAction } = meta.tableParams;
@@ -150,7 +144,6 @@ export default function* watchActions() {
         takeLatest(moduleActionTypes.DELETE_SUCCESS, handleDeleteSuccess),
         takeLatest(moduleActionTypes.ADD, handleAdd),
         takeLatest(moduleActionTypes.EDIT, handleEdit),
-        takeLatest(moduleActionTypes.OPEN_FORM, openForm),
         takeLatest(filterActionTypes.FILTER_SUBMIT, handleSearch),
         takeLatest(datatableActionTypes.RELOADED, handleReloaded),
     ]);

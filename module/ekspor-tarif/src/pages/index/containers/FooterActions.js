@@ -11,7 +11,6 @@ import {
     PreviewButton,
     ExportButton,
 } from '@simrs/components';
-import {toastr} from '@simrs/common';
 import { isGranted } from '@simrs/main/src/modules/auth';
 import actions from '../actions';
 
@@ -99,9 +98,9 @@ class FooterActions extends Component {
     }
 
     _isCanSearch() {
-        let { permissions } = this.props;
+        let { customPermissions } = this.props;
         let isValid = false;
-        if (permissions.canSearch) {
+        if (customPermissions.canSearch) {
             isValid = true;
         }
 
@@ -109,9 +108,9 @@ class FooterActions extends Component {
     }
 
     _isCanExport() {
-        let { permissions } = this.props;
+        let { customPermissions } = this.props;
         let isValid = false;
-        if (permissions.canExport) {
+        if (customPermissions.canExport) {
             isValid = true;
         }
 
@@ -152,13 +151,13 @@ class FooterActions extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { form, focusElement } = state.default;
 
     return {
-        permissions: {
-            canSearch: isGranted(state.acl, 'view'),
-            canExport: isGranted(state.acl, 'ekspor'),
+        customPermissions: {
+            canSearch: isGranted(props.permissions, 'view'),
+            canExport: isGranted(props.permissions, 'ekspor'),
         },
         post: {
             versi_tarif: form.post.versi_tarif,
@@ -182,7 +181,8 @@ const mapDispatchToProps = function (dispatch) {
 }
 
 FooterActions.propTypes = {
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     action: PropTypes.object,
     post: PropTypes.object,
     focusElement: PropTypes.string,

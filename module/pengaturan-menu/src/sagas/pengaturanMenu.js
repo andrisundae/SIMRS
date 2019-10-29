@@ -9,7 +9,6 @@ import {
     actions,
     actionTypes
 } from '../pages/index';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
@@ -19,7 +18,6 @@ function* resetForm({ meta }) {
 }
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
     yield put(actions.populateForm(meta.resource));
 }
 

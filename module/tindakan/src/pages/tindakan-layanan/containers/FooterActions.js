@@ -330,11 +330,11 @@ class FooterActions extends Component {
 
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { statusForm, selectedRow, reference, post, focusElement, importKelas } = state.nested.module;
 
     return {
-        permissions: getPermissions(state.acl),
+        permissions: getPermissions(props.permissions),
         statusForm,
         selectedRow,
         reference,

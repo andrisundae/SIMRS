@@ -17,7 +17,7 @@ function App({ location, resource, t, i18n, permissions, settings}) {
         <Fragment>
           <Switch location={location}>
             <Route path="/" render={(props) => 
-              <Index resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
+              <Index {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
           </Switch>
           <Toastr />
         </Fragment>

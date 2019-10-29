@@ -9,14 +9,10 @@ import {
     moduleActions,
     filterActionTypes
 } from '@simrs/main/src/modules/master/nested';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { actions, actionTypes } from '../kelompok';
 import { getKlasifikasi } from '../kelompok/selectors';
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(moduleActions.populateForm(meta.resource));
 }
 

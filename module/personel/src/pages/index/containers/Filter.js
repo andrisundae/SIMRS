@@ -7,7 +7,7 @@ import { Trans } from 'react-i18next';
 
 import { Input, Select, FormField } from 'semantic-ui-react';
 import { Filter as FilterContainer, isDisableForm, filterActions } from '@simrs/main/src/modules/master/default';
-import { selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
+import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { filterIndexActions } from '../actions';
 
 class Filter extends Component {
@@ -112,13 +112,14 @@ class Filter extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { filter, module } = state.default;
     const optionsStatusAplikasi = filter.data.options_status_aplikasi.map(row => ({
         text: row.label,
         value: row.id,
         key: row.id
     }));
+    const minCharSearch = props.settings.find(setting => setting.aturan === context.MINCHARPENCARIANMASTER);
 
     return {
         post: filter.post,
@@ -127,7 +128,7 @@ const mapStateToProps = function (state) {
             ...optionsStatusAplikasi
         ],
         isDisableForm: !isDisableForm(module),
-        minCharSearch: parseInt(selectors.get(state, context.MINCHARPENCARIANMASTER)) || 0
+        minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0)
     }
 }
 

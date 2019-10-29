@@ -34,7 +34,7 @@ class SwitchComponent extends Component {
             <Switch location={isLayanan ? this.previousLocation : location}>
               <Route exact path="/" render={() => <Redirect to="/kelompok" />} />
               <Route exact path="/kelompok" render={(props) =>
-                <Kelompok resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
+                <Kelompok {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
@@ -43,7 +43,7 @@ class SwitchComponent extends Component {
           <Provider store={layananStore}>
             <Fragment>
             <Route path="/layanan/:kelompok" render={(props) =>
-              <Layanan resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} {...props} />} />
+              <Layanan {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               <Toastr preventDuplicates={false} />
             </Fragment>
           </Provider>

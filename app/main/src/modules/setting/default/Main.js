@@ -27,7 +27,8 @@ class Main extends Component {
         const {resource, sizeColumnsToFitSetting,
             sizeColumnsToFitSumber, dataSetting,
             settingColumns, sumberColumns, t, i18n,
-            containerHeightSetting, containerHeightSumber
+            containerHeightSetting, containerHeightSumber,
+            settings
         } = this.props;
 
         return (
@@ -56,6 +57,7 @@ class Main extends Component {
                                     t={t}
                                     i18n={i18n}
                                     containerHeight={containerHeightSumber}
+                                    settings={settings}
                                 />
                             </Grid.Column>
                             <Grid.Column width={2} verticalAlign="middle">
@@ -74,6 +76,7 @@ class Main extends Component {
                                     t={t}
                                     i18n={i18n}
                                     containerHeight={containerHeightSetting}
+                                    settings={settings}
                                 />
                             </Grid.Column>
                         </Grid.Row>
@@ -124,12 +127,14 @@ Main.propTypes = {
     sumberColumns: PropTypes.array.isRequired,
     containerHeightSetting: PropTypes.string,
     containerHeightSumber: PropTypes.string,
+    settings: PropTypes.array,
 };
 
 Main.defaultProps = {
     icon: 'setting',
     sizeColumnsToFitSumber: true,
     sizeColumnsToFitSetting: true,
+    settings: [],
     containerHeightSetting: '400px',
     containerHeightSumber: '400px'
 }

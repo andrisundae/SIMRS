@@ -4,16 +4,12 @@ import { ipcRenderer } from 'electron';
 import {validator as commonValidator, toastr} from '@simrs/common';
 import { loaderActions, datatableActions, constDatatable, datatableActionTypes } from '@simrs/components';
 import api from '../services/models/stokUnitLayananModel';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 import { moduleActions, moduleActionTypes, filterActionTypes, filterActions } from '../pages/index';
 
 const { getFirstElementError} = commonValidator;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(filterActions.populateForm.request(meta.resource));
 }
 

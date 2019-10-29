@@ -20,7 +20,7 @@ class SwitchComponent extends Component {
   }
 
   render() {
-    const { location, resource, t, i18n } = this.props;
+    const { location, resource, t, i18n, permissions, settings } = this.props;
     const isDiagnosis = !!(
       location.state &&
       location.state.diagnosis &&
@@ -33,7 +33,8 @@ class SwitchComponent extends Component {
           <Fragment>
             <Switch location={isDiagnosis ? this.previousLocation : location}>
               <Route exact path="/" render={() => <Redirect to="/versi" />} />
-              <Route exact path="/versi" render={(props) => <Versi resource={resource} {...props} t={t} i18n={i18n} />} />
+              <Route exact path="/versi" render={(props) =>
+                <Versi {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
@@ -41,7 +42,8 @@ class SwitchComponent extends Component {
         {isDiagnosis &&
           <Provider store={diagnosisStore}>
             <Fragment>
-            <Route path="/diagnosis/:versi" render={(props) => <Diagnosis resource={resource} t={t} i18n={i18n} {...props} />} />
+            <Route path="/diagnosis/:versi" render={(props) =>
+              <Diagnosis {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               <Toastr preventDuplicates={false} />
             </Fragment>
 
@@ -69,10 +71,11 @@ SwitchComponent.propTypes = {
 };
 
 
-function App({ match, t, i18n, resource}) {
+function App({ match, t, i18n, resource, permissions, settings}) {
   return (
     <Router basename={match.url}>
-      <Route render={(props) => <SwitchComponent t={t} i18n={i18n} resource={resource} {...props} />} />
+      <Route render={(props) =>
+        <SwitchComponent {...props} t={t} i18n={i18n} resource={resource} permissions={permissions} settings={settings} />} />
     </Router>
   );
 }

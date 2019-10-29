@@ -1,21 +1,17 @@
 import { put, call, takeLatest, all } from 'redux-saga/effects';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import {isEmpty} from 'lodash';
 
 import { validator as commonValidator, toastr} from '@simrs/common';
 import { loaderActions, datatableActions, constDatatable } from '@simrs/components';
 import api from '../services/models/eksporTarifModel';
 import { actions, actionTypes } from '../pages/index';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import { getFirstElementError } from '@simrs/common/src/utils/validator';
 
 const { getFirstError } = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(actions.populateForm.request(meta.resource));
 }
 

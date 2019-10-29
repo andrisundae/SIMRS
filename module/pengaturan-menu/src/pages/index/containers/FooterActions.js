@@ -163,9 +163,9 @@ class FooterActions extends Component {
     }
 
     _isCanAdd() {
-        let { permissions, statusForm } = this.props;
+        let { customPermissions, statusForm } = this.props;
         let isValid = false;
-        if (permissions.canAdd && (statusForm === actionTypes.READY ||
+        if (customPermissions.canAdd && (statusForm === actionTypes.READY ||
             statusForm === actionTypes.CANCEL || statusForm === actionTypes.SELECTED)
         ) {
             isValid = true;
@@ -175,9 +175,9 @@ class FooterActions extends Component {
     }
 
     _isCanEdit() {
-        let { permissions, statusForm, selectedKeys } = this.props;
+        let { customPermissions, statusForm, selectedKeys } = this.props;
         let isValid = false;
-        if (permissions.canEdit && (selectedKeys.length > 0) && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY || statusForm === actionTypes.SELECTED)
+        if (customPermissions.canEdit && (selectedKeys.length > 0) && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY || statusForm === actionTypes.SELECTED)
         ) {
             isValid = true;
         }
@@ -186,9 +186,9 @@ class FooterActions extends Component {
     }
 
     _isCanDelete() {
-        let { permissions, statusForm, selectedKeys } = this.props;
+        let { customPermissions, statusForm, selectedKeys } = this.props;
         let isValid = false;
-        if (permissions.canDelete && (selectedKeys.length > 0) && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY || statusForm === actionTypes.SELECTED)
+        if (customPermissions.canDelete && (selectedKeys.length > 0) && (statusForm === actionTypes.CANCEL || statusForm === actionTypes.READY || statusForm === actionTypes.SELECTED)
         ) {
             isValid = true;
         }
@@ -197,9 +197,9 @@ class FooterActions extends Component {
     }
 
     _isCanSave() {
-        let { permissions, statusForm } = this.props;
+        let { customPermissions, statusForm } = this.props;
         let isValid = false;
-        if ((permissions.canAdd || permissions.canEdit) && (statusForm === actionTypes.ADD || statusForm === actionTypes.EDIT)) {
+        if ((customPermissions.canAdd || customPermissions.canEdit) && (statusForm === actionTypes.ADD || statusForm === actionTypes.EDIT)) {
             isValid = true;
         }
 
@@ -283,11 +283,11 @@ class FooterActions extends Component {
 
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { statusForm, post, data, focusElement } = state.module;
 
     return {
-        permissions: getPermissions(state.acl),
+        customPermissions: getPermissions(props.permissions),
         statusForm,
         post,
         focusElement,
@@ -312,7 +312,8 @@ const mapDispatchToProps = function (dispatch) {
 }
 
 FooterActions.propTypes = {
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     action: PropTypes.object,
     statusForm: PropTypes.string,
     selectedRow: PropTypes.number,

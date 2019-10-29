@@ -20,7 +20,7 @@ class SwitchComponent extends Component {
   }
 
   render() {
-    const { location, resource, t, i18n } = this.props;
+    const { location, resource, t, i18n, permissions, settings } = this.props;
 
     const isTindakanKomponen = !!(
       location.state &&
@@ -34,7 +34,8 @@ class SwitchComponent extends Component {
           <Fragment>
             <Switch location={isTindakanKomponen ? this.previousLocation : location}>
               <Route exact path="/" render={() => <Redirect to="/tindakan" />} />
-              <Route exact path="/tindakan" render={(props) => <Tindakan resource={resource} t={t} i18n={i18n} {...props}/>} />
+              <Route exact path="/tindakan" render={(props) =>
+                <Tindakan {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
@@ -43,7 +44,8 @@ class SwitchComponent extends Component {
         {isTindakanKomponen &&
           <Provider store={tindakanKomponenStore}>
             <Fragment>
-            <Route path="/tindakan-komponen/:tindakan" render={(props) => <TindakanKomponen resource={resource} t={t} i18n={i18n} {...props} />} />
+            <Route path="/tindakan-komponen/:tindakan" render={(props) =>
+              <TindakanKomponen {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
               <Toastr preventDuplicates={false} />
             </Fragment>
           </Provider>
@@ -72,10 +74,11 @@ SwitchComponent.propTypes = {
 };
 
 
-function App({ match, t, i18n, resource}) {
+function App({ match, t, i18n, resource, permissions, settings}) {
   return (
     <Router basename={match.url}>
-      <Route render={(props) => <SwitchComponent t={t} i18n={i18n} resource={resource} {...props} />} />
+      <Route render={(props) =>
+        <SwitchComponent {...props} t={t} i18n={i18n} resource={resource} permissions={permissions} settings={settings} />} />
     </Router>
   );
 }

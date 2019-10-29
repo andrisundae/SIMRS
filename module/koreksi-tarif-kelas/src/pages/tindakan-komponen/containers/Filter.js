@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Form, Grid, Divider } from 'semantic-ui-react';
+import { Input, Form, Grid } from 'semantic-ui-react';
 
 import { Select, SearchButton } from '@simrs/components';
 

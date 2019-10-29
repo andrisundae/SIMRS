@@ -3,8 +3,6 @@ import _ from 'lodash';
 
 import {validator as commonValidator, toastr} from '@simrs/common';
 import { loaderActions } from '@simrs/components';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-
 import api from '../services/models/importTarifModel';
 import { actions, actionTypes, state } from '../pages/index';
 
@@ -67,7 +65,6 @@ function validationFile(files) {
 
 function* openForm({ meta }) {
     yield put(actions.onReset(meta.resource));
-    yield put(aclActions.getGranted.request(meta.resource));
     yield put(actions.populateForm(meta.resource));
 }
 

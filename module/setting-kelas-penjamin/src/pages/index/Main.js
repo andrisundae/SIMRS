@@ -21,11 +21,11 @@ class Main extends Component {
   render() {
     return (
         <Default
+          {...this.props}
           filterSumberLain={<FilterSumberLain {...this.props} />}
           caption={this.props.t(`${this.props.resource}:title`)}
           settingColumns={this.getColumnDefs()}
           sumberColumns={this.getColumnDefs()}
-          {...this.props}
         />
     );
   }

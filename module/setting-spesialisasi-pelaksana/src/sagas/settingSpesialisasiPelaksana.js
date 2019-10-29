@@ -5,8 +5,6 @@ import { validator as commonValidator, toastr } from '@simrs/common';
 import { loaderActions, datatableActions, constDatatable } from '@simrs/components';
 import api from '../services/models/settingSpesialisasiPelaksanaModel';
 
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import {
     moduleActionTypes,
     sumberLainActions,
@@ -22,8 +20,6 @@ const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(moduleActions.populateForm.request(meta.resource));
 }
 

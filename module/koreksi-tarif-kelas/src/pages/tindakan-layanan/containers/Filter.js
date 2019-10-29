@@ -9,8 +9,8 @@ import { remote } from 'electron';
 import { Trans } from 'react-i18next';
 
 import { Select, SearchButton } from '@simrs/components';
-import { moduleActions, filterActions } from '@simrs/main/src/modules/master/nested';
-import { selectors, context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
+import { filterActions } from '@simrs/main/src/modules/master/nested';
+import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import actions from '../actions';
 
 const { ipcMain } = remote;
@@ -253,9 +253,10 @@ class Filter extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { filter } = state.nested;
     const data = filter.data;
+    const minCharSearch = props.settings.find(setting => setting.aturan === context.MINCHARPENCARIANMASTER);
 
     return {
         optionsVersiTarif: data.options_versi_tarif,
@@ -264,7 +265,7 @@ const mapStateToProps = function (state) {
         optionsKelas: data.options_kelas,
         post: filter.post,
         focusElement: filter.focusElement,
-        minCharSearch: parseInt(selectors.get(state, context.MINCHARPENCARIANMASTER)) || 0,
+        minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0)
     }
 }
 

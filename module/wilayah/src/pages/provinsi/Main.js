@@ -18,6 +18,7 @@ class Main extends Component {
     render() {
         return (
             <Module
+                {...this.props}
                 subResource={this.subResource}
                 filter={<Filter subResource={this.subResource} {...this.props} />}
                 list={<List subResource={this.subResource} {...this.props} />}
@@ -26,7 +27,6 @@ class Main extends Component {
                 caption={this.props.t(`${this.props.resource}:provinsi.title`)}
                 isLoading={this.props.isLoading}
                 loaderMessage={this.props.loaderMessage}
-                {...this.props}
             />
         );
     }

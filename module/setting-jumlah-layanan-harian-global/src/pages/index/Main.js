@@ -38,12 +38,12 @@ class Main extends Component {
   render() {
     return (
         <Default
+          {...this.props}
           filterSumberLain={<FilterSumberLain {...this.props} />}
           caption={this.props.t(`${this.props.resource}:title`)}
           settingColumns={this.getSettingColumnDefs()}
           sumberColumns={this.getColumnDefs()}
           dataSetting={<DataSetting {...this.props} />}
-          {...this.props}
         />
     );
   }

@@ -7,8 +7,8 @@ class Main extends Component {
     render() {
         return (
             <Template
-                import={<Import {...this.props} />}
                 {...this.props}
+                import={<Import {...this.props} />}
             />
         );
     }

@@ -11,7 +11,6 @@ import {
     filterActionTypes
 } from '@simrs/main/src/modules/master/default';
 import aclActions from '@simrs/main/src/modules/auth/aclActions';
-import { actions as aturanAplikasiActions } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 import authActions, { actionTypes as authActionTypes } from '@simrs/main/src/modules/auth/authActions';
 
 import { actionTypes, actions, filterIndexActionTypes, uploadGambarActions, getPostUploadGambar} from '../pages/index';
@@ -20,9 +19,7 @@ const { getFirstError, getFirstElementError} = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
     yield put(actions.getGranted.request());
-    yield put(aturanAplikasiActions.getAturanAplikasi.request(meta.resource));
     yield put(actions.populateForm.request(meta.resource));
 }
 

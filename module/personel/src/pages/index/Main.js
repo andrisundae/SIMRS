@@ -8,7 +8,7 @@ import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Trans } from 'react-i18next';
 
 import { PageLoader, confirmation } from '@simrs/components';
-import { isGranted, authActions } from '@simrs/main/src/modules/auth';
+import { isGranted, authActions, getPermissions } from '@simrs/main/src/modules/auth';
 
 import Filter from './containers/Filter';
 import Create from './containers/Create';
@@ -41,21 +41,21 @@ class Main extends Component {
 
         MouseTrap.bindGlobal('alt+n', function (e) {
             e.preventDefault();
-            if ((_this.props.permissions.canChangeStatus && !_this.props.isDisableForm && _this.props.isRowSelected)) {
+            if ((_this.props.customPermissions.canChangeStatus && !_this.props.isDisableForm && _this.props.isRowSelected)) {
                 _this._onChangeStatus();
             }
         });
 
         MouseTrap.bindGlobal('alt+e', function (e) {
             e.preventDefault();
-            if ((_this.props.permissions.canResetPassword && !_this.props.isDisableForm && _this.props.isRowSelected)) {
+            if ((_this.props.customPermissions.canResetPassword && !_this.props.isDisableForm && _this.props.isRowSelected)) {
                 _this._onResetPassword();
             }
         });
 
         MouseTrap.bindGlobal('alt+l', function (e) {
             e.preventDefault();
-            if ((_this.props.permissions.canForceLogout && !_this.props.isDisableForm && _this.props.isRowSelected)) {
+            if ((_this.props.customPermissions.canForceLogout && !_this.props.isDisableForm && _this.props.isRowSelected)) {
                 _this._onForceLogout();
             }
         });
@@ -171,7 +171,10 @@ class Main extends Component {
     }
 
     render() {
-        const { t, permissions, resource, i18n, isRowSelected, isShowUploadGambar} = this.props;
+        const {
+            t, permissions, customPermissions, resource, i18n,
+            isRowSelected, isShowUploadGambar, settings}
+            = this.props;
         return (
             <Segment size="mini">
                 <Header as='h5' attached='top' block>
@@ -183,7 +186,7 @@ class Main extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Segment padded>
-                                    <Filter t={t} resource={resource} i18n={i18n} />
+                                    <Filter settings={settings} t={t} resource={resource} i18n={i18n} />
                                 </Segment>
                             </Grid.Column>
                         </Grid.Row>
@@ -193,10 +196,10 @@ class Main extends Component {
                                     <Grid.Row>
                                         <Grid.Column>
                                             <List sizeColumnsToFit={false} columnDefs={this.getColumnDefs()} t={t} resource={resource} />
-                                            {(permissions.canChangeStatus || permissions.canResetPassword || permissions.canForceLogout) &&
+                                            {(customPermissions.canChangeStatus || customPermissions.canResetPassword || customPermissions.canForceLogout) &&
                                             <Fragment>
                                                 <Divider />
-                                                {permissions.canChangeStatus &&
+                                                {customPermissions.canChangeStatus &&
                                                     <Button
                                                         name="change_status"
                                                         size="tiny"
@@ -209,7 +212,7 @@ class Main extends Component {
                                                         {this._renderTitleBtnStatus()}
                                                     </Button>
                                                 }
-                                                {permissions.canResetPassword &&
+                                                {customPermissions.canResetPassword &&
                                                     <Button
                                                         name="reset_password"
                                                         size="tiny"
@@ -222,7 +225,7 @@ class Main extends Component {
                                                         R<u>e</u>set Password
                                                     </Button>
                                                 }
-                                                {permissions.canForceLogout &&
+                                                {customPermissions.canForceLogout &&
                                                     <Button
                                                         name="force_logout"
                                                         size="tiny"
@@ -235,7 +238,7 @@ class Main extends Component {
                                                         Force <u>L</u>ogout
                                                     </Button>
                                                 }
-                                                {permissions.canUploadGambar &&
+                                                {customPermissions.canUploadGambar &&
                                                     <Button
                                                         name="upload_gambar"
                                                         size="tiny"
@@ -269,14 +272,14 @@ class Main extends Component {
                         resource={resource}
                     />
                 }
-                <FooterActions t={t} resource={resource} />
+                <FooterActions t={t} resource={resource} permissions={getPermissions(permissions)} />
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
             </Segment>
         );
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { module, uploadGambar: {show} } = state.default;
 
     return {
@@ -285,9 +288,9 @@ const mapStateToProps = function (state) {
         isRowSelected: module.selectedRow > 0,
         selectedRow: module.selectedRow,
         post: module.post,
-        permissions: {
-            canChangeStatus: isGranted(state.acl, 'ganti_status'),
-            canUploadGambar: isGranted(state.acl, 'upload_gambar'),
+        customPermissions: {
+            canChangeStatus: isGranted(props.permissions, 'ganti_status'),
+            canUploadGambar: isGranted(props.permissions, 'upload_gambar'),
             canResetPassword: module.auth.resetPassword,
             canForceLogout: module.auth.forceLogout
         },
@@ -321,7 +324,8 @@ Main.propTypes = {
     post: PropTypes.object,
     isLoading: PropTypes.bool,
     isDisableForm: PropTypes.bool,
-    permissions: PropTypes.object.isRequired,
+    permissions: PropTypes.array.isRequired,
+    customPermissions: PropTypes.object.isRequired,
     isRowSelected: PropTypes.bool,
     isShowUploadGambar: PropTypes.bool,
     selectedRow: PropTypes.number,

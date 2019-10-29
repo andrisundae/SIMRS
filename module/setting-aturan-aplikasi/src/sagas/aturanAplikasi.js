@@ -1,5 +1,4 @@
 import { put, call, takeLatest, all, select } from 'redux-saga/effects';
-import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 
 import { validator as commonValidator, toastr} from '@simrs/common';
@@ -10,12 +9,10 @@ import {
     actionTypes,
     selectors
 } from '../pages/index';
-import aclActions from '@simrs/main/src/modules/auth/aclActions';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 
 function* openForm({ meta }) {
-    yield put(aclActions.getGranted.request(meta.resource));
     yield put(actions.populateForm.request(meta.resource));
 }
 

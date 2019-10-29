@@ -64,9 +64,9 @@ class FooterActions extends Component {
     }
 
     _isCanSave() {
-        let { permissions } = this.props;
+        let { customPermissions } = this.props;
         let isValid = false;
-        if (permissions.canAdd || permissions.canEdit
+        if (customPermissions.canAdd || customPermissions.canEdit
         ) {
             isValid = true;
         }
@@ -84,11 +84,11 @@ class FooterActions extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { statusForm, selectedRow, reference, post } = state.nested.module;
 
     return {
-        permissions: getPermissions(state.acl),
+        customPermissions: getPermissions(props.permissions),
         statusForm,
         selectedRow,
         reference,
@@ -108,7 +108,8 @@ const mapDispatchToProps = function (dispatch) {
 }
 
 FooterActions.propTypes = {
-    permissions: PropTypes.object,
+    permissions: PropTypes.array,
+    customPermissions: PropTypes.object,
     action: PropTypes.object,
     statusForm: PropTypes.string,
     selectedRow: PropTypes.number,
