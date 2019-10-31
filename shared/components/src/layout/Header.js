@@ -43,7 +43,7 @@ function Header({logo, match, username, contexts, routers, history}) {
                     {logo}
                 </Menu.Item>
                 <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
-                <RightMenu disabled={isDisabled} username={username} />
+                <RightMenu disabled={isDisabled} username={username} routers={routers} />
             </Menu>
         </div>
     );

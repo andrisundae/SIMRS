@@ -6,8 +6,9 @@ import {remote} from 'electron';
 // import { useTranslation } from 'react-i18next';
 
 const _window = remote.getCurrentWindow();
-function RightMenu({username, disabled}) { 
+function RightMenu({ username, disabled, routers, history}) { 
     const [isMaximized, setMaximized] = useState(_window.isMaximized());
+    const [currentRoute, setCurrentRoute] = useState('');
     // const [t] = useTranslation();
 
     function _onExit() {
@@ -29,6 +30,14 @@ function RightMenu({username, disabled}) {
         _window.unmaximize();
     }
 
+    function changePasswordHandler(keyMenu) {
+        let router = routers.find(router => router.key === keyMenu);
+        if (router) {
+            history.replace(`${router.path}?route=${keyMenu}`);
+            setCurrentRoute(keyMenu);
+        }
+    }
+
     return (
         <Menu.Menu position='right' className="right-menu">
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }} disabled={disabled}>
@@ -37,7 +46,12 @@ function RightMenu({username, disabled}) {
             <Dropdown item text={username} style={{ paddingLeft: 10, paddingRight: 10 }} disabled={disabled}>
                 <Dropdown.Menu>
                     <Dropdown.Item icon="user md" text="My Profile" />
-                    <Dropdown.Item icon="lock" text="Ganti Password" />
+                    <Dropdown.Item
+                        icon="lock"
+                        text="Ganti Password"
+                        onClick={() => changePasswordHandler('_system_portal_change_password')}
+                        active={currentRoute === '_system_portal_change_password'}
+                    />
                     <Dropdown.Divider />
                     <Dropdown.Item icon="window close" text="Keluar" onClick={_onExit}/>
                 </Dropdown.Menu>

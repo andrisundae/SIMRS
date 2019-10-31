@@ -182,6 +182,11 @@ const routers = [
         path: '/billing/setting/setting-instalasi-kelas-tambahan',
         component: lazy(() => import('@module/setting-instalasi-kelas-tambahan'))
     },
+    {
+        key: '_system_portal_change_password',
+        path: '/system/portal/change-password',
+        component: lazy(() => import('@module/change-password'))
+    },
 ]
 
 export default routers;

@@ -77,7 +77,7 @@ class Main extends Component {
                 return (
                     <Segment key={index} inverted size="tiny" color='black' style={{ marginTop: 5, marginBottom: 5, padding: 5 }}>
                         <Button
-                            onClick={() => this._createWindow(context.key)}
+                            onClick={() => this._createWindow(context.key, index + 1)}
                             icon
                             labelPosition='right'
                             color={context.warna}
@@ -136,7 +136,7 @@ class Main extends Component {
         return splash;
     }
 
-    _createWindow(app) {
+    _createWindow(app, id) {
         let windowApp = new BrowserWindow({
             width: 1000,
             height: 800,
@@ -144,6 +144,7 @@ class Main extends Component {
             show: false,
             center: true,
             resizable: false,
+            id,
             webPreferences: {
                 nodeIntegration: true
             }

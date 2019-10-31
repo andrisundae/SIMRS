@@ -46,6 +46,7 @@ function createMainWindow() {
         frame: false,
         show: false,
         backgroundColor: '#2C3E50',
+        id: 1,
         webPreferences: {
             nodeIntegration: true
         },

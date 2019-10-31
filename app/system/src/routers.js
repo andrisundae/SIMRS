@@ -31,6 +31,11 @@ const routers = [
     path: '/system/manajemen-user/grup',
     component: lazy(() => import('@module/grup'))
   },
+  {
+    key: '_system_portal_change_password',
+    path: '/system/portal/change-password',
+    component: lazy(() => import('@module/change-password'))
+  },
 ]
 
 export default routers;
