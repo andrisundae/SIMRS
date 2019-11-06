@@ -143,7 +143,6 @@ class Main extends Component {
             frame: false,
             show: false,
             center: true,
-            resizable: false,
             id,
             webPreferences: {
                 nodeIntegration: true

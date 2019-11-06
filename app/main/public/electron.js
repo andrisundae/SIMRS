@@ -46,6 +46,7 @@ function createMainWindow() {
         frame: false,
         show: false,
         backgroundColor: '#2C3E50',
+        resizable: false,
         id: 1,
         webPreferences: {
             nodeIntegration: true
@@ -66,9 +67,7 @@ function createMainWindow() {
         ? 'http://localhost:9000'
         : formatPath('index.html');
 
-    // window.webContents.openDevTools();
-
-    window.setResizable(false);
+    // window.webContents.openDevTools({detach: true});
     window.loadURL(url);
 
     return window;

@@ -3,6 +3,11 @@ body {
     border: 1px solid #333333;
     background-color: #f3f4f5;
 }
+
+.content-container {
+    padding: 0px !important;
+    overflow: hidden;
+}
 /* fixed width */
 /* .container {
     width: 992px !important;
@@ -31,25 +36,6 @@ hr {
     margin-bottom: 10px;
 }
 
-.portlet-title {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-}
-
-.portlet-body {
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.portlet-title .caption{
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.portlet-content {
-    min-height: 500px;
-}
-
 .page-footer {
     padding-top: 15px !important;
     height: 45px;
@@ -61,26 +47,6 @@ hr {
 
 .page-footer .btn-actions button {
     margin-right: 5px;
-}
-
-.form-horizontal {
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-.form-horizontal .form-body {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-}
-
-.form-horizontal .form-group {
-    margin-bottom: 5px !important;
-}
-
-.page-content .portlet {
-    margin-top: 10px;
-    margin-left: -10px;
-    margin-right: -10px;
 }
 
 li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
@@ -104,14 +70,6 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 
 .modal-dialog {
   color: #333;
-}
-
-.form-horizontal .control-label {
-    text-align: left !important;
-}
-
-.form-horizontal .form-group {
-    margin-bottom: 7px !important;
 }
 
 .react-select__control--is-focused {
@@ -316,9 +274,31 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
     padding-bottom: 0px;
 } */
 
-.content-header {
+.layout-header {
     -webkit-app-region: drag;
-    border-bottom: 3px solid #66AFE8 !important;
+}
+
+x-menubar {
+    padding-right: 0px !important;
+}
+
+x-menuitem {
+    -webkit-app-region: no-drag;
+    /* cursor: pointer; */
+}
+
+x-menuitem.app-window-button {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+x-menuitem.app-window-button.close:hover {
+    background: #FF0000 !important;
+}
+
+x-menuitem:hover {
+    background-color: rgb(54, 150, 252);
+    color: #FFFFFF;
 }
 
 .main-menu, .right-menu {

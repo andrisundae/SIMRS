@@ -8,6 +8,10 @@ import { Menu, Container } from 'semantic-ui-react';
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
 
+import "xel/themes/macos.css";
+
+import "xel/xel.min.js"
+
 const { ipcMain } = remote;
 
 function Header({logo, match, username, contexts, routers, history}) {
@@ -33,7 +37,7 @@ function Header({logo, match, username, contexts, routers, history}) {
 
     return (
         <div className="layout-header">
-            <Menu className="content-header" borderless fixed="top" color="black" inverted size="tiny">
+            {/* <Menu className="content-header" borderless fixed="top" color="black" inverted size="tiny">
                 <Menu.Item
                     header
                     disabled={isDisabled}
@@ -44,7 +48,15 @@ function Header({logo, match, username, contexts, routers, history}) {
                 </Menu.Item>
                 <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
                 <RightMenu disabled={isDisabled} username={username} routers={routers} />
-            </Menu>
+            </Menu> */
+            }
+            <x-menubar>
+                <x-menuitem>
+                    <x-label>{logo}</x-label>
+                </x-menuitem>
+                <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
+                <RightMenu disabled={isDisabled} username={username} routers={routers} />
+            </x-menubar>
         </div>
     );
 }

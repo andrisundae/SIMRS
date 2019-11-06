@@ -39,7 +39,7 @@ class Main extends Component {
         }
 
         return (
-            <Segment {...containerProps}>
+            <Segment {...containerProps} className="content-container">
                 <Header as='h5' attached='top' block>
                     <Icon name={this.props.icon} />
                     {this.props.caption}

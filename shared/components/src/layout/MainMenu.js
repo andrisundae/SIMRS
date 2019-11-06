@@ -1,93 +1,92 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-// import { parse } from 'querystring';
-
-import { Dropdown, Menu } from 'semantic-ui-react'
 
 function MainMenu({ disabled, contexts, routers, history }) {
-    const [currentRoute, setCurrentRoute] = useState('');
-
-    // function _getCurrentRoute() {
-    //     let params = parse(location.search.substr(1));
-
-    //     return params.route ? params.route : '_billing_master';
-    // }
+    // const [currentRoute, setCurrentRoute] = useState('');
+    const disabledProp = disabled ? {disabled: true} : {};
 
     function _onClickMenuItem(keyMenu) {
         let router = routers.find(router => router.key === keyMenu);
         if (router) {
             history.replace(`${router.path}?route=${keyMenu}`);
-            setCurrentRoute(keyMenu);
+            // setCurrentRoute(keyMenu);
         }
     }
 
-    function _renderSubMenu(key, menu) {
+    function _renderSubMenu(menu) {
         return (
-            <Dropdown simple key={key} item text={menu.nama} disabled={disabled}>
-                <Dropdown.Menu>
-                    {menu.children.map((item, index) => {
+            <x-menuitem
+                key={menu.id}
+                {...disabledProp}
+            >
+                <x-label>{menu.nama}</x-label>
+                <x-menu>
+                    {menu.children.map((item) => {
                         return (
                             (() => {
                                 if (item.children) {
-                                    return _renderSubMenu(index, item)
+                                    return _renderSubMenu(item)
                                 } else {
                                     return (
-                                        <Dropdown.Item
-                                            key={index} text={item.nama}
+                                        <x-menuitem
+                                            key={item.id}
                                             onClick={() => _onClickMenuItem(item.key_menu)}
-                                            active={currentRoute === item.key_menu}
-                                        />
+                                        >
+                                            <x-label>{item.nama}</x-label>
+                                        </x-menuitem>
                                     )
                                 }
                             })()
                         )
                     })}
-                </Dropdown.Menu>
-            </Dropdown>
+                </x-menu>
+            </x-menuitem>
         )
     }
 
     function _renderMenu() {
         let list = [];
 
-        contexts.map((context, index) => {
+        contexts.map((context) => {
             if (context.children) {
                 list.push(
-                    <Dropdown item text={context.nama} key={index} disabled={disabled}>
-                        <Dropdown.Menu>
+                    <x-menuitem
+                        key={context.id}
+                        {...disabledProp}
+                    >
+                        <x-label>{context.nama}</x-label>
+                        <x-menu>
                             {context.children.map((menu, key) => {
                                 return (
                                     (() => {
                                         if (menu.children) {
-                                            return _renderSubMenu(key, menu)
+                                            return _renderSubMenu(menu)
                                         } else {
                                             return (
-                                                <Dropdown.Item
-                                                    key={key}
-                                                    text={menu.nama}
+                                                <x-menuitem
+                                                    key={menu.id}
                                                     onClick={() => _onClickMenuItem(menu.key_menu)}
-                                                    active={currentRoute === menu.key_menu}
-                                                />
+                                                >
+                                                    <x-label>{menu.nama}</x-label>
+                                                </x-menuitem>
                                             )
                                         }
                                     })()
                                 )
                             })}
-                        </Dropdown.Menu>
-                    </Dropdown>
+                        </x-menu>
+                    </x-menuitem>
                 );
             } else {
                 list.push(
-                    <Menu.Item
-                        key={index}
-                        name={context.key_menu}
-                        active={currentRoute === context.key_menu}
-                        content={context.nama}
+                    <x-menuitem
+                        key={context.id}
                         onClick={() => _onClickMenuItem(context.key_menu)}
-                        disabled={disabled}
-                        link
-                    />
+                        {...disabledProp}
+                    >
+                        <x-label>{context.nama}</x-label>
+                    </x-menuitem>
                 );
             }
 
@@ -98,11 +97,7 @@ function MainMenu({ disabled, contexts, routers, history }) {
         return list;
     }
 
-    return (
-        <div className="main-menu">
-            {_renderMenu()}
-        </div>
-    );
+    return _renderMenu();
 }
 
 MainMenu.propTypes = {

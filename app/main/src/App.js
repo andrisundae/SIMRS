@@ -17,7 +17,6 @@ function App() {
   const [isOpenServer, openServer] = useState(false);
 
   useEffect(() => {
-    console.log(store.main.get('config.api'))
     if (isEmpty(store.main.get('config.api'))) {
       openServer(true);
     } else {
@@ -36,10 +35,6 @@ function App() {
 
   function _renderPortal(props) {
     return <Portal {...props} />;
-  }
-
-  function onClickOpenServer() {
-    openServer(true);
   }
 
   function bindShortCut() {
@@ -62,7 +57,7 @@ function App() {
   
   return (
     <Provider store={storeRedux}>
-      <Suspense fallback={<PageLoader message="Load Transalation..." active={true} />}>
+      <Suspense fallback={<PageLoader active={true} />}>
         <Container>
           <Grid columns={2} className="main-page">
             <Grid.Row className="layout">
@@ -72,7 +67,7 @@ function App() {
                   <Image src='https://react.semantic-ui.com/images/avatar/large/daniel.jpg' circular size='small' centered />
                 </Segment>
               </Grid.Column>
-              <Grid.Column className="content">
+              <Grid.Column className="main-content">
                 <Router>
                   <Switch>
                     <Route exact path="/" render={_renderLogin} />

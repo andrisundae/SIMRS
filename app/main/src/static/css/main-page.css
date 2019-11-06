@@ -19,42 +19,42 @@
   align-items: center;
 }
 
-.main-page .layout .content {
+.main-page .layout .main-content {
   background-color: #32c5d2;
   background: linear-gradient(to right, #5c97bd, #32c5d2);
   padding: 30px 20px;
 }
 
-.main-page .layout .content .form-title {
+.main-page .layout .main-content .form-title {
   color: #edf4f8 !important;
   font-size: 19px !important;
   font-weight: 400 !important;
   margin-bottom: 30px;
 }
 
-.main-page .layout .content .form-subtitle {
+.main-page .layout .main-content .form-subtitle {
   color: #c9dce9 !important;
   font-size: 17px !important;
   font-weight: 300 !important;
   padding-left: 20px;
 }
 
-.content .form-control {
+.main-content .form-control {
   background-color: transparent;
   border: 1px solid #fff;
   color: #fff;
 }
 
-.content .form-control:focus {
+.main-content .form-control:focus {
   box-shadow: 0 0 5px #fff !important;
   background-color: transparent !important;
 }
 
-.content .form-control::placeholder {
+.main-content .form-control::placeholder {
   color: #bfcad1;
 }
 
-.content .copyright {
+.main-content .copyright {
   font-size: 12px;
   position: absolute;
   bottom: 30px;

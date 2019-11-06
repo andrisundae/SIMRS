@@ -148,8 +148,8 @@ const messageBox = (options) => (
             title: 'Informasi',
             ...options
         },
-        (dialogResponse) => {
-            if (dialogResponse === 0) {
+        (data) => {
+            if (data.response === 0) {
                 if (options.onOk) {
                     options.onOk();
                 }

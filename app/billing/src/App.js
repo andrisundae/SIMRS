@@ -35,7 +35,7 @@ function Page() {
   return (
     <Router>
       <Layout
-        logo={'SIMRS-BILLING'}
+        logo={'BILLING'}
         contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
         routers={rootRouters}
         username={store.main.get('user.username')}

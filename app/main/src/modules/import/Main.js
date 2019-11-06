@@ -25,7 +25,7 @@ class Main extends Component {
         console.log(this.props.permissions)
         
         return (
-            <Segment size="mini">
+            <Segment size="mini" className="content-container">
                 <Header as='h5' attached='top' block>
                     <Icon name={this.props.icon} circular color={isSocketConnected ? 'green': 'red'} inverted/>
                     <Header.Content>

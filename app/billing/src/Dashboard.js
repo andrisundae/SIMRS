@@ -24,7 +24,7 @@ function Dashboard() {
         },
     ]
     return (
-        <Segment>
+        <Segment size="mini" className="content-container">
             <Header as='h4' attached='top' block>
                 <Icon name='dashboard' />
                 Dashboard

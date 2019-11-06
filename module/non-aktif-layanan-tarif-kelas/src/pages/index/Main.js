@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Icon, Header, Grid, Divider } from 'semantic-ui-react';
+import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
 
@@ -13,7 +13,7 @@ import {moduleActions} from './actions';
 class Main extends Component {
     render() {
         return (
-            <Segment size="mini">
+            <Segment size="mini" className="content-container">
                 <Header as='h5' attached='top' block>
                     <Icon name="list" />
                     {this.props.t(`${this.props.resource}:title`)}

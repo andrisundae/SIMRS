@@ -13,7 +13,7 @@ import { moduleActions } from './actions';
 class Main extends Component {
     render() {
         return (
-            <Segment size="mini">
+            <Segment size="mini" className="content-container">
                 <Header as='h5' attached='top' block>
                     <Icon name="list" />
                     {this.props.t(`${this.props.resource}:title`)}

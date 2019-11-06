@@ -17,7 +17,7 @@ class Main extends Component {
     render() {
 
         return (
-            <Segment size="mini">
+            <Segment size="mini" className="content-container">
                 <Header as='h5' attached='top' block>
                     <Icon name="settings" />
                     {this.props.t(`${this.props.resource}:title`)}
