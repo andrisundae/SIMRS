@@ -10,7 +10,7 @@ import FooterActions from './containers/FooterActions';
 const containerStyles = {
     zIndex: 21,
     position: 'absolute',
-    top: -1,
+    top: 42.5,
     width: '100%',
 };
 
@@ -39,16 +39,18 @@ class Main extends Component {
         }
 
         return (
-            <Segment {...containerProps} className="content-container">
-                <Header as='h5' attached='top' block>
-                    <Icon name={this.props.icon} />
-                    {this.props.caption}
-                </Header>
-                <Segment attached size="mini" style={{ minHeight: 540 }}>
+            <Fragment>
+                <Segment secondary className="content-header">
+                    <Header as='h4'>
+                        <Icon name={this.props.icon} />
+                        {this.props.caption || this.props.t(`${this.props.resource}:title`)}
+                    </Header>
+                </Segment>
+                <Segment {...containerProps}>
                     <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column>
-                                <Segment padded>    
+                                <Segment padded>
                                     {this.props.filter}
                                 </Segment>
                             </Grid.Column>
@@ -60,13 +62,13 @@ class Main extends Component {
                         </Grid.Row>
                         {this.props.create &&
                             <Fragment>
-                            <Grid.Row>
-                                <Grid.Column>
-                                    <Segment padded>
-                                        {this.props.create}
-                                    </Segment>
-                                </Grid.Column>
-                            </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Segment padded>
+                                            {this.props.create}
+                                        </Segment>
+                                    </Grid.Column>
+                                </Grid.Row>
                             </Fragment>
                         }
                     </Grid>
@@ -75,7 +77,44 @@ class Main extends Component {
                     this._renderFooterActions()
                 }
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
-            </Segment>
+            </Fragment>
+            // <Segment {...containerProps} className="content-container">
+            //     <Header as='h5' style={{ marginBottom: 10 }}>
+            //         <Icon name={this.props.icon} />
+            //         {this.props.caption}
+            //     </Header>
+            //     <Segment size="mini" style={{ marginBottom: 10 }}>
+            //         <Grid className="content-grid">
+            //             <Grid.Row>
+            //                 <Grid.Column>
+            //                     <Segment padded>    
+            //                         {this.props.filter}
+            //                     </Segment>
+            //                 </Grid.Column>
+            //             </Grid.Row>
+            //             <Grid.Row>
+            //                 <Grid.Column>
+            //                     {this.props.list}
+            //                 </Grid.Column>
+            //             </Grid.Row>
+            //             {this.props.create &&
+            //                 <Fragment>
+            //                 <Grid.Row>
+            //                     <Grid.Column>
+            //                         <Segment padded>
+            //                             {this.props.create}
+            //                         </Segment>
+            //                     </Grid.Column>
+            //                 </Grid.Row>
+            //                 </Fragment>
+            //             }
+            //         </Grid>
+            //     </Segment>
+            //     {showFooterActions &&
+            //         this._renderFooterActions()
+            //     }
+            //     <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
+            // </Segment>
         );
     }
 

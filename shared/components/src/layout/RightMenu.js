@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import {remote} from 'electron';
-// import { useTranslation } from 'react-i18next';
+import { Input} from 'semantic-ui-react';
 
 const _window = remote.getCurrentWindow();
 function RightMenu({ username, disabled, routers, history}) { 
     const disabledProp = disabled ? { disabled: true } : {};
-    // const [t] = useTranslation();
 
     function _onExit() {
         _window.close();
@@ -34,7 +33,14 @@ function RightMenu({ username, disabled, routers, history}) {
     }
 
     const menus = [
-        <x-menuitem key="1" style={{ marginLeft: 'auto' }} {...disabledProp}>
+        <div id="right-menu-search" key="1" style={{ marginLeft: 'auto', marginRight: 11 }}>
+            <Input
+                icon={{ name: 'search', link: true }}
+                placeholder='Search users...'
+                size="mini"
+            />
+        </div>,
+        <x-menuitem key="2" {...disabledProp}>
             <x-icon name="face" />
             <x-label>{username}</x-label>
             <x-menu>
@@ -58,7 +64,7 @@ function RightMenu({ username, disabled, routers, history}) {
         </x-menuitem>,
         <x-menuitem
             class="app-window-button"
-            key="2"
+            key="3"
             onClick={_onMinimize}
             title="Minimize"
         >
@@ -66,7 +72,7 @@ function RightMenu({ username, disabled, routers, history}) {
         </x-menuitem>,
         <x-menuitem
             class="app-window-button"
-            key="3"
+            key="4"
             onClick={_onMaximize}
             title={_window.isMaximized() ? "Restore" : "Maximize"}
         >
@@ -74,7 +80,7 @@ function RightMenu({ username, disabled, routers, history}) {
         </x-menuitem>,
         <x-menuitem
             class="app-window-button close"
-            key="4"
+            key="5"
             onClick={_onExit}
             title="Keluar"
         >
@@ -83,44 +89,6 @@ function RightMenu({ username, disabled, routers, history}) {
     ]
 
     return menus;
-
-    // return (
-    //     <Menu.Menu position='right' className="right-menu">
-    //         <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }} disabled={disabled}>
-    //             <Input icon='search' placeholder={'Cari Pasien'} disabled={disabled}/>
-    //         </Menu.Item>
-    //         <Dropdown item text={username} style={{ paddingLeft: 10, paddingRight: 10 }} disabled={disabled}>
-    //             <Dropdown.Menu>
-    //                 <Dropdown.Item icon="user md" text="My Profile" />
-    //                 <Dropdown.Item
-    //                     icon="lock"
-    //                     text="Ganti Password"
-    //                     onClick={() => changePasswordHandler('_system_portal_change_password')}
-    //                     active={currentRoute === '_system_portal_change_password'}
-    //                 />
-    //                 <Dropdown.Divider />
-    //                 <Dropdown.Item icon="window close" text="Keluar" onClick={_onExit}/>
-    //             </Dropdown.Menu>
-    //         </Dropdown>
-    //         <Menu.Item title={'Minimize'} style={{ paddingLeft: 10, paddingRight: 5 }} onClick={_onMinimize} disabled={disabled}>
-    //             <Icon name='window minimize' />
-    //         </Menu.Item>
-    //         {!isMaximized &&
-    //             <Menu.Item title={'Maximize'} style={{ paddingLeft: 10, paddingRight: 5 }} onClick={_onMaximize} disabled={disabled}>
-    //                 <Icon name='window maximize' />
-    //             </Menu.Item>
-    //         }
-    //         {isMaximized &&
-    //             <Menu.Item title={'Restore'} style={{ paddingLeft: 10, paddingRight: 5 }} onClick={_unMaximize} disabled={disabled}>
-    //                 <Icon name='window restore' />
-    //             </Menu.Item>
-    //         }
-    //         <Menu.Item title={'Exit'} style={{ paddingLeft: 10, paddingRight: 5 }} onClick={_onExit} disabled={disabled}>
-    //             <Icon name='window close' />
-    //         </Menu.Item>
-    //     </Menu.Menu>
-        
-    // );
 }
 
 RightMenu.propTypes = {

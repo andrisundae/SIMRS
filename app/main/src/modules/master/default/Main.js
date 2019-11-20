@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
@@ -33,14 +33,16 @@ class Main extends Component {
             />;
         
         return (
-            <Segment size="mini" className="content-container">
-                <Header as='h5' attached='top' block>
-                    <Icon name={this.props.icon} />
-                    {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-                </Header>
-                <Segment attached size="mini" style={{minHeight: 540}}>
+            <Fragment>
+                <Segment secondary className="content-header">
+                    <Header as='h4'>
+                        <Icon name={this.props.icon} />
+                        {this.props.caption || this.props.t(`${this.props.resource}:title`)}
+                    </Header>
+                </Segment>
+                <Segment>
                     <Grid className="content-grid">
-                        <Grid.Row>
+                        <Grid.Row style={{ marginTop: 5 }}>
                             <Grid.Column>
                                 <Segment padded>
                                     {this.props.filter}
@@ -52,7 +54,7 @@ class Main extends Component {
                                 {this.props.list}
                             </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row>
+                        <Grid.Row style={{ marginBottom: 5 }}>
                             <Grid.Column>
                                 <Segment padded>
                                     {this.props.create}
@@ -62,8 +64,39 @@ class Main extends Component {
                     </Grid>
                 </Segment>
                 {footer}
-                <PageLoader active={this.props.isLoading} message={this.props.loaderMessage}/>
-            </Segment>
+                <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
+            </Fragment>
+            // <Segment size="mini" className="content-container">
+            //     <Header as='h5' style={{ marginBottom: 10 }}>
+            //         <Icon name={this.props.icon} />
+            //         {this.props.caption || this.props.t(`${this.props.resource}:title`)}
+            //     </Header>
+            //     <Segment size="mini" style={{marginTop: 10}}>
+            //         <Grid className="content-grid">
+            //             <Grid.Row style={{marginTop: 5}}>
+            //                 <Grid.Column>
+            //                     <Segment padded>
+            //                         {this.props.filter}
+            //                     </Segment>
+            //                 </Grid.Column>
+            //             </Grid.Row>
+            //             <Grid.Row>
+            //                 <Grid.Column>
+            //                     {this.props.list}
+            //                 </Grid.Column>
+            //             </Grid.Row>
+            //             <Grid.Row style={{ marginBottom: 5 }}>
+            //                 <Grid.Column>
+            //                     <Segment padded>
+            //                         {this.props.create}
+            //                     </Segment>
+            //                 </Grid.Column>
+            //             </Grid.Row>
+            //         </Grid>
+            //     </Segment>
+            //     {footer}
+            //     <PageLoader active={this.props.isLoading} message={this.props.loaderMessage}/>
+            // </Segment>
         );
     }
 

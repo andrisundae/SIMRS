@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
@@ -22,21 +22,21 @@ class Main extends Component {
         }
 
         const {isSocketConnected} = this.props;
-        console.log(this.props.permissions)
         
         return (
-            <Segment size="mini" className="content-container">
-                <Header as='h5' attached='top' block>
-                    <Icon name={this.props.icon} circular color={isSocketConnected ? 'green': 'red'} inverted/>
-                    <Header.Content>
-                        {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-                        <Header.Subheader>
-                            {this.props.t(`${this.props.resource}:sub.title`)}
-                        </Header.Subheader>
-                    </Header.Content>
-                    
-                </Header>
-                <Segment attached size="mini" style={{minHeight: 520}}>
+            <Fragment>
+                <Segment secondary className="content-header">
+                    <Header as='h4'>
+                        <Icon name={this.props.icon} circular color={isSocketConnected ? 'green' : 'red'} inverted />
+                        <Header.Content>
+                            {this.props.caption || this.props.t(`${this.props.resource}:title`)}
+                            <Header.Subheader>
+                                {this.props.t(`${this.props.resource}:sub.title`)}
+                            </Header.Subheader>
+                        </Header.Content>
+                    </Header>
+                </Segment>
+                <Segment>
                     <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column>
@@ -52,7 +52,7 @@ class Main extends Component {
                     permissions={getPermissions(this.props.permissions)}
                 />
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
-            </Segment>
+            </Fragment>
         );
     }
 

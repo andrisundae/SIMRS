@@ -93,15 +93,18 @@ const statusHandler = (response) => {
             return responses.then(dataResponse => {
                 if (dataResponse.data) {
                     if (dataResponse.data.isValidToken == false) {
-                        messageBox({
-                            message: 'Login Anda sudah expired, silah klik tombol OK untuk login kembali.',
-                            onOk: () => {
-                                let mainWindow = BrowserWindow.fromId(1);
-                                ipcRenderer.send('session-expired');
-                                window.close();
-                                mainWindow.focus();
-                            }
-                        });
+                        if (main.get('expiredToken') === 0) {
+                            messageBox({
+                                message: 'Login Anda sudah expired, silah klik tombol OK untuk login kembali.',
+                                onOk: () => {
+                                    let mainWindow = BrowserWindow.fromId(1);
+                                    ipcRenderer.send('session-expired');
+                                    window.close();
+                                    mainWindow.focus();
+                                }
+                            });
+                        }
+                        main.set('expiredToken', 1);
                     }
                 }
                 return dataResponse;
@@ -147,15 +150,14 @@ const messageBox = (options) => (
             type: 'info',
             title: 'Informasi',
             ...options
-        },
-        (data) => {
-            if (data.response === 0) {
-                if (options.onOk) {
-                    options.onOk();
-                }
+        }
+    ).then((data) => {
+        if (data.response === 0) {
+            if (options.onOk) {
+                options.onOk();
             }
         }
-    )
+    })
 )
 
 class HttpError extends Error {

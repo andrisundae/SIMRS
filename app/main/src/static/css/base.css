@@ -1,12 +1,18 @@
-body {
+/* body {
     overflow-x: hidden;
     border: 1px solid #333333;
     background-color: #f3f4f5;
+} */
+html {
+    overflow: hidden;
 }
 
 .content-container {
-    padding: 0px !important;
-    overflow: hidden;
+    background: #ECECEC !important;
+}
+
+.content-header {
+    padding-bottom: 8px !important;
 }
 /* fixed width */
 /* .container {
@@ -282,7 +288,7 @@ x-menubar {
     padding-right: 0px !important;
 }
 
-x-menuitem {
+x-menuitem, #right-menu-search input {
     -webkit-app-region: no-drag;
     /* cursor: pointer; */
 }
@@ -365,6 +371,10 @@ x-menuitem:hover {
 }
 
 /*Form input*/
+#right-menu-search input {
+    height: 20px !important;
+}
+
 .ui .input input, .react-datepicker__input-container input {
     height: 30px !important;
     padding: 3px 6px !important;

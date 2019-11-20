@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
@@ -32,12 +32,14 @@ class Main extends Component {
         } = this.props;
 
         return (
-            <Segment size="mini" className="content-container">
-                <Header as='h5' attached='top' block>
-                    <Icon name={this.props.icon} />
-                    {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-                </Header>
-                <Segment attached size="mini" style={{ minHeight: 540 }}>
+            <Fragment>
+                <Segment secondary className="content-header">
+                    <Header as='h4'>
+                        <Icon name={this.props.icon} />
+                        {this.props.caption || this.props.t(`${this.props.resource}:title`)}
+                    </Header>
+                </Segment>
+                <Segment>
                     <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column>
@@ -46,8 +48,6 @@ class Main extends Component {
                                 </Segment>
                             </Grid.Column>
                         </Grid.Row>
-                    </Grid>
-                    <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column width={7}>
                                 <FilterableSumberList
@@ -62,7 +62,7 @@ class Main extends Component {
                             </Grid.Column>
                             <Grid.Column width={2} verticalAlign="middle">
                                 {dataSetting &&
-                                    <div style={{position: 'absolute', top: -125}}>
+                                    <div style={{ position: 'absolute', top: -125 }}>
                                         {dataSetting}
                                     </div>
                                 }
@@ -81,9 +81,43 @@ class Main extends Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
+                    {/* <Grid className="content-grid">
+                        <Grid.Row>
+                            <Grid.Column width={7}>
+                                <FilterableSumberList
+                                    resource={resource}
+                                    sizeColumnsToFit={sizeColumnsToFitSumber}
+                                    columnDefs={sumberColumns}
+                                    t={t}
+                                    i18n={i18n}
+                                    containerHeight={containerHeightSumber}
+                                    settings={settings}
+                                />
+                            </Grid.Column>
+                            <Grid.Column width={2} verticalAlign="middle">
+                                {dataSetting &&
+                                    <div style={{ position: 'absolute', top: -125 }}>
+                                        {dataSetting}
+                                    </div>
+                                }
+                                <ActionButtons resource={resource} />
+                            </Grid.Column>
+                            <Grid.Column width={7}>
+                                <FilterableSettingList
+                                    resource={resource}
+                                    sizeColumnsToFit={sizeColumnsToFitSetting}
+                                    columnDefs={settingColumns}
+                                    t={t}
+                                    i18n={i18n}
+                                    containerHeight={containerHeightSetting}
+                                    settings={settings}
+                                />
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid> */}
                 </Segment>
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
-            </Segment>
+            </Fragment>
         );
     }
 

@@ -48,7 +48,7 @@ class Import extends Component {
 
         return (
             <Form id={this.formId} size="small">
-                <Divider hidden/>
+                <Divider hidden />
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width="10">
@@ -95,6 +95,7 @@ class Import extends Component {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                <Divider hidden />
             </Form>
         )
     }

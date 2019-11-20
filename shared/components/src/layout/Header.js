@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { remote } from 'electron';
 
-import { Menu, Container } from 'semantic-ui-react';
+import { Icon, Header as SmHeader } from 'semantic-ui-react';
 
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
@@ -36,28 +36,20 @@ function Header({logo, match, username, contexts, routers, history}) {
     });
 
     return (
-        <div className="layout-header">
-            {/* <Menu className="content-header" borderless fixed="top" color="black" inverted size="tiny">
-                <Menu.Item
-                    header
-                    disabled={isDisabled}
-                    link
-                    onClick={() => history.replace(`${match.url}/dashboard`)}
-                >
-                    {logo}
-                </Menu.Item>
-                <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
-                <RightMenu disabled={isDisabled} username={username} routers={routers} />
-            </Menu> */
-            }
-            <x-menubar>
-                <x-menuitem>
-                    <x-label>{logo}</x-label>
-                </x-menuitem>
-                <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
-                <RightMenu disabled={isDisabled} username={username} routers={routers} />
-            </x-menubar>
-        </div>
+        <x-menubar class="layout-header" style={{ height: 40, zIndex: 28, top: 0, position: 'fixed', left: 0, right: 'auto', bottom: 'auto', width: '100%', margin: 0 }}>
+            <div style={{ marginLeft: 10 }}>
+                <SmHeader as='h6' icon style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}>
+                    {logo === 'BILLING' &&
+                        <Icon name='bold' style={{ fontSize: '2em' }} />
+                    }
+                    {logo === 'SISTEM' &&
+                        <Icon name='stripe s' style={{ fontSize: '2em' }} />
+                    }
+                </SmHeader>
+            </div>
+            <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
+            <RightMenu disabled={isDisabled} username={username} routers={routers} />
+        </x-menubar>
     );
 }
 

@@ -32,6 +32,7 @@ export default {
         if (response.status) {
             if (response.data.isValidLogin) {
                 setLocalIdentity(response.data);
+                main.set('expiredToken', 0);
             }
         }
 

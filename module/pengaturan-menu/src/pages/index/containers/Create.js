@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -46,12 +46,14 @@ class Create extends Component {
     } = this.props;
 
     return (
-      <Segment size="mini" className="content-container">
-        <Header as='h5' attached='top' block>
-          <Icon name="settings" />
-          {this.props.t(`${this.props.resource}:title`)}
-        </Header>
-        <Segment attached size="mini" style={{ minHeight: 540 }}>
+      <Fragment>
+        <Segment secondary className="content-header">
+          <Header as='h4'>
+            <Icon name="settings" />
+            {this.props.t(`${this.props.resource}:title`)}
+          </Header>
+        </Segment>
+        <Segment>
           <Grid className="content-grid">
             <Grid.Row>
               <Grid.Column width="9">
@@ -162,7 +164,7 @@ class Create extends Component {
           </Grid>
         </Segment>
         <PageLoader active={isLoading} message={loaderMessage} />
-      </Segment>
+      </Fragment>
     )
   }
 

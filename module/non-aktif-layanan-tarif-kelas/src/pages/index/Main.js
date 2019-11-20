@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
@@ -13,12 +13,14 @@ import {moduleActions} from './actions';
 class Main extends Component {
     render() {
         return (
-            <Segment size="mini" className="content-container">
-                <Header as='h5' attached='top' block>
-                    <Icon name="list" />
-                    {this.props.t(`${this.props.resource}:title`)}
-                </Header>
-                <Segment attached size="mini" style={{ minHeight: 540 }}>
+            <Fragment>
+                <Segment secondary className="content-header">
+                    <Header as='h4'>
+                        <Icon name="list" />
+                        {this.props.t(`${this.props.resource}:title`)}
+                    </Header>
+                </Segment>
+                <Segment>
                     <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column>
@@ -33,7 +35,7 @@ class Main extends Component {
                     </Grid>
                 </Segment>
                 <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
-            </Segment>
+            </Fragment>
         );
     }
 

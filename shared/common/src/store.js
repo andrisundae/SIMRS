@@ -29,7 +29,8 @@ const schema = {
             username: { type: 'string' },
             foto: { type: 'string' },
         }
-    }
+    },
+    expiredToken: { type: 'number', default: 0 },
 };
 const defaultOption = {
     encryptionKey: process.env.REACT_APP_SECRET,

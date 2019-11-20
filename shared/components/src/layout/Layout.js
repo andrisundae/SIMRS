@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Container} from 'semantic-ui-react';
 
 import Header from './Header';
 import Content from './Content';
@@ -9,7 +10,7 @@ function Layout(props) {
     const { children, logo, contexts, routers, username } = props;
 
     return (
-        <div className="layout-container">
+        <Container fluid>
             <Header
                 logo={logo}
                 contexts={contexts}
@@ -20,7 +21,7 @@ function Layout(props) {
                 {children}
             </Content>
             <Footer logo={logo}/>
-        </div>
+        </Container>
     );
 }
 
