@@ -187,6 +187,11 @@ const routers = [
         path: '/system/portal/change-password',
         component: lazy(() => import('@module/change-password'))
     },
+    {
+        key: '_billing_transaksi_kunjungan',
+        path: '/billing/transaksi/kunjungan',
+        component: lazy(() => import('@module/kunjungan'))
+    },
 ]
 
 export default routers;

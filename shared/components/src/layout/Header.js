@@ -25,15 +25,16 @@ function Header({logo, match, username, contexts, routers, history}) {
         setDisabled(false);
     }
 
-    useEffect(() => {
-        ipcMain.on('disable-header', handleDisableHeader);
-        ipcMain.on('enable-header', handleEnableHeader);
+    // useEffect(() => {
+    //     ipcMain.on('disable-header', handleDisableHeader);
+    //     ipcMain.on('enable-header', handleEnableHeader);
 
-        return () => {
-            ipcMain.removeListener('disable-header', handleDisableHeader);
-            ipcMain.removeListener('enable-header', handleEnableHeader);
-        };
-    });
+    //     return () => {
+    //         console.log('test')
+    //         ipcMain.removeListener('disable-header', handleDisableHeader);
+    //         ipcMain.removeListener('enable-header', handleEnableHeader);
+    //     };
+    // }, [isDisabled]);
 
     return (
         <x-menubar class="layout-header" style={{ height: 40, zIndex: 28, top: 0, position: 'fixed', left: 0, right: 'auto', bottom: 'auto', width: '100%', margin: 0 }}>

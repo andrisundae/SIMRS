@@ -34,7 +34,7 @@ class Create extends Component {
     }
 
     render() {
-        const { post, isDisableForm, statusForm, permissions, t } = this.props;
+        const { post, isDisableForm, statusForm, customPermissions, t } = this.props;
 
         return (
             <Form id={this.formId} size="small">
@@ -252,7 +252,7 @@ class Create extends Component {
                     </Fragment>
                     }
                 </Grid>
-                {permissions.canSettingGroup &&
+                {customPermissions.canSettingGroup &&
                 <Fragment>
                     <Header as='h5' attached='top' block>
                         <Icon name="list alternate" />
@@ -371,7 +371,7 @@ class Create extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state, props) {
     const { module } = state.default
     const { post, statusForm, focusElement, isSubmitted, submitting, data } = module;
 
@@ -389,8 +389,8 @@ const mapStateToProps = function (state) {
         optionsJabatanFungsional: data.options_jabatan_fungsional,
         optionsStatusAplikasi: data.options_status_aplikasi,
         optionsGrup: data.options_grup,
-        permissions: {
-            canSettingGroup: isGranted(state.acl, 'setting_grup')
+        customPermissions: {
+            canSettingGroup: isGranted(props.permissions, 'setting_grup')
         },
     }
 }

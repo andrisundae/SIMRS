@@ -256,7 +256,7 @@ class Main extends Component {
                                         </Grid.Column>
                                         <Grid.Column>
                                             <Segment padded style={{ marginBottom: 8 }}>
-                                                <Create t={t} resource={resource} i18n={i18n} />
+                                                <Create permissions={permissions} t={t} resource={resource} i18n={i18n} />
                                             </Segment>
                                         </Grid.Column>
                                     </Grid.Row>

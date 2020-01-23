@@ -58,18 +58,14 @@ class FilterSumberLain extends Component {
     switch (name) {
       case 'unit_layanan':
       case 'status': {
-        let selectedValue = this.props.postNeeded[name];
-        if (selectedValue > 0) {
-          value = this.props.dataSumberLain[name].find(row => row.value === selectedValue);
-        }
+        const selectedValue = this.props.postNeeded[name];
+        value = this.props.dataSumberLain[name].find(row => row.value === selectedValue);
       }
         break;
 
       case 'instalasi': {
-        let selectedValue = this.props.postOptional[name];
-        if (selectedValue > 0) {
-          value = this.props.dataFilter.filter_sumber_lain[name].find(row => row.value === selectedValue);
-        }
+        const selectedValue = this.props.postOptional[name];
+        value = this.props.dataFilter.filter_sumber_lain[name].find(row => row.value === selectedValue);
       }
         break;
       default:

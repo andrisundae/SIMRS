@@ -16,7 +16,7 @@ class List extends Component {
         super(props);
 
         this.state = {
-            cacheBlockSize: 500,
+            cacheBlockSize: 10,
             totalRow: []
         }
 
@@ -74,7 +74,7 @@ class List extends Component {
             editedCell
         } = this.props;
 
-        if (isReloadGrid) {
+        if (isReloadGrid && !prevProps.isReloadGrid) {
             this._reload(reloadType);
         }
 

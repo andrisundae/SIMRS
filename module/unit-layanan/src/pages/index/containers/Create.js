@@ -3,10 +3,27 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { Form, Input, Grid, Divider, Label } from 'semantic-ui-react';
+import { components } from 'react-select';
 
 import { isDisableForm, moduleActions as actions, moduleActionTypes } from '@simrs/main/src/modules/master/default';
 import { Checkbox, Select } from '@simrs/components';
 import indexActions from '../actions';
+
+const OptionInstalasi = (props) => {
+    let { data } = props;
+    return (
+        <components.Option {...props}>
+            <div className="react-select__option-label">{data.label}</div>
+            <div className="react-select__option-caption">
+                {`${data.nama_jenis_layanan} | ${data.nama_kelompok_jenis_layanan}`}
+            </div>
+        </components.Option>
+    );
+};
+
+OptionInstalasi.propTypes = {
+    data: PropTypes.object.isRequired
+};
 
 class Create extends Component {
     constructor(props) {
@@ -55,6 +72,8 @@ class Create extends Component {
                                             value={this._getInstalasiValue()}
                                             onKeyDown={(e) => this._onFocusElement(e, 'nama')}
                                             options={optionsInstalasi}
+                                            isClearable={false}
+                                            components={{ Option: OptionInstalasi }}
                                         />
                                     </Grid.Column>
                                 </Grid.Row>
@@ -154,11 +173,12 @@ class Create extends Component {
                                             value={this._getKategoriValue()}
                                             onKeyDown={(e) => this._onFocusElement(e, this._isKategoriAnak() ? 'umur1' : 'save')}
                                             options={optionsKategori}
+                                            isClearable={false}
                                         />
                                     </Grid.Column>
                                 </Grid.Row>
                                 {this._isKategoriAnak() === true &&
-                                    <Grid.Row className="form-row">
+                                    <Grid.Row className="form-row" style={{marginTop: 10}}>
                                         <Grid.Column width="4" className="field">
                                             <label>{t(this._getKey('label.field.rentang_umur'))}</label>
                                         </Grid.Column>

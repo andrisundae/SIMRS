@@ -84,10 +84,14 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 }
 
 .react-select__control {
-    height: 30px !important;
+    height: 28px !important;
     min-height: 0px !important;
     font-size: 11px;
     border: 1px solid #ccc !important;
+}
+
+.ui.selection.dropdown>.dropdown.icon {
+    padding-top: 6px !important;
 }
 
 .react-select__option-label {
@@ -106,13 +110,13 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 }
 
 .react-select__placeholder, .react-select__single-value {
-    top: 14px !important;
+    top: 12px !important;
     /* vertical-align: middle !important; */
 }
 
 .react-select__indicator-separator {
     /* margin-top: 4px !important; */
-    margin-bottom: 3px !important;
+    margin-bottom: 5px !important;
     margin-top: 0px !important;
 }
 
@@ -234,8 +238,12 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
     visibility: hidden;
 }
 
+/* React-datepicker */
 .react-datepicker-popper {
     z-index: 9000 !important;
+}
+.react-datepicker-wrapper, .react-datepicker__input-container {
+    width: 100% !important;
 }
 
 /*List main menu*/
@@ -376,7 +384,7 @@ x-menuitem:hover {
 }
 
 .ui .input input, .react-datepicker__input-container input {
-    height: 30px !important;
+    height: 25px !important;
     padding: 3px 6px !important;
     font-size: 11px !important;
 }
@@ -429,6 +437,10 @@ x-menuitem:hover {
     color: darkgray !important;
 }
 
+.ui.form .field>label {
+    font-size: 12px !important;
+}
+
 /*Dropdown fluid*/
 .ui.fluid.dropdown {
     width: 100% !important;
@@ -447,8 +459,9 @@ x-menuitem:hover {
 }
 
 .ui.action.input button {
-    height: 30px !important;
-    padding-top: 8px !important;
+    height: 25px !important;
+    padding-top: 6px !important;
+    font-size: 12px !important;
 }
 
 /* Radio */

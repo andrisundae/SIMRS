@@ -64,6 +64,7 @@ class Create extends Component {
                                             value={this._getJenisLayananValue()}
                                             onKeyDown={(e) => this._onFocusElement(e, 'kelompok_jenis_layanan')}
                                             options={optionsJenisLayanan}
+                                            isClearable={false}
                                         />
                                     </Grid.Column>
                                 </Grid.Row>
@@ -81,6 +82,7 @@ class Create extends Component {
                                             onChange={this._handleKelompokJenisLayananChange}
                                             onKeyDown={(e) => this._onFocusElement(e, 'aktif')}
                                             options={optionsKelompokJenisLayanan}
+                                            isClearable={false}
                                         />
                                     </Grid.Column>
                                 </Grid.Row>

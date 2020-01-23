@@ -157,6 +157,42 @@ class PreviewButton extends PureComponent {
     }
 }
 
+class SelectedButton extends PureComponent {
+    render() {
+        let { inputRef, ...attributes } = this.props;
+        return (
+            <Button ref={inputRef} name="select" color="blue" size="mini" {...attributes}>
+                <Icon name='check' />
+                <Trans i18nKey="common:action.select" />
+            </Button>
+        )
+    }
+}
+
+class PrintButton extends PureComponent {
+    render() {
+        let { inputRef, ...attributes } = this.props;
+        return (
+            <Button ref={inputRef} name="print" size="mini" {...attributes}>
+                <Icon name='print' />
+                <Trans i18nKey="common:action.print" />
+            </Button>
+        )
+    }
+}
+
+class FinishButton extends PureComponent {
+    render() {
+        let { inputRef, ...attributes } = this.props;
+        return (
+            <Button ref={inputRef} name="finish" size="mini" {...attributes}>
+                <Icon name='stop' />
+                <Trans i18nKey="common:action.finish" />
+            </Button>
+        )
+    }
+}
+
 export {
     Button,
     SaveButton,
@@ -171,5 +207,8 @@ export {
     DuplicationButton,
     ExportButton,
     ResetButton,
-    PreviewButton
+    PreviewButton,
+    SelectedButton,
+    PrintButton,
+    FinishButton
 }
