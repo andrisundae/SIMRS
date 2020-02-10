@@ -79,6 +79,10 @@ class Create extends Component {
     }
   }
 
+  select2ChangeHanlder = (name, selected) => {
+    this.props.action.onChangeSelect2(this.props.resource, name, selected);
+  }
+
   render() {
     const {
       post,
@@ -89,7 +93,8 @@ class Create extends Component {
       filterPasien,
       action,
       resource,
-      statusForm
+      statusForm,
+      selectedOption
     } = this.props;
     
 
@@ -117,7 +122,6 @@ class Create extends Component {
     ]
 
     const disabledDetail = isDisable('detail_pasien', statusForm);
-    console.log(post)
 
     return (
       <Form id="form-kunjungan-pasien" size="mini">
@@ -128,10 +132,10 @@ class Create extends Component {
               <Grid.Column>
                 <Grid>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="3" className="field">
                       <label>{t(this._getKey('label.field.norm'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <Input
                         name="norm"
                         ref={this.norm}
@@ -140,10 +144,10 @@ class Create extends Component {
                         value={post.norm}
                       />
                     </Grid.Column>
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="3" className="field">
                       <label>{t(this._getKey('label.field.kode_kunjungan'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <Input
                         name="kode_kunjungan"
                         ref={this.kode_kunjungan}
@@ -152,10 +156,10 @@ class Create extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="3" className="field">
                       <label>{t(this._getKey('label.field.nama'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="12" className="field">
+                    <Grid.Column width="13" className="field">
                       <Input
                         name="nama"
                         ref={this.nama}
@@ -175,30 +179,42 @@ class Create extends Component {
               </Grid.Column>
               <Grid.Column>
                 <Grid>
-                  <Grid.Row className="form-row">
-                    <Grid.Column width="5" className="field">
-                      <label>{t(this._getKey('label.field.jenis_kelamin'))}</label>
+                  <Grid.Row>
+                    <Grid.Column width="10">
+                      <Grid>
+                        <Grid.Row className="form-row" style={{ marginTop: 14 }}>
+                          <Grid.Column width="5" className="field">
+                            <label>{t(this._getKey('label.field.jenis_kelamin'))}</label>
+                          </Grid.Column>
+                          <Grid.Column width="11" className="field">
+                            <Select
+                              name="id_jenis_kelamin"
+                              options={data.options_jenis_kelamin}
+                              isDisabled={disabledDetail}
+                              value={selectedOption.jenis_kelamin}
+                              onChange={(selected) => this.select2ChangeHanlder('jenis_kelamin', selected)}
+                              isClearable={false}
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row className="form-row">
+                          <Grid.Column width="5" className="field">
+                            <label>{t(this._getKey('label.field.nama_orangtua'))}</label>
+                          </Grid.Column>
+                          <Grid.Column width="11" className="field">
+                            <Input
+                              name="nama_ortu"
+                              ref={this.nama_ortu}
+                              disabled={disabledDetail}
+                              value={post.nama_ortu}
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
                     </Grid.Column>
-                    <Grid.Column width="11" className="field">
-                      <Select
-                        name="id_jenis_kelamin"
-                        options={data.options_jenis_kelamin}
-                        isDisabled={disabledDetail}
-                        value={{ value: post.jenis_kelamin_id, label: post.jenis_kelamin}}
-                      />
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row className="form-row">
-                    <Grid.Column width="5" className="field">
-                      <label>{t(this._getKey('label.field.nama_orangtua'))}</label>
-                    </Grid.Column>
-                    <Grid.Column width="11" className="field">
-                      <Input
-                        name="nama_ortu"
-                        ref={this.nama_ortu}
-                        disabled={disabledDetail}
-                        value={post.nama_ortu}
-                      />
+                    <Grid.Column width="6" style={{textAlign: 'right'}}>
+                      <h5 style={{ marginTop: 0 }}><strong>Kunjungan Aktif</strong></h5>
+                      <h5 style={{ marginTop: 0 }}><strong>UMUM</strong></h5>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -265,7 +281,8 @@ const mapStateToProps = function (state) {
     showCariPasien,
     showCariKunjungan,
     filterPasien,
-    statusForm
+    statusForm,
+    selectedOption
   } = state.module;
 
   return {
@@ -276,7 +293,8 @@ const mapStateToProps = function (state) {
     showCariKunjungan,
     filterPasien,
     datatables: state.datatable.datatables,
-    statusForm
+    statusForm,
+    selectedOption
   }
 }
 

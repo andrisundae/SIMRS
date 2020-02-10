@@ -88,7 +88,7 @@ function* changeSelect2({ meta, payload }) {
     try {
         switch (payload.name) {
             case 'unit_layanan':
-                yield put(actions.kelasKamar.request(meta.resource, payload.data));
+                yield put(actions.optionsByUnitLayanan.request(meta.resource, payload.data));
                 break;
             // case 'kelompok':
             //     yield put(actions.instalasi.request(meta.resource, payload.data));
@@ -143,13 +143,13 @@ function* unitLayananRequest({ meta, payload }) {
     }
 }
 
-function* kelasKamarRequest({ meta, payload }) {
+function* optionsByUnitLayananRequest({ meta, payload }) {
     try {
-        let response = yield call(api.getKelasKamarOptions, payload.data.value);
+        let response = yield call(api.getOptionsByUnitLayanan, payload.data.value);
         if (response.status) {
-            yield put(actions.kelasKamar.requestSuccess(meta.resource, response.data));
+            yield put(actions.optionsByUnitLayanan.requestSuccess(meta.resource, response.data));
         } else {
-            yield put(actions.kelasKamar.requestFailure(meta.resource, response.message));
+            yield put(actions.optionsByUnitLayanan.requestFailure(meta.resource, response.message));
         }
     } catch (error) {
         yield toastr.error(error.message);
@@ -226,7 +226,7 @@ export default function* watchAuthActions() {
         takeLatest(actionTypes.ASAL_MASUK_DETAIL_REQUEST, asalMasukDetailRequest),
         takeLatest(actionTypes.INSTALASI_REQUEST, instalasiRequest),
         takeLatest(actionTypes.UNIT_LAYANAN_REQUEST, unitLayananRequest),
-        takeLatest(actionTypes.KELAS_KAMAR_REQUEST, kelasKamarRequest),
+        takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequest),
 
         takeLatest(actionTypes.GET_ALL_PASIEN_REQUEST, loadAllPasien),
         takeLatest(actionTypes.FILTER_SUBMIT_PASIEN, handleSearchPasien),

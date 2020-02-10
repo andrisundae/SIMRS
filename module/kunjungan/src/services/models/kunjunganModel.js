@@ -47,8 +47,8 @@ export default {
 
         return response;
     },
-    getKelasKamarOptions: async (idUnitLayanan) => {
-        let response = await request.get(`${path}/kelas-kamar-options/${idUnitLayanan}`);
+    getOptionsByUnitLayanan: async (idUnitLayanan) => {
+        let response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`);
         return response;
     },
     validationRules

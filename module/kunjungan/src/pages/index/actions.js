@@ -91,19 +91,19 @@ export default {
             { resource }
         )
     },
-    kelasKamar: {
+    optionsByUnitLayanan: {
         request: (resource, data) => createAction(
-            actionTypes.KELAS_KAMAR_REQUEST,
+            actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST,
             { data },
             { resource }
         ),
         requestSuccess: (resource, data) => createAction(
-            actionTypes.KELAS_KAMAR_SUCCESS,
+            actionTypes.OPTIONS_BY_UNITLAYANAN_SUCCESS,
             { data },
             { resource }
         ),
         requestFailure: (resource, error) => createAction(
-            actionTypes.KELAS_KAMAR_FAILURE,
+            actionTypes.OPTIONS_BY_UNITLAYANAN_FAILURE,
             { error },
             { resource }
         )

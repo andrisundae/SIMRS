@@ -82,15 +82,16 @@ export default (state = initialState, action) =>
             draft.loaderUnitLayanan = false;
             return
         
-        case actionTypes.KELAS_KAMAR_REQUEST:
-            draft.loaderKelasKamar = true;
+        case actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST:
+            draft.loaderOptionsByUnitLayanan = true;
             return
-        case actionTypes.KELAS_KAMAR_SUCCESS:
-            draft.data.options_kelas_kamar = payload.data;
-            draft.loaderKelasKamar = false;
+        case actionTypes.OPTIONS_BY_UNITLAYANAN_SUCCESS:
+            draft.data.options_kelas_kamar = payload.data.kelas_kamar;
+            draft.data.options_dpjp = payload.data.dpjp;
+            draft.loaderOptionsByUnitLayanan = false;
             return
-        case actionTypes.KELAS_KAMAR_FAILURE:
-            draft.loaderKelasKamar = false;
+        case actionTypes.OPTIONS_BY_UNITLAYANAN_FAILURE:
+            draft.loaderOptionsByUnitLayanan = false;
             return
 
         case actionTypes.FILTER_CHANGE_PASIEN:

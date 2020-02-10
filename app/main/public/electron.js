@@ -3,7 +3,6 @@ const os = require('os');
 const path = require('path');
 const { format } = require('url');
 const { app, BrowserWindow } = require('electron');
-const { default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const store = new Store({ encryptionKey: process.env.REACT_APP_SECRET });
@@ -134,16 +133,6 @@ if (!gotTheLock) {
             mainWindow.show();
             mainWindow.focus();
         });
-
-        if (isDev) {
-            installExtension(REACT_DEVELOPER_TOOLS)
-                .then((name) => console.log(`Added Extension:  ${name}`))
-                .catch((err) => console.log('An error occurred: ', err));
-
-            installExtension(REDUX_DEVTOOLS)
-                .then((name) => console.log(`Added Extension:  ${name}`))
-                .catch((err) => console.log('An error occurred: ', err));
-        }
     });
     app.on('window-all-closed', () => {
         // Respect the OSX convention of having the application in memory even
