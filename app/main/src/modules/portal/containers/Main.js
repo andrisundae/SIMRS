@@ -174,8 +174,8 @@ class Main extends Component {
                 break;
             case '_farmasi':
                 url = isDev
-                    ? 'http://localhost:9001'
-                    : remote.app.getAppPath() + '/build/billing/index.html';
+                    ? 'http://localhost:9003'
+                    : remote.app.getAppPath() + '/build/farmasi/index.html';
                 titleApp = 'Farmasi';
                 color = '#f3c200';
                 break;
