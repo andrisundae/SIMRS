@@ -83,6 +83,12 @@ class Create extends Component {
     this.props.action.onChangeSelect2(this.props.resource, name, selected);
   }
 
+  inputChangeHandler = (e) => {
+    const { name, value } = e.target;
+    const { resource, action } = this.props;
+    action.onChangeInput(resource, { name, value });
+  }
+
   render() {
     const {
       post,
@@ -142,6 +148,7 @@ class Create extends Component {
                         onKeyDown={this.noRmKeyDownHandler}
                         disabled={isDisable('norm', statusForm)}
                         value={post.norm}
+                        onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
                     <Grid.Column width="3" className="field">
@@ -172,6 +179,7 @@ class Create extends Component {
                         }}
                         disabled={disabledDetail}
                         value={post.nama}
+                        onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
                   </Grid.Row>
@@ -207,6 +215,7 @@ class Create extends Component {
                               ref={this.nama_ortu}
                               disabled={disabledDetail}
                               value={post.nama_ortu}
+                              onChange={this.inputChangeHandler}
                             />
                           </Grid.Column>
                         </Grid.Row>
