@@ -167,7 +167,7 @@ class Main extends Component {
         switch (app) {
             case '_billing':
                 url = isDev
-                    ? 'http://localhost:9010'
+                    ? 'http://localhost:9001'
                     : remote.app.getAppPath() + '/build/billing/index.html';
                 titleApp = 'Billing';
                 color = '#26C281';
