@@ -11,6 +11,11 @@ const routers = [
         path: '/system/portal/change-password',
         component: lazy(() => import('@module/change-password'))
     },
+    {
+        key: '_billing_master_referensi_umum',
+        path: '/billing/master/referensi-umum',
+        component: lazy(() => import('@module/referensi-umum'))
+    },
 ]
 
 export default routers;
