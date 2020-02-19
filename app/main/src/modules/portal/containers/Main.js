@@ -214,15 +214,9 @@ class Main extends Component {
                 break;
             case '_farmasi':
                 url = isDev
-<<<<<<< HEAD
-                    ? 'http://localhost:9003'
-                    : remote.app.getAppPath() + '/build/farmasi/index.html';
-                titleApp = 'Farmasi';
-=======
                     ? `http://localhost:${envApp.farmasi ? envApp.farmasi.PORT : '9003'}`
                     : remote.app.getAppPath() + '/build/farmasi/index.html';
                 titleApp = envApp.farmasi ? envApp.farmasi.REACT_APP_NAME : 'Farmasi';
->>>>>>> dev-andi
                 color = '#f3c200';
                 break;
             case '_rekam_medis':
