@@ -12,20 +12,20 @@ class CariPasien extends Component {
   columns = [
     {
       headerName: 'Desa',
-      field: "nama_desa",
+      field: "desa",
       cellRenderer: "loadingRenderer",
     },
     {
       headerName: 'Kecamatan',
-      field: "nama_kecamatan",
+      field: "kecamatan",
     },
     {
       headerName: 'Kota',
-      field: "nama_kota",
+      field: "kota",
     },
     {
       headerName: 'Provinsi',
-      field: "nama_provinsi",
+      field: "provinsi",
     }
   ]
 

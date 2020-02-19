@@ -1,4 +1,4 @@
-import React, { Component, } from 'react';
+import React, { Component, createRef} from 'react';
 import { Grid, Divider, Input } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -44,6 +44,23 @@ const OptionKelasKamar = ({data, ...props}) => {
 };
 
 class InputPasien extends Component {
+  constructor(props) {
+    super(props);
+
+    this.radio_jenis_umur = createRef();
+    this.radio_jenis_tgl_lahir = createRef();
+    this.tgl_lahir = createRef();
+    this.umur = createRef();
+    this.jenis_umur = createRef();
+    this.alamat = createRef();
+    this.rt = createRef();
+    this.rw = createRef();
+    this.desa = createRef();
+    this.kecamatan = createRef();
+    this.kota = createRef();
+    this.provinsi = createRef();
+  }
+
   _getKey(key) {
     return `${this.props.resource}:${key}`;
   }
@@ -79,8 +96,8 @@ class InputPasien extends Component {
   getAsalMasukDetailOptions = () => {
     const {post, data} = this.props;
     let options = [];
-    if (post.asal_masuk) {
-      options = data.options_asal_masuk_detail.filter(item => item.asal_masuk_id === post.asal_masuk);
+    if (post.id_asal_masuk) {
+      options = data.options_asal_masuk_detail.filter(item => item.asal_masuk_id === post.id_asal_masuk);
     }
 
     return options;
@@ -89,8 +106,8 @@ class InputPasien extends Component {
   getInstalasiOptions = () => {
     const { post, data } = this.props;
     let options = [];
-    if (post.kelompok) {
-      options = data.options_instalasi.filter(item => item.kelompok_id === post.kelompok);
+    if (post.id_kelompok) {
+      options = data.options_instalasi.filter(item => item.kelompok_id === post.id_kelompok);
     }
 
     return options;
@@ -99,14 +116,14 @@ class InputPasien extends Component {
   getUnitLayananOptions = () => {
     const { post, data } = this.props;
     let options = [];
-    if (post.instalasi) {
-      options = data.options_unit_layanan.filter(item => item.instalasi_id === post.instalasi);
+    if (post.id_instalasi) {
+      options = data.options_unit_layanan.filter(item => item.instalasi_id === post.id_instalasi);
     }
 
     return options;
   }
 
-  onInputChange = (e) => {
+  inputChangeHandler = (e) => {
     const { name, value, checked, type } = e.target;
     const { resource, action} = this.props;
     let val = '';
@@ -116,6 +133,11 @@ class InputPasien extends Component {
       val = value;
     }
     action.onChangeInput(resource, { name, value: val });
+  }
+
+  dateTimeChangeHandler = (name, date) => {
+    const { resource, action } = this.props;
+    action.onChangeInput(resource, { name, value: date });
   }
 
   render() {
@@ -146,8 +168,9 @@ class InputPasien extends Component {
                     value="tgl_lahir_umur"
                     name="jenis_tgl_lahir"
                     disabled={disabledDetail}
-                    onChange={this.onInputChange}
+                    onChange={this.inputChangeHandler}
                     checked={post.jenis_tgl_lahir === 'tgl_lahir_umur' ? true : false}
+                    inputRef={this.radio_jenis_tgl_lahir}
                   />
                 </Grid.Column>
                 <Grid.Column width="3" className="field">
@@ -155,10 +178,12 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="7" className="field">
                   <DatePicker
-                    name="tgl_aktif_tarif"
-                    inputRef={this.tgl_aktif_tarif}
+                    name="tgl_lahir"
+                    inputRef={this.tgl_lahir}
                     dateFormat="dd/MM/yyyy"
                     disabled={disabledDetail || disabledTglLahir}
+                    selected={post.tgl_lahir}
+                    onChange={(date) => this.dateTimeChangeHandler('tgl_lahir', date)}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -171,8 +196,9 @@ class InputPasien extends Component {
                     value="umur"
                     name="jenis_tgl_lahir"
                     disabled={disabledDetail}
-                    onChange={this.onInputChange}
+                    onChange={this.inputChangeHandler}
                     checked={post.jenis_tgl_lahir === 'umur' ? true : false}
+                    inputRef={this.radio_jenis_umur}
                   />
                 </Grid.Column>
                 <Grid.Column width="3" className="field">
@@ -182,13 +208,20 @@ class InputPasien extends Component {
                   <Input
                     name="umur"
                     ref={this.umur}
+                    value={post.umur}
                     disabled={disabledDetail || disabledUmur}
+                    onChange={this.inputChangeHandler}
+                    type="number"
+                    min={1}
                   />
                 </Grid.Column>
                 <Grid.Column width="5" className="field">
                   <Select
                     options={data.options_umur}
                     isDisabled={disabledDetail || disabledUmur}
+                    value={selectedOption.jenis_umur}
+                    onChange={(selected) => this.select2ChangeHanlder('jenis_umur', selected)}
+                    isClearable={false}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -200,8 +233,8 @@ class InputPasien extends Component {
                   <Input
                     name="alamat"
                     ref={this.alamat}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                    onChange={this.inputChangeHandler}
+                    // onKeyDown={(e) => this._onFocusElement(e, 'rt')}
                     disabled={disabledDetail}
                     value={post.alamat}
                   />
@@ -215,8 +248,8 @@ class InputPasien extends Component {
                   <Input
                     name="rt"
                     ref={this.rt}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                    onChange={this.inputChangeHandler}
+                    // onKeyDown={(e) => this._onFocusElement(e, 'save')}
                     disabled={disabledDetail}
                     value={post.rt}
                   />
@@ -228,8 +261,8 @@ class InputPasien extends Component {
                   <Input
                     name="rw"
                     ref={this.rw}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                    onChange={this.inputChangeHandler}
+                    // onKeyDown={(e) => this._onFocusElement(e, 'save')}
                     disabled={disabledDetail}
                     value={post.rw}
                   />
@@ -262,9 +295,7 @@ class InputPasien extends Component {
                   <Input
                     name="kecamatan"
                     ref={this.kecamatan}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'newPassword')}
-                    disabled={disabledDetail}
+                    disabled
                     value={post.kecamatan}
                   />
                 </Grid.Column>
@@ -277,9 +308,7 @@ class InputPasien extends Component {
                   <Input
                     name="kota"
                     ref={this.kota}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'newPassword')}
-                    disabled={disabledDetail}
+                    disabled
                     value={post.kota}
                   />
                 </Grid.Column>
@@ -292,9 +321,7 @@ class InputPasien extends Component {
                   <Input
                     name="provinsi"
                     ref={this.provinsi}
-                    onChange={this._handleInputChange}
-                    onKeyDown={(e) => this._onFocusElement(e, 'newPassword')}
-                    disabled={disabledDetail}
+                    disabled
                     value={post.provinsi}
                   />
                 </Grid.Column>
@@ -385,9 +412,9 @@ class InputPasien extends Component {
                 <Grid.Column width="12" className="field">
                   <Select
                     options={data.options_asal_masuk}
-                    name="asal_masuk"
-                    value={selectedOption.asal_masuk}
-                    onChange={(selected) => this.select2ChangeHanlder('asal_masuk', selected)}
+                    name="id_asal_masuk"
+                    value={selectedOption.id_asal_masuk}
+                    onChange={(selected) => this.select2ChangeHanlder('id_asal_masuk', selected)}
                     isClearable={false}
                     isDisabled={disabledKunjungan}
                   />
@@ -401,8 +428,10 @@ class InputPasien extends Component {
                   <Select
                     options={this.getAsalMasukDetailOptions()}
                     isClearable={false}
-                    isDisabled={disabledKunjungan || !post.asal_masuk}
-                    onChange={(selected) => this.select2ChangeHanlder('asal_masuk_detail', selected)}
+                    name="id_asal_masuk_detail"
+                    isDisabled={disabledKunjungan}
+                    onChange={(selected) => this.select2ChangeHanlder('id_asal_masuk_detail', selected)}
+                    value={selectedOption.id_asal_masuk_detail}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -448,10 +477,6 @@ class InputPasien extends Component {
                     name="tgl_aktif_tarif"
                     dateFormat="dd/MM/yyyy"
                     popperModifiers={{
-                      // offset: {
-                      //   enabled: true,
-                      //   // offset: "5px, 10px"
-                      // },
                       preventOverflow: {
                         enabled: true,
                         escapeWithReference: false,
@@ -469,9 +494,9 @@ class InputPasien extends Component {
                 <Grid.Column width="12" className="field">
                   <Select
                     options={data.options_kelompok}
-                    name="kelompok"
-                    value={selectedOption.kelompok}
-                    onChange={(selected) => this.select2ChangeHanlder('kelompok', selected)}
+                    name="id_kelompok"
+                    value={selectedOption.id_kelompok}
+                    onChange={(selected) => this.select2ChangeHanlder('id_kelompok', selected)}
                     isClearable={false}
                     isDisabled={disabledKunjungan}
                   />
@@ -485,9 +510,11 @@ class InputPasien extends Component {
                   <Select
                     options={this.getInstalasiOptions()}
                     isClearable={false}
+                    name="id_instalasi"
                     components={{ Option: OptionInstalasi }}
-                    onChange={(selected) => this.select2ChangeHanlder('intalasi', selected)}
-                    isDisabled={disabledKunjungan || !post.kelompok}
+                    onChange={(selected) => this.select2ChangeHanlder('id_instalasi', selected)}
+                    isDisabled={disabledKunjungan || !post.id_kelompok}
+                    value={selectedOption.id_instalasi}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -498,9 +525,11 @@ class InputPasien extends Component {
                 <Grid.Column width="12" className="field">
                   <Select
                     options={this.getUnitLayananOptions()}
-                    isDisabled={disabledKunjungan || !post.instalasi}
-                    onChange={(selected) => this.select2ChangeHanlder('unit_layanan', selected)}
+                    isDisabled={disabledKunjungan || !post.id_instalasi}
+                    onChange={(selected) => this.select2ChangeHanlder('id_unit_layanan', selected)}
                     isClearable={false}
+                    name="id_unit_layanan"
+                    value={selectedOption.id_unit_layanan}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -514,8 +543,10 @@ class InputPasien extends Component {
                     isDisabled={disabledKunjungan}
                     isLoading={loaderOptionsByUnitLayanan}
                     components={{ SingleValue: KelasKamarSingleValue, Option: OptionKelasKamar }}
-                    onChange={(selected) => this.select2ChangeHanlder('kelas_kamar', selected)}
+                    onChange={(selected) => this.select2ChangeHanlder('id_kelas_kamar', selected)}
                     isClearable={false}
+                    value={selectedOption.id_kelas_kamar}
+                    name="id_kelas_kamar"
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -539,8 +570,10 @@ class InputPasien extends Component {
                     options={data.options_dpjp}
                     isDisabled={disabledKunjungan}
                     isLoading={loaderOptionsByUnitLayanan}
-                    onChange={(selected) => this.select2ChangeHanlder('dpjp', selected)}
+                    onChange={(selected) => this.select2ChangeHanlder('id_dpjp', selected)}
                     isClearable={false}
+                    value={selectedOption.id_dpjp}
+                    name="id_dpjp"
                   />
                 </Grid.Column>
               </Grid.Row>
