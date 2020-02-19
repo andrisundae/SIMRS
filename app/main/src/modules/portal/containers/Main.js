@@ -6,11 +6,17 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
+import fs from 'fs';
+import dotenv from 'dotenv';
+import path from 'path';
 
 import { store, menu, templates } from '@simrs/common';
 import authActions from '../../auth/authActions';
 
 const { BrowserWindow, app, ipcMain} = remote;
+
+const appDirectory = fs.realpathSync(process.cwd())
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 class Main extends Component {
     constructor(props) {
@@ -19,6 +25,50 @@ class Main extends Component {
         this._logout = this._logout.bind(this);
         this._renderContextsMenu = this._renderContextsMenu.bind(this);
         this.handleSessionExpired = this.handleSessionExpired.bind(this);
+    }
+
+    componentDidMount() {
+        ipcMain.on('session-expired', this.handleSessionExpired);
+    }
+
+    componentWillUnmount() {
+        ipcMain.removeListener('session-expired', this.handleSessionExpired);
+    }
+
+    handleSessionExpired() {
+        this._logout();
+        app.quit();
+    }
+
+    getEnvApp = () => {
+        const config = {
+            billing: {},
+            farmasi: {},
+            emr: {},
+            sistem: {},
+        }
+        const billingPath = resolveApp('../billing/.env');
+        const farmasiPath = resolveApp('../farmasi/.env');
+        const sistemPath = resolveApp('../billing/.env');
+        const emrPath = resolveApp('../emr/.env');
+
+        if (fs.existsSync(billingPath)) {
+            config.billing = dotenv.parse(fs.readFileSync(billingPath));
+        }
+
+        if (fs.existsSync(farmasiPath)) {
+            config.farmasi = dotenv.parse(fs.readFileSync(farmasiPath));
+        }
+
+        if (fs.existsSync(sistemPath)) {
+            config.sistem = dotenv.parse(fs.readFileSync(sistemPath));
+        }
+
+        if (fs.existsSync(emrPath)) {
+            config.emr = dotenv.parse(fs.readFileSync(emrPath));
+        }
+
+        return config;
     }
 
     render() {
@@ -56,19 +106,6 @@ class Main extends Component {
                 </div>
             </Fragment>
         );
-    }
-
-    componentDidMount() {
-        ipcMain.on('session-expired', this.handleSessionExpired);
-    }
-
-    handleSessionExpired() {
-        this._logout();
-        app.quit();
-    }
-
-    componentWillUnmount() {
-        ipcMain.removeListener('session-expired', this.handleSessionExpired);
     }
 
     _renderContextsMenu() {
@@ -161,36 +198,45 @@ class Main extends Component {
             this.forceUpdate();
         });
 
+        const envApp = this.getEnvApp();
+        
+
         let url = '';
         let titleApp = '';
         let color = '';
         switch (app) {
             case '_billing':
                 url = isDev
-                    ? 'http://localhost:9010'
+                    ? `http://localhost:${envApp.billing ? envApp.billing.PORT : '9001'}`
                     : remote.app.getAppPath() + '/build/billing/index.html';
-                titleApp = 'Billing';
+                titleApp = envApp.billing ? envApp.billing.REACT_APP_NAME : 'Billing';
                 color = '#26C281';
                 break;
             case '_farmasi':
                 url = isDev
+<<<<<<< HEAD
                     ? 'http://localhost:9003'
                     : remote.app.getAppPath() + '/build/farmasi/index.html';
                 titleApp = 'Farmasi';
+=======
+                    ? `http://localhost:${envApp.farmasi ? envApp.farmasi.PORT : '9003'}`
+                    : remote.app.getAppPath() + '/build/farmasi/index.html';
+                titleApp = envApp.farmasi ? envApp.farmasi.REACT_APP_NAME : 'Farmasi';
+>>>>>>> dev-andi
                 color = '#f3c200';
                 break;
             case '_rekam_medis':
                 url = isDev
-                    ? 'http://localhost:9001'
-                    : remote.app.getAppPath() + '/build/billing/index.html';
-                titleApp = 'RM';
+                    ? `http://localhost:${envApp.emr ? envApp.emr.PORT : '9004'}`
+                    : remote.app.getAppPath() + '/build/emr/index.html';
+                titleApp = envApp.emr ? envApp.emr.REACT_APP_NAME : 'RM';
                 color = '#e7505a';
                 break;
             case '_system':
                 url = isDev
-                    ? 'http://localhost:9002'
+                    ? `http://localhost:${envApp.sistem ? envApp.sistem.PORT : '9002'}`
                     : remote.app.getAppPath() + '/build/system/index.html';
-                titleApp = 'Sistem';
+                titleApp = envApp.sistem ? envApp.sistem.REACT_APP_NAME : 'Sistem';
                 color = '#3598dc';
                 break;
             default:

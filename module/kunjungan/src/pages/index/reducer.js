@@ -1,16 +1,32 @@
 import produce from 'immer';
 import {includes} from 'lodash';
+import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
 
+const defaultJenisUmur = (data) => {
+    return data.length > 0 ? data[0] : { label: 'Tahun', value: 'year' };
+}
+
 export default (state = initialState, action) =>
   produce(state, draft => {
-    let { type, payload } = action;
+    const { type, payload } = action;
+    const jenisUmur = defaultJenisUmur(state.data.options_umur);
+      const now = dayjs();
 
     switch (type) {
         case actionTypes.CHANGE_INPUT:
             draft.post[payload.data.name] = payload.data.value;
             draft.focusElement = '';
+
+            if (payload.data.name === 'umur') {
+                draft.post.tgl_lahir = dayjs().subtract(payload.data.value, state.post.jenis_umur).toDate();
+            } else if (payload.data.name === 'tgl_lahir') {
+                const tglLahir = dayjs(payload.data.value);
+                draft.post.umur = now.diff(tglLahir, 'year');
+                draft.post.jenis_umur = jenisUmur.value;
+                draft.selectedOption.jenis_umur = jenisUmur;
+            }
             return
 
         case actionTypes.SAVE_SUCCESS:
@@ -42,6 +58,7 @@ export default (state = initialState, action) =>
             draft.data.options_asal_masuk_detail = payload.data.asal_masuk_detail;
             draft.data.options_instalasi = payload.data.instalasi;
             draft.data.options_unit_layanan = payload.data.unit_layanan;
+            draft.data.options_umur = payload.data.jenis_umur;
             return
         
         case actionTypes.CHANGE_SELECT2:
@@ -109,6 +126,11 @@ export default (state = initialState, action) =>
             return
         case actionTypes.ADD:
             draft.statusForm = actionTypes.ADD;
+            draft.post.tgl_lahir = now.toDate();
+            draft.post.norm = '66000004';
+
+            draft.post.jenis_umur = jenisUmur.value;
+            draft.selectedOption.jenis_umur = jenisUmur;
             return
 
         case actionTypes.FILTER_SELECTED_PASIEN:
@@ -118,6 +140,14 @@ export default (state = initialState, action) =>
                 ...state.post,
                 ...payload.data
             };
+            return
+        
+        case actionTypes.FILTER_SELECTED_WILAYAH:
+            draft.post = {
+                ...state.post,
+                ...payload.data
+            };
+
             return
 
         case actionTypes.ADD_WITH_SELECTED:

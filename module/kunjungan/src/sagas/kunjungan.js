@@ -87,7 +87,7 @@ function* populateForm({ meta }) {
 function* changeSelect2({ meta, payload }) {
     try {
         switch (payload.name) {
-            case 'unit_layanan':
+            case 'id_unit_layanan':
                 yield put(actions.optionsByUnitLayanan.request(meta.resource, payload.data));
                 break;
             // case 'kelompok':
@@ -216,6 +216,10 @@ function* handleSearchWilayah() {
     }
 }
 
+function* handleSelectedWilayah({ meta }) {
+    yield put(actions.toggleShowCariWilayah(meta.resource));
+}
+
 export default function* watchAuthActions() {
     yield all([
         takeLatest(actionTypes.SAVE_REQUEST, handleSave),
@@ -233,5 +237,6 @@ export default function* watchAuthActions() {
         takeLatest(actionTypes.GET_ALL_WILAYAH_REQUEST, loadAllWilayah),
         takeLatest(actionTypes.FILTER_SUBMIT_WILAYAH, handleSearchWilayah),
         takeLatest(actionTypes.FILTER_SELECTED_PASIEN, handleSelectedPasien),
+        takeLatest(actionTypes.FILTER_SELECTED_WILAYAH, handleSelectedWilayah),
     ]);
 }
