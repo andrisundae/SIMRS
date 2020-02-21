@@ -49,7 +49,7 @@ class Main extends Component {
         }
         const billingPath = resolveApp('../billing/.env');
         const farmasiPath = resolveApp('../farmasi/.env');
-        const sistemPath = resolveApp('../billing/.env');
+        const sistemPath = resolveApp('../system/.env');
         const emrPath = resolveApp('../emr/.env');
 
         if (fs.existsSync(billingPath)) {
