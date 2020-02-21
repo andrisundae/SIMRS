@@ -192,6 +192,11 @@ const routers = [
         path: '/billing/transaksi/kunjungan',
         component: lazy(() => import('@module/kunjungan'))
     },
+    {
+        key: '_billing_setting_jenis_klasifikasi_registrasi',
+        path: '/billing/setting/jenis-klasifikasi-registrasi',
+        component: lazy(() => import('@module/setting-jenis-klasifikasi-registrasi'))
+    },
 ]
 
 export default routers;
