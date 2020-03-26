@@ -7,6 +7,11 @@ const routers = [
         component: lazy(() => import('@module/supplier'))
     },
     {
+        key: '_farmasi_master_barang',
+        path: '/farmasi/master/barang',
+        component: lazy(() => import('@module/barang'))
+    },
+    {
         key: '_system_portal_change_password',
         path: '/system/portal/change-password',
         component: lazy(() => import('@module/change-password'))
