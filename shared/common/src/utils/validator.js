@@ -5,6 +5,7 @@ const types = {
     MINLENGTH: 'minlength',
     MAXLENGTH: 'maxlength',
     NUMBER: 'number',
+    MAXNUMBER: "maxnumber"
 }
 
 const defaultMessage = {
@@ -39,6 +40,16 @@ const checkMaxLength = (value, max) => {
 
 const checkNumber = (value) => {
     let isValid = _.isNumber(value);
+
+    return isValid;
+}
+
+const checkMaxNumber = (value, max) => {
+    let isValid = _.isNumber(value);
+
+    if (isValid) {
+        isValid = value <= max ? true : false;
+    }
 
     return isValid;
 }
@@ -112,6 +123,9 @@ export default (values, rules, messages) => {
                     break;
                 case types.NUMBER:
                     isValid = checkNumber(value);
+                    break;
+                case types.MAXNUMBER:
+                    isValid = checkMaxNumber(value, ruleValue);
                     break;
                 default:
                     break;
