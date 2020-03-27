@@ -36,7 +36,7 @@ const filterState = {
     ...filter,
     post: {
         ...filter.post,
-        filter_index: 'nama'
+        filter_index: 'barcode'
     }
 }
 
