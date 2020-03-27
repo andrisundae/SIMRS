@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import { Trans } from 'react-i18next';
 
 import { Input, Select, FormField } from 'semantic-ui-react';
 import { Filter as FilterContainer, isDisableForm, filterActions } from '@simrs/main/src/modules/master/default';
+import { Radio } from '@simrs/components';
 import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 class Filter extends Component {
@@ -20,8 +21,49 @@ class Filter extends Component {
         this._handleSelectionChange = this._handleSelectionChange.bind(this);
     }
 
+    __renderFilterField() {
+        let { post, isDisableForm, minCharSearch, t } = this.props;
+
+        switch (post.filter_index) {
+          case "stExpired":
+          case "autoUpdateHargaJual":
+          case "includeDiskonPembelian":
+          case "aktif":
+            return <Fragment>
+                <Radio
+                    value="Ya"
+                    name="filter_value"
+                    checked={post.filter_value === 'Ya' ? true : false}
+                    onChange={this._handleFilterChange}
+                    inputRef={this.filterValue}
+                    label={t(this._getKey('sub.label.ya'))}
+                    disabled={isDisableForm}
+                />
+                <Radio
+                    value="Tidak"
+                    name="filter_value"
+                    checked={post.filter_value === 'Tidak' ? true : false}
+                    onChange={this._handleFilterChange}
+                    label={t(this._getKey('sub.label.tdk'))}
+                    inputRef={this.filterValue}
+                    disabled={isDisableForm}
+                />
+            </Fragment>
+        
+          default:
+            return <Input
+                name="filter_value"
+                ref={this.filterValue}
+                value={post.filter_value}
+                onChange={this._handleFilterChange}
+                disabled={isDisableForm}
+                placeholder={t(this._getKey('placeholder.filter'), {minCharSearch})}
+            />
+        }
+    }
+
     render() {
-        const { post, isDisableForm, resource, minCharSearch, t } = this.props;
+        const { post, isDisableForm, resource } = this.props;
         return (
             <FilterContainer resource={resource}>
                 <FormField>
@@ -38,14 +80,7 @@ class Filter extends Component {
                     />
                 </FormField>
                 <FormField width="4">
-                    <Input
-                        name="filter_value"
-                        ref={this.filterValue}
-                        value={post.filter_value}
-                        onChange={this._handleFilterChange}
-                        disabled={isDisableForm}
-                        placeholder={t(this._getKey('placeholder.filter'), {minCharSearch})}
-                    />
+                    {this.__renderFilterField()}
                 </FormField>
             </FilterContainer>
         )
@@ -79,7 +114,17 @@ class Filter extends Component {
 
     _getFilterColumns() {
         return [
-            { key: 'nama', value: 'nama', text: this.props.t(this._getKey('header.column.nama')) }
+            { key: 'barcode', value: 'barcode', text: this.props.t(this._getKey('header.column.barcode')) },
+            { key: 'nama', value: 'nama', text: this.props.t(this._getKey('header.column.nama')) },
+            { key: 'jenis_barang', value: 'idJenis', text: this.props.t(this._getKey('header.column.jenis')) },
+            { key: 'kelompok_barang', value: 'idKelompok', text: this.props.t(this._getKey('header.column.kelompok')) },
+            { key: 'golongan_barang', value: 'idGolongan', text: this.props.t(this._getKey('header.column.golongan')) },
+            { key: 'satuan_terkecil', value: 'idSatuan', text: this.props.t(this._getKey('header.column.satuan_terkecil')) },
+            { key: 'st_expired', value: 'stExpired', text: this.props.t(this._getKey('header.column.st_expired')) },
+            { key: 'otomatis_update_harga', value: 'autoUpdateHargaJual', text: this.props.t(this._getKey('header.column.otomatis_update_harga')) },
+            { key: 'metode_update_harga', value: 'metodeUpdateHargaJual', text: this.props.t(this._getKey('header.column.metode_update_harga')) },
+            { key: 'include_diskon_beli', value: 'includeDiskonPembelian', text: this.props.t(this._getKey('header.column.include_diskon_beli')) },
+            { key: 'aktif', value: 'aktif', text: this.props.t(this._getKey('header.column.aktif')) }
         ];
     }
 }
