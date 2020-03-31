@@ -11,7 +11,7 @@ class Main extends Component {
         return (
             <Module
                 {...this.props}
-                icon={`address book`}
+                icon={`dolly flatbed`}
                 filter={<Filter {...this.props} />}
                 list={<List columnDefs={this._getColumnDefs()} {...this.props} sizeColumnsToFit={false}/>}
                 create={<Create {...this.props} />}
