@@ -151,7 +151,7 @@ class Create extends Component {
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row className="form-row">
-                                    <Grid.Column width="4" className="field right aligned">
+                                    <Grid.Column width="4" className="field required right aligned">
                                         <label>{t(this._getKey('label.field.status'))}</label>
                                     </Grid.Column>
                                     <Grid.Column width="12" className="field">

@@ -45,7 +45,7 @@ const checkNumber = (value) => {
 }
 
 const checkMaxNumber = (value, max) => {
-    let isValid = _.isNumber(value);
+    let isValid = _.isNumber(parseFloat(value));
 
     if (isValid) {
         isValid = value <= max ? true : false;
