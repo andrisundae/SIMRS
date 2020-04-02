@@ -199,8 +199,8 @@ class Create extends Component {
                               name="id_jenis_kelamin"
                               options={data.options_jenis_kelamin}
                               isDisabled={disabledDetail}
-                              value={selectedOption.jenis_kelamin}
-                              onChange={(selected) => this.select2ChangeHanlder('jenis_kelamin', selected)}
+                              value={selectedOption.id_jenis_kelamin}
+                              onChange={(selected) => this.select2ChangeHanlder('id_jenis_kelamin', selected)}
                               isClearable={false}
                             />
                           </Grid.Column>

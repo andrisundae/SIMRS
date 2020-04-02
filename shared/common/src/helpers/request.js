@@ -56,16 +56,22 @@ const get = async (path, data) => {
     return response;
 }
 
-const post = async (path, data = {}, options) => {
-    let formData = new FormData();
+const post = async (path, data = {}, options, isParseArray=true) => {
+    const formData = new FormData();
 
-    Object.keys(data).map((idx) => {
+    Object.keys(data).forEach((idx) => {
         let value = data[idx];
-        if ((typeof value === 'object' || value.isArray) && !(value instanceof File)) {
-            value = JSON.stringify(value);
-        }
 
-        return formData.append(idx, value);
+        if (value instanceof Object && isParseArray) {
+            value = JSON.stringify(value);
+            formData.append(idx, value);
+        } else if (Array.isArray(value) && !isParseArray) {
+            value.forEach(item => {
+                formData.append(`${idx}[]`, item)
+            })
+        } else {
+            formData.append(idx, value);
+        }
     });
 
     const newOptions = {
