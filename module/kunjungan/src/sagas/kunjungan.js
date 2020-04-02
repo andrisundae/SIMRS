@@ -1,14 +1,12 @@
-import { put, call, takeLatest, all } from 'redux-saga/effects';
+import { put, call, takeLatest, all, select } from 'redux-saga/effects';
 import _ from 'lodash';
 import { ipcRenderer } from 'electron';
+import dayjs from 'dayjs';
 
 import { validator as commonValidator, toastr} from '@simrs/common';
 import { loaderActions, messageBox, constDatatable, datatableActionTypes, datatableActions} from '@simrs/components';
 import api from '../services/models/kunjunganModel';
-import {
-    actions,
-    actionTypes
-} from '../pages/index';
+import {actions, actionTypes, getPost} from '../pages/index';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
@@ -26,25 +24,58 @@ function* openForm({ meta }) {
 }
 
 function* handleSave({ payload, meta }) {
-    let { resource } = meta;
+    const { resource } = meta;
+    const { data } = payload;
     try {
         yield put(loaderActions.show());
-        let { rules, messages } = api.validationRules(resource);
-        let post = payload.data;
-        let errors = validator(post, rules, messages);
+        // let { rules, messages } = api.validationRules(resource);
+        // let post = payload.data;
+        // let errors = validator(post, rules, messages);
 
-        if (_.isEmpty(errors)) {
-            let response = yield call(api.save, post);
-            if (response.status) {
-                yield put(actions.save.requestSuccess(resource, response));
-            } else {
-                yield put(actions.save.requestFailure(resource, errors));
-                yield toastr.warning(response.message);
-                yield put(actions.onFocusElement(resource, 'oldPassword'));
-            }
-        } else {
-            yield put(actions.onFocusElement(resource, getFirstElementError(errors)));
-            yield toastr.warning(getFirstError(errors));
+        // if (_.isEmpty(errors)) {
+        //     let response = yield call(api.save, post);
+        //     if (response.status) {
+        //         yield put(actions.save.requestSuccess(resource, response));
+        //     } else {
+        //         yield put(actions.save.requestFailure(resource, errors));
+        //         yield toastr.warning(response.message);
+        //         yield put(actions.onFocusElement(resource, 'oldPassword'));
+        //     }
+        // } else {
+        //     yield put(actions.onFocusElement(resource, getFirstElementError(errors)));
+        //     yield toastr.warning(getFirstError(errors));
+        // }
+        const prevPost = yield select(getPost);
+        const jamKunjungan = dayjs(data.jam_kunjungan).format('HH:mm');
+        const post = {
+            norm: data.norm,
+            nama: data.nama,
+            id_jenis_kelamin: data.id_jenis_kelamin,
+            alamat: data.alamat,
+            rt: data.rt,
+            rw: data.rw,
+            id_desa: data.id_desa,
+            nomor_anggota: data.nomor_anggota,
+            id_kelas_penjamin_pasien: data.id_kelas_penjamin_pasien,
+            id_kepersertaan: data.id_kepersertaan,
+            id_asal_masuk: data.id_asal_masuk,
+            id_asal_masuk_detail: data.id_asal_masuk_detail,
+            id_penjamin: data.id_penjamin,
+            id_unit_layanan: data.id_unit_layanan,
+            id_dpjp: data.id_dpjp,
+            id_penjamin_pasien: data.id_penjamin_pasien,
+            tgl_lahir: dayjs(data.tgl_lahir).format('YYYY-MM-DD'),
+            tgl_kunjungan: dayjs(data.tgl_kunjungan).format(`YYYY-MM-DD ${jamKunjungan}:ss`),
+            tgl_jaminan: dayjs(data.tgl_jaminan).format('YYYY-MM-DD HH:mm:ss'),
+            tgl_cetak_jaminan: dayjs(data.tgl_cetak_jaminan).format('YYYY-MM-DD HH:mm:ss'),
+            id_tindakan: prevPost.id_tindakan.map(item => item.value),
+            id_kelas: 4,
+        };
+        // let errors = validator(post, rules, messages);
+
+        let response = yield call(api.save, 'tambah', post);
+        if (response.status) {
+            yield put(actions.save.requestSuccess(resource, response));
         }
         yield put(loaderActions.hide());
     } catch (error) {
@@ -93,8 +124,8 @@ function* changeSelect2({ meta, payload }) {
             // case 'kelompok':
             //     yield put(actions.instalasi.request(meta.resource, payload.data));
             //     break;
-            // case 'instalasi':
-            //     yield put(actions.unitLayanan.request(meta.resource, payload.data));
+            // case 'id_instalasi':
+            //     yield put(actions.jenisKlasifikasiRegistrasi.request(meta.resource, payload.data));
             //     break;
             default:
                 break;
@@ -155,6 +186,19 @@ function* optionsByUnitLayananRequest({ meta, payload }) {
         yield toastr.error(error.message);
     }
 }
+
+// function* jenisKlasifikasiRegistrasiRequest({ meta, payload }) {
+//     try {
+//         let response = yield call(api.getJenisKlasifikasiRegistrasi, payload.data.value);
+//         if (response.status) {
+//             yield put(actions.jenisKlasifikasiRegistrasi.requestSuccess(meta.resource, response.data));
+//         } else {
+//             yield put(actions.jenisKlasifikasiRegistrasi.requestFailure(meta.resource, response.message));
+//         }
+//     } catch (error) {
+//         yield toastr.error(error.message);
+//     }
+// }
 
 function* loadAllPasien({ payload, meta }) {
     const { successCallback, failCallback } = meta.tableParams;
@@ -231,6 +275,7 @@ export default function* watchAuthActions() {
         takeLatest(actionTypes.INSTALASI_REQUEST, instalasiRequest),
         takeLatest(actionTypes.UNIT_LAYANAN_REQUEST, unitLayananRequest),
         takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequest),
+        // takeLatest(actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST, jenisKlasifikasiRegistrasiRequest),
 
         takeLatest(actionTypes.GET_ALL_PASIEN_REQUEST, loadAllPasien),
         takeLatest(actionTypes.FILTER_SUBMIT_PASIEN, handleSearchPasien),

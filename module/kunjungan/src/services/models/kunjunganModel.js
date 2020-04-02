@@ -17,8 +17,9 @@ const validationRules = (resource) => {
 const path = '/billing/transaksi/kunjungan';
 
 export default {
-    save: async (params) => {
-        let response = await request.post(`${path}/save`, params);
+    save: async (method, params) => {
+        let response = await request.post(`${path}/${method}`, params, {}, false);
+
         return response;
     },
     init: async () => {
@@ -49,6 +50,10 @@ export default {
     },
     getOptionsByUnitLayanan: async (idUnitLayanan) => {
         let response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`);
+        return response;
+    },
+    getJenisKlasifikasiRegistrasi: async (idInstalasi) => {
+        let response = await request.get(`${path}/jenis-klasifikasi-registrasi/${idInstalasi}`);
         return response;
     },
     validationRules

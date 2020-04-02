@@ -108,6 +108,23 @@ export default {
             { resource }
         )
     },
+    jenisKlasifikasiRegistrasi: {
+        request: (resource, data) => createAction(
+            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST,
+            { data },
+            { resource }
+        ),
+        requestSuccess: (resource, data) => createAction(
+            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_SUCCESS,
+            { data },
+            { resource }
+        ),
+        requestFailure: (resource, error) => createAction(
+            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_FAILURE,
+            { error },
+            { resource }
+        )
+    },
     loadAllPasien: (resource, data, tableParams) => createAction(
         actionTypes.GET_ALL_PASIEN_REQUEST,
         { data },
@@ -135,7 +152,7 @@ export default {
         { element },
         { resource }
     ),
-    onChangeSelect2: (resource, name, data) => createAction(actionTypes.CHANGE_SELECT2, { name, data }, { resource }),
+    onChangeSelect2: (resource, name, data, isTindakan) => createAction(actionTypes.CHANGE_SELECT2, { name, data, isTindakan }, { resource }),
     toggleShowCariPasien: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_PASIEN, {}, { resource }),
     toggleShowCariWilayah: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_WILAYAH, {}, { resource }),
     toggleShowCariKunjungan: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN, {}, { resource }),

@@ -3,6 +3,7 @@ import {includes} from 'lodash';
 import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
+import {staticConst} from './static';
 
 const defaultJenisUmur = (data) => {
     return data.length > 0 ? data[0] : { label: 'Tahun', value: 'year' };
@@ -19,9 +20,9 @@ export default (state = initialState, action) =>
             draft.post[payload.data.name] = payload.data.value;
             draft.focusElement = '';
 
-            if (payload.data.name === 'umur') {
+            if (payload.data.name === staticConst.UMUR) {
                 draft.post.tgl_lahir = dayjs().subtract(payload.data.value, state.post.jenis_umur).toDate();
-            } else if (payload.data.name === 'tgl_lahir') {
+            } else if (payload.data.name === staticConst.TGL_LAHIR) {
                 const tglLahir = dayjs(payload.data.value);
                 draft.post.umur = now.diff(tglLahir, 'year');
                 draft.post.jenis_umur = jenisUmur.value;
@@ -59,11 +60,70 @@ export default (state = initialState, action) =>
             draft.data.options_instalasi = payload.data.instalasi;
             draft.data.options_unit_layanan = payload.data.unit_layanan;
             draft.data.options_umur = payload.data.jenis_umur;
+            draft.data.options_status_kepersetaan = payload.data.status_kepersetaan;
+            draft.data.options_status_pasien_default = payload.data.status_pasien;
+            draft.data.options_status_pasien = payload.data.status_pasien;
             return
         
         case actionTypes.CHANGE_SELECT2:
             draft.post[payload.name] = payload.data.value;
             draft.selectedOption[payload.name] = payload.data;
+            if (payload.name === 'id_penjamin_pasien' && payload.data) {
+                draft.post.id_penjamin = '';
+                draft.selectedOption.id_penjamin = null;
+                draft.post.penjamin_pasien = '';
+                draft.data.options_status_pasien = [
+                    payload.data,
+                    ...draft.data.options_status_pasien_default,
+                ];
+            } else if (payload.name === 'id_penjamin' && payload.data) {
+                if (payload.data.label.toUpperCase() === staticConst.UMUM) {
+                    draft.post.penjamin_pasien = staticConst.BAYAR_SENDIRI;
+                } else {
+                    draft.post.penjamin_pasien = payload.data.label.toUpperCase();
+                }
+            } else if (payload.name === 'id_asal_masuk' && payload.data && draft.selectedOption.id_asal_masuk_detail) {
+                draft.post.id_asal_masuk_detail = '';
+                draft.selectedOption.id_asal_masuk_detail = null;
+            } else if (payload.name === 'id_kelompok' || payload.name === 'id_instalasi' || payload.name === 'id_unit_layanan') {
+                if (payload.name === 'id_kelompok') {
+                    draft.post.id_instalasi = '';
+                    draft.selectedOption.id_instalasi = null;
+                }
+
+                if (payload.name !== 'id_unit_layanan') {
+                    draft.post.id_unit_layanan = '';
+                    draft.selectedOption.id_unit_layanan = null;
+                }
+
+                draft.post.id_kelas_kamar = '';
+                draft.selectedOption.id_kelas_kamar = null;
+
+                draft.post.id_dpjp = '';
+                draft.selectedOption.id_dpjp = null;
+
+                draft.data.options_kelas_kamar = [];
+                draft.data.options_dpjp = [];
+
+                Object.keys(draft.data.jenis_klasifikasi_registrasi).forEach(key => {
+                    draft.selectedOption[key] = null;
+                })
+
+                draft.data.jenis_klasifikasi_registrasi = {};
+                draft.post.id_tindakan = [];
+            }
+
+            if (payload.isTindakan) {
+                const selectedTindakan = draft.post.id_tindakan;
+                const selectedData = { name: payload.name, value: payload.data.value };
+                const findIndex = selectedTindakan.findIndex(row => row.name === payload.name);
+                if (findIndex >= 0) {
+                    selectedTindakan[findIndex] = selectedData;
+                } else {
+                    selectedTindakan.push(selectedData)
+                }
+                draft.post.id_tindakan = selectedTindakan;
+            }
             return
         
         case actionTypes.ASAL_MASUK_DETAIL_REQUEST:
@@ -105,10 +165,27 @@ export default (state = initialState, action) =>
         case actionTypes.OPTIONS_BY_UNITLAYANAN_SUCCESS:
             draft.data.options_kelas_kamar = payload.data.kelas_kamar;
             draft.data.options_dpjp = payload.data.dpjp;
+            draft.data.jenis_klasifikasi_registrasi = payload.data.jenis_klasifikasi_registrasi;
             draft.loaderOptionsByUnitLayanan = false;
+
+            Object.keys(payload.data.jenis_klasifikasi_registrasi).forEach(key => {
+                draft.selectedOption[key] = null;
+            })
+
             return
         case actionTypes.OPTIONS_BY_UNITLAYANAN_FAILURE:
             draft.loaderOptionsByUnitLayanan = false;
+            return
+
+        case actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST:
+            draft.loaderJenisKlasifikasiRegistrasi = true;
+            return
+        case actionTypes.JENIS_KLASIFIKASI_REGISTRASI_SUCCESS:
+            draft.data.jenisKlasifikasiRegistrasi = payload.data;
+            draft.loaderJenisKlasifikasiRegistrasi = false;
+            return
+        case actionTypes.JENIS_KLASIFIKASI_REGISTRASI_FAILURE:
+            draft.loaderJenisKlasifikasiRegistrasi = false;
             return
 
         case actionTypes.FILTER_CHANGE_PASIEN:
@@ -125,8 +202,13 @@ export default (state = initialState, action) =>
             draft.post = { ...initialState.post};
             return
         case actionTypes.ADD:
+            const toDateNow = now.toDate();
             draft.statusForm = actionTypes.ADD;
-            draft.post.tgl_lahir = now.toDate();
+            draft.post.tgl_lahir = toDateNow;
+            draft.post.tgl_kunjungan = toDateNow;
+            draft.post.tgl_jaminan = toDateNow;
+            draft.post.tgl_cetak_jaminan = toDateNow;
+            draft.post.jam_kunjungan = toDateNow;
             draft.post.norm = '66000004';
 
             draft.post.jenis_umur = jenisUmur.value;
