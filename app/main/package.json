@@ -42,15 +42,10 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "desktop": "wait-on http://localhost:9000 && electron .",
-    "precompile": "rimraf dist",
-    "compile": "mkdir dist\\static && concurrently \"babel src -w -d dist\" \"ncp src/static dist/static\"",
+    "desktop": "electron --disable-gpu .",
     "build-desktop": "electron-builder --config",
-    "prebuild-desktop": "yarn build",
-    "postbuild": "concurrently \"ncp ../billing/build build/billing\" \"ncp ../system/build build/system\""
+    "prebuild-desktop": "react-app-rewired build",
+    "postbuild-desktop": "concurrently \"ncp ../billing/build build/billing\" \"ncp ../farmasi/build build/farmasi\" \"ncp ../system/build build/system\""
   },
   "eslintConfig": {
     "extends": "react-app"

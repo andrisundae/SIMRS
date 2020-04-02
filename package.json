@@ -8,19 +8,16 @@
   "private": true,
   "scripts": {
     "start": "wsrun --exclude-missing start",
-    "desktop": "wsrun -p @simrs/main -c desktop",
-    "compile": "wsrun compile",
-    "start-desktop": "concurrently \"yarn start\" \"yarn desktop\"",
-    "build-desktop": "wsrun -p @simrs/main -c build-desktop",
-    "prebuild-desktop": "concurrently \"wsrun -p @simrs/billing -c build\" \"wsrun -p @simrs/system -c build\"",
+    "desktop": "yarn workspace @simrs/main desktop",
+    "build-desktop": "yarn workspace @simrs/main build-desktop",
+    "prebuild-desktop": "wsrun --exclude-missing build",
     "storybook": "wsrun -p @simrs/components -c storybook"
   },
   "workspaces": {
     "packages": [
       "app/*",
       "module/*",
-      "shared/components",
-      "shared/common"
+      "shared/*"
     ],
     "nohoist": [
       "**/dotenv",
