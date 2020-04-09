@@ -15,11 +15,11 @@ export * from './datatable';
 export * from './Button';
 
 export {
-    TextBox,
-    PermissionDenied,
-    PrivateRoute,
-    Restricted,
-    Toastr,
-    FileUpload,
-    TreeView
-}
+  TextBox,
+  PermissionDenied,
+  PrivateRoute,
+  Restricted,
+  Toastr,
+  FileUpload,
+  TreeView,
+};

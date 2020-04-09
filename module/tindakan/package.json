@@ -12,8 +12,7 @@
     "@simrs/main": "*",
     "@module/tarif": "*"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "eslintConfig": {
     "extends": "react-app"
   },

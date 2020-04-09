@@ -6,7 +6,7 @@ import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
 import { ipcRenderer } from 'electron';
-import {Icon, Button} from 'semantic-ui-react';
+import { Icon, Button } from 'semantic-ui-react';
 import { Trans } from 'react-i18next';
 
 import {
@@ -16,10 +16,13 @@ import {
   DeleteButton,
   SaveButton,
   CancelButton,
-  confirmation
+  confirmation,
 } from '@simrs/components';
 import { getPermissions, isGranted } from '@simrs/main/src/modules/auth';
-import { moduleActions, moduleActionTypes } from '@simrs/main/src/modules/master/default';
+import {
+  moduleActions,
+  moduleActionTypes,
+} from '@simrs/main/src/modules/master/default';
 import actions from '../actions';
 
 class FooterActions extends Component {
@@ -46,7 +49,7 @@ class FooterActions extends Component {
     return (
       <FooterActionsContainer>
         <Fragment>
-          {this._isCanAdd() &&
+          {this._isCanAdd() && (
             <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
               <AddButton
                 as="a"
@@ -55,9 +58,8 @@ class FooterActions extends Component {
                 onKeyDown={this.keyDownHandler}
               />
             </Menu.Item>
-              
-          }
-          {this._isCanEdit() &&
+          )}
+          {this._isCanEdit() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <EditButton
                 onClick={this._onEdit}
@@ -65,8 +67,8 @@ class FooterActions extends Component {
                 onKeyDown={this.keyDownHandler}
               />
             </Menu.Item>
-          }
-          {this._isCanDelete() &&
+          )}
+          {this._isCanDelete() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <DeleteButton
                 onClick={this._onDelete}
@@ -74,8 +76,8 @@ class FooterActions extends Component {
                 onKeyDown={this.keyDownHandler}
               />
             </Menu.Item>
-          }
-          {this._isCanSave() &&
+          )}
+          {this._isCanSave() && (
             <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
               <SaveButton
                 tabIndex={-1}
@@ -85,8 +87,8 @@ class FooterActions extends Component {
                 onKeyDown={this.keyDownHandler}
               />
             </Menu.Item>
-          }
-          {this._isCanCancel() &&
+          )}
+          {this._isCanCancel() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <CancelButton
                 tabIndex={-1}
@@ -96,8 +98,8 @@ class FooterActions extends Component {
                 onKeyDown={this.keyDownHandler}
               />
             </Menu.Item>
-          }
-          {this._isCanSettingCounter() &&
+          )}
+          {this._isCanSettingCounter() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <Button
                 ref={this.settingCounter}
@@ -107,14 +109,16 @@ class FooterActions extends Component {
                 onClick={this._onSettingCounter}
                 onKeyDown={this.keyDownHandler}
               >
-                <Icon name='setting' />
-                <Trans i18nKey={`${this.props.resource}:action.setting_counter`} />
+                <Icon name="setting" />
+                <Trans
+                  i18nKey={`${this.props.resource}:action.setting_counter`}
+                />
               </Button>
             </Menu.Item>
-          }
+          )}
         </Fragment>
       </FooterActionsContainer>
-    )
+    );
   }
 
   componentDidMount() {
@@ -126,22 +130,22 @@ class FooterActions extends Component {
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
-          this[focusElement].current.focus();
+        this[focusElement].current.focus();
       }
     }
   }
 
   componentWillUnmount() {
-      this._unbindKey();
+    this._unbindKey();
   }
 
   _unbindKey() {
-    MouseTrap.unbind("alt+t");
-    MouseTrap.unbind("alt+k");
-    MouseTrap.unbind("alt+h");
-    MouseTrap.unbind("alt+s");
-    MouseTrap.unbind("alt+b");
-    MouseTrap.unbind("esc");
+    MouseTrap.unbind('alt+t');
+    MouseTrap.unbind('alt+k');
+    MouseTrap.unbind('alt+h');
+    MouseTrap.unbind('alt+s');
+    MouseTrap.unbind('alt+b');
+    MouseTrap.unbind('esc');
   }
 
   _bindKey() {
@@ -150,24 +154,24 @@ class FooterActions extends Component {
     MouseTrap.bindGlobal('alt+t', function (e) {
       e.preventDefault();
       if (_this._isCanAdd()) {
-          _this.add.current.focus();
-          _this._onAdd();
+        _this.add.current.focus();
+        _this._onAdd();
       }
     });
 
     MouseTrap.bindGlobal('alt+k', function (e) {
       e.preventDefault();
       if (_this._isCanEdit()) {
-          _this.edit.current.focus();
-          _this._onEdit();
+        _this.edit.current.focus();
+        _this._onEdit();
       }
     });
 
     MouseTrap.bindGlobal('alt+h', function (e) {
       e.preventDefault();
       if (_this._isCanDelete()) {
-          _this.delete.current.focus();
-          _this._onDelete();
+        _this.delete.current.focus();
+        _this._onDelete();
       }
     });
 
@@ -177,8 +181,11 @@ class FooterActions extends Component {
       if (settingCounter.show === true) {
         _this.props.action.onSaveSettingCounter(resource, settingCounter.post);
       } else {
-        if (statusForm === moduleActionTypes.READY ||
-          statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED) {
+        if (
+          statusForm === moduleActionTypes.READY ||
+          statusForm === moduleActionTypes.CANCEL ||
+          statusForm === moduleActionTypes.SELECTED
+        ) {
           if (_this._isCanSettingCounter()) {
             _this._onSettingCounter();
           }
@@ -193,7 +200,7 @@ class FooterActions extends Component {
     MouseTrap.bindGlobal(['alt+b', 'esc'], function (e) {
       e.preventDefault();
       if (_this.props.settingCounter.show === true) {
-        _this.props.action.onCancelSettingCounter(_this.props.resource)
+        _this.props.action.onCancelSettingCounter(_this.props.resource);
       } else {
         if (_this._isCanCancel()) {
           _this._onCancel();
@@ -203,12 +210,15 @@ class FooterActions extends Component {
   }
 
   _isCanAdd() {
-    let { customPermissions, statusForm} = this.props;
+    let { customPermissions, statusForm } = this.props;
     let isValid = false;
-    if (customPermissions.canAdd && (statusForm === moduleActionTypes.READY ||
-        statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+    if (
+      customPermissions.canAdd &&
+      (statusForm === moduleActionTypes.READY ||
+        statusForm === moduleActionTypes.CANCEL ||
+        statusForm === moduleActionTypes.SELECTED)
     ) {
-        isValid = true;
+      isValid = true;
     }
 
     return isValid;
@@ -217,9 +227,13 @@ class FooterActions extends Component {
   _isCanEdit() {
     let { customPermissions, statusForm, selectedRow } = this.props;
     let isValid = false;
-    if (customPermissions.canEdit && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+    if (
+      customPermissions.canEdit &&
+      selectedRow &&
+      (statusForm === moduleActionTypes.CANCEL ||
+        statusForm === moduleActionTypes.SELECTED)
     ) {
-        isValid = true;
+      isValid = true;
     }
 
     return isValid;
@@ -228,9 +242,13 @@ class FooterActions extends Component {
   _isCanDelete() {
     let { customPermissions, statusForm, selectedRow } = this.props;
     let isValid = false;
-    if (customPermissions.canDelete && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+    if (
+      customPermissions.canDelete &&
+      selectedRow &&
+      (statusForm === moduleActionTypes.CANCEL ||
+        statusForm === moduleActionTypes.SELECTED)
     ) {
-        isValid = true;
+      isValid = true;
     }
 
     return isValid;
@@ -239,9 +257,12 @@ class FooterActions extends Component {
   _isCanSave() {
     let { customPermissions, statusForm } = this.props;
     let isValid = false;
-    if ((customPermissions.canAdd || customPermissions.canEdit) && (statusForm === moduleActionTypes.ADD || statusForm === moduleActionTypes.EDIT)
+    if (
+      (customPermissions.canAdd || customPermissions.canEdit) &&
+      (statusForm === moduleActionTypes.ADD ||
+        statusForm === moduleActionTypes.EDIT)
     ) {
-        isValid = true;
+      isValid = true;
     }
 
     return isValid;
@@ -250,8 +271,11 @@ class FooterActions extends Component {
   _isCanCancel() {
     let { statusForm } = this.props;
     let isValid = false;
-    if (statusForm === moduleActionTypes.ADD || statusForm === moduleActionTypes.EDIT) {
-        isValid = true;
+    if (
+      statusForm === moduleActionTypes.ADD ||
+      statusForm === moduleActionTypes.EDIT
+    ) {
+      isValid = true;
     }
 
     return isValid;
@@ -260,7 +284,11 @@ class FooterActions extends Component {
   _isCanSettingCounter() {
     let { customPermissions, statusForm, selectedRow } = this.props;
     let isValid = false;
-    if (customPermissions.canSettingCounter && selectedRow && (statusForm === moduleActionTypes.CANCEL || statusForm === moduleActionTypes.SELECTED)
+    if (
+      customPermissions.canSettingCounter &&
+      selectedRow &&
+      (statusForm === moduleActionTypes.CANCEL ||
+        statusForm === moduleActionTypes.SELECTED)
     ) {
       isValid = true;
     }
@@ -279,12 +307,12 @@ class FooterActions extends Component {
   }
 
   _onDelete() {
-    const {t, resource, action, post} = this.props;
+    const { t, resource, action, post } = this.props;
     confirmation({
-        title: t(`common:dialog.confirmation.title`),
-        message: t(`common:dialog.confirmation.delete`),
-        buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-        onOk: () => action.onDelete(resource, post)
+      title: t(`common:dialog.confirmation.title`),
+      message: t(`common:dialog.confirmation.delete`),
+      buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
+      onOk: () => action.onDelete(resource, post),
     });
   }
 
@@ -307,31 +335,31 @@ class FooterActions extends Component {
       e.preventDefault();
       let nextElement = '';
       switch (name) {
-          case 'add':
-            if (this.props.post.id) {
-              nextElement = 'settingCounter';
-            } else {
-              nextElement = 'add';
-            }
-            break;
-          case 'edit':
-            nextElement = 'delete';
-            break;
-          case 'delete':
+        case 'add':
+          if (this.props.post.id) {
+            nextElement = 'settingCounter';
+          } else {
             nextElement = 'add';
-            break;
-          case 'save':
-            nextElement = 'cancel';
-            break;
-          case 'cancel':
-            nextElement = 'save';
-            break;
-          case 'duplication':
-            nextElement = 'add';
-            break;
-          default:
-            nextElement= '';
-            break;
+          }
+          break;
+        case 'edit':
+          nextElement = 'delete';
+          break;
+        case 'delete':
+          nextElement = 'add';
+          break;
+        case 'save':
+          nextElement = 'cancel';
+          break;
+        case 'cancel':
+          nextElement = 'save';
+          break;
+        case 'duplication':
+          nextElement = 'add';
+          break;
+        default:
+          nextElement = '';
+          break;
       }
 
       this.props.action.onFocusElement(this.props.resource, nextElement);
@@ -343,24 +371,29 @@ class FooterActions extends Component {
       }
     }
   }
-
 }
 
 const mapStateToProps = function (state, props) {
-  const { statusForm, selectedRow, post, focusElement, settingCounter } = state.default.module;
+  const {
+    statusForm,
+    selectedRow,
+    post,
+    focusElement,
+    settingCounter,
+  } = state.default.module;
 
   return {
     customPermissions: {
       ...getPermissions(props.permissions),
-      canSettingCounter: isGranted(props.permissions, 'setting_counter')
+      canSettingCounter: isGranted(props.permissions, 'setting_counter'),
     },
     statusForm,
     selectedRow,
     post,
     focusElement,
-    settingCounter
-  }
-}
+    settingCounter,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -375,8 +408,8 @@ const mapDispatchToProps = function (dispatch) {
       },
       dispatch
     ),
-  }
-}
+  };
+};
 
 FooterActions.propTypes = {
   permissions: PropTypes.array,

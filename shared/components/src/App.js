@@ -1,7 +1,17 @@
 import React, { Component, Fragment } from 'react';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 
-import { Layout, PrivateRoute, PermissionDenied, Restricted } from 'main/dist/components';
+import {
+  Layout,
+  PrivateRoute,
+  PermissionDenied,
+  Restricted,
+} from 'main/dist/components';
 import { store, menu } from 'common';
 import Dashboard from './Dashboard';
 import ChangePassword from 'change-password';
@@ -12,7 +22,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      hasError: false
+      hasError: false,
     };
   }
 
@@ -22,7 +32,6 @@ class App extends Component {
     }
 
     return (
-      
       <Router>
         <Layout
           logo={
@@ -38,7 +47,10 @@ class App extends Component {
           username={this._getUsername()}
         >
           <Switch>
-            <PrivateRoute path="/billing/dashboard" render={this._renderDashboard} />
+            <PrivateRoute
+              path="/billing/dashboard"
+              render={this._renderDashboard}
+            />
             {rootRouters.map((router, index) => {
               let Component = router.component;
 
@@ -46,19 +58,31 @@ class App extends Component {
                 <PrivateRoute
                   key={index}
                   path={router.path}
-                  render={(props) =>
-                    <Restricted route={router.key} {...props}><Component resource={router.key} {...props} /></Restricted>
-                  }
+                  render={(props) => (
+                    <Restricted route={router.key} {...props}>
+                      <Component resource={router.key} {...props} />
+                    </Restricted>
+                  )}
                 />
-              )
+              );
             })}
-            <Route path="/system/portal/change-password" render={(props) => <ChangePassword {...props} resource="_system_portal_change_password" />} />
-            <Route path="/permission-denied" render={(props) => <PermissionDenied {...props}/>}/>
+            <Route
+              path="/system/portal/change-password"
+              render={(props) => (
+                <ChangePassword
+                  {...props}
+                  resource="_system_portal_change_password"
+                />
+              )}
+            />
+            <Route
+              path="/permission-denied"
+              render={(props) => <PermissionDenied {...props} />}
+            />
             <Redirect to={'/billing/dashboard'} />
           </Switch>
         </Layout>
       </Router>
-      
     );
   }
 

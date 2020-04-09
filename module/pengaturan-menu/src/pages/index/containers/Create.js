@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { Segment, Icon, Header, Grid, Form, Input } from 'semantic-ui-react';
 
-import {
-  TreeView,
-  Checkbox,
-  PageLoader
-} from '@simrs/components';
+import { TreeView, Checkbox, PageLoader } from '@simrs/components';
 import Details from './Details';
 import actions from '../actions';
 import actionTypes from '../actionTypes';
@@ -42,13 +38,13 @@ class Create extends Component {
       isDisableForm,
       statusForm,
       loaderMessage,
-      t
+      t,
     } = this.props;
 
     return (
       <Fragment>
         <Segment secondary className="content-header">
-          <Header as='h4'>
+          <Header as="h4">
             <Icon name="settings" />
             {this.props.t(`${this.props.resource}:title`)}
           </Header>
@@ -88,13 +84,17 @@ class Create extends Component {
                             value={post.nama}
                             disabled={isDisableForm}
                             onChange={this._handleInputChange}
-                            onKeyDown={(e) => this._onFocusElement(e, 'key_menu')}
+                            onKeyDown={(e) =>
+                              this._onFocusElement(e, 'key_menu')
+                            }
                           />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="required field">
-                          <label>{t(this._getKey('label.field.key_menu'))}</label>
+                          <label>
+                            {t(this._getKey('label.field.key_menu'))}
+                          </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
                           <Input
@@ -103,13 +103,17 @@ class Create extends Component {
                             value={post.key_menu}
                             disabled={isDisableForm}
                             onChange={this._handleInputChange}
-                            onKeyDown={(e) => this._onFocusElement(e, 'kode_app')}
+                            onKeyDown={(e) =>
+                              this._onFocusElement(e, 'kode_app')
+                            }
                           />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="required field">
-                          <label>{t(this._getKey('label.field.kode_app'))}</label>
+                          <label>
+                            {t(this._getKey('label.field.kode_app'))}
+                          </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
                           <Input
@@ -133,14 +137,18 @@ class Create extends Component {
                             value={post.urutan}
                             disabled={isDisableForm}
                             onChange={this._handleInputChange}
-                            onKeyDown={(e) => this._onFocusElement(e, 'default_action')}
+                            onKeyDown={(e) =>
+                              this._onFocusElement(e, 'default_action')
+                            }
                           />
                         </Grid.Column>
                       </Grid.Row>
-                      {statusForm === actionTypes.ADD &&
+                      {statusForm === actionTypes.ADD && (
                         <Grid.Row className="form-row">
                           <Grid.Column width="4" className="field">
-                            <label>{t(this._getKey('label.field.default_action'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.default_action'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
                             <Checkbox
@@ -154,7 +162,7 @@ class Create extends Component {
                             />
                           </Grid.Column>
                         </Grid.Row>
-                      }
+                      )}
                     </Grid>
                   </Form>
                 </Segment>
@@ -165,7 +173,7 @@ class Create extends Component {
         </Segment>
         <PageLoader active={isLoading} message={loaderMessage} />
       </Fragment>
-    )
+    );
   }
 
   componentDidMount() {
@@ -181,11 +189,17 @@ class Create extends Component {
           this[focusElement].current.focus();
         }
       }
-    } else if (statusForm === actionTypes.CANCEL && prevProps.statusForm === actionTypes.ADD) {
+    } else if (
+      statusForm === actionTypes.CANCEL &&
+      prevProps.statusForm === actionTypes.ADD
+    ) {
       if (selectedKeys[0]) {
         let node = this.tree.current._getNode(selectedKeys[0]);
         if (node) {
-          this.props.action.onSelect(this.props.resource, { selectedKeys, selectedData: node.props });
+          this.props.action.onSelect(this.props.resource, {
+            selectedKeys,
+            selectedData: node.props,
+          });
         }
       }
     }
@@ -195,7 +209,7 @@ class Create extends Component {
     const { name, value, checked, type } = e.target;
     let val = '';
     if (type === 'checkbox') {
-      val = checked ? true : ''
+      val = checked ? true : '';
     } else {
       val = value;
     }
@@ -207,7 +221,10 @@ class Create extends Component {
   }
 
   _onSelect(selectedKeys, { node }) {
-    this.props.action.onSelect(this.props.resource, { selectedKeys, selectedData: node.props });
+    this.props.action.onSelect(this.props.resource, {
+      selectedKeys,
+      selectedData: node.props,
+    });
   }
 
   _getKey(key) {
@@ -238,21 +255,24 @@ const mapStateToProps = function (state) {
     isDisableForm: isDisableForm(statusForm),
     focusElement,
     statusForm,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
-    action: bindActionCreators({
-      openForm: actions.openForm,
-      onExpand: actions.onExpandedChange,
-      onSelect: actions.onSelectedChange,
-      onInputChange: actions.onInputChange,
-      onFocusElement: actions.onFocusElement,
-      onReset: actions.onReset,
-    }, dispatch),
-  }
-}
+    action: bindActionCreators(
+      {
+        openForm: actions.openForm,
+        onExpand: actions.onExpandedChange,
+        onSelect: actions.onSelectedChange,
+        onInputChange: actions.onInputChange,
+        onFocusElement: actions.onFocusElement,
+        onReset: actions.onReset,
+      },
+      dispatch
+    ),
+  };
+};
 
 Create.propTypes = {
   action: PropTypes.object,

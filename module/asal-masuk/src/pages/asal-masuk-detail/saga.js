@@ -3,12 +3,17 @@ import _ from 'lodash';
 import { ipcRenderer } from 'electron';
 
 import { validator as commonValidator, toastrActions } from '@simrs/common';
-import { loaderActions, datatableActions, constDatatable, datatableActionTypes } from '@simrs/components';
+import {
+  loaderActions,
+  datatableActions,
+  constDatatable,
+  datatableActionTypes,
+} from '@simrs/components';
 import api from '../../services/models/asalMasukDetailModel';
 import {
-    moduleActionTypes,
-    moduleActions,
-    filterActionTypes
+  moduleActionTypes,
+  moduleActions,
+  filterActionTypes,
 } from '@simrs/main/src/modules/master/nested';
 import { actions, actionTypes } from '../asal-masuk-detail';
 
@@ -16,226 +21,267 @@ const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
 function* loadAll({ payload, meta }) {
-    const { successCallback, failCallback, pastAction } = meta.tableParams;
+  const { successCallback, failCallback, pastAction } = meta.tableParams;
 
-    try {
-        let response = yield call(api.getAll, payload.data);
-        if (response.status) {
-            successCallback(response.data, response.recordsTotal)
-        } else {
-            failCallback();
-        }
-    } catch (error) {
-        failCallback();
+  try {
+    let response = yield call(api.getAll, payload.data);
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      failCallback();
     }
-    yield put(datatableActions.onReloaded(meta.subResource, pastAction));
+  } catch (error) {
+    failCallback();
+  }
+  yield put(datatableActions.onReloaded(meta.subResource, pastAction));
 }
 
 function* loadAllDetail({ payload, meta }) {
-    const { successCallback, failCallback } = meta.tableParams;
+  const { successCallback, failCallback } = meta.tableParams;
 
-    try {
-        let response = yield call(api.getAllUnitLayanan, payload.data);
+  try {
+    let response = yield call(api.getAllUnitLayanan, payload.data);
 
-        if (response.status) {
-            successCallback(response.data, response.recordsTotal)
-        } else {
-            yield put(toastrActions.error(response.message));
-            failCallback();
-        }
-    } catch (error) {
-        failCallback();
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      yield put(toastrActions.error(response.message));
+      failCallback();
     }
-    yield put(actions.onReloaded(meta.resource, meta.subResource));
+  } catch (error) {
+    failCallback();
+  }
+  yield put(actions.onReloaded(meta.resource, meta.subResource));
 }
 
 function* handleSave({ payload, meta }) {
-    let { resource, subResource } = meta;
-    try {
-        yield put(loaderActions.show('Proses simpan...'));
-        let { rules, messages } = api.validationRules(resource);
-        let post = payload.data;
-        let method = post.id ? 'koreksi' : 'tambah';
-        let errors = validator(post, rules, messages);
-        let isError = false;
+  let { resource, subResource } = meta;
+  try {
+    yield put(loaderActions.show('Proses simpan...'));
+    let { rules, messages } = api.validationRules(resource);
+    let post = payload.data;
+    let method = post.id ? 'koreksi' : 'tambah';
+    let errors = validator(post, rules, messages);
+    let isError = false;
 
-        if (_.isEmpty(errors)) {
-            let response = yield call(api.save, method, post);
-            if (response.status) {
-                response.action = method;
-                yield put(moduleActions.save.requestSuccess(resource, subResource, response));
-            } else {
-                isError = true;
-                errors = response.data;
-            }
-        } else {
-            isError = true;
-        }
-
-        if (isError) {
-            yield put(toastrActions.warning(getFirstError(errors)));
-            yield put(moduleActions.save.requestFailure(resource, subResource, errors));
-        }
-        yield put(loaderActions.hide());
-    } catch (error) {
-        yield put(loaderActions.hide());
-        yield put(toastrActions.error(error.message));
-        yield ipcRenderer.send('enable-header');
+    if (_.isEmpty(errors)) {
+      let response = yield call(api.save, method, post);
+      if (response.status) {
+        response.action = method;
+        yield put(
+          moduleActions.save.requestSuccess(resource, subResource, response)
+        );
+      } else {
+        isError = true;
+        errors = response.data;
+      }
+    } else {
+      isError = true;
     }
+
+    if (isError) {
+      yield put(toastrActions.warning(getFirstError(errors)));
+      yield put(
+        moduleActions.save.requestFailure(resource, subResource, errors)
+      );
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield put(toastrActions.error(error.message));
+    yield ipcRenderer.send('enable-header');
+  }
 }
 
 function* handleSaveSuccess({ payload, meta }) {
-    try {
-        yield put(toastrActions.success(payload.data.message));
-        yield put(datatableActions.onReload(meta.subResource));
-        yield ipcRenderer.send('enable-header');
-    } catch (error) {
-        yield put(toastrActions.error(error.message));
-    }
+  try {
+    yield put(toastrActions.success(payload.data.message));
+    yield put(datatableActions.onReload(meta.subResource));
+    yield ipcRenderer.send('enable-header');
+  } catch (error) {
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleSaveFailure({ payload, meta }) {
-    let { resource, subResource } = meta;
-    yield put(moduleActions.onFocusElement(resource, subResource, getFirstElementError(payload.errors)));
+  let { resource, subResource } = meta;
+  yield put(
+    moduleActions.onFocusElement(
+      resource,
+      subResource,
+      getFirstElementError(payload.errors)
+    )
+  );
 }
 
 function* handleReloaded({ meta }) {
-    yield put(moduleActions.onReady(meta.resource, meta.subResource));
+  yield put(moduleActions.onReady(meta.resource, meta.subResource));
 }
 
 function* handleDelete({ payload, meta }) {
-    try {
-        yield put(loaderActions.show('Proses hapus...'));
-        let post = payload.data;
+  try {
+    yield put(loaderActions.show('Proses hapus...'));
+    let post = payload.data;
 
-        let response = yield call(api.delete, { id: post.id });
-        if (response.status) {
-            yield put(moduleActions.delete.requestSuccess(meta.resource, meta.subResource, response));
-        } else {
-            if (response.info.type === 'warning') {
-                yield put(toastrActions.warning(response.message));
-            } else {
-                yield put(toastrActions.error(response.message));
-            }
-        }
-
-        yield put(loaderActions.hide());
-    } catch (error) {
-        yield put(loaderActions.hide());
-        yield put(toastrActions.error(error.message));
+    let response = yield call(api.delete, { id: post.id });
+    if (response.status) {
+      yield put(
+        moduleActions.delete.requestSuccess(
+          meta.resource,
+          meta.subResource,
+          response
+        )
+      );
+    } else {
+      if (response.info.type === 'warning') {
+        yield put(toastrActions.warning(response.message));
+      } else {
+        yield put(toastrActions.error(response.message));
+      }
     }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleDeleteSuccess({ payload, meta }) {
-    try {
-        yield put(toastrActions.success(payload.data.message));
-        yield put(datatableActions.onReload(meta.subResource));
-    } catch (error) {
-        yield put(toastrActions.error(error.message));
-    }
+  try {
+    yield put(toastrActions.success(payload.data.message));
+    yield put(datatableActions.onReload(meta.subResource));
+  } catch (error) {
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleSearch({ meta }) {
-    try {
-        yield put(datatableActions.onReload(meta.subResource, constDatatable.reloadType.purge));
-    } catch (error) {
-        yield put(toastrActions.error(error.message));
-    }
+  try {
+    yield put(
+      datatableActions.onReload(
+        meta.subResource,
+        constDatatable.reloadType.purge
+      )
+    );
+  } catch (error) {
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleAdd({ meta }) {
-    yield put(moduleActions.onFocusElement(meta.resource, meta.subResource, 'nama'));
+  yield put(
+    moduleActions.onFocusElement(meta.resource, meta.subResource, 'nama')
+  );
 }
 
 function* handleEdit({ meta }) {
-    yield put(moduleActions.onFocusElement(meta.resource, meta.subResource, 'nama'));
+  yield put(
+    moduleActions.onFocusElement(meta.resource, meta.subResource, 'nama')
+  );
 }
 
 function* populateForm({ meta }) {
-    try {
-        yield put(loaderActions.show('Load data instalasi...'));
-        let { getInstalasi } = actions;
-        let response = yield call(api.getInstalasi);
-        if (response.status) {
-            yield put(getInstalasi.requestSuccess(meta.resource, meta.subResource, response.data));
-        } else {
-            yield put(getInstalasi.requestFailure(meta.resource, meta.subResource, response.message));
-        }
-
-        yield put(loaderActions.hide());
-    } catch (error) {
-        yield put(loaderActions.hide());
-        yield put(toastrActions.error(error.message));
+  try {
+    yield put(loaderActions.show('Load data instalasi...'));
+    let { getInstalasi } = actions;
+    let response = yield call(api.getInstalasi);
+    if (response.status) {
+      yield put(
+        getInstalasi.requestSuccess(
+          meta.resource,
+          meta.subResource,
+          response.data
+        )
+      );
+    } else {
+      yield put(
+        getInstalasi.requestFailure(
+          meta.resource,
+          meta.subResource,
+          response.message
+        )
+      );
     }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleImportDetail({ payload, meta }) {
-    let { resource, subResource } = meta;
-    try {
-        yield put(loaderActions.show('Proses impor...'));
-        let { rules, messages } = api.validationImportRules(resource);
-        let post = payload.data;
-        let errors = validator(post, rules, messages);
-        let isError = false;
+  let { resource, subResource } = meta;
+  try {
+    yield put(loaderActions.show('Proses impor...'));
+    let { rules, messages } = api.validationImportRules(resource);
+    let post = payload.data;
+    let errors = validator(post, rules, messages);
+    let isError = false;
 
-        if (_.isEmpty(errors)) {
-            let response = yield call(api.importDetail, post);
-            if (response.status) {
-                yield put(actions.importDetail.requestSuccess(resource, subResource, response));
-            } else {
-                isError = true;
-                errors = response.data;
-            }
-        } else {
-            isError = true;
-        }
-
-        if (isError) {
-            yield put(actions.importDetail.requestFailure(resource, subResource, errors));
-            yield put(toastrActions.error(getFirstError(errors)));
-        }
-        yield put(loaderActions.hide());
-    } catch (error) {
-        yield put(loaderActions.hide());
-        yield put(toastrActions.error(error.message));
+    if (_.isEmpty(errors)) {
+      let response = yield call(api.importDetail, post);
+      if (response.status) {
+        yield put(
+          actions.importDetail.requestSuccess(resource, subResource, response)
+        );
+      } else {
+        isError = true;
+        errors = response.data;
+      }
+    } else {
+      isError = true;
     }
+
+    if (isError) {
+      yield put(
+        actions.importDetail.requestFailure(resource, subResource, errors)
+      );
+      yield put(toastrActions.error(getFirstError(errors)));
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleImportDetailSuccess({ payload, meta }) {
-    try {
-        yield put(datatableActions.onReload(meta.subResource));
-        yield put(toastrActions.success(payload.data.message));
-    } catch (error) {
-        yield put(toastrActions.error(error.message));
-    }
+  try {
+    yield put(datatableActions.onReload(meta.subResource));
+    yield put(toastrActions.success(payload.data.message));
+  } catch (error) {
+    yield put(toastrActions.error(error.message));
+  }
 }
 
 function* handleChangeInstalasi({ meta }) {
-    yield put(actions.onReload(meta.resource, meta.subResource));
+  yield put(actions.onReload(meta.resource, meta.subResource));
 }
 
 function* handleFocusElement() {
-    yield ipcRenderer.send('focusing-field');
+  yield ipcRenderer.send('focusing-field');
 }
 
 export default function* watchActions() {
-    yield all([
-        takeLatest(moduleActionTypes.LOAD_ALL, loadAll),
-        takeLatest(moduleActionTypes.SAVE_REQUEST, handleSave),
-        takeLatest(moduleActionTypes.SAVE_SUCCESS, handleSaveSuccess),
-        takeLatest(moduleActionTypes.SAVE_FAILURE, handleSaveFailure),
-        takeLatest(moduleActionTypes.DELETE_REQUEST, handleDelete),
-        takeLatest(moduleActionTypes.DELETE_SUCCESS, handleDeleteSuccess),
-        takeLatest(moduleActionTypes.ADD, handleAdd),
-        takeLatest(moduleActionTypes.EDIT, handleEdit),
-        takeLatest(filterActionTypes.FILTER_SUBMIT, handleSearch),
-        takeLatest(datatableActionTypes.RELOADED, handleReloaded),
-        takeLatest(moduleActionTypes.ON_FOCUS_ELEMENT, handleFocusElement),
+  yield all([
+    takeLatest(moduleActionTypes.LOAD_ALL, loadAll),
+    takeLatest(moduleActionTypes.SAVE_REQUEST, handleSave),
+    takeLatest(moduleActionTypes.SAVE_SUCCESS, handleSaveSuccess),
+    takeLatest(moduleActionTypes.SAVE_FAILURE, handleSaveFailure),
+    takeLatest(moduleActionTypes.DELETE_REQUEST, handleDelete),
+    takeLatest(moduleActionTypes.DELETE_SUCCESS, handleDeleteSuccess),
+    takeLatest(moduleActionTypes.ADD, handleAdd),
+    takeLatest(moduleActionTypes.EDIT, handleEdit),
+    takeLatest(filterActionTypes.FILTER_SUBMIT, handleSearch),
+    takeLatest(datatableActionTypes.RELOADED, handleReloaded),
+    takeLatest(moduleActionTypes.ON_FOCUS_ELEMENT, handleFocusElement),
 
-        takeLatest(actionTypes.LOAD_DATA_ON_IMPORT_DETAIL, loadAllDetail),
-        takeLatest(actionTypes.GET_OPTIONS_INSTALASI_REQUEST, populateForm),
-        takeLatest(actionTypes.IMPORT_DETAIL_REQUEST, handleImportDetail),
-        takeLatest(actionTypes.IMPORT_DETAIL_SUCCESS, handleImportDetailSuccess),
-        takeLatest(actionTypes.CHANGE_INSTALASI, handleChangeInstalasi),
-    ]);
+    takeLatest(actionTypes.LOAD_DATA_ON_IMPORT_DETAIL, loadAllDetail),
+    takeLatest(actionTypes.GET_OPTIONS_INSTALASI_REQUEST, populateForm),
+    takeLatest(actionTypes.IMPORT_DETAIL_REQUEST, handleImportDetail),
+    takeLatest(actionTypes.IMPORT_DETAIL_SUCCESS, handleImportDetailSuccess),
+    takeLatest(actionTypes.CHANGE_INSTALASI, handleChangeInstalasi),
+  ]);
 }

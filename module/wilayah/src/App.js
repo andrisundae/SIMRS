@@ -1,7 +1,12 @@
 import React, { Fragment, Component } from 'react';
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 
 import { Toastr } from '@simrs/components';
 import Provinsi, { store as createProvinsiStore } from './pages/provinsi';
@@ -47,74 +52,120 @@ class SwitchComponent extends Component {
 
     return (
       <Fragment>
-          <Provider store={provinsiStore}>
+        <Provider store={provinsiStore}>
           <Fragment>
             <Switch location={isKota ? this.previousLocation : location}>
-              <Route exact path="/" render={() => <Redirect to="/provinsi" />} />
-              <Route exact path="/provinsi" render={(props) =>
-                <Provinsi resource={resource} {...props} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
+              <Route
+                exact
+                path="/"
+                render={() => <Redirect to="/provinsi" />}
+              />
+              <Route
+                exact
+                path="/provinsi"
+                render={(props) => (
+                  <Provinsi
+                    resource={resource}
+                    {...props}
+                    t={t}
+                    i18n={i18n}
+                    permissions={permissions}
+                    settings={settings}
+                  />
+                )}
+              />
             </Switch>
             <Toastr preventDuplicates={false} />
           </Fragment>
         </Provider>
-        {isKota &&
+        {isKota && (
           <Provider store={kotaStore}>
             <Fragment>
-              <Switch location={isKecamatan ? this.previousLocationKota : location}>
-                <Route path="/kota/:provinsi" render={(props) =>
-                  <Kota {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
+              <Switch
+                location={isKecamatan ? this.previousLocationKota : location}
+              >
+                <Route
+                  path="/kota/:provinsi"
+                  render={(props) => (
+                    <Kota
+                      {...props}
+                      resource={resource}
+                      t={t}
+                      i18n={i18n}
+                      permissions={permissions}
+                      settings={settings}
+                    />
+                  )}
+                />
               </Switch>
               <Toastr preventDuplicates={false} />
             </Fragment>
-
           </Provider>
-        }
+        )}
 
-        {isKecamatan &&
+        {isKecamatan && (
           <Provider store={kecamatanStore}>
             <Fragment>
-              <Switch location={isDesa ? this.previousLocationKecamatan : location}>
-              <Route path="/kecamatan/:kota" render={(props) =>
-                <Kecamatan {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
+              <Switch
+                location={isDesa ? this.previousLocationKecamatan : location}
+              >
+                <Route
+                  path="/kecamatan/:kota"
+                  render={(props) => (
+                    <Kecamatan
+                      {...props}
+                      resource={resource}
+                      t={t}
+                      i18n={i18n}
+                      permissions={permissions}
+                      settings={settings}
+                    />
+                  )}
+                />
               </Switch>
               <Toastr preventDuplicates={false} />
             </Fragment>
           </Provider>
-        }
+        )}
 
-        {isDesa &&
+        {isDesa && (
           <Provider store={desaStore}>
             <Fragment>
-            <Route path="/desa/:kecamatan" render={(props) =>
-              <Desa {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
+              <Route
+                path="/desa/:kecamatan"
+                render={(props) => (
+                  <Desa
+                    {...props}
+                    resource={resource}
+                    t={t}
+                    i18n={i18n}
+                    permissions={permissions}
+                    settings={settings}
+                  />
+                )}
+              />
               <Toastr preventDuplicates={false} />
             </Fragment>
           </Provider>
-        }
+        )}
       </Fragment>
     );
   }
 
   componentDidUpdate() {
     const { location, history } = this.props;
-    if (
-      history.action !== "POP" &&
-      (!location.state || !location.state.kota)
-    ) {
+    if (history.action !== 'POP' && (!location.state || !location.state.kota)) {
       this.previousLocation = location;
     }
 
     if (
-      history.action !== "POP" &&
+      history.action !== 'POP' &&
       (!location.state || !location.state.kecamatan)
     ) {
       this.previousLocationKota = location;
     }
 
-    if (
-      history.action !== "POP" &&
-      (!location.state || !location.state.desa)
-    ) {
+    if (history.action !== 'POP' && (!location.state || !location.state.desa)) {
       this.previousLocationKecamatan = location;
     }
   }
@@ -126,12 +177,21 @@ SwitchComponent.propTypes = {
   history: PropTypes.object,
 };
 
-
-function App({ match, t, i18n, resource, permissions, settings}) {
+function App({ match, t, i18n, resource, permissions, settings }) {
   return (
     <Router basename={match.url}>
-      <Route render={(props) =>
-        <SwitchComponent {...props} t={t} i18n={i18n} resource={resource} permissions={permissions} settings={settings} />} />
+      <Route
+        render={(props) => (
+          <SwitchComponent
+            {...props}
+            t={t}
+            i18n={i18n}
+            resource={resource}
+            permissions={permissions}
+            settings={settings}
+          />
+        )}
+      />
     </Router>
   );
 }
@@ -140,7 +200,7 @@ App.propTypes = {
   resource: PropTypes.string.isRequired,
   match: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
-  i18n: PropTypes.object.isRequired
+  i18n: PropTypes.object.isRequired,
 };
 
 export default App;

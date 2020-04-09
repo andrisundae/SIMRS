@@ -12,7 +12,7 @@ import PenjaminPasien from './PenjaminPasien';
 import InputPasien from './InputPasien';
 
 import actions from '../actions';
-import {isDisable} from '../reducer';
+import { isDisable } from '../reducer';
 
 class Create extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Create extends Component {
       e.preventDefault();
       this.props.action.toggleShowCariKunjungan();
     }
-  }
+  };
 
   dataSourcePasien = () => {
     return {
@@ -43,13 +43,13 @@ class Create extends Component {
           start: params.startRow,
           sort_name: sortModel.colId ? sortModel.colId : '',
           sort_order: sortModel.colId ? sortModel.sort : '',
-          filters: { ...this.props.filterPasien.post}
+          filters: { ...this.props.filterPasien.post },
         };
 
         this.props.action.loadAllPasien(this.props.resource, post, params);
-      }
-    }
-  }
+      },
+    };
+  };
 
   dataSourceWilayah = () => {
     return {
@@ -61,33 +61,33 @@ class Create extends Component {
           start: params.startRow,
           sort_name: sortModel.colId ? sortModel.colId : '',
           sort_order: sortModel.colId ? sortModel.sort : '',
-          filters: { ...this.props.filterWilayah.post }
+          filters: { ...this.props.filterWilayah.post },
         };
 
         this.props.action.loadAllWilayah(this.props.resource, post, params);
-      }
-    }
-  }
+      },
+    };
+  };
 
   getStateDatatables = (name) => {
     return this.props.datatables[name];
-  }
+  };
 
   onSelectedPasienHandler = (params) => {
     if (params.node.isSelected()) {
       this.props.action.onSelectedPasien(this.props.resource, params.data);
     }
-  }
+  };
 
   select2ChangeHanlder = (name, selected) => {
     this.props.action.onChangeSelect2(this.props.resource, name, selected);
-  }
+  };
 
   inputChangeHandler = (e) => {
     const { name, value } = e.target;
     const { resource, action } = this.props;
     action.onChangeInput(resource, { name, value });
-  }
+  };
 
   render() {
     const {
@@ -100,39 +100,43 @@ class Create extends Component {
       action,
       resource,
       statusForm,
-      selectedOption
+      selectedOption,
     } = this.props;
-    
 
     const panes = [
       {
         menuItem: '1. Pasien',
         render: () => {
           return (
-            <Tab.Pane attached='top'>
+            <Tab.Pane attached="top">
               <InputPasien t={this.props.t} resource={this.props.resource} />
             </Tab.Pane>
-          )
+          );
         },
       },
       {
         menuItem: '2. Penjamin Pasien',
         render: () => {
           return (
-            <Tab.Pane attached='top'>
+            <Tab.Pane attached="top">
               <PenjaminPasien t={this.props.t} resource={this.props.resource} />
             </Tab.Pane>
-          )
+          );
         },
       },
-    ]
+    ];
 
     const disabledDetail = isDisable('detail_pasien', statusForm);
 
     return (
       <Form id="form-kunjungan-pasien" size="mini">
-        <Segment size="mini" style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}>
-          <Divider horizontal style={{ marginTop: 0, marginBottom: 35 }}>{t(this._getKey('label.field.identitas_pasien'))}</Divider>
+        <Segment
+          size="mini"
+          style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
+        >
+          <Divider horizontal style={{ marginTop: 0, marginBottom: 35 }}>
+            {t(this._getKey('label.field.identitas_pasien'))}
+          </Divider>
           <Grid columns="2">
             <Grid.Row>
               <Grid.Column>
@@ -152,7 +156,9 @@ class Create extends Component {
                       />
                     </Grid.Column>
                     <Grid.Column width="3" className="field">
-                      <label>{t(this._getKey('label.field.kode_kunjungan'))}</label>
+                      <label>
+                        {t(this._getKey('label.field.kode_kunjungan'))}
+                      </label>
                     </Grid.Column>
                     <Grid.Column width="5" className="field">
                       <Input
@@ -170,12 +176,14 @@ class Create extends Component {
                       <Input
                         name="nama"
                         ref={this.nama}
-                        onKeyDown={(e) => this._onFocusElement(e, 'newPassword')}
+                        onKeyDown={(e) =>
+                          this._onFocusElement(e, 'newPassword')
+                        }
                         action={{
                           content: 'Cari',
                           onClick: action.toggleShowCariPasien,
                           disabled: isDisable('search', statusForm),
-                          color: "blue"
+                          color: 'blue',
                         }}
                         disabled={disabledDetail}
                         value={post.nama}
@@ -190,9 +198,14 @@ class Create extends Component {
                   <Grid.Row>
                     <Grid.Column width="10">
                       <Grid>
-                        <Grid.Row className="form-row" style={{ marginTop: 14 }}>
+                        <Grid.Row
+                          className="form-row"
+                          style={{ marginTop: 14 }}
+                        >
                           <Grid.Column width="5" className="field">
-                            <label>{t(this._getKey('label.field.jenis_kelamin'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.jenis_kelamin'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="11" className="field">
                             <Select
@@ -200,14 +213,21 @@ class Create extends Component {
                               options={data.options_jenis_kelamin}
                               isDisabled={disabledDetail}
                               value={selectedOption.id_jenis_kelamin}
-                              onChange={(selected) => this.select2ChangeHanlder('id_jenis_kelamin', selected)}
+                              onChange={(selected) =>
+                                this.select2ChangeHanlder(
+                                  'id_jenis_kelamin',
+                                  selected
+                                )
+                              }
                               isClearable={false}
                             />
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row className="form-row">
                           <Grid.Column width="5" className="field">
-                            <label>{t(this._getKey('label.field.nama_orangtua'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.nama_orangtua'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="11" className="field">
                             <Input
@@ -221,9 +241,13 @@ class Create extends Component {
                         </Grid.Row>
                       </Grid>
                     </Grid.Column>
-                    <Grid.Column width="6" style={{textAlign: 'right'}}>
-                      <h5 style={{ marginTop: 0 }}><strong>Kunjungan Aktif</strong></h5>
-                      <h5 style={{ marginTop: 0 }}><strong>UMUM</strong></h5>
+                    <Grid.Column width="6" style={{ textAlign: 'right' }}>
+                      <h5 style={{ marginTop: 0 }}>
+                        <strong>Kunjungan Aktif</strong>
+                      </h5>
+                      <h5 style={{ marginTop: 0 }}>
+                        <strong>UMUM</strong>
+                      </h5>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -232,7 +256,7 @@ class Create extends Component {
           </Grid>
         </Segment>
         <Tab menu={{ attached: 'bottom' }} panes={panes} />
-        {showCariPasien &&
+        {showCariPasien && (
           <CariPasien
             show={showCariPasien}
             onHide={action.toggleShowCariPasien}
@@ -245,14 +269,14 @@ class Create extends Component {
             isReloadGrid={this.getStateDatatables('table_pasien').isReload}
             reloadType={this.getStateDatatables('table_pasien').reloadType}
           />
-        }
-        
+        )}
+
         <CariKunjungan
           show={showCariKunjungan}
           onHide={action.toggleShowCariKunjungan}
         />
       </Form>
-    )
+    );
   }
 
   componentDidUpdate() {
@@ -291,7 +315,7 @@ const mapStateToProps = function (state) {
     showCariKunjungan,
     filterPasien,
     statusForm,
-    selectedOption
+    selectedOption,
   } = state.module;
 
   return {
@@ -303,15 +327,15 @@ const mapStateToProps = function (state) {
     filterPasien,
     datatables: state.datatable.datatables,
     statusForm,
-    selectedOption
-  }
-}
+    selectedOption,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(actions, dispatch),
-  }
-}
+  };
+};
 
 Create.propTypes = {
   action: PropTypes.object,

@@ -11,28 +11,32 @@ class Main extends Component {
   getColumnDefs() {
     return [
       {
-          headerName: this.props.t(`${this.props.resource}:header.column.unit_layanan`),
-          field: "unit",
-          cellRenderer: "loadingRenderer",
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.unit_layanan`
+        ),
+        field: 'unit',
+        cellRenderer: 'loadingRenderer',
       },
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.instalasi`),
-        field: "instalasi",
-      }
-    ]
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.instalasi`
+        ),
+        field: 'instalasi',
+      },
+    ];
   }
 
   render() {
     return (
-        <Default
-          {...this.props}
-          filterSumberLain={<FilterSumberLain {...this.props} />}
-          caption={this.props.t(`${this.props.resource}:title`)}
-          settingColumns={this.getColumnDefs()}
-          sumberColumns={this.getColumnDefs()}
-          containerHeightSumber="350px"
-          containerHeightSetting="350px"
-        />
+      <Default
+        {...this.props}
+        filterSumberLain={<FilterSumberLain {...this.props} />}
+        caption={this.props.t(`${this.props.resource}:title`)}
+        settingColumns={this.getColumnDefs()}
+        sumberColumns={this.getColumnDefs()}
+        containerHeightSumber="350px"
+        containerHeightSetting="350px"
+      />
     );
   }
 }

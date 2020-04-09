@@ -12,10 +12,10 @@ const salt = '';
 store.set('config.computerName', os.hostname());
 store.set('config.appCode', 'web-client');
 
-Object.values(os.networkInterfaces()).find(networkTypes => {
+Object.values(os.networkInterfaces()).find((networkTypes) => {
   return (
     undefined !==
-    Object.values(networkTypes).find(network => {
+    Object.values(networkTypes).find((network) => {
       const hasMacAddress =
         '00:00:00:00:00' !== network.mac && 'IPv4' === network.family;
 
@@ -48,10 +48,10 @@ function createMainWindow() {
     resizable: false,
     id: 1,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
-  window.on('close', e => {
+  window.on('close', (e) => {
     const openedApp = store.get('user.openedApp') || 0;
 
     if (0 < openedApp || store.get('user.isLogin')) {
@@ -66,7 +66,6 @@ function createMainWindow() {
     ? `http://localhost:${process.env.PORT}`
     : formatPath('index.html');
 
-  // window.webContents.openDevTools({detach: true});
   window.loadURL(url);
 
   return window;
@@ -81,7 +80,7 @@ function createSplashWindow() {
     alwaysOnTop: true,
     center: true,
     modal: true,
-    skipTaskbar: true
+    skipTaskbar: true,
   });
 
   splash.loadURL(formatPath('splash.html'));
@@ -93,7 +92,7 @@ function formatPath(file) {
   return format({
     pathname: path.join(__dirname, file),
     protocol: 'file',
-    slashes: true
+    slashes: true,
   });
 }
 
@@ -107,7 +106,6 @@ if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
       if (mainWindow.isMinimized()) {
         mainWindow.restore();
@@ -135,19 +133,12 @@ if (!gotTheLock) {
     });
   });
   app.on('window-all-closed', () => {
-    // Respect the OSX convention of having the application in memory even
-    // after all windows have been closed
     if (process.platform !== 'darwin') {
       app.quit();
     }
   });
-  // app.on('window-all-closed', process.exit);
   app.on('will-quit', () => {
     let mainWindow = BrowserWindow.fromId(1);
     mainWindow.focus();
   });
-  // app.on('before-quit', () => {
-  //   mainWindow.removeAllListeners('close');
-  //   // mainWindow.close();
-  // });
 }

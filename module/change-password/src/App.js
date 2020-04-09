@@ -9,15 +9,25 @@ import Index from './pages/index';
 
 const storeRedux = createStore();
 
-
 function App({ location, resource, t, i18n, permissions, settings }) {
   return (
     <Provider store={storeRedux}>
       <Router>
         <Fragment>
           <Switch location={location}>
-            <Route path="/" render={(props) =>
-              <Index {...props} resource={resource} t={t} i18n={i18n} permissions={permissions} settings={settings} />} />
+            <Route
+              path="/"
+              render={(props) => (
+                <Index
+                  {...props}
+                  resource={resource}
+                  t={t}
+                  i18n={i18n}
+                  permissions={permissions}
+                  settings={settings}
+                />
+              )}
+            />
           </Switch>
           <Toastr />
         </Fragment>
@@ -30,7 +40,7 @@ App.propTypes = {
   resource: PropTypes.string.isRequired,
   location: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
-  i18n: PropTypes.object.isRequired
+  i18n: PropTypes.object.isRequired,
 };
 
 export default App;

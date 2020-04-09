@@ -11,8 +11,7 @@
     "@simrs/common": "*",
     "@simrs/main": "*"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "eslintConfig": {
     "extends": "react-app"
   },

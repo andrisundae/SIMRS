@@ -12,15 +12,19 @@ class Main extends Component {
   getColumnDefs() {
     return [
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.layanan`),
-        field: "layanan",
-        cellRenderer: "loadingRenderer",
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.layanan`
+        ),
+        field: 'layanan',
+        cellRenderer: 'loadingRenderer',
       },
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.kelompok`),
-        field: "kelompok",
-      }
-    ]
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.kelompok`
+        ),
+        field: 'kelompok',
+      },
+    ];
   }
 
   getSettingColumnDefs() {
@@ -28,11 +32,11 @@ class Main extends Component {
       ...this.getColumnDefs(),
       {
         headerName: this.props.t(`${this.props.resource}:header.column.jumlah`),
-        field: "jumlah",
+        field: 'jumlah',
         suppressSorting: false,
-        cellClass: "ag-number-cell",
-      }
-    ]
+        cellClass: 'ag-number-cell',
+      },
+    ];
   }
 
   render() {

@@ -11,22 +11,24 @@ class Main extends Component {
   getColumnDefs() {
     return [
       {
-          headerName: this.props.t(`${this.props.resource}:header.column.klasifikasi`),
-          field: "klasifikasi",
-          cellRenderer: "loadingRenderer",
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.klasifikasi`
+        ),
+        field: 'klasifikasi',
+        cellRenderer: 'loadingRenderer',
       },
-    ]
+    ];
   }
 
   render() {
     return (
-        <Default
-          {...this.props}
-          filterSumberLain={<FilterSumberLain {...this.props} />}
-          caption={this.props.t(`${this.props.resource}:title`)}
-          settingColumns={this.getColumnDefs()}
-          sumberColumns={this.getColumnDefs()}
-        />
+      <Default
+        {...this.props}
+        filterSumberLain={<FilterSumberLain {...this.props} />}
+        caption={this.props.t(`${this.props.resource}:title`)}
+        settingColumns={this.getColumnDefs()}
+        sumberColumns={this.getColumnDefs()}
+      />
     );
   }
 }

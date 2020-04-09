@@ -1,4 +1,4 @@
-import React, { Component, } from 'react';
+import React, { Component } from 'react';
 import { Grid, Segment, Form, Divider } from 'semantic-ui-react';
 import { DatatableServerSide, Select, Checkbox } from '@simrs/components';
 
@@ -6,35 +6,35 @@ class PenjaminPasien extends Component {
   columns = [
     {
       headerName: 'No. Anggota',
-      field: "no_anggota",
-      cellRenderer: "loadingRenderer",
-      cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' }
+      field: 'no_anggota',
+      cellRenderer: 'loadingRenderer',
+      cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
     },
     {
       headerName: 'Penjamin',
-      field: "nama_penjamin",
+      field: 'nama_penjamin',
     },
     {
       headerName: 'Kelas',
-      field: "nama_kelas",
+      field: 'nama_kelas',
     },
     {
       headerName: 'Status',
-      field: "status",
+      field: 'status',
     },
     {
       headerName: 'Aktif',
-      field: "string_aktif",
-    }
-  ]
+      field: 'string_aktif',
+    },
+  ];
 
   _getDataSource() {
     return {
       rowCount: null,
       getRows: (params) => {
-        params.successCallback([], 0)
-      }
-    }
+        params.successCallback([], 0);
+      },
+    };
   }
 
   _getKey(key) {
@@ -42,13 +42,15 @@ class PenjaminPasien extends Component {
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
 
     return (
       <Grid className="content-grid">
         <Grid.Row>
           <Grid.Column>
-            <Divider horizontal style={{ marginTop: 10, marginBottom: 10 }}>Data Penjamin</Divider>
+            <Divider horizontal style={{ marginTop: 10, marginBottom: 10 }}>
+              Data Penjamin
+            </Divider>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -78,10 +80,12 @@ class PenjaminPasien extends Component {
                 <Grid columns="2">
                   <Grid.Row>
                     <Grid.Column>
-                      <Grid style={{marginTop: 0, marginBottom: -11}}>
+                      <Grid style={{ marginTop: 0, marginBottom: -11 }}>
                         <Grid.Row className="form-row">
                           <Grid.Column width="4" className="field">
-                            <label>{t(this._getKey('label.field.penjamin'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.penjamin'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
                             <Select />
@@ -89,7 +93,9 @@ class PenjaminPasien extends Component {
                         </Grid.Row>
                         <Grid.Row className="form-row">
                           <Grid.Column width="4" className="field">
-                            <label>{t(this._getKey('label.field.no_anggota'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.no_anggota'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
                             <Select />
@@ -97,7 +103,9 @@ class PenjaminPasien extends Component {
                         </Grid.Row>
                         <Grid.Row className="form-row">
                           <Grid.Column width="4" className="field">
-                            <label>{t(this._getKey('label.field.hak_kelas'))}</label>
+                            <label>
+                              {t(this._getKey('label.field.hak_kelas'))}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
                             <Select />
@@ -105,7 +113,11 @@ class PenjaminPasien extends Component {
                         </Grid.Row>
                         <Grid.Row className="form-row">
                           <Grid.Column width="4" className="field">
-                            <label>{t(this._getKey('label.field.status_kepersetaan'))}</label>
+                            <label>
+                              {t(
+                                this._getKey('label.field.status_kepersetaan')
+                              )}
+                            </label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
                             <Select />
@@ -132,7 +144,7 @@ class PenjaminPasien extends Component {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    )
+    );
   }
 }
 

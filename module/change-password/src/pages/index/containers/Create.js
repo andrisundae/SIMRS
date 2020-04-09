@@ -75,7 +75,7 @@ class Create extends Component {
           </Grid.Row>
         </Grid>
       </Form>
-    )
+    );
   }
 
   componentDidUpdate() {
@@ -111,15 +111,15 @@ const mapStateToProps = function (state) {
   return {
     post,
     focusElement,
-    data
-  }
-}
+    data,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(actions, dispatch),
-  }
-}
+  };
+};
 
 Create.propTypes = {
   action: PropTypes.object,
