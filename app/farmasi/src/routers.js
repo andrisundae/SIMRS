@@ -21,6 +21,11 @@ const routers = [
     path: '/billing/master/referensi-umum',
     component: lazy(() => import('@module/referensi-umum')),
   },
+  {
+    key: '_farmasi_setting_unit_farmasi',
+    path: '/farmasi/setting/unit-farmasi',
+    component: lazy(() => import('@module/unit-farmasi')),
+  },
 ];
 
 export default routers;
