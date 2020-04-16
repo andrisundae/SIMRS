@@ -2,14 +2,15 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Form, Input, Grid, Segment, Header } from 'semantic-ui-react';
+import { Form, Input, Grid } from 'semantic-ui-react';
 
 import {
   isDisableForm,
   moduleActions as actions,
   moduleActionTypes,
 } from '@simrs/main/src/modules/master/default';
-import { Checkbox, Select, CurrencyInput } from '@simrs/components';
+
+import { Checkbox } from '@simrs/components';
 
 import localActions from '../actions';
 
