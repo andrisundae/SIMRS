@@ -4,11 +4,11 @@ import i18n from 'i18next';
 const validationRules = (resource) => {
   return {
     rules: {
-      unit_farmasi: { required: true },
+      // unit_farmasi: { required: true },
     },
     messages: {
       unit_farmasi: {
-        required: i18n.t(`${resource}:validator.unit_farmasi.required`),
+        // required: i18n.t(`${resource}:validator.unit_farmasi.required`),
       },
     },
   };
