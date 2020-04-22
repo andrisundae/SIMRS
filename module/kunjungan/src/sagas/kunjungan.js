@@ -3,8 +3,14 @@ import _ from 'lodash';
 import { ipcRenderer } from 'electron';
 import dayjs from 'dayjs';
 
-import { validator as commonValidator, toastr} from '@simrs/common';
-import { loaderActions, messageBox, constDatatable, datatableActionTypes, datatableActions} from '@simrs/components';
+import { validator as commonValidator, toastr } from '@simrs/common';
+import {
+  loaderActions,
+  messageBox,
+  constDatatable,
+  datatableActionTypes,
+  datatableActions,
+} from '@simrs/components';
 import api from '../services/models/kunjunganModel';
 import {actions, actionTypes, getPost, isPasienBaru} from '../pages/index';
 
@@ -16,21 +22,21 @@ const TABLE_KUNJUNGAN = 'table_kunjungan';
 const TABLE_WILAYAH = 'table_wilayah';
 
 function* openForm({ meta }) {
-    yield put(datatableActions.onInitialize(TABLE_PASIEN));
-    yield put(datatableActions.onInitialize(TABLE_KUNJUNGAN));
-    yield put(datatableActions.onInitialize(TABLE_WILAYAH));
-    yield put(actions.populateForm.request(meta.resource));
-    yield put(actions.onReady(meta.resource));
+  yield put(datatableActions.onInitialize(TABLE_PASIEN));
+  yield put(datatableActions.onInitialize(TABLE_KUNJUNGAN));
+  yield put(datatableActions.onInitialize(TABLE_WILAYAH));
+  yield put(actions.populateForm.request(meta.resource));
+  yield put(actions.onReady(meta.resource));
 }
 
 function* handleSave({ payload, meta }) {
-    const { resource } = meta;
-    const { data } = payload;
-    try {
-        yield put(loaderActions.show());
-        // let { rules, messages } = api.validationRules(resource);
-        // let post = payload.data;
-        // let errors = validator(post, rules, messages);
+  const { resource } = meta;
+  const { data } = payload;
+  try {
+    yield put(loaderActions.show());
+    // let { rules, messages } = api.validationRules(resource);
+    // let post = payload.data;
+    // let errors = validator(post, rules, messages);
 
         // if (_.isEmpty(errors)) {
         //     let response = yield call(api.save, post);
@@ -97,21 +103,21 @@ function* handleSaveSuccess({payload, meta}) {
 }
 
 function* populateForm({ meta }) {
-    try {
-        yield put(loaderActions.show());
-        let { populateForm } = actions;
-        let response = yield call(api.init);
-        if (response.status) {
-            yield put(populateForm.requestSuccess(meta.resource, response.data));
-        } else {
-            yield put(populateForm.requestFailure(meta.resource, response.message));
-        }
-
-        yield put(loaderActions.hide());
-    } catch (error) {
-        yield put(loaderActions.hide());
-        yield toastr.error(error.message);
+  try {
+    yield put(loaderActions.show());
+    let { populateForm } = actions;
+    let response = yield call(api.init);
+    if (response.status) {
+      yield put(populateForm.requestSuccess(meta.resource, response.data));
+    } else {
+      yield put(populateForm.requestFailure(meta.resource, response.message));
     }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
 }
 
 function* changeSelect2({ meta, payload }) {
@@ -129,42 +135,55 @@ function* changeSelect2({ meta, payload }) {
 }
 
 function* asalMasukDetailRequest({ meta, payload }) {
-    try {
-        let response = yield call(api.getAsalMasukDetailOptions, payload.data.value);
-        if (response.status) {
-            yield put(actions.asalMasukDetail.requestSuccess(meta.resource, response.data));
-        } else {
-            yield put(actions.asalMasukDetail.requestFailure(meta.resource, response.message));
-        }
-    } catch (error) {
-        yield toastr.error(error.message);
+  try {
+    let response = yield call(
+      api.getAsalMasukDetailOptions,
+      payload.data.value
+    );
+    if (response.status) {
+      yield put(
+        actions.asalMasukDetail.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.asalMasukDetail.requestFailure(meta.resource, response.message)
+      );
     }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 function* instalasiRequest({ meta, payload }) {
-    try {
-        let response = yield call(api.getInstalasiOptions, payload.data.value);
-        if (response.status) {
-            yield put(actions.instalasi.requestSuccess(meta.resource, response.data));
-        } else {
-            yield put(actions.instalasi.requestFailure(meta.resource, response.message));
-        }
-    } catch (error) {
-        yield toastr.error(error.message);
+  try {
+    let response = yield call(api.getInstalasiOptions, payload.data.value);
+    if (response.status) {
+      yield put(actions.instalasi.requestSuccess(meta.resource, response.data));
+    } else {
+      yield put(
+        actions.instalasi.requestFailure(meta.resource, response.message)
+      );
     }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 function* unitLayananRequest({ meta, payload }) {
-    try {
-        let response = yield call(api.getUnitLayananOptions, payload.data.value);
-        if (response.status) {
-            yield put(actions.unitLayanan.requestSuccess(meta.resource, response.data));
-        } else {
-            yield put(actions.unitLayanan.requestFailure(meta.resource, response.message));
-        }
-    } catch (error) {
-        yield toastr.error(error.message);
+  try {
+    let response = yield call(api.getUnitLayananOptions, payload.data.value);
+    if (response.status) {
+      yield put(
+        actions.unitLayanan.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.unitLayanan.requestFailure(meta.resource, response.message)
+      );
     }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 function* optionsByUnitLayananRequest({ meta, payload }) {
@@ -195,67 +214,76 @@ function* optionsByUnitLayananRequest({ meta, payload }) {
 // }
 
 function* loadAllPasien({ payload, meta }) {
-    const { successCallback, failCallback } = meta.tableParams;
+  const { successCallback, failCallback } = meta.tableParams;
 
-    try {
-        let response = yield call(api.getAllPasien, payload.data);
-        if (response.status) {
-            successCallback(response.data, response.recordsTotal)
-        } else {
-            failCallback();
-        }
-    } catch (error) {
-        failCallback();
+  try {
+    let response = yield call(api.getAllPasien, payload.data);
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      failCallback();
     }
-    yield put(datatableActions.onReloaded(TABLE_PASIEN));
+  } catch (error) {
+    failCallback();
+  }
+  yield put(datatableActions.onReloaded(TABLE_PASIEN));
 }
 
 function* loadAllWilayah({ payload, meta }) {
-    const { successCallback, failCallback } = meta.tableParams;
+  const { successCallback, failCallback } = meta.tableParams;
 
-    try {
-        let response = yield call(api.getAllWilayah, payload.data);
-        if (response.status) {
-            successCallback(response.data, response.recordsTotal)
-        } else {
-            failCallback();
-        }
-    } catch (error) {
-        failCallback();
+  try {
+    let response = yield call(api.getAllWilayah, payload.data);
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      failCallback();
     }
-    yield put(datatableActions.onReloaded(TABLE_WILAYAH));
+  } catch (error) {
+    failCallback();
+  }
+  yield put(datatableActions.onReloaded(TABLE_WILAYAH));
 }
 
 function* handleSearchPasien() {
-    try {
-        yield put(datatableActions.onReload(TABLE_PASIEN, constDatatable.reloadType.purge));
-    } catch (error) {
-        yield toastr.error(error.message);
-    }
+  try {
+    yield put(
+      datatableActions.onReload(TABLE_PASIEN, constDatatable.reloadType.purge)
+    );
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
-function* handleSelectedPasien({meta}) {
-    yield put(actions.toggleShowCariPasien(meta.resource));
+function* handleSelectedPasien({ meta }) {
+  yield put(actions.toggleShowCariPasien(meta.resource));
 }
 
 function* handleSearchKunjungan() {
-    try {
-        yield put(datatableActions.onReload(TABLE_KUNJUNGAN, constDatatable.reloadType.purge));
-    } catch (error) {
-        yield toastr.error(error.message);
-    }
+  try {
+    yield put(
+      datatableActions.onReload(
+        TABLE_KUNJUNGAN,
+        constDatatable.reloadType.purge
+      )
+    );
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 function* handleSearchWilayah() {
-    try {
-        yield put(datatableActions.onReload(TABLE_WILAYAH, constDatatable.reloadType.purge));
-    } catch (error) {
-        yield toastr.error(error.message);
-    }
+  try {
+    yield put(
+      datatableActions.onReload(TABLE_WILAYAH, constDatatable.reloadType.purge)
+    );
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 function* handleSelectedWilayah({ meta }) {
-    yield put(actions.toggleShowCariWilayah(meta.resource));
+  yield put(actions.toggleShowCariWilayah(meta.resource));
 }
 
 function* handleAdd({ meta, payload }) {
@@ -290,11 +318,11 @@ export default function* watchAuthActions() {
         takeLatest(actionTypes.NEXT_NORM_REQUEST, nextNormRequest),
         // takeLatest(actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST, jenisKlasifikasiRegistrasiRequest),
 
-        takeLatest(actionTypes.GET_ALL_PASIEN_REQUEST, loadAllPasien),
-        takeLatest(actionTypes.FILTER_SUBMIT_PASIEN, handleSearchPasien),
-        takeLatest(actionTypes.GET_ALL_WILAYAH_REQUEST, loadAllWilayah),
-        takeLatest(actionTypes.FILTER_SUBMIT_WILAYAH, handleSearchWilayah),
-        takeLatest(actionTypes.FILTER_SELECTED_PASIEN, handleSelectedPasien),
-        takeLatest(actionTypes.FILTER_SELECTED_WILAYAH, handleSelectedWilayah),
-    ]);
+    takeLatest(actionTypes.GET_ALL_PASIEN_REQUEST, loadAllPasien),
+    takeLatest(actionTypes.FILTER_SUBMIT_PASIEN, handleSearchPasien),
+    takeLatest(actionTypes.GET_ALL_WILAYAH_REQUEST, loadAllWilayah),
+    takeLatest(actionTypes.FILTER_SUBMIT_WILAYAH, handleSearchWilayah),
+    takeLatest(actionTypes.FILTER_SELECTED_PASIEN, handleSelectedPasien),
+    takeLatest(actionTypes.FILTER_SELECTED_WILAYAH, handleSelectedWilayah),
+  ]);
 }

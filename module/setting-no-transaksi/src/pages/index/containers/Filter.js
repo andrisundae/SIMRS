@@ -6,7 +6,11 @@ import MouseTrap from 'mousetrap';
 import { Trans } from 'react-i18next';
 
 import { Input, Select, FormField } from 'semantic-ui-react';
-import { Filter as FilterContainer, isDisableForm, filterActions } from '@simrs/main/src/modules/master/default';
+import {
+  Filter as FilterContainer,
+  isDisableForm,
+  filterActions,
+} from '@simrs/main/src/modules/master/default';
 import { context } from '@simrs/main/src/modules/setting/aturan-aplikasi';
 
 class Filter extends Component {
@@ -27,42 +31,44 @@ class Filter extends Component {
       <FilterContainer resource={resource}>
         <FormField width="5">
           <label>
-              <Trans i18nKey={this._getKey('label.filter')}/>
+            <Trans i18nKey={this._getKey('label.filter')} />
           </label>
           <Select
-              name="filter_index"
-              onChange={this._handleSelectionChange}
-              value={post.filter_index}
-              disabled={isDisableForm}
-              options={this._getFilterColumns()}
-              placeholder="Pilih Filter"
-              fluid
+            name="filter_index"
+            onChange={this._handleSelectionChange}
+            value={post.filter_index}
+            disabled={isDisableForm}
+            options={this._getFilterColumns()}
+            placeholder="Pilih Filter"
+            fluid
           />
         </FormField>
-          <FormField width="4">
-            <Input
-                name="filter_value"
-                ref={this.filterValue}
-                value={post.filter_value}
-                onChange={this._handleFilterChange}
-                disabled={isDisableForm}
-                placeholder={t(this._getKey('placeholder.filter'), {minCharSearch})}
-            />
-          </FormField>
+        <FormField width="4">
+          <Input
+            name="filter_value"
+            ref={this.filterValue}
+            value={post.filter_value}
+            onChange={this._handleFilterChange}
+            disabled={isDisableForm}
+            placeholder={t(this._getKey('placeholder.filter'), {
+              minCharSearch,
+            })}
+          />
+        </FormField>
       </FilterContainer>
-    )
+    );
   }
 
   componentDidMount() {
     let _this = this;
 
     MouseTrap.bind('alt+f', function (e) {
-        e.preventDefault();
-        if (!_this.props.isDisableForm) {
-            if (_this.filterValue) {
-                _this.filterValue.current.focus();
-            }
+      e.preventDefault();
+      if (!_this.props.isDisableForm) {
+        if (_this.filterValue) {
+          _this.filterValue.current.focus();
         }
+      }
     });
   }
 
@@ -72,7 +78,10 @@ class Filter extends Component {
   }
 
   _handleSelectionChange(e, { value }) {
-    this.props.action.onChangeFilter(this.props.resource, { name: 'filter_index', value });
+    this.props.action.onChangeFilter(this.props.resource, {
+      name: 'filter_index',
+      value,
+    });
   }
 
   _getKey(key) {
@@ -81,28 +90,38 @@ class Filter extends Component {
 
   _getFilterColumns() {
     return [
-        { key: 'alias', value: 'alias', text: this.props.t(this._getKey('header.column.alias')) },
-        { key: 'prefix', value: 'prefix', text: this.props.t(this._getKey('header.column.prefix')) }
+      {
+        key: 'alias',
+        value: 'alias',
+        text: this.props.t(this._getKey('header.column.alias')),
+      },
+      {
+        key: 'prefix',
+        value: 'prefix',
+        text: this.props.t(this._getKey('header.column.prefix')),
+      },
     ];
   }
 }
 
 const mapStateToProps = function (state, props) {
   const { filter, module } = state.default;
-  const minCharSearch = props.settings.find(setting => setting.aturan === context.MINCHARPENCARIANMASTER);
+  const minCharSearch = props.settings.find(
+    (setting) => setting.aturan === context.MINCHARPENCARIANMASTER
+  );
 
   return {
-      post: filter.post,
-      isDisableForm: !isDisableForm(module),
-    minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0)
-  }
-}
+    post: filter.post,
+    isDisableForm: !isDisableForm(module),
+    minCharSearch: parseInt(minCharSearch ? minCharSearch.nilai : 0),
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
-      action: bindActionCreators(filterActions, dispatch),
-  }
-}
+    action: bindActionCreators(filterActions, dispatch),
+  };
+};
 
 Filter.propTypes = {
   post: PropTypes.object,
@@ -111,7 +130,7 @@ Filter.propTypes = {
   minCharSearch: PropTypes.number,
   resource: PropTypes.string.isRequired,
   i18n: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

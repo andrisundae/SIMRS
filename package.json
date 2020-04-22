@@ -8,19 +8,16 @@
   "private": true,
   "scripts": {
     "start": "wsrun --exclude-missing start",
-    "desktop": "wsrun -p @simrs/main -c desktop",
-    "compile": "wsrun compile",
-    "start-desktop": "concurrently \"yarn start\" \"yarn desktop\"",
-    "build-desktop": "wsrun -p @simrs/main -c build-desktop",
-    "prebuild-desktop": "concurrently \"wsrun -p @simrs/billing -c build\" \"wsrun -p @simrs/system -c build\"",
+    "desktop": "yarn workspace @simrs/main desktop",
+    "build-desktop": "yarn workspace @simrs/main build-desktop",
+    "prebuild-desktop": "wsrun --exclude-missing build",
     "storybook": "wsrun -p @simrs/components -c storybook"
   },
   "workspaces": {
     "packages": [
       "app/*",
       "module/*",
-      "shared/components",
-      "shared/common"
+      "shared/*"
     ],
     "nohoist": [
       "**/dotenv",
@@ -35,8 +32,16 @@
       "**/babel-loader/**"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "devDependencies": {
     "concurrently": "^4.1.1",
+    "husky": "^4.2.3",
+    "prettier": "2.0.4",
+    "pretty-quick": "^2.0.1",
     "wsrun": "^5.0.0"
   }
 }

@@ -4,20 +4,20 @@ import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-fetch-backend';
 import LanguageDetector from 'i18next-electron-language-detector';
 
-import {request} from '@simrs/common';
+import { request } from '@simrs/common';
 
 const fetch = new Backend(null, {
-    loadPath: (lngs, namespace) => {
-    return `http://simrs-x.test/translation/${lngs}/${namespace}`
-    },
-    stringify: JSON.stringify,
-    allowMultiLoading: false,
-    multiSeparator: '+',
-    requestOptions: {
-        mode: 'cors',
-        cache: 'no-cache',
-        headers: request.simrsHeaders()
-    },
+  loadPath: (lngs, namespace) => {
+    return `http://simrs-x.test/translation/${lngs}/${namespace}`;
+  },
+  stringify: JSON.stringify,
+  allowMultiLoading: false,
+  multiSeparator: '+',
+  requestOptions: {
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: request.simrsHeaders(),
+  },
 });
 
 i18n
@@ -36,7 +36,7 @@ i18n
     },
     interpolation: {
       escapeValue: false,
-    }
+    },
   });
 
 export default i18n;

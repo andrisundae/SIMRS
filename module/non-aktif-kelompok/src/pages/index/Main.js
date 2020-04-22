@@ -8,63 +8,65 @@ import { PageLoader } from '@simrs/components';
 import Filter from './containers/Filter';
 import List from './containers/List';
 
-import {moduleActions} from './actions';
+import { moduleActions } from './actions';
 
 class Main extends Component {
-    render() {
-        return (
-            <Fragment>
-                <Segment secondary className="content-header">
-                    <Header as='h4'>
-                        <Icon name="list" />
-                        {this.props.t(`${this.props.resource}:title`)}
-                    </Header>
-                </Segment>
-                <Segment>
-                    <Grid className="content-grid">
-                        <Grid.Row>
-                            <Grid.Column>
-                                <Filter {...this.props} />
-                            </Grid.Column>
-                        </Grid.Row>
-                        {/* <Divider style={{ marginBottom: 0, marginTop: 5 }} /> */}
-                        <Grid.Row>
-                            <Grid.Column>
-                                <List {...this.props} />
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                </Segment>
-                <PageLoader active={this.props.isLoading} message={this.props.loaderMessage} />
-            </Fragment>
-        );
-    }
+  render() {
+    return (
+      <Fragment>
+        <Segment secondary className="content-header">
+          <Header as="h4">
+            <Icon name="list" />
+            {this.props.t(`${this.props.resource}:title`)}
+          </Header>
+        </Segment>
+        <Segment>
+          <Grid className="content-grid">
+            <Grid.Row>
+              <Grid.Column>
+                <Filter {...this.props} />
+              </Grid.Column>
+            </Grid.Row>
+            {/* <Divider style={{ marginBottom: 0, marginTop: 5 }} /> */}
+            <Grid.Row>
+              <Grid.Column>
+                <List {...this.props} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+        <PageLoader
+          active={this.props.isLoading}
+          message={this.props.loaderMessage}
+        />
+      </Fragment>
+    );
+  }
 
-    componentDidMount() {
-        this.props.openForm(this.props.resource);
-    }
+  componentDidMount() {
+    this.props.openForm(this.props.resource);
+  }
 }
 
 Main.propTypes = {
-    resource: PropTypes.string.isRequired,
-    isLoading: PropTypes.bool,
-    loaderMessage: PropTypes.string,
-    openForm: PropTypes.func,
-    t: PropTypes.func,
+  resource: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool,
+  loaderMessage: PropTypes.string,
+  openForm: PropTypes.func,
+  t: PropTypes.func,
 };
 
 const mapStateToProps = function (state) {
-
-    return {
-        isLoading: state.loader.count > 0,
-        loaderMessage: state.loader.message,
-    }
-}
+  return {
+    isLoading: state.loader.count > 0,
+    loaderMessage: state.loader.message,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
-    return {
-        openForm: (resource) => dispatch(moduleActions.openForm(resource))
-    }
-}
+  return {
+    openForm: (resource) => dispatch(moduleActions.openForm(resource)),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

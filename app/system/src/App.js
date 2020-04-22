@@ -1,8 +1,19 @@
-import React, { Suspense, useState, useEffect} from 'react';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import React, { Suspense, useState, useEffect } from 'react';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
 
-import { Layout, PrivateRoute, Restricted, PermissionDenied, PageLoader} from '@simrs/components';
+import {
+  Layout,
+  PrivateRoute,
+  Restricted,
+  PermissionDenied,
+  PageLoader,
+} from '@simrs/components';
 import { store, menu } from '@simrs/common';
 import apiSettingAplikasi from '@simrs/main/src/services/models/aturanAplikasiModel';
 
@@ -15,17 +26,17 @@ function Page() {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true)
+    setLoading(true);
     const fetchData = async () => {
       const result = await apiSettingAplikasi.getAturanAplikasi();
       if (mounted) {
         if (result.status) {
-          setSettings(result.data)
+          setSettings(result.data);
         }
       }
-      setLoading(false)
+      setLoading(false);
     };
-    fetchData()
+    fetchData();
     return () => {
       // When cleanup is called, toggle the mounted variable to false
       mounted = false;
@@ -40,11 +51,15 @@ function Page() {
         routers={rootRouters}
         username={store.main.get('user.username')}
       >
-        {loading ?
-          <PageLoader active={true} /> :
+        {loading ? (
+          <PageLoader active={true} />
+        ) : (
           <Suspense fallback={<PageLoader active={true} />}>
             <Switch>
-              <PrivateRoute path="/billing/dashboard" render={_renderDashboard} />
+              <PrivateRoute
+                path="/billing/dashboard"
+                render={_renderDashboard}
+              />
               {rootRouters.map((router, index) => {
                 let Component = withTranslation(router.key)(router.component);
 
@@ -52,20 +67,32 @@ function Page() {
                   <PrivateRoute
                     key={index}
                     path={router.path}
-                    render={(props) =>
+                    render={(props) => (
                       // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
-                      <Restricted route={router.key} {...props} render={(permissions) => (
-                        <Component settings={settings} permissions={permissions} resource={router.key} {...props} />
-                      )} />
-                    }
+                      <Restricted
+                        route={router.key}
+                        {...props}
+                        render={(permissions) => (
+                          <Component
+                            settings={settings}
+                            permissions={permissions}
+                            resource={router.key}
+                            {...props}
+                          />
+                        )}
+                      />
+                    )}
                   />
-                )
+                );
               })}
-              <Route path="/permission-denied" render={(props) => <PermissionDenied {...props} />} />
+              <Route
+                path="/permission-denied"
+                render={(props) => <PermissionDenied {...props} />}
+              />
               <Redirect to={'/billing/dashboard'} />
             </Switch>
           </Suspense>
-        }
+        )}
       </Layout>
     </Router>
   );
@@ -81,4 +108,4 @@ export default function App() {
       <Page />
     </Suspense>
   );
-};
+}

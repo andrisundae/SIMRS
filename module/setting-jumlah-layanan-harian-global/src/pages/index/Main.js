@@ -12,15 +12,19 @@ class Main extends Component {
   getColumnDefs() {
     return [
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.layanan`),
-        field: "layanan",
-        cellRenderer: "loadingRenderer",
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.layanan`
+        ),
+        field: 'layanan',
+        cellRenderer: 'loadingRenderer',
       },
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.kelompok`),
-        field: "kelompok",
-      }
-    ]
+        headerName: this.props.t(
+          `${this.props.resource}:header.column.kelompok`
+        ),
+        field: 'kelompok',
+      },
+    ];
   }
 
   getSettingColumnDefs() {
@@ -28,23 +32,23 @@ class Main extends Component {
       ...this.getColumnDefs(),
       {
         headerName: this.props.t(`${this.props.resource}:header.column.jumlah`),
-        field: "jumlah",
+        field: 'jumlah',
         suppressSorting: false,
-        cellClass: "ag-number-cell",
-      }
-    ]
+        cellClass: 'ag-number-cell',
+      },
+    ];
   }
 
   render() {
     return (
-        <Default
-          {...this.props}
-          filterSumberLain={<FilterSumberLain {...this.props} />}
-          caption={this.props.t(`${this.props.resource}:title`)}
-          settingColumns={this.getSettingColumnDefs()}
-          sumberColumns={this.getColumnDefs()}
-          dataSetting={<DataSetting {...this.props} />}
-        />
+      <Default
+        {...this.props}
+        filterSumberLain={<FilterSumberLain {...this.props} />}
+        caption={this.props.t(`${this.props.resource}:title`)}
+        settingColumns={this.getSettingColumnDefs()}
+        sumberColumns={this.getColumnDefs()}
+        dataSetting={<DataSetting {...this.props} />}
+      />
     );
   }
 }

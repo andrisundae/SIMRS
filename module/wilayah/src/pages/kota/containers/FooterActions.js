@@ -6,30 +6,28 @@ import { isGranted } from '@simrs/main/src/modules/auth';
 import { FooterActions as Footer } from '@simrs/main/src/modules/master/nested';
 
 class FooterActions extends Component {
-
-    render() {
-        return (
-            <Footer {...this.props} permissions={this.props.customPermissions} />
-        )
-    }
+  render() {
+    return (
+      <Footer {...this.props} permissions={this.props.customPermissions} />
+    );
+  }
 }
 
 const mapStateToProps = function (state, props) {
-
-    return {
-        customPermissions: {
-            canAdd: isGranted(props.permissions, 'tambah_kota'),
-            canEdit: isGranted(props.permissions, 'koreksi_kota'),
-            canDelete: isGranted(props.permissions, 'hapus_kota')
-        },
-    }
-}
+  return {
+    customPermissions: {
+      canAdd: isGranted(props.permissions, 'tambah_kota'),
+      canEdit: isGranted(props.permissions, 'koreksi_kota'),
+      canDelete: isGranted(props.permissions, 'hapus_kota'),
+    },
+  };
+};
 
 FooterActions.propTypes = {
-    resource: PropTypes.string.isRequired,
-    subResource: PropTypes.string.isRequired,
-    permissions: PropTypes.array,
-    customPermissions: PropTypes.object,
+  resource: PropTypes.string.isRequired,
+  subResource: PropTypes.string.isRequired,
+  permissions: PropTypes.array,
+  customPermissions: PropTypes.object,
 };
 
 export default connect(mapStateToProps)(FooterActions);

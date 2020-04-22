@@ -1,16 +1,16 @@
 import produce from 'immer';
-import {includes} from 'lodash';
+import { includes } from 'lodash';
 import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
-import {staticConst} from './static';
+import { staticConst } from './static';
 
 const defaultJenisUmur = (data) => {
-    return data.length > 0 ? data[0] : { label: 'Tahun', value: 'year' };
-}
+  return data.length > 0 ? data[0] : { label: 'Tahun', value: 'year' };
+};
 
 export default (state = initialState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     const { type, payload } = action;
     const jenisUmur = defaultJenisUmur(state.data.options_umur);
     const now = dayjs();
@@ -320,15 +320,26 @@ export default (state = initialState, action) =>
         default:
             return state;
     }
-})
+  });
 
 export const statusesElements = {
   [actionTypes.READY]: ['norm', 'search', 'add', 'exit'],
   [actionTypes.SELECTED]: ['add', 'edit', 'delete', 'preview', 'finish'],
-  [actionTypes.ADD]: ['detail_pasien', 'penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
-  [actionTypes.ADD_WITH_SELECTED]: ['penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
+  [actionTypes.ADD]: [
+    'detail_pasien',
+    'penjamin_pasien',
+    'kunjungan_pasien',
+    'cancel',
+    'save',
+  ],
+  [actionTypes.ADD_WITH_SELECTED]: [
+    'penjamin_pasien',
+    'kunjungan_pasien',
+    'cancel',
+    'save',
+  ],
   [actionTypes.EDIT]: ['penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
-}
+};
 
 export const isDisable = (element, status) => {
   if (statusesElements[status]) {
@@ -339,6 +350,4 @@ export const isDisable = (element, status) => {
   }
 
   return true;
-}
-
-
+};

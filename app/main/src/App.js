@@ -1,15 +1,15 @@
-import React, { Suspense, useState, useEffect} from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Container, Grid, Image, Label, Segment } from 'semantic-ui-react';
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
-import {PageLoader} from '@simrs/components';
+import { PageLoader } from '@simrs/components';
 import { store } from '@simrs/common';
 import createStore from './store';
-import {Portal, Login, Server} from './modules';
+import { Portal, Login, Server } from './modules';
 
 const storeRedux = createStore();
 
@@ -25,9 +25,9 @@ function App() {
     bindShortCut();
 
     return () => {
-      MouseTrap.unbind('mod+shift+c')
+      MouseTrap.unbind('mod+shift+c');
     };
-  }, [])
+  }, []);
 
   function _renderLogin(props) {
     return <Login {...props} />;
@@ -40,7 +40,7 @@ function App() {
   function bindShortCut() {
     MouseTrap.bindGlobal('mod+shift+c', function (e) {
       e.preventDefault();
-      openServer(true)
+      openServer(true);
     });
   }
 
@@ -48,13 +48,13 @@ function App() {
     try {
       const response = await fetch(store.main.get('config.api'));
       if (response.status) {
-        console.log('ok')
+        console.log('ok');
       }
     } catch (error) {
       openServer(true);
     }
   }
-  
+
   return (
     <Provider store={storeRedux}>
       <Suspense fallback={<PageLoader active={true} />}>
@@ -63,8 +63,18 @@ function App() {
             <Grid.Row className="layout">
               <Grid.Column className="logo">
                 <Segment color="teal" inverted>
-                  <Label color='red' ribbon icon="hospital" content="RS. Kusta Sumberglagah" />
-                  <Image src='https://react.semantic-ui.com/images/avatar/large/daniel.jpg' circular size='small' centered />
+                  <Label
+                    color="red"
+                    ribbon
+                    icon="hospital"
+                    content="RS. Kusta Sumberglagah"
+                  />
+                  <Image
+                    src="https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                    circular
+                    size="small"
+                    centered
+                  />
                 </Segment>
               </Grid.Column>
               <Grid.Column className="main-content">
@@ -73,9 +83,12 @@ function App() {
                     <Route exact path="/" render={_renderLogin} />
                     <Route path="/portal" render={_renderPortal} />
                   </Switch>
-                  {isOpenServer &&
-                    <Server open={isOpenServer} onClose={() => openServer(false)} />
-                  }
+                  {isOpenServer && (
+                    <Server
+                      open={isOpenServer}
+                      onClose={() => openServer(false)}
+                    />
+                  )}
                 </Router>
                 <div className="copyright">
                   2018 <span dangerouslySetInnerHTML={{ __html: '&copy;' }} />{' '}

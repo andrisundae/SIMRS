@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { Segment, Icon, Header, Grid, Form } from 'semantic-ui-react';
 
-import {
-  TreeView,
-  Select,
-  PageLoader
-} from '@simrs/components';
+import { TreeView, Select, PageLoader } from '@simrs/components';
 import actions from '../actions';
 import actionTypes from '../actionTypes';
 import { isDisableForm } from '../reducer';
@@ -28,14 +24,23 @@ class Create extends Component {
 
   render() {
     let {
-      post, grup, menu, selectedKeys, checkedKeys, expandedKeys, selectedGrup, isLoading, isDisableForm,
-      loaderMessage, t
+      post,
+      grup,
+      menu,
+      selectedKeys,
+      checkedKeys,
+      expandedKeys,
+      selectedGrup,
+      isLoading,
+      isDisableForm,
+      loaderMessage,
+      t,
     } = this.props;
 
     return (
       <Fragment>
         <Segment secondary className="content-header">
-          <Header as='h4'>
+          <Header as="h4">
             <Icon name="settings" />
             {this.props.t(`${this.props.resource}:title`)}
           </Header>
@@ -54,7 +59,9 @@ class Create extends Component {
                         <Grid.Column width="12" className="field">
                           <Select
                             name="grup"
-                            placeholder={t(this._getKey('placeholder.field.grup'))}
+                            placeholder={t(
+                              this._getKey('placeholder.field.grup')
+                            )}
                             inputRef={this.grup}
                             value={selectedGrup}
                             onChange={this._handleGrupChange}
@@ -94,7 +101,7 @@ class Create extends Component {
         </Segment>
         <PageLoader active={isLoading} message={loaderMessage} />
       </Fragment>
-    )
+    );
   }
 
   componentDidMount() {
@@ -127,7 +134,7 @@ class Create extends Component {
 
   _onCheck(checkedKeys) {
     let leafKeys = [];
-    checkedKeys.forEach(key => {
+    checkedKeys.forEach((key) => {
       let node = this.tree.current._getNode(key);
       if (node) {
         let props = node.props;
@@ -135,7 +142,7 @@ class Create extends Component {
           leafKeys.push(props.id);
         }
       }
-    })
+    });
     this.props.action.onCheck(this.props.resource, { checkedKeys, leafKeys });
   }
 
@@ -146,7 +153,14 @@ class Create extends Component {
 
 const mapStateToProps = function (state) {
   const { data, post, statusForm, focusElement } = state.module;
-  const { menu, grup, expandedKeys, checkedKeys, selectedKeys, selectedGrup } = data;
+  const {
+    menu,
+    grup,
+    expandedKeys,
+    checkedKeys,
+    selectedKeys,
+    selectedGrup,
+  } = data;
 
   return {
     menu,
@@ -159,23 +173,26 @@ const mapStateToProps = function (state) {
     isLoading: state.loader.count > 0,
     isDisableForm: isDisableForm(statusForm),
     focusElement,
-    statusForm
-  }
-}
+    statusForm,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
-    action: bindActionCreators({
-      openForm: actions.openForm,
-      onCheck: actions.onCheckedChange,
-      onExpand: actions.onExpandedChange,
-      onSelect: actions.onSelectedChange,
-      onGrupChange: actions.onGrupChange,
-      onFocusElement: actions.onFocusElement,
-      onReset: actions.onReset
-    }, dispatch),
-  }
-}
+    action: bindActionCreators(
+      {
+        openForm: actions.openForm,
+        onCheck: actions.onCheckedChange,
+        onExpand: actions.onExpandedChange,
+        onSelect: actions.onSelectedChange,
+        onGrupChange: actions.onGrupChange,
+        onFocusElement: actions.onFocusElement,
+        onReset: actions.onReset,
+      },
+      dispatch
+    ),
+  };
+};
 
 Create.propTypes = {
   action: PropTypes.object,

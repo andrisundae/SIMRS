@@ -4,15 +4,15 @@
     background-color: #f3f4f5;
 } */
 html {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .content-container {
-    background: #ECECEC !important;
+  background: #ececec !important;
 }
 
 .content-header {
-    padding-bottom: 8px !important;
+  padding-bottom: 8px !important;
 }
 /* fixed width */
 /* .container {
@@ -20,58 +20,62 @@ html {
 } */
 
 .page-header.navbar .page-logo {
-    /* margin-top: 10px; */
-    /* margin-left: -20px; */
-    margin-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 22px;
-    font-weight: 600;
+  /* margin-top: 10px; */
+  /* margin-left: -20px; */
+  margin-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .page-content {
-    min-height: 510px !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    padding-top: 1px !important;
-    /* padding: 10px 10px 10px 10px !important; */
+  min-height: 510px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  padding-top: 1px !important;
+  /* padding: 10px 10px 10px 10px !important; */
 }
 
 hr {
-    margin-top: 10px;
-    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .page-footer {
-    padding-top: 15px !important;
-    height: 45px;
+  padding-top: 15px !important;
+  height: 45px;
 }
 
 .page-footer .btn-actions {
-    margin-top: -7px;
+  margin-top: -7px;
 }
 
 .page-footer .btn-actions button {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
-li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
-    background: #47596e;
-    outline: none !important;
+li.dropdown-item:focus,
+li.dropdown-submenu:focus,
+.dropdown-menu li a:focus {
+  background: #47596e;
+  outline: none !important;
 }
 
 .page-header.navbar .hor-menu .navbar-nav > li > a:focus {
-    background: #47596e !important;
-    outline: none !important;
+  background: #47596e !important;
+  outline: none !important;
 }
 
-.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
-    background: #47596e !important;
-    outline: none !important;
+.nav .open > a,
+.nav .open > a:focus,
+.nav .open > a:hover {
+  background: #47596e !important;
+  outline: none !important;
 }
 
 .dropdown-menu {
-    min-width: 200px;
+  min-width: 200px;
 }
 
 .modal-dialog {
@@ -79,49 +83,51 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 }
 
 .react-select__control--is-focused {
-    background-color: #f7ecb5 !important;
-    border: 1px solid #66AFE8 !important;
+  background-color: #f7ecb5 !important;
+  border: 1px solid #66afe8 !important;
 }
 
 .react-select__control {
-    height: 28px !important;
-    min-height: 0px !important;
-    font-size: 11px;
-    border: 1px solid #ccc !important;
+  height: 28px !important;
+  min-height: 0px !important;
+  font-size: 11px;
+  border: 1px solid #ccc !important;
 }
 
-.ui.selection.dropdown>.dropdown.icon {
-    padding-top: 6px !important;
+.ui.selection.dropdown > .dropdown.icon {
+  padding-top: 6px !important;
 }
 
 .react-select__option-label {
-    font-size: 11px;
-    font-weight: 700;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .react-select__option-caption {
-    font-size: 11px;
-    color: #ccc;
+  font-size: 11px;
+  color: #ccc;
 }
 
 .react-select__menu {
-    z-index: 99999!important;
-    position: absolute !important;
+  z-index: 99999 !important;
+  position: absolute !important;
 }
 
-.react-select__placeholder, .react-select__single-value {
-    top: 12px !important;
-    /* vertical-align: middle !important; */
+.react-select__placeholder,
+.react-select__single-value {
+  top: 12px !important;
+  /* vertical-align: middle !important; */
 }
 
 .react-select__indicator-separator {
-    /* margin-top: 4px !important; */
-    margin-bottom: 5px !important;
-    margin-top: 0px !important;
+  /* margin-top: 4px !important; */
+  margin-bottom: 5px !important;
+  margin-top: 0px !important;
 }
 
-.react-select__dropdown-indicator, .react-select__clear-indicator {
-    padding-top: 3px !important;
+.react-select__dropdown-indicator,
+.react-select__clear-indicator {
+  padding-top: 3px !important;
 }
 
 /* .react-select__indicator .react-select__clear-indicator {
@@ -129,17 +135,20 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
     padding-bottom: 4px !important;
 } */
 
-.mt-checkbox.mt-checkbox-outline>input:focus~span,
-.mt-radio.mt-radio-outline>input:focus~span {
-    border-color: #66AFE8 !important;
+.mt-checkbox.mt-checkbox-outline > input:focus ~ span,
+.mt-radio.mt-radio-outline > input:focus ~ span {
+  border-color: #66afe8 !important;
 }
 
-.mt-checkbox.mt-checkbox-disabled, .mt-checkbox.mt-radio-disabled, .mt-radio.mt-checkbox-disabled, .mt-radio.mt-radio-disabled {
-    opacity: inherit;
+.mt-checkbox.mt-checkbox-disabled,
+.mt-checkbox.mt-radio-disabled,
+.mt-radio.mt-checkbox-disabled,
+.mt-radio.mt-radio-disabled {
+  opacity: inherit;
 }
 
 .form-control[disabled] {
-    color: hsl(0,0%,60%);
+  color: hsl(0, 0%, 60%);
 }
 
 #modal-root {
@@ -148,7 +157,7 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 }
 
 .loader-container {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   height: 100%;
   width: 100%;
@@ -160,103 +169,104 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 }
 
 .block-ui-container {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .ag-theme-balham .ag-ltr .ag-cell-focus {
-    outline: 2px dotted #d9534f !important;
-    outline-offset: -2px;
+  outline: 2px dotted #d9534f !important;
+  outline-offset: -2px;
 }
 
-.ag-theme-balham .ag-cell-no-focus{
-  border:none !important;
+.ag-theme-balham .ag-cell-no-focus {
+  border: none !important;
 }
 
 .ag-theme-balham .ag-row {
-    border:none !important;
+  border: none !important;
 }
 
 .ag-theme-balham .ag-cell {
-    border:0.5px solid #d9dcde !important;
+  border: 0.5px solid #d9dcde !important;
 }
 
 .ag-number-cell {
-    text-align: right;
+  text-align: right;
 }
 
 .ag-date-cell {
-    text-align: center;
+  text-align: center;
 }
-
 
 .slidein-from-right {
-    animation: slidein-from-right 700ms;
+  animation: slidein-from-right 700ms;
 }
 @keyframes slidein-from-right {
-    from {
-        margin-left: 80%;
-        opacity: 0;
-    }
-    to {
-        margin-left: 0%;
-        opacity: 1;
-    }
+  from {
+    margin-left: 80%;
+    opacity: 0;
+  }
+  to {
+    margin-left: 0%;
+    opacity: 1;
+  }
 }
 
 .dropdown-quick-sidebar-toggler {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .dropdown-user {
-    padding-right: 20px !important;
+  padding-right: 20px !important;
 }
 
-.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
-    padding-top: 4px;
-    padding-bottom: 4px;
+.input-group-btn:last-child > .btn,
+.input-group-btn:last-child > .btn-group {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
-.input-icon>svg {
-    color: #ccc;
-    position: absolute;
-    z-index: 3;
-    width: 16px;
-    font-size: 16px;
-    text-align: center;
-    left: 10px;
-    top: 7px;
+.input-icon > svg {
+  color: #ccc;
+  position: absolute;
+  z-index: 3;
+  width: 16px;
+  font-size: 16px;
+  text-align: center;
+  left: 10px;
+  top: 7px;
 }
 
-.input-icon.right>svg {
-    left: auto;
-    right: 8px;
-    float: right;
+.input-icon.right > svg {
+  left: auto;
+  right: 8px;
+  float: right;
 }
 
 .loading-indicator {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 /* React-datepicker */
 .react-datepicker-popper {
-    z-index: 9000 !important;
+  z-index: 9000 !important;
 }
-.react-datepicker-wrapper, .react-datepicker__input-container {
-    width: 100% !important;
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  width: 100% !important;
 }
 
 /*List main menu*/
-.page-header.navbar .hor-menu .navbar-nav>li .dropdown-menu li>a {
-    font-size: 12px !important;
+.page-header.navbar .hor-menu .navbar-nav > li .dropdown-menu li > a {
+  font-size: 12px !important;
 }
 
-.page-header.navbar .hor-menu .navbar-nav>li>a {
-    font-size: 12px !important;
+.page-header.navbar .hor-menu .navbar-nav > li > a {
+  font-size: 12px !important;
 }
 
-.dropdown-menu>li>a {
-    line-height: 10px !important;
+.dropdown-menu > li > a {
+  line-height: 10px !important;
 }
 
 /* .dropdown-submenu:focus > .dropdown-menu {
@@ -289,80 +299,82 @@ li.dropdown-item:focus, li.dropdown-submenu:focus, .dropdown-menu li a:focus {
 } */
 
 .layout-header {
-    -webkit-app-region: drag;
+  -webkit-app-region: drag;
 }
 
 x-menubar {
-    padding-right: 0px !important;
+  padding-right: 0px !important;
 }
 
-x-menuitem, #right-menu-search input {
-    -webkit-app-region: no-drag;
-    /* cursor: pointer; */
+x-menuitem,
+#right-menu-search input {
+  -webkit-app-region: no-drag;
+  /* cursor: pointer; */
 }
 
 x-menuitem.app-window-button {
-    padding-left: 10px;
-    padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 x-menuitem.app-window-button.close:hover {
-    background: #FF0000 !important;
+  background: #ff0000 !important;
 }
 
 x-menuitem:hover {
-    background-color: rgb(54, 150, 252);
-    color: #FFFFFF;
+  background-color: rgb(54, 150, 252);
+  color: #ffffff;
 }
 
-.main-menu, .right-menu {
-    -webkit-app-region: no-drag;
-    display: flex;
-    /* width: 100% !important; */
+.main-menu,
+.right-menu {
+  -webkit-app-region: no-drag;
+  display: flex;
+  /* width: 100% !important; */
 }
 
-@media only screen and (min-width:  800px) {
+@media only screen and (min-width: 800px) {
   /* 768px */
-    .page-content {
-        min-height: 510px !important;
-        /* padding: 10px 10px 10px 10px !important; */
-    }
-    .portlet-content {
-        min-height: 500px;
-    }
+  .page-content {
+    min-height: 510px !important;
+    /* padding: 10px 10px 10px 10px !important; */
+  }
+  .portlet-content {
+    min-height: 500px;
+  }
 }
 
-@media only screen and (min-width:  1200px) {
+@media only screen and (min-width: 1200px) {
   /* 768px */
-    .page-content {
-        min-height: 585px !important;
-        /* padding: 10px 10px 10px 10px !important; */
-    }
-    .portlet-content {
-        min-height: 560px;
-    }
+  .page-content {
+    min-height: 585px !important;
+    /* padding: 10px 10px 10px 10px !important; */
+  }
+  .portlet-content {
+    min-height: 560px;
+  }
 }
 
 .ui.top.attached.header {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 .form-row {
-    padding-bottom: 0px !important;
-    padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 }
 
 .form-grid {
-    padding-bottom: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 .ag-grid-segment {
-    border: 0px !important;
-    border-bottom-width: 1px !important;
-    padding: 0px !important;
-    margin-bottom: 0px !important;
-    margin-top: 0px !important;
+  border: 0px !important;
+  border-bottom-width: 1px !important;
+  padding: 0px !important;
+  margin-bottom: 0px !important;
+  margin-top: 0px !important;
 }
 
 /* .ag-grid-segment.footer .ag-body-viewport.ag-layout-normal  {
@@ -370,80 +382,90 @@ x-menuitem:hover {
 } */
 
 .ag-grid-segment.ui.loading.segment:before {
-    z-index: 10 !important;
+  z-index: 10 !important;
 }
 
 .content-grid .row {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 /*Form input*/
 #right-menu-search input {
-    height: 20px !important;
+  height: 20px !important;
 }
 
-.ui .input input, .react-datepicker__input-container input {
-    height: 25px !important;
-    padding: 3px 6px !important;
-    font-size: 11px !important;
+.ui .input input,
+.react-datepicker__input-container input {
+  height: 25px !important;
+  padding: 3px 6px !important;
+  font-size: 11px !important;
 }
 
-.ui .input input:disabled, .ui.form textarea:disabled, .react-datepicker__input-container input:disabled {
-    background-color: #d9dcde !important;
+.ui .input input:disabled,
+.ui.form textarea:disabled,
+.react-datepicker__input-container input:disabled {
+  background-color: #d9dcde !important;
 }
 
 .ui.form textarea {
-    padding: 6px !important;
+  padding: 6px !important;
 }
 
 .ui.disabled.input {
-    opacity: 0.7 !important;
+  opacity: 0.7 !important;
 }
 
 .ui.form .field .input :disabled {
-    opacity: 0.7 !important;
+  opacity: 0.7 !important;
 }
 
-.ui .input input:focus, .ui.form textarea:focus, .react-datepicker__input-container input:focus {
-    background-color: #f7ecb5 !important;
+.ui .input input:focus,
+.ui.form textarea:focus,
+.react-datepicker__input-container input:focus {
+  background-color: #f7ecb5 !important;
 }
 
-.ui.checkbox input[disabled]~label:before {
-    background-color: #d9dcde !important;
+.ui.checkbox input[disabled] ~ label:before {
+  background-color: #d9dcde !important;
 }
 
 .ui.loading.segment.ag-grid-segment:before {
-    border-radius: 0px !important;
+  border-radius: 0px !important;
 }
 
 .ui.loading.segment.ag-grid-segment:after {
-    visibility: hidden !important;
+  visibility: hidden !important;
 }
 
-.ui.checkbox input[disabled]~.box:after, .ui.checkbox input[disabled]~label, .ui.disabled.checkbox .box:after, .ui.disabled.checkbox label {
-    opacity: 0.7 !important;
+.ui.checkbox input[disabled] ~ .box:after,
+.ui.checkbox input[disabled] ~ label,
+.ui.disabled.checkbox .box:after,
+.ui.disabled.checkbox label {
+  opacity: 0.7 !important;
 }
 
-.ui.checkbox .box:before, .ui.checkbox label:before {
-    border: 1px solid rgba(34,36,38,.15);
+.ui.checkbox .box:before,
+.ui.checkbox label:before {
+  border: 1px solid rgba(34, 36, 38, 0.15);
 }
 
 .ui .mini .form label {
-    font-size: 12px !important;
+  font-size: 12px !important;
 }
 
-.ui.menu .item.disabled, .ui.menu .item.disabled:hover {
-    color: darkgray !important;
+.ui.menu .item.disabled,
+.ui.menu .item.disabled:hover {
+  color: darkgray !important;
 }
 
-.ui.form .field>label {
-    font-size: 12px !important;
+.ui.form .field > label {
+  font-size: 12px !important;
 }
 
 /*Dropdown fluid*/
 .ui.fluid.dropdown {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 /* .ui.dropdown .menu>.item {
@@ -454,39 +476,40 @@ x-menuitem:hover {
     font-size: 11px !important;
 } */
 
-.main-menu .ui.simple.active.dropdown>.menu, .main-menu .ui.simple.dropdown:hover>.menu {
-    top: -5% !important;
+.main-menu .ui.simple.active.dropdown > .menu,
+.main-menu .ui.simple.dropdown:hover > .menu {
+  top: -5% !important;
 }
 
 .ui.action.input button {
-    height: 25px !important;
-    padding-top: 6px !important;
-    font-size: 12px !important;
+  height: 25px !important;
+  padding-top: 6px !important;
+  font-size: 12px !important;
 }
 
 /* Radio */
 .ui.radio.checkbox {
-    margin-right: 12px;
+  margin-right: 12px;
 }
 
 .help-block {
-    color: rgba(0,0,0,.6);
-    font-weight: 400;
-    font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  font-size: 12px;
 }
 
 /*React Select*/
 .filter-select {
-    width: 200px !important;
+  width: 200px !important;
 }
 
 /*Rc- Tree*/
 span.rc-tree-title {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 .rc-tree li .rc-tree-node-content-wrapper {
-    height: 23px;
+  height: 23px;
 }
 
 .content-grid .form-row:not(:last-child) {

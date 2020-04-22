@@ -1,0 +1,14 @@
+import { redux } from '@simrs/common';
+
+const { types, createRequestType, createType } = redux;
+
+const { REQUEST, SUCCESS, FAILURE } = types;
+const GENERATE_UNIT_FARMASI = createRequestType('GENERATE_UNIT_FARMASI');
+
+export default {
+  GENERATE_UNIT_FARMASI_REQUEST: GENERATE_UNIT_FARMASI[REQUEST],
+  GENERATE_UNIT_FARMASI_SUCCESS: GENERATE_UNIT_FARMASI[SUCCESS],
+  GENERATE_UNIT_FARMASI_FAILURE: GENERATE_UNIT_FARMASI[FAILURE],
+
+  TOGGLE_CHECK: createType('TOGGLE_CHECK'),
+};
