@@ -5,9 +5,11 @@ import { bindActionCreators } from 'redux';
 import { Grid, Form, Input, Tab, Segment, Divider } from 'semantic-ui-react';
 
 import { Select } from '@simrs/components';
+import { formatter } from '@simrs/common';
 
 import CariPasien from '../components/CariPasien';
 import CariKunjungan from '../components/CariKunjungan';
+import NormModal from '../components/NormModal';
 import PenjaminPasien from './PenjaminPasien';
 import InputPasien from './InputPasien';
 
@@ -96,6 +98,7 @@ class Create extends Component {
       data,
       showCariPasien,
       showCariKunjungan,
+      showNormModal,
       filterPasien,
       action,
       resource,
@@ -246,11 +249,19 @@ class Create extends Component {
             reloadType={this.getStateDatatables('table_pasien').reloadType}
           />
         }
-        
-        <CariKunjungan
-          show={showCariKunjungan}
-          onHide={action.toggleShowCariKunjungan}
-        />
+        {showCariKunjungan &&
+          <CariKunjungan
+            show={showCariKunjungan}
+            onHide={action.toggleShowCariKunjungan}
+          />
+        }
+        {showNormModal &&
+          <NormModal
+            show={showNormModal}
+            onHide={action.toggleShowNormModal}
+            pasien={{ norm: post.norm, nama: post.nama }}
+          />
+        }
       </Form>
     )
   }
@@ -289,6 +300,7 @@ const mapStateToProps = function (state) {
     data,
     showCariPasien,
     showCariKunjungan,
+    showNormModal,
     filterPasien,
     statusForm,
     selectedOption
@@ -300,6 +312,7 @@ const mapStateToProps = function (state) {
     data,
     showCariPasien,
     showCariKunjungan,
+    showNormModal,
     filterPasien,
     datatables: state.datatable.datatables,
     statusForm,

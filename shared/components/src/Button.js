@@ -193,6 +193,18 @@ class FinishButton extends PureComponent {
     }
 }
 
+class OkButton extends PureComponent {
+    render() {
+        let { inputRef, ...attributes } = this.props;
+        return (
+            <Button ref={inputRef} name="ok" size="mini" {...attributes}>
+                <Icon name='check' />
+                <Trans i18nKey="common:action.ok" />
+            </Button>
+        )
+    }
+}
+
 export {
     Button,
     SaveButton,
@@ -210,5 +222,6 @@ export {
     PreviewButton,
     SelectedButton,
     PrintButton,
-    FinishButton
+    FinishButton,
+    OkButton
 }

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { validator as commonValidator, toastr} from '@simrs/common';
 import { loaderActions, messageBox, constDatatable, datatableActionTypes, datatableActions} from '@simrs/components';
 import api from '../services/models/kunjunganModel';
-import {actions, actionTypes, getPost} from '../pages/index';
+import {actions, actionTypes, getPost, isPasienBaru} from '../pages/index';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
@@ -70,12 +70,17 @@ function* handleSave({ payload, meta }) {
             tgl_cetak_jaminan: dayjs(data.tgl_cetak_jaminan).format('YYYY-MM-DD HH:mm:ss'),
             id_tindakan: prevPost.id_tindakan.map(item => item.value),
             id_kelas: 4,
+            id_kunjungan_asal: data.id_kunjungan_asal,
         };
         // let errors = validator(post, rules, messages);
 
         let response = yield call(api.save, 'tambah', post);
         if (response.status) {
-            yield put(actions.save.requestSuccess(resource, response));
+            const showNormModal = yield select(isPasienBaru);
+            if (showNormModal) {
+                yield put(actions.toggleShowNormModal(resource));
+            }
+            yield put(actions.save.requestSuccess(resource, response.data));
         }
         yield put(loaderActions.hide());
     } catch (error) {
@@ -84,17 +89,11 @@ function* handleSave({ payload, meta }) {
     }
 }
 
-function* handleSaveSuccess() {
-    try {
-        yield messageBox({
-            onOk: () => {
-                ipcRenderer.send('session-expired')
-            },
-            message: 'Ganti password berhasil, klik tombol OK untuk login kembali',
-        });
-    } catch (error) {
-        yield toastr.error(error.message);
-    }
+function* handleSaveSuccess({payload, meta}) {
+    // const showNormModal = yield select(isPasienBaru);
+    // if (showNormModal) {
+    //     yield put(actions.toggleShowNormModal(meta.resource));
+    // }
 }
 
 function* populateForm({ meta }) {
@@ -121,12 +120,6 @@ function* changeSelect2({ meta, payload }) {
             case 'id_unit_layanan':
                 yield put(actions.optionsByUnitLayanan.request(meta.resource, payload.data));
                 break;
-            // case 'kelompok':
-            //     yield put(actions.instalasi.request(meta.resource, payload.data));
-            //     break;
-            // case 'id_instalasi':
-            //     yield put(actions.jenisKlasifikasiRegistrasi.request(meta.resource, payload.data));
-            //     break;
             default:
                 break;
         }
@@ -176,7 +169,8 @@ function* unitLayananRequest({ meta, payload }) {
 
 function* optionsByUnitLayananRequest({ meta, payload }) {
     try {
-        let response = yield call(api.getOptionsByUnitLayanan, payload.data.value);
+        const prevPost = yield select(getPost);
+        let response = yield call(api.getOptionsByUnitLayanan, payload.data.value, {id_pasien: prevPost.id_pasien});
         if (response.status) {
             yield put(actions.optionsByUnitLayanan.requestSuccess(meta.resource, response.data));
         } else {
@@ -264,8 +258,26 @@ function* handleSelectedWilayah({ meta }) {
     yield put(actions.toggleShowCariWilayah(meta.resource));
 }
 
+function* handleAdd({ meta, payload }) {
+    yield put(actions.nextNorm.request(meta.resource));
+}
+
+function* nextNormRequest({ meta, payload }) {
+    try {
+        let response = yield call(api.getNextNorm);
+        if (response.status) {
+            yield put(actions.nextNorm.requestSuccess(meta.resource, response.data));
+        } else {
+            yield put(actions.nextNorm.requestFailure(meta.resource, response.message));
+        }
+    } catch (error) {
+        yield toastr.error(error.message);
+    }
+}
+
 export default function* watchAuthActions() {
     yield all([
+        takeLatest(actionTypes.ADD, handleAdd),
         takeLatest(actionTypes.SAVE_REQUEST, handleSave),
         takeLatest(actionTypes.SAVE_SUCCESS, handleSaveSuccess),
         takeLatest(actionTypes.OPEN_FORM, openForm),
@@ -275,6 +287,7 @@ export default function* watchAuthActions() {
         takeLatest(actionTypes.INSTALASI_REQUEST, instalasiRequest),
         takeLatest(actionTypes.UNIT_LAYANAN_REQUEST, unitLayananRequest),
         takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequest),
+        takeLatest(actionTypes.NEXT_NORM_REQUEST, nextNormRequest),
         // takeLatest(actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST, jenisKlasifikasiRegistrasiRequest),
 
         takeLatest(actionTypes.GET_ALL_PASIEN_REQUEST, loadAllPasien),

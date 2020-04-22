@@ -63,6 +63,9 @@ export default {
         nomor_anggota: '',
         id_kelas: '',
         penjamin_pasien: '',
+        nama_non_kelas: '',
+        id: '',
+        id_kunjungan_asal: '',
     },
     filterPasien: {
         post: {
@@ -95,6 +98,8 @@ export default {
         jenis_umur: null,
         id_kepersetaan: null,
         id_penjamin_pasien: null,
+        id_penjamin: null,
+        id_kunjungan_asal: null,
         
     },
     focusElement: '',
@@ -102,6 +107,7 @@ export default {
     showCariPasien: false,
     showCariWilayah: false,
     showCariKunjungan: false,
+    showNormModal: false,
     loaderAsalMasukDetail: false,
     loaderInstalasi: false,
     loaderUnitLayanan: false,

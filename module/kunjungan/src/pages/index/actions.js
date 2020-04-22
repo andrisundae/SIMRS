@@ -125,6 +125,23 @@ export default {
             { resource }
         )
     },
+    nextNorm: {
+        request: (resource) => createAction(
+            actionTypes.NEXT_NORM_REQUEST,
+            {},
+            { resource }
+        ),
+        requestSuccess: (resource, data) => createAction(
+            actionTypes.NEXT_NORM_SUCCESS,
+            { data },
+            { resource }
+        ),
+        requestFailure: (resource, error) => createAction(
+            actionTypes.NEXT_NORM_FAILURE,
+            { error },
+            { resource }
+        )
+    },
     loadAllPasien: (resource, data, tableParams) => createAction(
         actionTypes.GET_ALL_PASIEN_REQUEST,
         { data },
@@ -156,6 +173,7 @@ export default {
     toggleShowCariPasien: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_PASIEN, {}, { resource }),
     toggleShowCariWilayah: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_WILAYAH, {}, { resource }),
     toggleShowCariKunjungan: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN, {}, { resource }),
+    toggleShowNormModal: (resource) => createAction(actionTypes.TOGGLE_SHOW_NORM_MODAL, {}, { resource }),
 
     onChangeFilterPasien: (resource, data) => createAction(actionTypes.FILTER_CHANGE_PASIEN, { data }, { resource }),
     onSubmitFilterPasien: (resource, data) => createAction(

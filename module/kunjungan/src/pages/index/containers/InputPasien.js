@@ -29,9 +29,9 @@ OptionInstalasi.propTypes = {
   data: PropTypes.object.isRequired
 };
 
-const KelasKamarSingleValue = ({ data, ...props }) => (
-  <components.SingleValue {...props}>{`${data.label} (Rp ${formatter.currency(data.tarif)})`}</components.SingleValue>
-);
+// const KelasKamarSingleValue = ({ data, ...props }) => (
+//   <components.SingleValue {...props}>{`${data.label} (Rp ${formatter.currency(data.tarif)})`}</components.SingleValue>
+// );
 
 const BiayaTindakan = ({label}) => {
   return (
@@ -49,6 +49,20 @@ const OptionKelasKamar = ({data, ...props}) => {
       <div className="react-select__option-label">{data.label}</div>
       <div className="react-select__option-caption">
         {`Tarif kamar : Rp ${formatter.currency(data.tarif)}`}
+      </div>
+    </components.Option>
+  );
+};
+OptionKelasKamar.propTypes = {
+  data: PropTypes.object.isRequired
+};
+
+const OptionAsalKunjungan = ({ data, ...props }) => {
+  return (
+    <components.Option {...props}>
+      <div className="react-select__option-label">{data.tgl_kunjungan}</div>
+      <div className="react-select__option-caption">
+        {data.label}
       </div>
     </components.Option>
   );
@@ -199,6 +213,30 @@ class InputPasien extends Component {
         {jenisKlasifikasiRegistrasi.map(row => row)}
       </Grid>
     )
+  }
+
+  isRawatInap = () => {
+    const {selectedOption} = this.props;
+    let isRawatInap = false;
+    if (selectedOption.id_instalasi) {
+      if (selectedOption.id_instalasi.alias_jenis_layanan === staticConst.RAWAT_INAP_ALIAS) {
+        isRawatInap = true;
+      }
+    }
+
+    return isRawatInap;
+  }
+
+  isShowAsalKunjungan = () => {
+    const { selectedOption } = this.props;
+    let isShowAsalKunjungan = false;
+    if (selectedOption.id_unit_layanan) {
+      if (selectedOption.id_unit_layanan.status_asal_kunjungan === 1) {
+        isShowAsalKunjungan = true;
+      }
+    }
+
+    return isShowAsalKunjungan;
   }
 
   render() {
@@ -626,30 +664,44 @@ class InputPasien extends Component {
                   <label>{t(this._getKey('label.field.kelas_kamar'))}</label>
                 </Grid.Column>
                 <Grid.Column width="9" className="field">
-                  <Select
-                    options={data.options_kelas_kamar}
-                    isDisabled={disabledKunjungan}
-                    isLoading={loaderOptionsByUnitLayanan}
-                    components={{ Option: OptionKelasKamar }}
-                    onChange={(selected) => this.select2ChangeHanlder('id_kelas', selected, true)}
-                    isClearable={false}
-                    value={selectedOption.id_kelas}
-                    name="id_kelas"
-                  />
+                  {this.isRawatInap() ? (
+                    <Select
+                      options={data.options_kelas_kamar}
+                      isDisabled={disabledKunjungan}
+                      isLoading={loaderOptionsByUnitLayanan}
+                      components={{ Option: OptionKelasKamar }}
+                      onChange={(selected) => this.select2ChangeHanlder('id_kelas', selected, true)}
+                      isClearable={false}
+                      value={selectedOption.id_kelas}
+                      name="id_kelas"
+                    />
+                  ) : (
+                      <Input
+                        value={post.nama_non_kelas}
+                        disabled
+                      />
+                  )}
                 </Grid.Column>
                 <BiayaTindakan label={selectedOption.id_kelas ? formatter.currency(selectedOption.id_kelas.tarif) : 0} />
               </Grid.Row>
-              <Grid.Row className="form-row">
-                <Grid.Column width="4" className="field">
-                  <label>{t(this._getKey('label.field.asal_kunjungan'))}</label>
-                </Grid.Column>
-                <Grid.Column width="9" className="field">
-                  <Select
-                    options={data.options_asal_kunjungan}
-                    isDisabled={disabledKunjungan}
-                  />
-                </Grid.Column>
-              </Grid.Row>
+              {this.isShowAsalKunjungan() &&
+                <Grid.Row className="form-row">
+                  <Grid.Column width="4" className="field">
+                    <label>{t(this._getKey('label.field.asal_kunjungan'))}</label>
+                  </Grid.Column>
+                  <Grid.Column width="9" className="field">
+                    <Select
+                      options={data.options_asal_kunjungan}
+                      isDisabled={disabledKunjungan}
+                      isLoading={loaderOptionsByUnitLayanan}
+                      components={{ Option: OptionAsalKunjungan }}
+                      onChange={(selected) => this.select2ChangeHanlder('id_kunjungan_asal', selected)}
+                      isClearable={false}
+                      value={selectedOption.id_kunjungan_asal}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              }
               <Grid.Row className="form-row">
                 <Grid.Column width="4" className="field">
                   <label>{t(this._getKey('label.field.dpjp'))}</label>

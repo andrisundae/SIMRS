@@ -70,28 +70,6 @@ class CariKunjungan extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Form>
-                  <Grid>
-                    <Grid.Row className="form-row">
-                      <Grid.Column width="12" className="inline field">
-                        <Radio
-                          value="baru"
-                          name="jenis_tarif"
-                          label="Kunjungan Aktif"
-                        />
-                        <Radio
-                          value="baru"
-                          name="jenis_tarif"
-                          label="Kunjungan Selesai"
-                        />
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-                </Form>
-              </Grid.Column>
-            </Grid.Row>
           </Grid>
         </Modal.Content>
         <Modal.Actions>

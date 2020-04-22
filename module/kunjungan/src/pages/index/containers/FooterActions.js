@@ -33,7 +33,7 @@ class FooterActions extends Component {
     }
 
     onAdd = () => {
-        if (this.props.post.pasien_id) {
+        if (this.props.post.id_pasien) {
             this.props.action.onAddWithSelected(this.props.resource);
         } else {
             this.props.action.onAdd(this.props.resource);
@@ -41,7 +41,7 @@ class FooterActions extends Component {
     }
 
     onCancel = () => {
-        if (this.props.post.pasien_id) {
+        if (this.props.post.id_pasien) {
             this.props.action.onCancelWithSelected(this.props.resource);
         } else {
             this.props.action.onCancel(this.props.resource);

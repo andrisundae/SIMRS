@@ -4,8 +4,6 @@ import { main } from '../store';
 const { BrowserWindow, dialog } = remote;
 
 // const BASE_URI = process.env.REACT_APP_API_DOMAIN;
-var defaultSearchParams = new URLSearchParams();
-
 const simrsHeaders = (isWithToken = true) => {
     let headers = {
         'device-id': main.get('config.macAddress'),
@@ -36,9 +34,12 @@ const getPath = (path) => {
 }
 
 const get = async (path, data) => {
+    const defaultSearchParams = new URLSearchParams();
     if (data) {
         Object.keys(data).forEach(function (key) {
-            defaultSearchParams.set(key, data[key]);
+            if (data[key]) {
+                defaultSearchParams.set(key, data[key]);
+            }
         }, this);
     }
 

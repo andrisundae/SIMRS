@@ -49,3 +49,19 @@ export const currency = (nominal, format = "(0,0.00)") => {
 export const numFormatDb = (nominal) => {
     return parseFloat(_.replace(nominal, ',', '.'));
 }
+
+export const textSplitter = (text, splitter='.', len= 2) => {
+    text = text.toString();
+    
+    if (!text) {
+        return ''
+    }
+
+    const split = text.match(/.{1,2}/g);
+    if (!split) {
+        return ''
+    }
+    const joinText = split.join(splitter);
+
+    return joinText;
+}

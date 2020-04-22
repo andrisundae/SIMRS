@@ -13,7 +13,8 @@ export default (state = initialState, action) =>
   produce(state, draft => {
     const { type, payload } = action;
     const jenisUmur = defaultJenisUmur(state.data.options_umur);
-      const now = dayjs();
+    const now = dayjs();
+    const toDateNow = now.toDate();
 
     switch (type) {
         case actionTypes.CHANGE_INPUT:
@@ -31,7 +32,14 @@ export default (state = initialState, action) =>
             return
 
         case actionTypes.SAVE_SUCCESS:
-            draft.post = initialState.post;
+            const {id, id_pasien: idPasien} = payload.data;
+            draft.statusForm = actionTypes.SELECTED;
+            draft.post = {
+                ...state.post,
+                id,
+                id_pasien: idPasien,
+            }
+
             return
 
         case actionTypes.ON_FOCUS_ELEMENT:
@@ -48,6 +56,10 @@ export default (state = initialState, action) =>
         
         case actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN:
             draft.showCariKunjungan = !state.showCariKunjungan;
+            return
+
+        case actionTypes.TOGGLE_SHOW_NORM_MODAL:
+            draft.showNormModal = !state.showNormModal;
             return
 
         case actionTypes.POPULATE_FORM_SUCCESS:
@@ -105,17 +117,28 @@ export default (state = initialState, action) =>
                 draft.data.options_kelas_kamar = [];
                 draft.data.options_dpjp = [];
 
-                Object.keys(draft.data.jenis_klasifikasi_registrasi).forEach(key => {
+                Object.keys(state.data.jenis_klasifikasi_registrasi).forEach(key => {
                     draft.selectedOption[key] = null;
                 })
 
                 draft.data.jenis_klasifikasi_registrasi = {};
                 draft.post.id_tindakan = [];
+
+                if (payload.name === 'id_instalasi') {
+                    if (payload.data.alias_jenis_layanan !== staticConst.RAWAT_INAP_ALIAS) {
+                        const findNonKelas = state.data.options_kelas.find(row => row.value === staticConst.ID_NON_KELAS);
+                        draft.post.id_kelas = staticConst.ID_NON_KELAS;
+                        draft.post.nama_non_kelas = findNonKelas ? findNonKelas.label : '';
+                    }
+                }
             }
 
             if (payload.isTindakan) {
-                const selectedTindakan = draft.post.id_tindakan;
-                const selectedData = { name: payload.name, value: payload.data.value };
+                const selectedTindakan = state.post.id_tindakan;
+                const selectedData = {
+                    name: payload.name,
+                    value: payload.name === 'id_kelas' ? payload.data.id_tindakan : payload.data.value
+                };
                 const findIndex = selectedTindakan.findIndex(row => row.name === payload.name);
                 if (findIndex >= 0) {
                     selectedTindakan[findIndex] = selectedData;
@@ -166,6 +189,7 @@ export default (state = initialState, action) =>
             draft.data.options_kelas_kamar = payload.data.kelas_kamar;
             draft.data.options_dpjp = payload.data.dpjp;
             draft.data.jenis_klasifikasi_registrasi = payload.data.jenis_klasifikasi_registrasi;
+            draft.data.options_asal_kunjungan = payload.data.asal_kunjungan;
             draft.loaderOptionsByUnitLayanan = false;
 
             Object.keys(payload.data.jenis_klasifikasi_registrasi).forEach(key => {
@@ -200,28 +224,47 @@ export default (state = initialState, action) =>
             draft.statusForm = actionTypes.READY;
             draft.filterPasien.selected = {};
             draft.post = { ...initialState.post};
+            draft.selectedOption = {...initialState.selectedOption};
+            draft.data.jenis_klasifikasi_registrasi = {};
             return
         case actionTypes.ADD:
-            const toDateNow = now.toDate();
             draft.statusForm = actionTypes.ADD;
             draft.post.tgl_lahir = toDateNow;
             draft.post.tgl_kunjungan = toDateNow;
             draft.post.tgl_jaminan = toDateNow;
             draft.post.tgl_cetak_jaminan = toDateNow;
             draft.post.jam_kunjungan = toDateNow;
-            draft.post.norm = '66000004';
 
             draft.post.jenis_umur = jenisUmur.value;
             draft.selectedOption.jenis_umur = jenisUmur;
             return
 
         case actionTypes.FILTER_SELECTED_PASIEN:
+            const data = payload.data;
             draft.statusForm = actionTypes.SELECTED;
-            draft.filterPasien.selected = payload.data;
+            draft.filterPasien.selected = data;
             draft.post = {
                 ...state.post,
-                ...payload.data
+                id_pasien: data.pasien_id,
+                nama: data.nama,
+                norm: data.norm,
+                alamat: data.alamat,
+                kecamatan: data.kecamatan,
+                kota: data.kota,
+                provinsi: data.provinsi,
+                desa: data.desa,
+                id_desa: data.id_desa,
+                rt: data.rt,
+                rw: data.rw,
+                nama_ortu: data.nama_ortu,
+                id_jenis_kelamin: data.jenis_kelamin_id,
+                tgl_lahir: dayjs(data.tgl_lahir).toDate()
             };
+
+            draft.selectedOption.id_jenis_kelamin = {
+                value: data.jenis_kelamin_id,
+                label: data.jenis_kelamin
+            }
             return
         
         case actionTypes.FILTER_SELECTED_WILAYAH:
@@ -234,9 +277,45 @@ export default (state = initialState, action) =>
 
         case actionTypes.ADD_WITH_SELECTED:
             draft.statusForm = actionTypes.ADD_WITH_SELECTED;
+            draft.post = {
+                ...state.post,
+                tgl_kunjungan: toDateNow,
+                tgl_jaminan: toDateNow,
+                tgl_cetak_jaminan: toDateNow,
+                jam_kunjungan: toDateNow,
+                id_asal_masuk: '',
+                id_asal_masuk_detail: '',
+                id_penjamin: '',
+                id_kelompok: '',
+                id_instalasi: '',
+                id_tindakan: [],
+                id_dpjp: '',
+                id_unit_layanan: '',
+                id_kelas: '',
+                penjamin_pasien: '',
+                nama_non_kelas: '',
+            }
+            draft.data = {
+                ...state.data,
+                jenis_klasifikasi_registrasi: {}
+            }
+            draft.selectedOption = {
+                ...state.selectedOption,
+                id_kelompok: null,
+                id_instalasi: null,
+                id_asal_masuk: null,
+                id_asal_masuk_detail: null,
+                id_unit_layanan: null,
+                id_kelas: null,
+                id_penjamin: null,
+            }
             return
         case actionTypes.CANCEL_WITH_SELECTED:
             draft.statusForm = actionTypes.SELECTED;
+            return
+
+        case actionTypes.NEXT_NORM_SUCCESS:
+            draft.post.norm = payload.data;
             return
         default:
             return state;

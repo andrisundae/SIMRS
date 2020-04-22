@@ -48,12 +48,21 @@ export default {
 
         return response;
     },
-    getOptionsByUnitLayanan: async (idUnitLayanan) => {
-        let response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`);
+    getOptionsByUnitLayanan: async (idUnitLayanan, params) => {
+        let response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`, params);
         return response;
     },
     getJenisKlasifikasiRegistrasi: async (idInstalasi) => {
         let response = await request.get(`${path}/jenis-klasifikasi-registrasi/${idInstalasi}`);
+        return response;
+    },
+    getNextNorm: async () => {
+        let response = await request.get(`${path}/norm/next`);
+        return response;
+    },
+    getPasienByNorm: async (norm) => {
+        let response = await request.post(`/billing/master/pasien/${norm}`);
+
         return response;
     },
     validationRules
