@@ -26,6 +26,11 @@ const routers = [
     path: '/farmasi/setting/unit-farmasi',
     component: lazy(() => import('@module/unit-farmasi')),
   },
+  {
+    key: '_farmasi_setting_barang_supplier',
+    path: '/farmasi/setting/barang-supplier',
+    component: lazy(() => import('@module/setting-barang-supplier')),
+  },
 ];
 
 export default routers;
