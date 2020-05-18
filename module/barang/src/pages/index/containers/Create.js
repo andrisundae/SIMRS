@@ -51,7 +51,7 @@ class Create extends Component {
             <Grid.Column>
               <Grid>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="6" className="field right aligned">
+                  <Grid.Column width="6" className="field left aligned">
                     <label>{t(this._getKey('label.field.barcode'))}</label>
                   </Grid.Column>
                   <Grid.Column width="10" className="field">
@@ -68,7 +68,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.nama'))}</label>
                   </Grid.Column>
@@ -86,7 +86,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.jenis'))}</label>
                   </Grid.Column>
@@ -114,7 +114,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.kelompok'))}</label>
                   </Grid.Column>
@@ -148,7 +148,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.golongan'))}</label>
                   </Grid.Column>
@@ -186,7 +186,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>
                       {t(this._getKey('label.field.satuan_terkecil'))}
@@ -220,7 +220,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.het'))}</label>
                   </Grid.Column>
@@ -245,7 +245,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>
                       {t(this._getKey('label.field.persentase_profit'))}
@@ -272,7 +272,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.status_exp'))}</label>
                   </Grid.Column>
@@ -292,7 +292,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="6"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.status'))}</label>
                   </Grid.Column>
@@ -322,7 +322,7 @@ class Create extends Component {
                   <Grid.Row className="form-row">
                     <Grid.Column
                       width="8"
-                      className="required field right aligned"
+                      className="required field left aligned"
                     >
                       <label>
                         {t(this._getKey('label.field.otomatis_update'))}
@@ -346,7 +346,7 @@ class Create extends Component {
                   <Grid.Row className="form-row">
                     <Grid.Column
                       width="8"
-                      className="required field right aligned"
+                      className="required field left aligned"
                     >
                       <label>
                         {t(this._getKey('label.field.include_diskon'))}
@@ -370,7 +370,7 @@ class Create extends Component {
                   <Grid.Row className="form-row">
                     <Grid.Column
                       width="8"
-                      className="required field right aligned"
+                      className="required field left aligned"
                     >
                       <label>
                         {t(this._getKey('label.field.metode_update'))}
