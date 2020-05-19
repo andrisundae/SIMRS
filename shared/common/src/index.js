@@ -11,6 +11,7 @@ var menu = require('./utils/menu');
 var templates = require('./utils/templates');
 var findNextElement = require('./utils/findNextElement');
 var { id } = require('./utils/locale');
+var utils = require('./utils');
 
 module.exports = {
   store,
@@ -27,4 +28,5 @@ module.exports = {
   toastr: emitter,
   toastrActions: actions,
   localeId: id,
+  utils,
 };

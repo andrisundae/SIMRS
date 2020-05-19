@@ -53,25 +53,34 @@ export default {
   },
   getAllWilayah: async (params) => {
     let response = await request.post('/billing/master/wilayah/view', params);
-
-        return response;
-    },
-    getOptionsByUnitLayanan: async (idUnitLayanan, params) => {
-        let response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`, params);
-        return response;
-    },
-    getJenisKlasifikasiRegistrasi: async (idInstalasi) => {
-        let response = await request.get(`${path}/jenis-klasifikasi-registrasi/${idInstalasi}`);
-        return response;
-    },
-    getNextNorm: async () => {
-        let response = await request.get(`${path}/norm/next`);
-        return response;
-    },
-    getPasienByNorm: async (norm) => {
-        let response = await request.post(`/billing/master/pasien/${norm}`);
-
-        return response;
-    },
-    validationRules
+    return response;
+  },
+  getOptionsByUnitLayanan: async (idUnitLayanan, params) => {
+    let response = await request.get(
+      `${path}/options-by-unitlayanan/${idUnitLayanan}`,
+      params
+    );
+    return response;
+  },
+  getNextNorm: async () => {
+    let response = await request.get(`${path}/norm/next`);
+    return response;
+  },
+  getPasienByNorm: async (norm) => {
+    let response = await request.post(`/billing/master/pasien/${norm}`);
+    return response;
+  },
+  getKunjunganDetail: async (idKunjunganUnit) => {
+    let response = await request.get(`${path}/detail/${idKunjunganUnit}`);
+    return response;
+  },
+  getKunjunganTerakhir: async (idPasien) => {
+    let response = await request.get(`${path}/terakhir/${idPasien}`);
+    return response;
+  },
+  getPenjaminPasien: async (idPasien) => {
+    let response = await request.get(`${path}/penjamin-pasien/${idPasien}`);
+    return response;
+  },
+  validationRules,
 };

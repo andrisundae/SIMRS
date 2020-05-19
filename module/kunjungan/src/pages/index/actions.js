@@ -6,151 +6,10 @@ const { createActivity } = logActions;
 const { createAction } = redux;
 
 export default {
-<<<<<<< HEAD
-    save: {
-        request: (resource, data) => createAction(
-            actionTypes.SAVE_REQUEST,
-            { data },
-            { resource, log: createActivity(resource, activity.SIMPAN) }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.SAVE_SUCCESS,
-            { data },
-            { resource, log: createActivity(resource, activity.SIMPAN, 'sukses') }
-        ),
-        requestFailure: (resource, errors) => createAction(
-            actionTypes.SAVE_FAILURE,
-            { errors },
-            { resource, log: createActivity(resource, activity.SIMPAN, 'gagal') }
-        )
-    },
-    populateForm: {
-        request: (resource, data) => createAction(
-            actionTypes.POPULATE_FORM_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.POPULATE_FORM_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.POPULATE_FORM_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    asalMasukDetail: {
-        request: (resource, data) => createAction(
-            actionTypes.ASAL_MASUK_DETAIL_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.ASAL_MASUK_DETAIL_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.ASAL_MASUK_DETAIL_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    instalasi: {
-        request: (resource, data) => createAction(
-            actionTypes.INSTALASI_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.INSTALASI_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.INSTALASI_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    unitLayanan: {
-        request: (resource, data) => createAction(
-            actionTypes.UNIT_LAYANAN_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.UNIT_LAYANAN_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.UNIT_LAYANAN_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    optionsByUnitLayanan: {
-        request: (resource, data) => createAction(
-            actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.OPTIONS_BY_UNITLAYANAN_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.OPTIONS_BY_UNITLAYANAN_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    jenisKlasifikasiRegistrasi: {
-        request: (resource, data) => createAction(
-            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_REQUEST,
-            { data },
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.JENIS_KLASIFIKASI_REGISTRASI_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    nextNorm: {
-        request: (resource) => createAction(
-            actionTypes.NEXT_NORM_REQUEST,
-            {},
-            { resource }
-        ),
-        requestSuccess: (resource, data) => createAction(
-            actionTypes.NEXT_NORM_SUCCESS,
-            { data },
-            { resource }
-        ),
-        requestFailure: (resource, error) => createAction(
-            actionTypes.NEXT_NORM_FAILURE,
-            { error },
-            { resource }
-        )
-    },
-    loadAllPasien: (resource, data, tableParams) => createAction(
-        actionTypes.GET_ALL_PASIEN_REQUEST,
-=======
   save: {
     request: (resource, data) =>
       createAction(
         actionTypes.SAVE_REQUEST,
->>>>>>> origin/dev
         { data },
         { resource, log: createActivity(resource, activity.SIMPAN) }
       ),
@@ -251,12 +110,89 @@ export default {
         { resource }
       ),
   },
+  nextNorm: {
+    request: (resource) =>
+      createAction(actionTypes.NEXT_NORM_REQUEST, {}, { resource }),
+    requestSuccess: (resource, data) =>
+      createAction(actionTypes.NEXT_NORM_SUCCESS, { data }, { resource }),
+    requestFailure: (resource, error) =>
+      createAction(actionTypes.NEXT_NORM_FAILURE, { error }, { resource }),
+  },
+  getPasien: {
+    request: (resource, data) =>
+      createAction(actionTypes.GET_PASIEN_REQUEST, { data }, { resource }),
+    requestSuccess: (resource, data) =>
+      createAction(actionTypes.GET_PASIEN_SUCCESS, { data }, { resource }),
+    requestFailure: (resource, error) =>
+      createAction(actionTypes.GET_PASIEN_FAILURE, { error }, { resource }),
+  },
+  getKunjunganTerakhir: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_TERAKHIR_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_TERAKHIR_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_TERAKHIR_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  getKunjunganDetail: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  getPenjaminPasien: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_PENJAMIN_PASIEN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_PENJAMIN_PASIEN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_PENJAMIN_PASIEN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   loadAllPasien: (resource, data, tableParams) =>
     createAction(
       actionTypes.GET_ALL_PASIEN_REQUEST,
       { data },
-      { tableParams, resource }
+      { resource, log: createActivity(resource, activity.SIMPAN), tableParams }
     ),
+
   loadAllWilayah: (resource, data, tableParams) =>
     createAction(
       actionTypes.GET_ALL_WILAYAH_REQUEST,
@@ -266,6 +202,8 @@ export default {
   onReady: (resource) => createAction(actionTypes.READY, {}, { resource }),
   onAdd: (resource) => createAction(actionTypes.ADD, {}, { resource }),
   onCancel: (resource) => createAction(actionTypes.CANCEL, {}, { resource }),
+  onSelected: (resource, data) =>
+    createAction(actionTypes.SELECTED, { data }, { resource }),
   onAddWithSelected: (resource) =>
     createAction(actionTypes.ADD_WITH_SELECTED, {}, { resource }),
   onCancelWithSelected: (resource) =>
@@ -287,20 +225,14 @@ export default {
       { name, data, isTindakan },
       { resource }
     ),
-<<<<<<< HEAD
-    onChangeSelect2: (resource, name, data, isTindakan) => createAction(actionTypes.CHANGE_SELECT2, { name, data, isTindakan }, { resource }),
-    toggleShowCariPasien: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_PASIEN, {}, { resource }),
-    toggleShowCariWilayah: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_WILAYAH, {}, { resource }),
-    toggleShowCariKunjungan: (resource) => createAction(actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN, {}, { resource }),
-    toggleShowNormModal: (resource) => createAction(actionTypes.TOGGLE_SHOW_NORM_MODAL, {}, { resource }),
-=======
   toggleShowCariPasien: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_CARI_PASIEN, {}, { resource }),
   toggleShowCariWilayah: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_CARI_WILAYAH, {}, { resource }),
   toggleShowCariKunjungan: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN, {}, { resource }),
->>>>>>> origin/dev
+  toggleShowNormModal: (resource) =>
+    createAction(actionTypes.TOGGLE_SHOW_NORM_MODAL, {}, { resource }),
 
   onChangeFilterPasien: (resource, data) =>
     createAction(actionTypes.FILTER_CHANGE_PASIEN, { data }, { resource }),

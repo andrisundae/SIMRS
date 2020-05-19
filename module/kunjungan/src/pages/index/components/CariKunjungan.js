@@ -1,32 +1,43 @@
-import React, { Component } from 'react';
-import { Grid, Form, Modal, Icon } from 'semantic-ui-react';
+import React, { Component, createRef } from 'react';
+import { Grid, Modal, Icon } from 'semantic-ui-react';
 import {
   DatatableServerSide,
   CancelButton,
-  SaveButton,
-  Radio,
+  SelectedButton,
 } from '@simrs/components';
 
 class CariKunjungan extends Component {
+  constructor(props) {
+    super(props);
+
+    this.dataTable = createRef();
+    this.onClickSelectedHandler = this.onClickSelectedHandler.bind(this);
+    this.onRowDoubleClickHandler = this.onRowDoubleClickHandler.bind(this);
+    this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
+  }
+
   columns = [
     {
       headerName: 'Tgl. Masuk',
-      field: 'tgl_masuk',
-      cellRenderer: 'loadingRenderer',
-      sortable: false,
+      field: 'tgl_kunjungan',
+      sortable: true,
       cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
+      cellRenderer: 'dateRenderer',
+      cellClass: 'ag-date-cell',
     },
     {
       headerName: 'Tgl. Keluar',
-      field: 'tgl_keluar',
+      field: 'tgl_pulang',
+      cellRenderer: 'dateRenderer',
+      cellClass: 'ag-date-cell',
     },
     {
       headerName: 'No. RM',
-      field: 'no_rm',
+      field: 'norm',
     },
     {
       headerName: 'No. Billing',
-      field: 'no_billing',
+      field: 'kode_kunjungan',
     },
     {
       headerName: 'Nama Pasien',
@@ -34,21 +45,43 @@ class CariKunjungan extends Component {
     },
     {
       headerName: 'Tempat Layanan',
-      field: 'nama_layanan',
+      field: 'nama_unit_layanan',
     },
   ];
 
-  _getDataSource() {
-    return {
-      rowCount: null,
-      getRows: (params) => {
-        params.successCallback([], 0);
-      },
-    };
+  componentDidMount() {
+    let refDatatable = this.getRefDatatable();
+    this.gridApi = refDatatable.api;
+    this.columnApi = refDatatable.columnApi;
+  }
+
+  getRefDatatable() {
+    return this.dataTable.current.refs['kunjungan_terakhir'];
+  }
+
+  onClickSelectedHandler() {
+    const selectedRows = this.gridApi.getSelectedRows();
+    if (selectedRows.length > 0) {
+      this.props.onSelect(selectedRows[0]);
+    }
+  }
+
+  onRowDoubleClickHandler(params) {
+    if (params.node.isSelected()) {
+      this.props.onSelect(params.data);
+    }
+  }
+
+  onRowEnteredHandler() {
+    this.onClickSelectedHandler();
+  }
+
+  getRowNodeId(item) {
+    return item.id;
   }
 
   render() {
-    const { show, onHide, onOk } = this.props;
+    const { show, onHide, dataSource } = this.props;
 
     return (
       <Modal
@@ -69,26 +102,26 @@ class CariKunjungan extends Component {
                 <DatatableServerSide
                   ref={this.dataTable}
                   columns={this.columns}
-                  name="pasien"
+                  name="kunjungan_terakhir"
                   navigateToSelect={true}
-                  enableServerSideSorting={true}
-                  datasource={this._getDataSource()}
+                  datasource={dataSource()}
                   rowBuffer={0}
                   maxConcurrentDatasourceRequests={1}
                   infiniteInitialRowCount={1}
-                  cacheBlockSize={25}
+                  cacheBlockSize={100}
                   containerHeight="200px"
-                  onRowSelected={this._onRowSelected}
-                  getRowNodeId={this._getRowNodeId}
+                  getRowNodeId={this.getRowNodeId}
                   sizeColumnsToFit={true}
+                  onRowDoubleClicked={this.onRowDoubleClickHandler}
+                  onRowEntered={this.onRowEnteredHandler}
                 />
               </Grid.Column>
             </Grid.Row>
           </Grid>
         </Modal.Content>
         <Modal.Actions>
+          <SelectedButton onClick={this.onClickSelectedHandler} />
           <CancelButton onClick={onHide} />
-          <SaveButton onClick={this._onDuplication} />
         </Modal.Actions>
       </Modal>
     );

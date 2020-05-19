@@ -18,12 +18,6 @@ class Main extends Component {
   render() {
     return (
       <Fragment>
-        {/* <Segment secondary className="content-header">
-                    <Header as='h4'>
-                        <Icon name="settings" />
-                        {this.props.t(`${this.props.resource}:title`)}
-                    </Header>
-                </Segment> */}
         <Segment style={{ backgroundColor: '#ECECEC' }}>
           <Grid className="content-grid">
             <Grid.Row>

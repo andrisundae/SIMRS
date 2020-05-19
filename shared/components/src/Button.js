@@ -249,39 +249,18 @@ class FinishButton extends PureComponent {
 }
 
 class OkButton extends PureComponent {
-    render() {
-        let { inputRef, ...attributes } = this.props;
-        return (
-            <Button ref={inputRef} name="ok" size="mini" {...attributes}>
-                <Icon name='check' />
-                <Trans i18nKey="common:action.ok" />
-            </Button>
-        )
-    }
+  render() {
+    let { inputRef, ...attributes } = this.props;
+    return (
+      <Button ref={inputRef} name="ok" size="mini" {...attributes}>
+        <Icon name="check" />
+        <Trans i18nKey="common:action.ok" />
+      </Button>
+    );
+  }
 }
 
 export {
-<<<<<<< HEAD
-    Button,
-    SaveButton,
-    CancelButton,
-    AddButton,
-    EditButton,
-    DeleteButton,
-    SearchButton,
-    NextButton,
-    PrevButton,
-    ImportButton,
-    DuplicationButton,
-    ExportButton,
-    ResetButton,
-    PreviewButton,
-    SelectedButton,
-    PrintButton,
-    FinishButton,
-    OkButton
-}
-=======
   Button,
   SaveButton,
   CancelButton,
@@ -299,5 +278,5 @@ export {
   SelectedButton,
   PrintButton,
   FinishButton,
+  OkButton,
 };
->>>>>>> origin/dev

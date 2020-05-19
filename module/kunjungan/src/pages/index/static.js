@@ -5,12 +5,9 @@ const staticConst = {
   UMUR: 'umur',
   TGL_LAHIR: 'tgl_lahir',
   ID_PENJAMIN_UMUM: 0,
-<<<<<<< HEAD
   RAWAT_INAP_ALIAS: 'rawat_inap',
   ID_NON_KELAS: 4,
-}
-=======
+  TEMPAT_TIDUR: 'tempat_tidur',
 };
->>>>>>> origin/dev
 
 export { staticConst };

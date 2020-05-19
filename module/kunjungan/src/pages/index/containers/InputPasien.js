@@ -1,76 +1,33 @@
 import React, { Component, createRef } from 'react';
-import { Grid, Divider, Input, Placeholder, Header } from 'semantic-ui-react';
+import { Grid, Divider, Input, Placeholder } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { components } from 'react-select';
+import _ from 'lodash';
 import { formatter } from '@simrs/common';
 import PropTypes from 'prop-types';
 
 import { Select, Radio, DatePicker } from '@simrs/components';
 
 import CariAlamat from '../components/CariAlamat';
+import BiayaTindakan from '../components/BiayaTindakan';
+import {
+  OptionAsalKunjungan,
+  OptionInstalasi,
+  OptionKelasKamar,
+  AsalKunjunganSingleValue,
+} from '../components/CustomOptions';
+
 import actions from '../actions';
+import actionTypes from '../actionTypes';
 import { isDisable } from '../reducer';
 import { staticConst } from '../static';
-
-const OptionInstalasi = (props) => {
-  let { data } = props;
-  return (
-    <components.Option {...props}>
-      <div className="react-select__option-label">{data.label}</div>
-      <div className="react-select__option-caption">
-        {`${data.nama_jenis_layanan} | ${data.nama_kelompok_jenis_layanan}`}
-      </div>
-    </components.Option>
-  );
-};
-
-OptionInstalasi.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-
-// const KelasKamarSingleValue = ({ data, ...props }) => (
-//   <components.SingleValue {...props}>{`${data.label} (Rp ${formatter.currency(data.tarif)})`}</components.SingleValue>
-// );
-
-const BiayaTindakan = ({ label }) => {
-  return (
-    <Grid.Column width="3" style={{ paddingLeft: 0, paddingRight: 8 }}>
-      <Header as="h5" textAlign="right" dividing style={{ width: '100%' }}>
-        {label}
-      </Header>
-    </Grid.Column>
-  );
-};
-
-const OptionKelasKamar = ({ data, ...props }) => {
-  return (
-    <components.Option {...props}>
-      <div className="react-select__option-label">{data.label}</div>
-      <div className="react-select__option-caption">
-        {`Tarif kamar : Rp ${formatter.currency(data.tarif)}`}
-      </div>
-    </components.Option>
-  );
-};
-OptionKelasKamar.propTypes = {
-  data: PropTypes.object.isRequired
-};
-
-const OptionAsalKunjungan = ({ data, ...props }) => {
-  return (
-    <components.Option {...props}>
-      <div className="react-select__option-label">{data.tgl_kunjungan}</div>
-      <div className="react-select__option-caption">
-        {data.label}
-      </div>
-    </components.Option>
-  );
-};
 
 class InputPasien extends Component {
   constructor(props) {
     super(props);
+
+    this._onFocusElement = this._onFocusElement.bind(this);
+    this.setFocus = this.setFocus.bind(this);
 
     this.radio_jenis_umur = createRef();
     this.radio_jenis_tgl_lahir = createRef();
@@ -84,10 +41,58 @@ class InputPasien extends Component {
     this.alamat = createRef();
     this.rt = createRef();
     this.rw = createRef();
-    this.desa = createRef();
-    this.kecamatan = createRef();
-    this.kota = createRef();
-    this.provinsi = createRef();
+    this.id_desa = createRef();
+
+    this.id_penjamin_pasien = createRef();
+    this.nomor_anggota = createRef();
+    this.id_kelas_penjamin_pasien = createRef();
+    this.id_kepersertaan = createRef();
+    this.id_asal_masuk = createRef();
+    this.id_asal_masuk_detail = createRef();
+    this.id_penjamin = createRef();
+    this.id_kelompok = createRef();
+    this.id_instalasi = createRef();
+    this.id_unit_layanan = createRef();
+    this.id_kelas = createRef();
+    this.id_dpjp = createRef();
+    this.id_kunjungan_asal = createRef();
+  }
+
+  componentDidUpdate() {
+    this.setFocus();
+  }
+
+  setFocus() {
+    let { statusForm, focusElement } = this.props;
+
+    if (
+      statusForm === actionTypes.READY ||
+      statusForm === actionTypes.ADD ||
+      statusForm === actionTypes.ADD_WITH_SELECTED
+    ) {
+      if (this[focusElement]) {
+        if (this[focusElement].current) {
+          if (focusElement === 'tgl_lahir') {
+            this[focusElement].current.setFocus();
+          } else if (focusElement === 'tarif') {
+            this[focusElement].current.theInput.focus();
+          } else {
+            this[focusElement].current.focus();
+          }
+        } else {
+          this[focusElement].focus();
+        }
+      }
+    }
+  }
+
+  _onFocusElement(e, nameRef) {
+    if (13 === e.which) {
+      if (e.target.name) {
+        e.preventDefault();
+      }
+      this.props.action.onFocusElement(this.props.resource, nameRef);
+    }
   }
 
   _getKey(key) {
@@ -121,10 +126,8 @@ class InputPasien extends Component {
     };
   };
 
-  onSelectedWilayahHandler = (params) => {
-    if (params.node.isSelected()) {
-      this.props.action.onSelectedWilayah(this.props.resource, params.data);
-    }
+  onSelectedWilayahHandler = (data) => {
+    this.props.action.onSelectedWilayah(this.props.resource, data);
   };
 
   getAsalMasukDetailOptions = () => {
@@ -180,28 +183,43 @@ class InputPasien extends Component {
     action.onChangeInput(resource, { name, value: date });
   };
 
+  renderDividerBiayaTambahan = () => {
+    return (
+      <Divider horizontal style={{ marginTop: 20, marginBottom: 20 }}>
+        {this.props.t(this._getKey('label.field.biaya_tambahan'))}
+      </Divider>
+    );
+  };
+
   renderJenisKlasifikasiRegistrasi = () => {
     const {
       data,
-      disabledKunjungan,
       loaderOptionsByUnitLayanan,
       selectedOption,
+      statusForm,
     } = this.props;
+    const disabledKunjungan = isDisable('kunjungan_pasien', statusForm);
     if (loaderOptionsByUnitLayanan) {
       return (
-        <Placeholder>
-          <Placeholder.Paragraph>
-            <Placeholder.Line />
-            <Placeholder.Line />
-            <Placeholder.Line />
-          </Placeholder.Paragraph>
-        </Placeholder>
+        <React.Fragment>
+          {this.renderDividerBiayaTambahan()}
+          <Placeholder>
+            <Placeholder.Paragraph>
+              <Placeholder.Line />
+              <Placeholder.Line />
+              <Placeholder.Line />
+            </Placeholder.Paragraph>
+          </Placeholder>
+        </React.Fragment>
       );
     }
 
     const jenisKlasifikasiRegistrasi = [];
-    Object.keys(data.jenis_klasifikasi_registrasi).forEach((key) => {
+    const dataKeys = Object.keys(data.jenis_klasifikasi_registrasi);
+    dataKeys.forEach((key, index) => {
       const dataSetting = data.jenis_klasifikasi_registrasi[key];
+      const nextKey = dataKeys[index + 1] ? dataKeys[index + 1] : 'save';
+
       jenisKlasifikasiRegistrasi.push(
         <Grid.Row className="form-row" key={key}>
           <Grid.Column width="4" className="field">
@@ -217,6 +235,8 @@ class InputPasien extends Component {
               onChange={(selected) =>
                 this.select2ChangeHanlder(key, selected, true)
               }
+              inputRef={(ref) => (this[key] = ref)}
+              onKeyDown={(e) => this._onFocusElement(e, nextKey)}
             />
           </Grid.Column>
           <BiayaTindakan
@@ -234,16 +254,19 @@ class InputPasien extends Component {
   };
 
   isRawatInap = () => {
-    const {selectedOption} = this.props;
+    const { selectedOption } = this.props;
     let isRawatInap = false;
     if (selectedOption.id_instalasi) {
-      if (selectedOption.id_instalasi.alias_jenis_layanan === staticConst.RAWAT_INAP_ALIAS) {
+      if (
+        selectedOption.id_instalasi.alias_jenis_layanan ===
+        staticConst.RAWAT_INAP_ALIAS
+      ) {
         isRawatInap = true;
       }
     }
 
     return isRawatInap;
-  }
+  };
 
   isShowAsalKunjungan = () => {
     const { selectedOption } = this.props;
@@ -255,7 +278,13 @@ class InputPasien extends Component {
     }
 
     return isShowAsalKunjungan;
-  }
+  };
+
+  getFirstJenisKlasifikasiRegistrasi = () => {
+    const { data } = this.props;
+
+    return Object.keys(data.jenis_klasifikasi_registrasi)[0];
+  };
 
   render() {
     const {
@@ -271,6 +300,7 @@ class InputPasien extends Component {
       statusForm,
       post,
       optionsKelasPenjamin,
+      optionsPenjamin,
     } = this.props;
 
     const disabledDetail = isDisable('detail_pasien', statusForm);
@@ -321,6 +351,7 @@ class InputPasien extends Component {
                     onChange={(date) =>
                       this.dateTimeChangeHandler('tgl_lahir', date)
                     }
+                    onKeyDown={(e) => this._onFocusElement(e, 'alamat')}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -377,7 +408,7 @@ class InputPasien extends Component {
                     name="alamat"
                     ref={this.alamat}
                     onChange={this.inputChangeHandler}
-                    // onKeyDown={(e) => this._onFocusElement(e, 'rt')}
+                    onKeyDown={(e) => this._onFocusElement(e, 'rt')}
                     disabled={disabledDetail}
                     value={post.alamat}
                   />
@@ -392,7 +423,7 @@ class InputPasien extends Component {
                     name="rt"
                     ref={this.rt}
                     onChange={this.inputChangeHandler}
-                    // onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                    onKeyDown={(e) => this._onFocusElement(e, 'rw')}
                     disabled={disabledDetail}
                     value={post.rt}
                   />
@@ -405,7 +436,7 @@ class InputPasien extends Component {
                     name="rw"
                     ref={this.rw}
                     onChange={this.inputChangeHandler}
-                    // onKeyDown={(e) => this._onFocusElement(e, 'save')}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_desa')}
                     disabled={disabledDetail}
                     value={post.rw}
                   />
@@ -417,8 +448,8 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
                   <Input
-                    name="desa"
-                    ref={this.desa}
+                    name="id_desa"
+                    ref={this.id_desa}
                     action={{
                       content: 'Cari',
                       onClick: action.toggleShowCariWilayah,
@@ -426,7 +457,10 @@ class InputPasien extends Component {
                       color: 'blue',
                     }}
                     disabled={disabledDetail}
-                    value={post.desa}
+                    value={post.id_desa}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(e, 'id_penjamin_pasien')
+                    }
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -435,12 +469,7 @@ class InputPasien extends Component {
                   <label>{t(this._getKey('label.field.kecamatan'))}</label>
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
-                  <Input
-                    name="kecamatan"
-                    ref={this.kecamatan}
-                    disabled
-                    value={post.kecamatan}
-                  />
+                  <Input disabled value={post.nama_kecamatan} />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row className="form-row">
@@ -448,12 +477,7 @@ class InputPasien extends Component {
                   <label>{t(this._getKey('label.field.kota_kabupaten'))}</label>
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
-                  <Input
-                    name="kota"
-                    ref={this.kota}
-                    disabled
-                    value={post.kota}
-                  />
+                  <Input disabled value={post.nama_kota} />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row className="form-row">
@@ -461,12 +485,7 @@ class InputPasien extends Component {
                   <label>{t(this._getKey('label.field.provinsi'))}</label>
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
-                  <Input
-                    name="provinsi"
-                    ref={this.provinsi}
-                    disabled
-                    value={post.provinsi}
-                  />
+                  <Input disabled value={post.nama_provinsi} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -480,13 +499,15 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
                   <Select
-                    options={data.options_penjamin}
+                    inputRef={this.id_penjamin_pasien}
+                    options={optionsPenjamin}
                     isDisabled={disabledPenjamin}
                     value={selectedOption.id_penjamin_pasien}
                     onChange={(selected) =>
                       this.select2ChangeHanlder('id_penjamin_pasien', selected)
                     }
                     isClearable={false}
+                    onKeyDown={(e) => this._onFocusElement(e, 'nomor_anggota')}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -501,6 +522,9 @@ class InputPasien extends Component {
                     disabled={disabledPenjamin}
                     onChange={this.inputChangeHandler}
                     value={post.nomor_anggota}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(e, 'id_kelas_penjamin_pasien')
+                    }
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -510,6 +534,7 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="12" className="field">
                   <Select
+                    inputRef={this.id_kelas_penjamin_pasien}
                     options={optionsKelasPenjamin}
                     isDisabled={disabledPenjamin}
                     value={selectedOption.id_kelas_penjamin_pasien}
@@ -520,6 +545,9 @@ class InputPasien extends Component {
                       )
                     }
                     isClearable={false}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(e, 'id_kepersertaan')
+                    }
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -538,6 +566,8 @@ class InputPasien extends Component {
                       this.select2ChangeHanlder('id_kepersertaan', selected)
                     }
                     isClearable={false}
+                    inputRef={this.id_kepersertaan}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_asal_masuk')}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -590,6 +620,7 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="9" className="field">
                   <Select
+                    inputRef={this.id_asal_masuk}
                     options={data.options_asal_masuk}
                     name="id_asal_masuk"
                     value={selectedOption.id_asal_masuk}
@@ -598,6 +629,9 @@ class InputPasien extends Component {
                     }
                     isClearable={false}
                     isDisabled={disabledKunjungan}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(e, 'id_asal_masuk_detail')
+                    }
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -609,6 +643,7 @@ class InputPasien extends Component {
                 </Grid.Column>
                 <Grid.Column width="9" className="field">
                   <Select
+                    inputRef={this.id_asal_masuk_detail}
                     options={this.getAsalMasukDetailOptions()}
                     isClearable={false}
                     name="id_asal_masuk_detail"
@@ -620,6 +655,7 @@ class InputPasien extends Component {
                       )
                     }
                     value={selectedOption.id_asal_masuk_detail}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_penjamin')}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -636,6 +672,9 @@ class InputPasien extends Component {
                       this.select2ChangeHanlder('id_penjamin', selected)
                     }
                     isClearable={false}
+                    name="id_penjamin"
+                    inputRef={this.id_penjamin}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_kelompok')}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -705,6 +744,8 @@ class InputPasien extends Component {
                     }
                     isClearable={false}
                     isDisabled={disabledKunjungan}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_instalasi')}
+                    inputRef={this.id_kelompok}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -723,6 +764,10 @@ class InputPasien extends Component {
                     }
                     isDisabled={disabledKunjungan || !post.id_kelompok}
                     value={selectedOption.id_instalasi}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(e, 'id_unit_layanan')
+                    }
+                    inputRef={this.id_instalasi}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -740,6 +785,17 @@ class InputPasien extends Component {
                     isClearable={false}
                     name="id_unit_layanan"
                     value={selectedOption.id_unit_layanan}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(
+                        e,
+                        this.isRawatInap()
+                          ? 'id_kelas'
+                          : this.isShowAsalKunjungan()
+                          ? 'id_kunjungan_asal'
+                          : 'id_dpjp'
+                      )
+                    }
+                    inputRef={this.id_unit_layanan}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -754,16 +810,24 @@ class InputPasien extends Component {
                       isDisabled={disabledKunjungan}
                       isLoading={loaderOptionsByUnitLayanan}
                       components={{ Option: OptionKelasKamar }}
-                      onChange={(selected) => this.select2ChangeHanlder('id_kelas', selected, true)}
+                      onChange={(selected) =>
+                        this.select2ChangeHanlder('id_kelas', selected, true)
+                      }
                       isClearable={false}
                       value={selectedOption.id_kelas}
                       name="id_kelas"
+                      onKeyDown={(e) =>
+                        this._onFocusElement(
+                          e,
+                          this.isShowAsalKunjungan()
+                            ? 'id_kunjungan_asal'
+                            : 'id_dpjp'
+                        )
+                      }
+                      inputRef={this.id_kelas}
                     />
                   ) : (
-                      <Input
-                        value={post.nama_non_kelas}
-                        disabled
-                      />
+                    <Input value={post.nama_non_kelas || ''} disabled />
                   )}
                 </Grid.Column>
                 <BiayaTindakan
@@ -774,24 +838,34 @@ class InputPasien extends Component {
                   }
                 />
               </Grid.Row>
-              {this.isShowAsalKunjungan() &&
+              {this.isShowAsalKunjungan() && (
                 <Grid.Row className="form-row">
                   <Grid.Column width="4" className="field">
-                    <label>{t(this._getKey('label.field.asal_kunjungan'))}</label>
+                    <label>
+                      {t(this._getKey('label.field.asal_kunjungan'))}
+                    </label>
                   </Grid.Column>
                   <Grid.Column width="9" className="field">
                     <Select
                       options={data.options_asal_kunjungan}
                       isDisabled={disabledKunjungan}
                       isLoading={loaderOptionsByUnitLayanan}
-                      components={{ Option: OptionAsalKunjungan }}
-                      onChange={(selected) => this.select2ChangeHanlder('id_kunjungan_asal', selected)}
+                      components={{
+                        Option: OptionAsalKunjungan,
+                        SingleValue: AsalKunjunganSingleValue,
+                      }}
+                      onChange={(selected) =>
+                        this.select2ChangeHanlder('id_kunjungan_asal', selected)
+                      }
                       isClearable={false}
                       value={selectedOption.id_kunjungan_asal}
+                      onKeyDown={(e) => this._onFocusElement(e, 'id_dpjp')}
+                      inputRef={this.id_kunjungan_asal}
+                      name="id_kunjungan_asal"
                     />
                   </Grid.Column>
                 </Grid.Row>
-              }
+              )}
               <Grid.Row className="form-row">
                 <Grid.Column width="4" className="field">
                   <label>{t(this._getKey('label.field.dpjp'))}</label>
@@ -807,13 +881,20 @@ class InputPasien extends Component {
                     isClearable={false}
                     value={selectedOption.id_dpjp}
                     name="id_dpjp"
+                    inputRef={this.id_dpjp}
+                    onKeyDown={(e) =>
+                      this._onFocusElement(
+                        e,
+                        this.getFirstJenisKlasifikasiRegistrasi()
+                      )
+                    }
                   />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-            <Divider horizontal style={{ marginTop: 20, marginBottom: 20 }}>
-              {t(this._getKey('label.field.biaya_tambahan'))}
-            </Divider>
+            {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
+              this.renderDividerBiayaTambahan()}
+
             {this.renderJenisKlasifikasiRegistrasi()}
           </Grid.Column>
         </Grid.Row>
@@ -867,6 +948,9 @@ const mapStateToProps = function (state) {
     statusForm,
     optionsKelasPenjamin: data.options_kelas.filter(
       (row) => row.alias !== staticConst.NON_KELAS
+    ),
+    optionsPenjamin: data.options_penjamin.filter(
+      (row) => row.value !== staticConst.ID_PENJAMIN_UMUM
     ),
     loaderJenisKlasifikasiRegistrasi,
   };

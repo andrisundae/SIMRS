@@ -36,50 +36,12 @@ const getPath = (path) => {
 };
 
 const get = async (path, data) => {
-<<<<<<< HEAD
-    const defaultSearchParams = new URLSearchParams();
-    if (data) {
-        Object.keys(data).forEach(function (key) {
-            if (data[key]) {
-                defaultSearchParams.set(key, data[key]);
-            }
-        }, this);
-    }
-
-    const requestData = new Request(
-        `${getPath(path)}?${defaultSearchParams.toString()}`,
-        { ...defaultOptions,
-            headers: simrsHeaders()
-        }
-    )
-
-    const response = await fetch(requestData).then(statusHandler).catch(error => {
-        console.log(error.message)
-        return Promise.reject(error)
-    });
-    return response;
-}
-
-const post = async (path, data = {}, options, isParseArray=true) => {
-    const formData = new FormData();
-
-    Object.keys(data).forEach((idx) => {
-        let value = data[idx];
-
-        if (value instanceof Object && isParseArray) {
-            value = JSON.stringify(value);
-            formData.append(idx, value);
-        } else if (Array.isArray(value) && !isParseArray) {
-            value.forEach(item => {
-                formData.append(`${idx}[]`, item)
-            })
-        } else {
-            formData.append(idx, value);
-        }
-=======
+  const defaultSearchParams = new URLSearchParams();
   if (data) {
     Object.keys(data).forEach(function (key) {
-      defaultSearchParams.set(key, data[key]);
+      if (data[key]) {
+        defaultSearchParams.set(key, data[key]);
+      }
     }, this);
   }
 
@@ -93,10 +55,29 @@ const post = async (path, data = {}, options, isParseArray=true) => {
     .catch((error) => {
       console.log(error.message);
       return Promise.reject(error);
->>>>>>> origin/dev
     });
   return response;
 };
+
+// const post = async (path, data = {}, options, isParseArray=true) => {
+//     const formData = new FormData();
+
+//     Object.keys(data).forEach((idx) => {
+//         let value = data[idx];
+
+//         if (value instanceof Object && isParseArray) {
+//             value = JSON.stringify(value);
+//             formData.append(idx, value);
+//         } else if (Array.isArray(value) && !isParseArray) {
+//             value.forEach(item => {
+//                 formData.append(`${idx}[]`, item)
+//             })
+//         } else {
+//             formData.append(idx, value);
+//         }
+//     });
+//   return response;
+// };
 
 const post = async (path, data = {}, options, isParseArray = true) => {
   const formData = new FormData();
@@ -160,7 +141,7 @@ const statusHandler = (response) => {
         return dataResponse;
       });
     }
-    throw new Error(response.statusText);
+    // throw new Error(response.statusText);
   }
   return response.json();
 };

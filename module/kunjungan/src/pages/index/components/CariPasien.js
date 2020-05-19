@@ -13,6 +13,9 @@ class CariPasien extends Component {
     super(props);
 
     this.dataTable = createRef();
+    this.onClickSelectedHandler = this.onClickSelectedHandler.bind(this);
+    this.onRowDoubleClickHandler = this.onRowDoubleClickHandler.bind(this);
+    this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
   }
 
   columns = [
@@ -20,21 +23,24 @@ class CariPasien extends Component {
       headerName: 'No. RM',
       field: 'norm',
       cellRenderer: 'loadingRenderer',
-      sortable: false,
+      sortable: true,
       width: 110,
       cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
     },
     {
       headerName: 'Nama Pasien',
       field: 'nama',
+      sortable: true,
     },
     {
       headerName: 'Alamat',
       field: 'alamat',
+      sortable: true,
     },
     {
       headerName: 'Desa',
       field: 'desa',
+      sortable: true,
     },
   ];
 
@@ -74,8 +80,29 @@ class CariPasien extends Component {
     this.props.onSubmit(this.props.resource, this.props.data.post);
   };
 
+  onClickSelectedHandler() {
+    const selectedRows = this.gridApi.getSelectedRows();
+    if (selectedRows.length > 0) {
+      this.props.onSelect(selectedRows[0]);
+    }
+  }
+
+  onRowDoubleClickHandler(params) {
+    if (params.node.isSelected()) {
+      this.props.onSelect(params.data);
+    }
+  }
+
+  onRowEnteredHandler() {
+    this.onClickSelectedHandler();
+  }
+
+  getRowNodeId(item) {
+    return item.id;
+  }
+
   render() {
-    const { show, onHide, dataSource, data, onSelect } = this.props;
+    const { show, onHide, dataSource, data } = this.props;
 
     return (
       <Modal
@@ -127,24 +154,25 @@ class CariPasien extends Component {
                   columns={this.columns}
                   name="pasien"
                   navigateToSelect={true}
-                  enableServerSideSorting={true}
+                  // enableServerSideSorting={true}
                   datasource={dataSource()}
                   rowBuffer={0}
                   maxConcurrentDatasourceRequests={1}
                   infiniteInitialRowCount={1}
                   cacheBlockSize={25}
                   containerHeight="335px"
-                  onRowSelected={onSelect}
-                  getRowNodeId={this._getRowNodeId}
+                  onRowDoubleClicked={this.onRowDoubleClickHandler}
+                  onRowEntered={this.onRowEnteredHandler}
                   sizeColumnsToFit={true}
+                  getRowNodeId={this.getRowNodeId}
                 />
               </Grid.Column>
             </Grid.Row>
           </Grid>
         </Modal.Content>
         <Modal.Actions>
+          <SelectedButton onClick={this.onClickSelectedHandler} />
           <CancelButton onClick={onHide} />
-          <SelectedButton onClick={this._onDuplication} />
         </Modal.Actions>
       </Modal>
     );

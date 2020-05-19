@@ -19,13 +19,14 @@
 }
 
 #form-kunjungan-pasien .react-select__option-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 #form-kunjungan-pasien .react-select__option-caption {
   font-size: 10px;
-  color: #ccc;
+  font-weight: 500;
+  color: rgb(59, 59, 59);
 }
 
 #form-kunjungan-pasien .react-select__menu {

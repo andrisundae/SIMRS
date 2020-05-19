@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Grid, Form, Input, Tab, Segment, Divider } from 'semantic-ui-react';
 
 import { Select } from '@simrs/components';
-import { formatter } from '@simrs/common';
+import { formatter, utils } from '@simrs/common';
 
 import CariPasien from '../components/CariPasien';
 import CariKunjungan from '../components/CariKunjungan';
@@ -14,6 +14,7 @@ import PenjaminPasien from './PenjaminPasien';
 import InputPasien from './InputPasien';
 
 import actions from '../actions';
+import actionTypes from '../actionTypes';
 import { isDisable } from '../reducer';
 
 class Create extends Component {
@@ -23,15 +24,43 @@ class Create extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
     this._onFocusElement = this._onFocusElement.bind(this);
 
-    this.no_rm = createRef();
+    this.norm = createRef();
     this.nama = createRef();
-    this.newPassword = createRef();
+    this.id_jenis_kelamin = createRef();
+    this.nama_ortu = createRef();
+  }
+
+  componentDidUpdate() {
+    let { statusForm, focusElement } = this.props;
+
+    if (
+      statusForm === actionTypes.READY ||
+      statusForm === actionTypes.ADD ||
+      statusForm === actionTypes.ADD_WITH_SELECTED
+    ) {
+      if (this[focusElement]) {
+        if (this[focusElement].current) {
+          this[focusElement].current.focus();
+        }
+      }
+    }
+  }
+
+  _onFocusElement(e, nameRef) {
+    if (13 === e.which) {
+      if (e.target.name) {
+        e.preventDefault();
+      }
+      this.props.action.onFocusElement(this.props.resource, nameRef);
+    }
   }
 
   noRmKeyDownHandler = (e) => {
     if (e.which === 13) {
       e.preventDefault();
-      this.props.action.toggleShowCariKunjungan();
+      if (e.target.value) {
+        this.props.onGetPasien(this.props.resource, { norm: e.target.value });
+      }
     }
   };
 
@@ -53,20 +82,21 @@ class Create extends Component {
     };
   };
 
-  dataSourceWilayah = () => {
+  dataSourceKunjunganTerakhir = () => {
+    const data = this.props.data.kunjungan_terakhir;
     return {
       rowCount: null,
       getRows: (params) => {
-        let sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
-        let post = {
-          length: 25,
-          start: params.startRow,
-          sort_name: sortModel.colId ? sortModel.colId : '',
-          sort_order: sortModel.colId ? sortModel.sort : '',
-          filters: { ...this.props.filterWilayah.post },
-        };
-
-        this.props.action.loadAllWilayah(this.props.resource, post, params);
+        const dataAfterSorting = utils.sortData(params.sortModel, data);
+        const rowsThisPage = dataAfterSorting.slice(
+          params.startRow,
+          params.endRow
+        );
+        let lastRow = -1;
+        if (dataAfterSorting.length <= params.endRow) {
+          lastRow = dataAfterSorting.length;
+        }
+        params.successCallback(rowsThisPage, lastRow);
       },
     };
   };
@@ -75,10 +105,24 @@ class Create extends Component {
     return this.props.datatables[name];
   };
 
-  onSelectedPasienHandler = (params) => {
-    if (params.node.isSelected()) {
-      this.props.action.onSelectedPasien(this.props.resource, params.data);
-    }
+  onSelectedPasienHandler = (data) => {
+    this.props.action.onSelectedPasien(this.props.resource, {
+      id: data.id,
+      nama: data.nama,
+      norm: data.norm,
+      alamat: data.alamat,
+      nama_kecamatan: data.kecamatan,
+      nama_kota: data.kota,
+      nama_provinsi: data.provinsi,
+      nama_desa: data.desa,
+      id_desa: data.id_desa,
+      rt: data.rt,
+      rw: data.rw,
+      nama_ortu: data.nama_ortu,
+      id_jenis_kelamin: data.jenis_kelamin_id,
+      nama_jenis_kelamin: data.jenis_kelamin,
+      tgl_lahir: data.tgl_lahir,
+    });
   };
 
   select2ChangeHanlder = (name, selected) => {
@@ -89,6 +133,10 @@ class Create extends Component {
     const { name, value } = e.target;
     const { resource, action } = this.props;
     action.onChangeInput(resource, { name, value });
+  };
+
+  onSelectKunjunganHandler = (data) => {
+    this.props.action.onSelectedKunjungan(this.props.resource, data);
   };
 
   render() {
@@ -130,9 +178,14 @@ class Create extends Component {
     ];
 
     const disabledDetail = isDisable('detail_pasien', statusForm);
+    const disableNoRm = isDisable('norm', statusForm);
 
     return (
-      <Form id="form-kunjungan-pasien" size="mini">
+      <Form
+        id="form-kunjungan-pasien"
+        size="mini"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <Segment
           size="mini"
           style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
@@ -153,8 +206,12 @@ class Create extends Component {
                         name="norm"
                         ref={this.norm}
                         onKeyDown={this.noRmKeyDownHandler}
-                        disabled={isDisable('norm', statusForm)}
-                        value={post.norm}
+                        disabled={disableNoRm}
+                        value={
+                          disableNoRm
+                            ? formatter.textSplitter(post.norm)
+                            : post.norm
+                        }
                         onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
@@ -180,7 +237,7 @@ class Create extends Component {
                         name="nama"
                         ref={this.nama}
                         onKeyDown={(e) =>
-                          this._onFocusElement(e, 'newPassword')
+                          this._onFocusElement(e, 'id_jenis_kelamin')
                         }
                         action={{
                           content: 'Cari',
@@ -223,6 +280,10 @@ class Create extends Component {
                                 )
                               }
                               isClearable={false}
+                              inputRef={this.id_jenis_kelamin}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'nama_ortu')
+                              }
                             />
                           </Grid.Column>
                         </Grid.Row>
@@ -239,19 +300,28 @@ class Create extends Component {
                               disabled={disabledDetail}
                               value={post.nama_ortu}
                               onChange={this.inputChangeHandler}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'tgl_lahir')
+                              }
                             />
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
                     </Grid.Column>
-                    <Grid.Column width="6" style={{ textAlign: 'right' }}>
-                      <h5 style={{ marginTop: 0 }}>
-                        <strong>Kunjungan Aktif</strong>
-                      </h5>
-                      <h5 style={{ marginTop: 0 }}>
-                        <strong>UMUM</strong>
-                      </h5>
-                    </Grid.Column>
+                    {post.id && (
+                      <Grid.Column width="6" style={{ textAlign: 'right' }}>
+                        <h5 style={{ marginTop: 0 }}>
+                          <strong>Kunjungan Aktif</strong>
+                        </h5>
+                        <h5 style={{ marginTop: 0 }}>
+                          <strong>
+                            {selectedOption.id_penjamin
+                              ? selectedOption.id_penjamin.label
+                              : ''}
+                          </strong>
+                        </h5>
+                      </Grid.Column>
+                    )}
                   </Grid.Row>
                 </Grid>
               </Grid.Column>
@@ -259,7 +329,7 @@ class Create extends Component {
           </Grid>
         </Segment>
         <Tab menu={{ attached: 'bottom' }} panes={panes} />
-        {showCariPasien && 
+        {showCariPasien && (
           <CariPasien
             show={showCariPasien}
             onHide={action.toggleShowCariPasien}
@@ -272,20 +342,22 @@ class Create extends Component {
             isReloadGrid={this.getStateDatatables('table_pasien').isReload}
             reloadType={this.getStateDatatables('table_pasien').reloadType}
           />
-        }
-        {showCariKunjungan &&
+        )}
+        {showCariKunjungan && (
           <CariKunjungan
             show={showCariKunjungan}
             onHide={action.toggleShowCariKunjungan}
+            dataSource={this.dataSourceKunjunganTerakhir}
+            onSelect={this.onSelectKunjunganHandler}
           />
-        }
-        {showNormModal &&
+        )}
+        {showNormModal && (
           <NormModal
             show={showNormModal}
             onHide={action.toggleShowNormModal}
             pasien={{ norm: post.norm, nama: post.nama }}
           />
-        }
+        )}
       </Form>
     );
   }
@@ -347,6 +419,8 @@ const mapStateToProps = function (state) {
 const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(actions, dispatch),
+    onGetPasien: (resource, data) =>
+      dispatch(actions.getPasien.request(resource, data)),
   };
 };
 

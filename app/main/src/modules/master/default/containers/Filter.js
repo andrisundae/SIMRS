@@ -8,7 +8,7 @@ import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Form, Grid } from 'semantic-ui-react';
 
-import {validator as commonValidator} from '@simrs/common';
+import { validator as commonValidator } from '@simrs/common';
 import { SearchButton } from '@simrs/components';
 
 import { filterActions as actions } from '../actions';
@@ -16,110 +16,116 @@ import { isDisableForm } from '../reducer';
 import { selectors, context } from '../../../setting/aturan-aplikasi';
 
 const MIN_CHAR_CONTEXT = context.MINCHARPENCARIANMASTER;
-const { getFirstError} = commonValidator;
+const { getFirstError } = commonValidator;
 const validator = commonValidator.default;
 
 class Filter extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+  }
+
+  render() {
+    const { children, isDisableForm } = this.props;
+
+    return (
+      <Form id="form-search" onSubmit={this._handleSubmit} size="mini">
+        <Grid>
+          <Grid.Row>
+            <Grid.Column>
+              <Form.Group inline style={{ marginBottom: 0 }}>
+                {children}
+                <SearchButton disabled={isDisableForm} />
+              </Form.Group>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Form>
+    );
+  }
+
+  componentDidMount() {
+    this.props.action.onReset(this.props.resource);
+    this._bindKey();
+  }
+
+  componentWillUnmount() {
+    this._unbindKey();
+  }
+
+  _unbindKey() {
+    MouseTrap.unbind('alt+c');
+  }
+
+  _bindKey() {
+    let _this = this;
+
+    MouseTrap.bindGlobal('alt+c', function (e) {
+      e.preventDefault();
+      _this._search();
+    });
+  }
+
+  _search() {
+    let { resource, post } = this.props;
+    let errors = this._validation(post);
+
+    if (_.isEmpty(errors) || post.filter_value.length <= 0) {
+      this.props.action.onSubmitFilter(resource, post);
+    } else {
+      toastr.warning('Kesalahan filter', getFirstError(errors));
     }
+  }
 
-    render() {
-        const { children, isDisableForm } = this.props;
+  _handleSubmit(e) {
+    e.preventDefault();
+    this._search();
+  }
 
-        return (
-            <Form id="form-search" onSubmit={this._handleSubmit} size="mini">
-                <Grid>
-                    <Grid.Row>
-                        <Grid.Column>
-                            <Form.Group inline style={{marginBottom: 0}}>
-                                {children}
-                                <SearchButton disabled={isDisableForm} />
-                            </Form.Group>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-            </Form>
-        )
-    }
+  _validation(post) {
+    const rules = {
+      [MIN_CHAR_CONTEXT]: { minlength: this.props.minCharSearch },
+    };
+    const messages = {
+      [MIN_CHAR_CONTEXT]: {
+        minlength: `Minimal karakter pencarian ${this.props.minCharSearch} huruf`,
+      },
+    };
 
-    componentDidMount() {
-        this.props.action.onReset(this.props.resource);
-        this._bindKey();
-    }
+    let errors = validator(
+      { [MIN_CHAR_CONTEXT]: post.filter_value },
+      rules,
+      messages
+    );
 
-    componentWillUnmount() {
-        this._unbindKey();
-    }
-
-    _unbindKey() {
-        MouseTrap.unbind("alt+c");
-    }
-
-    _bindKey() {
-        let _this = this;
-
-        MouseTrap.bindGlobal('alt+c', function (e) {
-            e.preventDefault();
-            _this._search();
-        });
-    }
-
-    _search() {
-        let { resource, post } = this.props;
-        let errors = this._validation(post);
-
-        if (_.isEmpty(errors) || post.filter_value.length <= 0) {
-            this.props.action.onSubmitFilter(resource, post);
-        } else {
-            toastr.warning('Kesalahan filter', getFirstError(errors));
-        }
-    }
-
-    _handleSubmit(e) {
-        e.preventDefault();
-        this._search();
-    }
-
-    _validation(post) {
-        const rules = {
-            [MIN_CHAR_CONTEXT]: { minlength: this.props.minCharSearch }
-        }
-        const messages = {
-            [MIN_CHAR_CONTEXT]: { minlength: `Minimal karakter pencarian ${this.props.minCharSearch} huruf` }
-        }
-
-        let errors = validator({ [MIN_CHAR_CONTEXT]: post.filter_value }, rules, messages);
-
-        return errors;
-    }
+    return errors;
+  }
 }
 
-const mapStateToProps = function (state) {
-    const { filter, module } = state.default;
+const mapStateToProps = function (state, props) {
+  const { filter, module } = state.default;
 
-    return {
-        post: filter.post,
-        isDisableForm: !isDisableForm(module),
-        minCharSearch: parseInt(selectors.get(state, MIN_CHAR_CONTEXT)) || 0
-    }
-}
+  return {
+    post: filter.post,
+    isDisableForm: !isDisableForm(module),
+    minCharSearch: parseInt(selectors.get(state, MIN_CHAR_CONTEXT)) || 0,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
-    return {
-        action: bindActionCreators(actions, dispatch),
-    }
-}
+  return {
+    action: bindActionCreators(actions, dispatch),
+  };
+};
 
 Filter.propTypes = {
-    post: PropTypes.object,
-    action: PropTypes.object,
-    isDisableForm: PropTypes.bool,
-    children: PropTypes.node,
-    resource: PropTypes.string.isRequired,
-    minCharSearch: PropTypes.number
+  post: PropTypes.object,
+  action: PropTypes.object,
+  isDisableForm: PropTypes.bool,
+  children: PropTypes.node,
+  resource: PropTypes.string.isRequired,
+  minCharSearch: PropTypes.number,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
