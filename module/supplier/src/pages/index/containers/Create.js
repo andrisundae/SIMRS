@@ -47,7 +47,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="4"
-                    className="required field right aligned"
+                    className="required field left aligned"
                   >
                     <label>{t(this._getKey('label.field.nama'))}</label>
                   </Grid.Column>
@@ -63,7 +63,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="right aligned field">
+                  <Grid.Column width="4" className="left aligned field">
                     <label>{t(this._getKey('label.field.alamat'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -78,7 +78,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="right aligned field">
+                  <Grid.Column width="4" className="left aligned field">
                     <label>{t(this._getKey('label.field.email'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -93,7 +93,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="right aligned field">
+                  <Grid.Column width="4" className="left aligned field">
                     <label>{t(this._getKey('label.field.telp'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -108,7 +108,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="right aligned field">
+                  <Grid.Column width="4" className="left aligned field">
                     <label>{t(this._getKey('label.field.npwp'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -127,7 +127,7 @@ class Create extends Component {
             <Grid.Column>
               <Grid>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field right aligned">
+                  <Grid.Column width="4" className="field left aligned">
                     <label>{t(this._getKey('label.field.nama_cp'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -142,7 +142,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field right aligned">
+                  <Grid.Column width="4" className="field left aligned">
                     <label>{t(this._getKey('label.field.telp_cp'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -159,7 +159,7 @@ class Create extends Component {
                 <Grid.Row className="form-row">
                   <Grid.Column
                     width="4"
-                    className="field required right aligned"
+                    className="field required left aligned"
                   >
                     <label>{t(this._getKey('label.field.status'))}</label>
                   </Grid.Column>
