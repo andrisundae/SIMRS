@@ -21,7 +21,7 @@ PageLoader.propTypes = {
 
 PageLoader.defaultProps = {
   size: 'small',
-  message: 'Loading',
+  message: '',
   active: false,
   inverted: true,
 };

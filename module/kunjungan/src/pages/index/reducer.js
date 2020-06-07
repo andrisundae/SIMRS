@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { includes } from 'lodash';
 import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
@@ -369,11 +368,24 @@ export default (state = initialState, action) =>
         };
         return;
       }
+      case actionTypes.EDIT:
+        draft.statusForm = actionTypes.EDIT;
+        draft.temp = {
+          data: { ...state.data },
+          post: { ...state.post },
+          selectedOption: { ...state.selectedOption },
+        };
+        return;
+
       case actionTypes.CANCEL_WITH_SELECTED:
         draft.statusForm = actionTypes.SELECTED;
         draft.data = { ...state.temp.data };
         draft.post = { ...state.temp.post };
         draft.selectedOption = { ...state.temp.selectedOption };
+        return;
+
+      case actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_SUCCESS:
+        draft.detailRangkaianKunjungan = payload.data;
         return;
 
       case actionTypes.NEXT_NORM_SUCCESS:
@@ -418,6 +430,7 @@ export default (state = initialState, action) =>
           id_kelas: ku.kelas.id,
           id_kunjungan_unit_asal: ku.id_kunjungan_unit_asal,
           id_kunjungan_asal: kunjungan.id_kunjungan_asal,
+          id_kunjungan_unit: ku.id,
         };
 
         draft.selectedOption.id_asal_masuk = {
@@ -557,37 +570,18 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST:
+        draft.loaderSettingKelasPenjamin = true;
+        return;
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_SUCCESS:
+        draft.data.options_setting_kelas_penjamin = payload.data;
+        draft.loaderSettingKelasPenjamin = false;
+        return;
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_FAILURE:
+        draft.loaderSettingKelasPenjamin = false;
+        return;
+
       default:
         return state;
     }
   });
-
-export const statusesElements = {
-  [actionTypes.READY]: ['norm', 'search', 'add', 'exit'],
-  [actionTypes.SELECTED]: ['add', 'edit', 'delete', 'preview', 'finish'],
-  [actionTypes.ADD]: [
-    'detail_pasien',
-    'penjamin_pasien',
-    'kunjungan_pasien',
-    'cancel',
-    'save',
-  ],
-  [actionTypes.ADD_WITH_SELECTED]: [
-    'penjamin_pasien',
-    'kunjungan_pasien',
-    'cancel',
-    'save',
-  ],
-  [actionTypes.EDIT]: ['penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
-};
-
-export const isDisable = (element, status) => {
-  if (statusesElements[status]) {
-    if (includes(statusesElements[status], element)) {
-      return false;
-    }
-    return true;
-  }
-
-  return true;
-};
