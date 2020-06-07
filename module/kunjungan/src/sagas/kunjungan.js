@@ -134,6 +134,11 @@ function* changeSelect2({ meta, payload }) {
           actions.optionsByUnitLayanan.request(meta.resource, payload.data)
         );
         break;
+      case 'id_penjamin_pasien':
+        yield put(
+          actions.settingKelasPenjamin.request(meta.resource, payload.data)
+        );
+        break;
       default:
         break;
     }
@@ -258,6 +263,7 @@ function* getPasienRequestHandler({ meta, payload }) {
     yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
+    yield put(loaderActions.hide());
   }
 }
 
@@ -301,6 +307,7 @@ function* getKunjunganTerakhirRequestHandler({ meta, payload }) {
     yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
+    yield put(loaderActions.hide());
   }
 }
 
@@ -326,6 +333,7 @@ function* getKunjunganDetailRequestHandler({ meta, payload }) {
     yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
+    yield put(loaderActions.hide());
   }
 }
 
@@ -348,6 +356,7 @@ function* getPenjaminPasienRequestHandler({ meta, payload }) {
     yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
+    yield put(loaderActions.hide());
   }
 }
 
@@ -355,11 +364,16 @@ function* loadAllPasien({ payload, meta }) {
   const { successCallback, failCallback } = meta.tableParams;
 
   try {
-    let response = yield call(api.getAllPasien, payload.data);
-    if (response.status) {
-      successCallback(response.data, response.recordsTotal);
+    const filters = payload.data.filters;
+    if (filters.nama || filters.desa) {
+      let response = yield call(api.getAllPasien, payload.data);
+      if (response.status) {
+        successCallback(response.data, response.recordsTotal);
+      } else {
+        failCallback();
+      }
     } else {
-      failCallback();
+      successCallback([], 0);
     }
   } catch (error) {
     failCallback();
@@ -430,6 +444,10 @@ function* addSelectedHandler({ meta }) {
   yield put(actions.onFocusElement(meta.resource, 'id_asal_masuk'));
 }
 
+function* editHandler({ meta }) {
+  yield put(actions.onFocusElement(meta.resource, 'id_asal_masuk'));
+}
+
 function* nextNormRequest({ meta }) {
   try {
     let response = yield call(api.getNextNorm);
@@ -445,8 +463,164 @@ function* nextNormRequest({ meta }) {
   }
 }
 
+function* checkEditHandler({ meta, payload }) {
+  try {
+    yield put(loaderActions.show());
+    let response = yield call(
+      api.getDetailRangkaianKunjungan,
+      payload.data.idKunjunganUnit
+    );
+    if (response.status) {
+      const data = response.data;
+      if (data.st_pulang === 1) {
+        messageBox({
+          title: 'Info',
+          message: 'Data tidak bisa dikoreksi, karena kunjungan telah selesai',
+        });
+      } else {
+        yield put(
+          actions.getDetailRangkaianKunjungan.requestSuccess(
+            meta.resource,
+            response.data
+          )
+        );
+        yield put(actions.onEdit(meta.resource));
+      }
+    } else {
+      yield put(
+        actions.getDetailRangkaianKunjungan.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield toastr.error(error.message);
+    yield put(loaderActions.hide());
+  }
+}
+
+function* checkDeleteHandler({ meta, payload }) {
+  try {
+    yield put(loaderActions.show());
+    let response = yield call(
+      api.getDetailRangkaianKunjungan,
+      payload.data.idKunjunganUnit
+    );
+    if (response.status) {
+      const data = response.data;
+      if (data.st_pulang === 1) {
+        messageBox({
+          title: 'Info',
+          message: 'Data tidak bisa hapus, karena kunjungan telah selesai',
+        });
+      } else {
+        let isValid = false;
+        if (data.st_inap === 1) {
+          if (
+            !data.is_entries_obat &&
+            !data.is_entries_erm &&
+            !data.is_bayar &&
+            !data.is_penunjang_ditanggapi &&
+            !data.is_konsul &&
+            !data.is_tindakan_lain &&
+            !data.is_pindah_kamar
+          ) {
+            isValid = true;
+          }
+        } else {
+          if (
+            !data.is_entries_obat &&
+            !data.is_entries_erm &&
+            !data.is_bayar &&
+            !data.is_penunjang_ditanggapi &&
+            !data.is_konsul &&
+            !data.is_tindakan_lain &&
+            !data.is_kunjungan_asal
+          ) {
+            isValid = true;
+          }
+        }
+
+        if (isValid) {
+          yield put(
+            actions.delete.request(meta.resource, { id: payload.data.id })
+          );
+        }
+      }
+    } else {
+      yield put(
+        actions.getDetailRangkaianKunjungan.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield toastr.error(error.message);
+    yield put(loaderActions.hide());
+  }
+}
+
+function* deleteHandler({ payload, meta }) {
+  try {
+    yield put(loaderActions.show());
+    let post = payload.data;
+
+    let response = yield call(api.delete, { id: post.id });
+    if (response.status) {
+      yield put(actions.delete.requestSuccess(meta.resource, response));
+    } else {
+      if (response.info.type === 'warning') {
+        yield toastr.warning(response.message);
+      } else {
+        yield toastr.error(response.message);
+      }
+    }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* deleteSuccessHandler({ payload }) {
+  try {
+    yield toastr.success(payload.data.message);
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* settingKelasPenjaminRequestHandler({ meta, payload }) {
+  try {
+    let response = yield call(api.getSettingKelasPenjamin, payload.data.value);
+    if (response.status) {
+      yield put(
+        actions.settingKelasPenjamin.requestSuccess(
+          meta.resource,
+          response.data
+        )
+      );
+    } else {
+      yield put(
+        actions.settingKelasPenjamin.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
 export default function* watchAuthActions() {
   yield all([
+    takeLatest(actionTypes.CHECK_EDIT, checkEditHandler),
     takeLatest(actionTypes.ADD, addHandler),
     takeLatest(actionTypes.ADD_WITH_SELECTED, addSelectedHandler),
     takeLatest(actionTypes.SAVE_REQUEST, handleSave),
@@ -484,5 +658,13 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.FILTER_SELECTED_PASIEN, selectedPasienHandler),
     takeLatest(actionTypes.FILTER_SELECTED_WILAYAH, selectedWilayahHandler),
     takeLatest(actionTypes.FILTER_SELECTED_KUNJUNGAN, selectedKunjunganHandler),
+    takeLatest(actionTypes.DELETE_REQUEST, deleteHandler),
+    takeLatest(actionTypes.DELETE_SUCCESS, deleteSuccessHandler),
+    takeLatest(actionTypes.CHECK_DELETE, checkDeleteHandler),
+    takeLatest(actionTypes.EDIT, editHandler),
+    takeLatest(
+      actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST,
+      settingKelasPenjaminRequestHandler
+    ),
   ]);
 }

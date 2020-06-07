@@ -21,6 +21,7 @@ export default {
     jenis_klasifikasi_registrasi: {},
     options_status_pasien_default: [],
     kunjungan_terakhir: [],
+    options_setting_kelas_penjamin: [],
   },
   post: {
     kode_kunjungan: '',
@@ -67,6 +68,7 @@ export default {
     id_kunjungan_unit_asal: '',
     id_kunjungan_asal: '',
     id: '',
+    id_kunjungan_unit: '',
   },
   filterPasien: {
     post: {
@@ -113,9 +115,11 @@ export default {
   loaderUnitLayanan: false,
   loaderOptionsByUnitLayanan: false,
   loaderJenisKlasifikasiRegistrasi: false,
+  loaderSettingKelasPenjamin: false,
   temp: {
     data: {},
     selectedOption: {},
     post: {},
   },
+  detailRangkaianKunjungan: {},
 };

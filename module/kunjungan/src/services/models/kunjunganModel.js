@@ -26,6 +26,11 @@ export default {
 
     return response;
   },
+  delete: async (params) => {
+    let response = await request.post(`${path}/hapus`, params);
+
+    return response;
+  },
   init: async () => {
     let response = await request.get(`${path}/init`);
     return response;
@@ -80,6 +85,18 @@ export default {
   },
   getPenjaminPasien: async (idPasien) => {
     let response = await request.get(`${path}/penjamin-pasien/${idPasien}`);
+    return response;
+  },
+  getDetailRangkaianKunjungan: async (idKunjunganUnit) => {
+    let response = await request.get(
+      `${path}/detail-rangkaian/${idKunjunganUnit}`
+    );
+    return response;
+  },
+  getSettingKelasPenjamin: async (idPenjamin) => {
+    let response = await request.get(
+      `${path}/setting-kelas-penjamin/${idPenjamin}`
+    );
     return response;
   },
   validationRules,

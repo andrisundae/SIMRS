@@ -15,7 +15,7 @@ import InputPasien from './InputPasien';
 
 import actions from '../actions';
 import actionTypes from '../actionTypes';
-import { isDisable } from '../reducer';
+import { isDisable } from '../selectors';
 
 class Create extends Component {
   constructor(props) {

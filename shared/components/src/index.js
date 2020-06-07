@@ -13,6 +13,7 @@ export * from './layout';
 export * from './input';
 export * from './datatable';
 export * from './Button';
+export * from './provider';
 
 export {
   TextBox,

@@ -26,6 +26,26 @@ export default {
         { resource, log: createActivity(resource, activity.SIMPAN, 'gagal') }
       ),
   },
+  delete: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.DELETE_REQUEST,
+        { data },
+        { resource, log: createActivity(resource, activity.HAPUS) }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.DELETE_SUCCESS,
+        { data },
+        { resource, log: createActivity(resource, activity.HAPUS, 'sukses') }
+      ),
+    requestFailure: (resource, errors) =>
+      createAction(
+        actionTypes.DELETE_FAILURE,
+        { errors },
+        { resource, log: createActivity(resource, activity.HAPUS, 'gagal') }
+      ),
+  },
   populateForm: {
     request: (resource, data) =>
       createAction(actionTypes.POPULATE_FORM_REQUEST, { data }, { resource }),
@@ -186,6 +206,46 @@ export default {
         { resource }
       ),
   },
+  getDetailRangkaianKunjungan: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  settingKelasPenjamin: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_SETTING_KELAS_PENJAMIN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_SETTING_KELAS_PENJAMIN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   loadAllPasien: (resource, data, tableParams) =>
     createAction(
       actionTypes.GET_ALL_PASIEN_REQUEST,
@@ -200,8 +260,23 @@ export default {
       { tableParams, resource }
     ),
   onReady: (resource) => createAction(actionTypes.READY, {}, { resource }),
-  onAdd: (resource) => createAction(actionTypes.ADD, {}, { resource }),
+  onAdd: (resource) =>
+    createAction(
+      actionTypes.ADD,
+      {},
+      { resource, log: createActivity(resource, activity.TAMBAH) }
+    ),
+  onEdit: (resource) =>
+    createAction(
+      actionTypes.EDIT,
+      {},
+      { resource, log: createActivity(resource, activity.KOREKSI) }
+    ),
   onCancel: (resource) => createAction(actionTypes.CANCEL, {}, { resource }),
+  onCheckEdit: (resource, data) =>
+    createAction(actionTypes.CHECK_EDIT, { data }, { resource }),
+  onCheckDelete: (resource, data) =>
+    createAction(actionTypes.CHECK_DELETE, { data }, { resource }),
   onSelected: (resource, data) =>
     createAction(actionTypes.SELECTED, { data }, { resource }),
   onAddWithSelected: (resource) =>

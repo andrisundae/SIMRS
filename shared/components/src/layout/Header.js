@@ -4,6 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { remote } from 'electron';
 
 import { Icon, Header as SmHeader } from 'semantic-ui-react';
+import { AppConsumer } from '@simrs/components';
 
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
@@ -37,37 +38,49 @@ function Header({ logo, match, username, contexts, routers, history }) {
   // }, [isDisabled]);
 
   return (
-    <x-menubar
-      class="layout-header"
-      style={{
-        height: 40,
-        zIndex: 28,
-        top: 0,
-        position: 'fixed',
-        left: 0,
-        right: 'auto',
-        bottom: 'auto',
-        width: '100%',
-        margin: 0,
-      }}
-    >
-      <div style={{ marginLeft: 10 }}>
-        <SmHeader
-          as="h6"
-          icon
-          style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}
+    <AppConsumer>
+      {({ disabledMainMenu }) => (
+        <x-menubar
+          class="layout-header"
+          style={{
+            height: 40,
+            zIndex: 28,
+            top: 0,
+            position: 'fixed',
+            left: 0,
+            right: 'auto',
+            bottom: 'auto',
+            width: '100%',
+            margin: 0,
+          }}
         >
-          {logo === 'BILLING' && (
-            <Icon name="bold" style={{ fontSize: '2em' }} />
-          )}
-          {logo === 'SISTEM' && (
-            <Icon name="stripe s" style={{ fontSize: '2em' }} />
-          )}
-        </SmHeader>
-      </div>
-      <MainMenu disabled={isDisabled} contexts={contexts} routers={routers} />
-      <RightMenu disabled={isDisabled} username={username} routers={routers} />
-    </x-menubar>
+          <div style={{ marginLeft: 10 }}>
+            <SmHeader
+              as="h6"
+              icon
+              style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}
+            >
+              {logo === 'BILLING' && (
+                <Icon name="bold" style={{ fontSize: '2em' }} />
+              )}
+              {logo === 'SISTEM' && (
+                <Icon name="stripe s" style={{ fontSize: '2em' }} />
+              )}
+            </SmHeader>
+          </div>
+          <MainMenu
+            disabled={disabledMainMenu}
+            contexts={contexts}
+            routers={routers}
+          />
+          <RightMenu
+            disabled={disabledMainMenu}
+            username={username}
+            routers={routers}
+          />
+        </x-menubar>
+      )}
+    </AppConsumer>
   );
 }
 
