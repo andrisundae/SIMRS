@@ -87,9 +87,17 @@ function* handleSave({ payload, meta }) {
     if (prevPost.id_pasien) {
       post.id_pasien = prevPost.id_pasien;
     }
+    if (prevPost.id) {
+      post.id = prevPost.id;
+    }
+    if (prevPost.id_kunjungan_unit) {
+      post.id_kunjungan_unit = prevPost.id_kunjungan_unit;
+    }
+
+    const method = post.id ? 'koreksi' : 'tambah';
     // let errors = validator(post, rules, messages);
 
-    let response = yield call(api.save, 'tambah', post);
+    let response = yield call(api.save, method, post);
     if (response.status) {
       const showNormModal = yield select(isPasienBaru);
       if (showNormModal) {
