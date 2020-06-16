@@ -1,17 +1,14 @@
 {
-  "name": "simrs-client",
-  "version": "1.0.0",
-  "description": "Aplikasi SIMRS Client",
-  "main": "index.js",
-  "author": "LINKAR Team Development",
-  "license": "MIT",
   "private": true,
   "scripts": {
     "start": "wsrun --exclude-missing start",
+    "build": "wsrun --exclude-missing build",
+    "postbuild": "concurrently \"ncp app/billing/build app/main/build/billing\" \"ncp app/farmasi/build app/main/build/farmasi\" \"ncp app/system/build app/main/build/system\"",
     "desktop": "yarn workspace @simrs/main desktop",
-    "build-desktop": "yarn workspace @simrs/main build-desktop",
-    "prebuild-desktop": "wsrun --exclude-missing build",
-    "storybook": "wsrun -p @simrs/components -c storybook"
+    "desktop:build": "yarn workspace @simrs/main desktop:build",
+    "predesktop:build": "yarn build",
+    "storybook:start": "yarn workspace @simrs/components storybook:start",
+    "storybook:build": "yarn workspace @simrs/components storybook:build"
   },
   "workspaces": {
     "packages": [
@@ -29,7 +26,11 @@
       "**/electron-devtools-installer",
       "**/electron-devtools-installer/**",
       "**/babel-loader",
-      "**/babel-loader/**"
+      "**/babel-loader/**",
+      "**/@babel",
+      "**/@babel/**",
+      "**/@storybook",
+      "**/@storybook/**"
     ]
   },
   "husky": {
@@ -38,10 +39,12 @@
     }
   },
   "devDependencies": {
-    "concurrently": "^4.1.1",
-    "husky": "^4.2.3",
+    "concurrently": "~4.1.1",
+    "husky": "~4.2.3",
+    "ncp": "~2.0.0",
     "prettier": "2.0.4",
-    "pretty-quick": "^2.0.1",
-    "wsrun": "^5.0.0"
+    "pretty-quick": "~2.0.1",
+    "rimraf": "~3.0.2",
+    "wsrun": "~5.0.0"
   }
 }

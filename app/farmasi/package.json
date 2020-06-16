@@ -1,21 +1,10 @@
 {
   "name": "@simrs/farmasi",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0-alpha.0",
   "homepage": ".",
-  "dependencies": {
-    "@module/jenis-layanan": "*",
-    "@simrs/common": "*",
-    "@simrs/components": "*",
-    "@simrs/main": "*",
-    "dotenv": "^8.0.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
-  },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build"
+    "start": "craco start",
+    "build": "craco build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,8 +20,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "react-app-rewired": "^2.1.3"
   }
 }

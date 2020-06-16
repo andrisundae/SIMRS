@@ -1,30 +1,10 @@
 {
   "name": "@simrs/components",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0-alpha.0",
   "main": "src/index.js",
-  "main:src": "src/index.js",
-  "dependencies": {
-    "@simrs/common": "*",
-    "ag-grid-community": "^21.1.0",
-    "ag-grid-react": "^21.1.0",
-    "classname": "^0.0.0",
-    "immer": "^3.1.3",
-    "mousetrap": "^1.6.3",
-    "rc-tree": "1.14.8",
-    "react": "^16.8.6",
-    "react-contextmenu": "^2.11.0",
-    "react-currency-input": "^1.3.6",
-    "react-datepicker": "^2.8.0",
-    "react-dom": "^16.8.6",
-    "react-redux-toastr": "^7.5.1",
-    "react-scripts": "3.0.1",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3"
-  },
   "scripts": {
-    "storybook": "start-storybook -s public",
-    "build-storybook": "build-storybook -s public"
+    "storybook:start": "start-storybook",
+    "storybook:build": "build-storybook"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,10 +21,30 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "ag-grid-community": "~23.2.0",
+    "ag-grid-react": "~23.2.0",
+    "classname": "~0.0.0",
+    "prop-types": "~15.7.2",
+    "rc-tree": "~3.3.1",
+    "react-contextmenu": "~2.14.0",
+    "react-i18next": "~11.5.0",
+    "react-redux-toastr": "~7.6.5",
+    "react-router-dom": "~5.2.0",
+    "react-scripts": "~3.4.1",
+    "semantic-ui-css": "~2.4.1",
+    "semantic-ui-react": "~0.88.2"
+  },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.1.9",
-    "@storybook/addon-links": "^5.1.9",
-    "@storybook/addons": "^5.1.9",
-    "@storybook/react": "^5.1.9"
+    "@babel/preset-env": "~7.10.2",
+    "@storybook/addon-actions": "~5.3.19",
+    "@storybook/addon-docs": "~5.3.19",
+    "@storybook/addon-links": "~5.3.19",
+    "@storybook/theming": "~5.3.19",
+    "@storybook/addons": "~5.3.19",
+    "@storybook/preset-create-react-app": "~3.0.0",
+    "@storybook/react": "~5.3.19",
+    "react": "~16.13.1",
+    "react-is": "~16.13.1"
   }
 }
