@@ -15,7 +15,7 @@ import InputPasien from './InputPasien';
 
 import actions from '../actions';
 import actionTypes from '../actionTypes';
-import { isDisable } from '../reducer';
+import { isDisable } from '../selectors';
 
 class Create extends Component {
   constructor(props) {
@@ -362,26 +362,9 @@ class Create extends Component {
     );
   }
 
-  componentDidUpdate() {
-    let { focusElement } = this.props;
-
-    if (this[focusElement]) {
-      if (this[focusElement].current) {
-        this[focusElement].current.focus();
-      }
-    }
-  }
-
   _handleInputChange(e) {
     const { name, value } = e.target;
     this.props.action.onChangeInput(this.props.resource, { name, value });
-  }
-
-  _onFocusElement(e, nameRef) {
-    if (13 === e.which) {
-      e.preventDefault();
-      this.props.action.onFocusElement(this.props.resource, nameRef);
-    }
   }
 
   _getKey(key) {

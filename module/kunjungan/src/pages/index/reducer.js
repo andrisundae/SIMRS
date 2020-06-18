@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { includes } from 'lodash';
 import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
@@ -35,12 +34,13 @@ export default (state = initialState, action) =>
       }
 
       case actionTypes.SAVE_SUCCESS: {
-        const { id, id_pasien: idPasien } = payload.data.data;
+        const { id, id_pasien: idPasien, kunjungan_unit: {id : idKunjunganUnit} } = payload.data.data;
         draft.statusForm = actionTypes.SELECTED;
         draft.post = {
           ...state.post,
           id,
           id_pasien: idPasien,
+          id_kunjungan_unit: idKunjunganUnit
         };
 
         return;
@@ -254,9 +254,11 @@ export default (state = initialState, action) =>
 
       case actionTypes.FILTER_CHANGE_PASIEN:
         draft.filterPasien.post[payload.data.name] = payload.data.value;
+        draft.focusElement = '';
         return;
       case actionTypes.FILTER_CHANGE_WILAYAH:
         draft.filterWilayah.post[payload.data.name] = payload.data.value;
+        draft.focusElement = '';
         return;
       case actionTypes.CANCEL:
       case actionTypes.FINISH:
@@ -318,13 +320,19 @@ export default (state = initialState, action) =>
 
         return;
 
-      case actionTypes.FILTER_SELECTED_WILAYAH:
+      case actionTypes.FILTER_SELECTED_WILAYAH: {
+        const data = payload.data;
         draft.post = {
           ...state.post,
-          ...payload.data,
+          nama_kecamatan: data.kecamatan,
+          nama_kota: data.kota,
+          nama_provinsi: data.provinsi,
+          nama_desa: data.desa,
+          id_desa: data.id_desa,
         };
 
         return;
+      }
 
       case actionTypes.ADD_WITH_SELECTED: {
         draft.statusForm = actionTypes.ADD_WITH_SELECTED;
@@ -369,11 +377,24 @@ export default (state = initialState, action) =>
         };
         return;
       }
+      case actionTypes.EDIT:
+        draft.statusForm = actionTypes.EDIT;
+        draft.temp = {
+          data: { ...state.data },
+          post: { ...state.post },
+          selectedOption: { ...state.selectedOption },
+        };
+        return;
+
       case actionTypes.CANCEL_WITH_SELECTED:
         draft.statusForm = actionTypes.SELECTED;
         draft.data = { ...state.temp.data };
         draft.post = { ...state.temp.post };
         draft.selectedOption = { ...state.temp.selectedOption };
+        return;
+
+      case actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_SUCCESS:
+        draft.detailRangkaianKunjungan = payload.data;
         return;
 
       case actionTypes.NEXT_NORM_SUCCESS:
@@ -389,7 +410,6 @@ export default (state = initialState, action) =>
           kunjungan_unit: ku,
           id_kelompok,
           id_instalasi,
-          id_tindakan,
           kelompok,
           instalasi,
           jenis_klasifikasi_registrasi: jenisKlasifikasiRegistrasi,
@@ -411,13 +431,21 @@ export default (state = initialState, action) =>
           id_asal_masuk_detail: kunjungan.id_asal_masuk_detail,
           id_kelompok,
           id_instalasi,
-          id_unit_layanan: ku.id_unit_layanan,
+          id_unit_layanan: ku.unit_layanan.id,
           id_dpjp: kunjungan.id_dpjp_registrasi,
-          id_tindakan,
+          id_tindakan: tindakan ? tindakan.map(row => {
+            return {
+              value: row.id,
+              label: row.nama_layanan,
+              tarif: row.tarif,
+              id_jenis_klasifikasi: row.id_jenis_klasifikasi,
+            }
+          }) : [],
           penjamin_pasien: kunjungan.nama_penjamin,
           id_kelas: ku.kelas.id,
           id_kunjungan_unit_asal: ku.id_kunjungan_unit_asal,
           id_kunjungan_asal: kunjungan.id_kunjungan_asal,
+          id_kunjungan_unit: ku.id,
         };
 
         draft.selectedOption.id_asal_masuk = {
@@ -517,7 +545,7 @@ export default (state = initialState, action) =>
           ...state.post,
           id_penjamin_pasien: aktifPenjamin.id_penjamin,
           nomor_anggota: aktifPenjamin.nomor_anggota,
-          id_kelas_penjamin_pasien: aktifPenjamin.id_kelas,
+          id_kelas_penjamin_pasien: aktifPenjamin.kelas ? aktifPenjamin.kelas.id : undefined,
           id_kepersertaan: aktifPenjamin.id_kepersertaan,
         };
 
@@ -557,37 +585,18 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST:
+        draft.loaderSettingKelasPenjamin = true;
+        return;
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_SUCCESS:
+        draft.data.options_setting_kelas_penjamin = payload.data;
+        draft.loaderSettingKelasPenjamin = false;
+        return;
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_FAILURE:
+        draft.loaderSettingKelasPenjamin = false;
+        return;
+
       default:
         return state;
     }
   });
-
-export const statusesElements = {
-  [actionTypes.READY]: ['norm', 'search', 'add', 'exit'],
-  [actionTypes.SELECTED]: ['add', 'edit', 'delete', 'preview', 'finish'],
-  [actionTypes.ADD]: [
-    'detail_pasien',
-    'penjamin_pasien',
-    'kunjungan_pasien',
-    'cancel',
-    'save',
-  ],
-  [actionTypes.ADD_WITH_SELECTED]: [
-    'penjamin_pasien',
-    'kunjungan_pasien',
-    'cancel',
-    'save',
-  ],
-  [actionTypes.EDIT]: ['penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
-};
-
-export const isDisable = (element, status) => {
-  if (statusesElements[status]) {
-    if (includes(statusesElements[status], element)) {
-      return false;
-    }
-    return true;
-  }
-
-  return true;
-};

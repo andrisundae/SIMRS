@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
-import { isDisable } from '../reducer';
+import { isDisable } from '../selectors';
 
 import {
   FooterActionsContainer,
@@ -16,6 +16,7 @@ import {
   AddButton,
   FinishButton,
   PrintButton,
+  confirmation,
 } from '@simrs/components';
 import { getPermissions } from '@simrs/main/src/modules/auth';
 import actions from '../actions';
@@ -50,6 +51,26 @@ class FooterActions extends Component {
 
   onFinish = () => {
     this.props.action.onFinish(this.props.resource);
+  };
+
+  onEdit = () => {
+    this.props.action.onCheckEdit(this.props.resource, {
+      idKunjunganUnit: this.props.post.id_kunjungan_unit,
+    });
+  };
+
+  onDelete = () => {
+    const { t, resource, action, post } = this.props;
+    confirmation({
+      title: t(`common:dialog.confirmation.title`),
+      message: t(`common:dialog.confirmation.delete`),
+      buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
+      onOk: () =>
+        action.onCheckDelete(resource, {
+          id: post.id,
+          idKunjunganUnit: post.id_kunjungan_unit,
+        }),
+    });
   };
 
   isCanAdd = () => {
@@ -110,7 +131,7 @@ class FooterActions extends Component {
           {this.isCanEdit() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <EditButton
-                onClick={this._onEdit}
+                onClick={this.onEdit}
                 inputRef={this.edit}
                 onKeyDown={this._onFocusElement}
               />
@@ -217,6 +238,8 @@ const mapDispatchToProps = function (dispatch) {
       {
         onSave: actions.save.request,
         onAdd: actions.onAdd,
+        onCheckEdit: actions.onCheckEdit,
+        onCheckDelete: actions.onCheckDelete,
         onCancel: actions.onCancel,
         onAddWithSelected: actions.onAddWithSelected,
         onCancelWithSelected: actions.onCancelWithSelected,

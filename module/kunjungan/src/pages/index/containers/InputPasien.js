@@ -19,7 +19,12 @@ import {
 
 import actions from '../actions';
 import actionTypes from '../actionTypes';
-import { isDisable } from '../reducer';
+import {
+  isDisable,
+  isDisabledKelompok,
+  isDisabledUnitLayanan,
+  isDisabledBiayaLain,
+} from '../selectors';
 import { staticConst } from '../static';
 
 class InputPasien extends Component {
@@ -196,9 +201,9 @@ class InputPasien extends Component {
       data,
       loaderOptionsByUnitLayanan,
       selectedOption,
-      statusForm,
+      disabledBiayaLain,
     } = this.props;
-    const disabledKunjungan = isDisable('kunjungan_pasien', statusForm);
+
     if (loaderOptionsByUnitLayanan) {
       return (
         <React.Fragment>
@@ -229,7 +234,7 @@ class InputPasien extends Component {
             <Select
               name={key}
               options={dataSetting.options}
-              isDisabled={disabledKunjungan}
+              isDisabled={disabledBiayaLain}
               isClearable={false}
               value={selectedOption[key] ? selectedOption[key] : {}}
               onChange={(selected) =>
@@ -295,22 +300,23 @@ class InputPasien extends Component {
       resource,
       filterWilayah,
       loaderOptionsByUnitLayanan,
+      loaderSettingKelasPenjamin,
       action,
       datatable,
-      statusForm,
       post,
       optionsKelasPenjamin,
       optionsPenjamin,
+      disabledDetail,
+      disabledPenjamin,
+      disabledKunjungan,
+      disabledTglLahir,
+      disabledUmur,
+      disabledTglSep,
+      disabledKelompok,
+      disabledUnitLayanan,
     } = this.props;
 
-    const disabledDetail = isDisable('detail_pasien', statusForm);
-    const disabledPenjamin = isDisable('penjamin_pasien', statusForm);
-    const disabledKunjungan = isDisable('kunjungan_pasien', statusForm);
-    const disabledTglLahir =
-      post.jenis_tgl_lahir !== 'tgl_lahir_umur' ? true : false;
-    const disabledUmur = post.jenis_tgl_lahir !== 'umur' ? true : false;
-    const disabledTglSep =
-      post.id_penjamin === staticConst.ID_PENJAMIN_UMUM ? true : false;
+    console.log(disabledUnitLayanan);
 
     return (
       <Grid columns="2" divided>
@@ -536,7 +542,11 @@ class InputPasien extends Component {
                   <Select
                     inputRef={this.id_kelas_penjamin_pasien}
                     options={optionsKelasPenjamin}
-                    isDisabled={disabledPenjamin}
+                    isDisabled={
+                      disabledPenjamin ||
+                      !post.id_penjamin_pasien ||
+                      loaderSettingKelasPenjamin
+                    }
                     value={selectedOption.id_kelas_penjamin_pasien}
                     onChange={(selected) =>
                       this.select2ChangeHanlder(
@@ -548,6 +558,7 @@ class InputPasien extends Component {
                     onKeyDown={(e) =>
                       this._onFocusElement(e, 'id_kepersertaan')
                     }
+                    isLoading={loaderSettingKelasPenjamin}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -743,7 +754,7 @@ class InputPasien extends Component {
                       this.select2ChangeHanlder('id_kelompok', selected)
                     }
                     isClearable={false}
-                    isDisabled={disabledKunjungan}
+                    isDisabled={disabledKelompok}
                     onKeyDown={(e) => this._onFocusElement(e, 'id_instalasi')}
                     inputRef={this.id_kelompok}
                   />
@@ -762,7 +773,7 @@ class InputPasien extends Component {
                     onChange={(selected) =>
                       this.select2ChangeHanlder('id_instalasi', selected)
                     }
-                    isDisabled={disabledKunjungan || !post.id_kelompok}
+                    isDisabled={disabledKelompok || !post.id_kelompok}
                     value={selectedOption.id_instalasi}
                     onKeyDown={(e) =>
                       this._onFocusElement(e, 'id_unit_layanan')
@@ -778,7 +789,7 @@ class InputPasien extends Component {
                 <Grid.Column width="9" className="field">
                   <Select
                     options={this.getUnitLayananOptions()}
-                    isDisabled={disabledKunjungan || !post.id_instalasi}
+                    isDisabled={disabledUnitLayanan || !post.id_instalasi}
                     onChange={(selected) =>
                       this.select2ChangeHanlder('id_unit_layanan', selected)
                     }
@@ -807,7 +818,9 @@ class InputPasien extends Component {
                   {this.isRawatInap() ? (
                     <Select
                       options={data.options_kelas_kamar}
-                      isDisabled={disabledKunjungan}
+                      isDisabled={
+                        disabledUnitLayanan || loaderOptionsByUnitLayanan
+                      }
                       isLoading={loaderOptionsByUnitLayanan}
                       components={{ Option: OptionKelasKamar }}
                       onChange={(selected) =>
@@ -848,7 +861,9 @@ class InputPasien extends Component {
                   <Grid.Column width="9" className="field">
                     <Select
                       options={data.options_asal_kunjungan}
-                      isDisabled={disabledKunjungan}
+                      isDisabled={
+                        disabledKunjungan || loaderOptionsByUnitLayanan
+                      }
                       isLoading={loaderOptionsByUnitLayanan}
                       components={{
                         Option: OptionAsalKunjungan,
@@ -873,7 +888,7 @@ class InputPasien extends Component {
                 <Grid.Column width="9" className="field">
                   <Select
                     options={data.options_dpjp}
-                    isDisabled={disabledKunjungan}
+                    isDisabled={disabledKunjungan || loaderOptionsByUnitLayanan}
                     isLoading={loaderOptionsByUnitLayanan}
                     onChange={(selected) =>
                       this.select2ChangeHanlder('id_dpjp', selected)
@@ -894,7 +909,6 @@ class InputPasien extends Component {
             </Grid>
             {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
               this.renderDividerBiayaTambahan()}
-
             {this.renderJenisKlasifikasiRegistrasi()}
           </Grid.Column>
         </Grid.Row>
@@ -931,7 +945,17 @@ const mapStateToProps = function (state) {
     filterWilayah,
     statusForm,
     loaderJenisKlasifikasiRegistrasi,
+    loaderSettingKelasPenjamin,
   } = state.module;
+
+  const disabledDetail = isDisable('detail_pasien', statusForm);
+  const disabledPenjamin = isDisable('penjamin_pasien', statusForm);
+  const disabledKunjungan = isDisable('kunjungan_pasien', statusForm);
+  const disabledTglLahir =
+    post.jenis_tgl_lahir !== 'tgl_lahir_umur' ? true : false;
+  const disabledUmur = post.jenis_tgl_lahir !== 'umur' ? true : false;
+  const disabledTglSep =
+    post.id_penjamin === staticConst.ID_PENJAMIN_UMUM ? true : false;
 
   return {
     post,
@@ -946,13 +970,21 @@ const mapStateToProps = function (state) {
     datatable: state.datatable.datatables['table_wilayah'],
     filterWilayah,
     statusForm,
-    optionsKelasPenjamin: data.options_kelas.filter(
-      (row) => row.alias !== staticConst.NON_KELAS
-    ),
+    optionsKelasPenjamin: data.options_setting_kelas_penjamin,
     optionsPenjamin: data.options_penjamin.filter(
       (row) => row.value !== staticConst.ID_PENJAMIN_UMUM
     ),
     loaderJenisKlasifikasiRegistrasi,
+    loaderSettingKelasPenjamin,
+    disabledDetail,
+    disabledPenjamin,
+    disabledKunjungan,
+    disabledTglLahir,
+    disabledUmur,
+    disabledTglSep,
+    disabledKelompok: isDisabledKelompok(state),
+    disabledUnitLayanan: isDisabledUnitLayanan(state),
+    disabledBiayaLain: isDisabledBiayaLain(state),
   };
 };
 
