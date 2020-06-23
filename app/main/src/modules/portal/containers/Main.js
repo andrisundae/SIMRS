@@ -183,6 +183,7 @@ class Main extends Component {
       id,
       webPreferences: {
         nodeIntegration: true,
+        enableRemoteModule: true,
       },
     });
     windowApp.on('show', () => {

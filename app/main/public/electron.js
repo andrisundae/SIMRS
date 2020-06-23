@@ -49,6 +49,7 @@ function createMainWindow() {
     id: 1,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
   window.on('close', (e) => {
