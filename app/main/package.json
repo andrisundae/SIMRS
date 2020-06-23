@@ -6,7 +6,7 @@
   "homepage": ".",
   "main": "public/electron.js",
   "scripts": {
-    "link": "yarn link react react-dom",
+    "linking": "yarn link react react-dom",
     "start": "craco start",
     "build": "craco build",
     "desktop": "electron --disable-gpu .",

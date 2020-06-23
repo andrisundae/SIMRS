@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dependencies:create-link": "cd shared/components/node_modules/react && yarn link && cd ../react-dom && yarn link",
-    "dependencies:link": "wsrun --exclude-missing link",
+    "dependencies:linking": "wsrun --exclude-missing linking",
     "start": "wsrun --exclude-missing start",
     "build": "wsrun --exclude-missing build",
     "postbuild": "concurrently \"ncp app/billing/build app/main/build/billing\" \"ncp app/farmasi/build app/main/build/farmasi\" \"ncp app/system/build app/main/build/system\"",
