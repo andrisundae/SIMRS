@@ -595,9 +595,10 @@ function* deleteHandler({ payload, meta }) {
   }
 }
 
-function* deleteSuccessHandler({ payload }) {
+function* deleteSuccessHandler({ meta, payload }) {
   try {
     yield toastr.success(payload.data.message);
+    yield put(actions.getPasien.request(meta.resource, {norm: payload.norm}));
   } catch (error) {
     yield toastr.error(error.message);
   }
