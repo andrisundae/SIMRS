@@ -1,5 +1,5 @@
 {
-  "name": "@module/unit-farmasi",
+  "name": "@module/setting-unit-farmasi",
   "version": "0.1.0",
   "private": true,
   "main": "src/index.js",
