@@ -1,4 +1,6 @@
 import withAppConsumer from './withAppConsumer';
+import withModuleConsumer from './withModuleConsumer';
 
 export * from './AppProvider';
-export { withAppConsumer };
+export * from './ModuleProvider';
+export { withAppConsumer, withModuleConsumer };

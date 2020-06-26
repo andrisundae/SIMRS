@@ -28,6 +28,10 @@ class PenjaminPasien extends Component {
     },
   ];
 
+  componentDidMount() {
+    console.log('penjamin mount');
+  }
+
   _getDataSource() {
     return {
       rowCount: null,

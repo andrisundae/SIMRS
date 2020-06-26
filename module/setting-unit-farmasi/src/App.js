@@ -5,7 +5,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Toastr } from '@simrs/components';
 import createStore from './store';
-import Index from './pages/index';
+import Index from './pages/index/index';
 
 const storeRedux = createStore();
 

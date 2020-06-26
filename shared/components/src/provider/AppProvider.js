@@ -1,6 +1,9 @@
 import React from 'react';
 
-const { Provider, Consumer } = React.createContext();
+const { Provider, Consumer } = React.createContext({
+  disabledMainMenu: false,
+  toggleMainMenu: () => {},
+});
 
 class AppProvider extends React.Component {
   constructor(props) {

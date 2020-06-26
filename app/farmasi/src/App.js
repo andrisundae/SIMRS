@@ -13,6 +13,7 @@ import {
   Restricted,
   PermissionDenied,
   PageLoader,
+  AppProvider,
 } from '@simrs/components';
 import { store, menu } from '@simrs/common';
 import apiSettingAplikasi from '@simrs/main/src/services/models/aturanAplikasiModel';
@@ -45,55 +46,57 @@ function Page() {
 
   return (
     <Router>
-      <Layout
-        logo={'FARMASI'}
-        contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
-        routers={rootRouters}
-        username={store.main.get('user.username')}
-      >
-        {loading ? (
-          <PageLoader active={true} />
-        ) : (
-          <Suspense fallback={<PageLoader active={true} />}>
-            <Switch>
-              <PrivateRoute
-                path="/farmasi/dashboard"
-                render={_renderDashboard}
-              />
-              {rootRouters.map((router, index) => {
-                let Component = withTranslation(router.key)(router.component);
+      <AppProvider>
+        <Layout
+          logo={'FARMASI'}
+          contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
+          routers={rootRouters}
+          username={store.main.get('user.username')}
+        >
+          {loading ? (
+            <PageLoader active={true} />
+          ) : (
+            <Suspense fallback={<PageLoader active={true} />}>
+              <Switch>
+                <PrivateRoute
+                  path="/farmasi/dashboard"
+                  render={_renderDashboard}
+                />
+                {rootRouters.map((router, index) => {
+                  let Component = withTranslation(router.key)(router.component);
 
-                return (
-                  <PrivateRoute
-                    key={index}
-                    path={router.path}
-                    render={(props) => (
-                      // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
-                      <Restricted
-                        route={router.key}
-                        {...props}
-                        render={(permissions) => (
-                          <Component
-                            settings={settings}
-                            permissions={permissions}
-                            resource={router.key}
-                            {...props}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                );
-              })}
-              <Route
-                path="/permission-denied"
-                render={(props) => <PermissionDenied {...props} />}
-              />
-              <Redirect to={'/farmasi/dashboard'} />
-            </Switch>
-          </Suspense>
-        )}
-      </Layout>
+                  return (
+                    <PrivateRoute
+                      key={index}
+                      path={router.path}
+                      render={(props) => (
+                        // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
+                        <Restricted
+                          route={router.key}
+                          {...props}
+                          render={(permissions) => (
+                            <Component
+                              settings={settings}
+                              permissions={permissions}
+                              resource={router.key}
+                              {...props}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  );
+                })}
+                <Route
+                  path="/permission-denied"
+                  render={(props) => <PermissionDenied {...props} />}
+                />
+                <Redirect to={'/farmasi/dashboard'} />
+              </Switch>
+            </Suspense>
+          )}
+        </Layout>
+      </AppProvider>
     </Router>
   );
 

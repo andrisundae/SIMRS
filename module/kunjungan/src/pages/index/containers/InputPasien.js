@@ -316,8 +316,6 @@ class InputPasien extends Component {
       disabledUnitLayanan,
     } = this.props;
 
-    console.log(disabledUnitLayanan);
-
     return (
       <Grid columns="2" divided>
         <Grid.Row>

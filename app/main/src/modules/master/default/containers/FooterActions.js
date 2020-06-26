@@ -254,6 +254,7 @@ class FooterActions extends Component {
 
   _onSave() {
     this.props.action.onSave(this.props.resource, this.props.post);
+    this.props.appContext.toggleMainMenu();
   }
 
   _onCancel() {
