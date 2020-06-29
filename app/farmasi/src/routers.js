@@ -27,6 +27,11 @@ const routers = [
     component: lazy(() => import('@module/setting-unit-farmasi')),
   },
   {
+    key: '_farmasi_setting_harga_jual',
+    path: '/farmasi/setting/harga-jual',
+    component: lazy(() => import('@module/setting-harga-jual')),
+  },
+  {
     key: '_farmasi_setting_barang_supplier',
     path: '/farmasi/setting/barang-supplier',
     component: lazy(() => import('@module/setting-barang-supplier')),
