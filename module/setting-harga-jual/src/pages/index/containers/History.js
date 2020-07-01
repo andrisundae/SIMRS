@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Modal, Grid, Icon, Button } from 'semantic-ui-react';
+import { Modal, Input, Grid, Icon, Button } from 'semantic-ui-react';
 import { DatatableServerSide, constDatatable } from '@simrs/components';
 
 import actions from '../actions';
@@ -21,10 +21,11 @@ class History extends Component {
 
     this.dataTable = createRef();
     this.exitBtn = createRef();
+    this.nama_barang = createRef();
   }
 
   render() {
-    const { t, show } = this.props;
+    const { t, show, post } = this.props;
 
     return (
       <Modal
@@ -40,6 +41,19 @@ class History extends Component {
         </Modal.Header>
         <Modal.Content>
           <Grid className="content-grid">
+            <Grid.Row className="form-row">
+              <Grid.Column width="3" className="field left aligned">
+                <label>{t(this._getKey('label.field.nama_barang'))}</label>
+              </Grid.Column>
+              <Grid.Column width="13" className="field">
+                <Input
+                  name="nama_barang"
+                  ref={this.nama_barang}
+                  value={post.nama_barang}
+                  disabled={true}
+                />
+              </Grid.Column>
+            </Grid.Row>
             <Grid.Row>
               <Grid.Column>
                 <DatatableServerSide
