@@ -5,12 +5,15 @@ import {
   settingState,
 } from '@simrs/main/src/modules/setting/default';
 
-sumberLainState.data = {
-  supplier: [],
+const sumberLain = {
+  ...sumberLainState,
+  data: {
+    supplier: [],
+  },
 };
 
 export default {
-  sumberLain: { ...sumberLainState },
+  sumberLain: { ...sumberLain },
   filter: { ...filterState },
   sumber: { ...sumberState },
   setting: { ...settingState },

@@ -468,12 +468,11 @@ class Create extends Component {
 
   _handleInputChange(e) {
     const { name, value, checked, type } = e.target;
-    let val = '';
+    let val = value;
     if (type === 'checkbox') {
       val = checked ? true : false;
-    } else {
-      val = value.trim();
     }
+
     this.props.action.onChangeInput(this.props.resource, { name, value: val });
   }
 
