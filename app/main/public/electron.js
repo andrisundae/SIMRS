@@ -9,6 +9,8 @@ const store = new Store({ encryptionKey: process.env.REACT_APP_SECRET });
 const sha256 = require('js-sha256').sha256;
 const salt = '';
 
+app.disableHardwareAcceleration();
+
 store.set('config.computerName', os.hostname());
 store.set('config.appCode', 'web-client');
 

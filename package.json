@@ -41,6 +41,7 @@
   },
   "husky": {
     "hooks": {
+      "post-clone": "bin/copy app/billing/.env.dist app/billing/.env && bin/copy app/farmasi/.env.dist app/farmasi/.env && bin/copy app/main/.env.dist app/main/.env && bin/copy app/system/.env.dist app/system/.env",
       "pre-commit": "pretty-quick --staged"
     }
   },

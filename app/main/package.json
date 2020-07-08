@@ -9,7 +9,7 @@
     "linking": "yarn link react react-dom",
     "start": "craco start",
     "build": "craco build",
-    "desktop": "electron --disable-gpu .",
+    "desktop": "electron .",
     "desktop:build": "electron-builder --config"
   },
   "eslintConfig": {
