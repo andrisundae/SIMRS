@@ -1,8 +1,9 @@
 {
   "private": true,
   "scripts": {
+    "predependencies:create-link": "concurrently \"ncp app/billing/.env.dist app/billing/.env\" \"ncp app/farmasi/.env.dist app/farmasi/.env\" \"ncp app/main/.env.dist app/main/.env\" \"ncp app/system/.env.dist app/system/.env\"",
     "dependencies:create-link": "cd shared/components/node_modules/react && yarn link && cd ../react-dom && yarn link",
-    "dependencies:linking": "wsrun --exclude-missing linking",
+    "postdependencies:create-link": "wsrun --exclude-missing linking",
     "start": "wsrun --exclude-missing start",
     "build": "wsrun --exclude-missing build",
     "postbuild": "concurrently \"ncp app/billing/build app/main/build/billing\" \"ncp app/farmasi/build app/main/build/farmasi\" \"ncp app/system/build app/main/build/system\"",
@@ -41,7 +42,6 @@
   },
   "husky": {
     "hooks": {
-      "post-clone": "bin/copy app/billing/.env.dist app/billing/.env && bin/copy app/farmasi/.env.dist app/farmasi/.env && bin/copy app/main/.env.dist app/main/.env && bin/copy app/system/.env.dist app/system/.env",
       "pre-commit": "pretty-quick --staged"
     }
   },
