@@ -159,6 +159,7 @@ class FilterSumberLain extends Component {
                       }
                       onKeyDown={(e) => this._onFocusElement(e, 'status')}
                       options={dataSumberLain.unit_layanan}
+                      isClearable={false}
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -180,6 +181,7 @@ class FilterSumberLain extends Component {
                         this._handleSelect2SumberLain('status', selected)
                       }
                       options={dataSumberLain.status}
+                      isClearable={false}
                     />
                   </Grid.Column>
                 </Grid.Row>

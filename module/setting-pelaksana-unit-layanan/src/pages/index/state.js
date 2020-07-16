@@ -1,33 +1,42 @@
 import {
-    sumberLainState,
-    filterState,
-    sumberState,
-    settingState,
+  sumberLainState,
+  filterState,
+  sumberState,
+  settingState,
 } from '@simrs/main/src/modules/setting/default';
 
-sumberLainState.data = {
+const sumberLain = {
+  ...sumberLainState,
+  data: {
     unit_layanan: [],
     status: [],
-}
+  },
+};
 
-filterState.data.filter_sumber_lain = {
-    instalasi: []
-}
+const filter = {
+  ...filterState,
+  data: {
+    ...filterState.data,
+    filter_sumber_lain: {
+      instalasi: [],
+    },
+  },
+};
 
 export default {
-    sumberLain: { ...sumberLainState },
-    filter: { ...filterState },
-    sumber: { ...sumberState },
-    setting: { ...settingState },
-    post: {
-        needed: {
-            unit_layanan: 0,
-            status: 0
-        },
-        optional: {
-            instalasi: 0,
-        }
+  sumberLain,
+  filter,
+  sumber: { ...sumberState },
+  setting: { ...settingState },
+  post: {
+    needed: {
+      unit_layanan: 0,
+      status: 0,
     },
-    focusElement: '',
-    submitting: false
-}
+    optional: {
+      instalasi: 0,
+    },
+  },
+  focusElement: '',
+  submitting: false,
+};
