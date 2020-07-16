@@ -232,7 +232,7 @@ class FooterActions extends Component {
     return isValid;
   }
 
-  _onAdd = (toggleMainMenu) => {
+  _onAdd = () => {
     this.props.action.onAdd(this.props.resource);
     this.props.appContext.toggleMainMenu();
   };

@@ -1,4 +1,5 @@
 import 'semantic-ui-css/semantic.min.css';
+import '@simrs/main/src/static/css/react-contextmenu.css';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';

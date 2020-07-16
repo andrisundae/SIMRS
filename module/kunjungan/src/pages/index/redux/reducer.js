@@ -2,7 +2,7 @@ import produce from 'immer';
 import dayjs from 'dayjs';
 import initialState from './state';
 import actionTypes from './actionTypes';
-import { staticConst } from './static';
+import { staticConst } from '../static';
 
 const defaultJenisUmur = (data) => {
   return data.length > 0 ? data[0] : { label: 'Tahun', value: 'year' };
@@ -34,13 +34,17 @@ export default (state = initialState, action) =>
       }
 
       case actionTypes.SAVE_SUCCESS: {
-        const { id, id_pasien: idPasien, kunjungan_unit: {id : idKunjunganUnit} } = payload.data.data;
+        const {
+          id,
+          id_pasien: idPasien,
+          kunjungan_unit: { id: idKunjunganUnit },
+        } = payload.data.data;
         draft.statusForm = actionTypes.SELECTED;
         draft.post = {
           ...state.post,
           id,
           id_pasien: idPasien,
-          id_kunjungan_unit: idKunjunganUnit
+          id_kunjungan_unit: idKunjunganUnit,
         };
 
         return;
@@ -433,14 +437,16 @@ export default (state = initialState, action) =>
           id_instalasi,
           id_unit_layanan: ku.unit_layanan.id,
           id_dpjp: kunjungan.id_dpjp_registrasi,
-          id_tindakan: tindakan ? tindakan.map(row => {
-            return {
-              value: row.id,
-              label: row.nama_layanan,
-              tarif: row.tarif,
-              id_jenis_klasifikasi: row.id_jenis_klasifikasi,
-            }
-          }) : [],
+          id_tindakan: tindakan
+            ? tindakan.map((row) => {
+                return {
+                  value: row.id,
+                  label: row.nama_layanan,
+                  tarif: row.tarif,
+                  id_jenis_klasifikasi: row.id_jenis_klasifikasi,
+                };
+              })
+            : [],
           penjamin_pasien: kunjungan.nama_penjamin,
           id_kelas: ku.kelas.id,
           id_kunjungan_unit_asal: ku.id_kunjungan_unit_asal,
@@ -540,33 +546,36 @@ export default (state = initialState, action) =>
       }
       case actionTypes.GET_PENJAMIN_PASIEN_SUCCESS: {
         const { aktif_penjamin: aktifPenjamin } = payload.data;
+        if (aktifPenjamin) {
+          draft.post = {
+            ...state.post,
+            id_penjamin_pasien: aktifPenjamin.id_penjamin,
+            nomor_anggota: aktifPenjamin.nomor_anggota,
+            id_kelas_penjamin_pasien: aktifPenjamin.kelas
+              ? aktifPenjamin.kelas.id
+              : undefined,
+            id_kepersertaan: aktifPenjamin.id_kepersertaan,
+          };
 
-        draft.post = {
-          ...state.post,
-          id_penjamin_pasien: aktifPenjamin.id_penjamin,
-          nomor_anggota: aktifPenjamin.nomor_anggota,
-          id_kelas_penjamin_pasien: aktifPenjamin.kelas ? aktifPenjamin.kelas.id : undefined,
-          id_kepersertaan: aktifPenjamin.id_kepersertaan,
-        };
+          draft.selectedOption.id_penjamin_pasien = {
+            label: aktifPenjamin.penjamin.nama,
+            value: aktifPenjamin.id_penjamin,
+          };
 
-        draft.selectedOption.id_penjamin_pasien = {
-          label: aktifPenjamin.penjamin.nama,
-          value: aktifPenjamin.id_penjamin,
-        };
+          draft.selectedOption.id_kelas_penjamin_pasien = {
+            label: aktifPenjamin.kelas.nama,
+            value: aktifPenjamin.kelas.id,
+            alias: aktifPenjamin.kelas.alias,
+          };
 
-        draft.selectedOption.id_kelas_penjamin_pasien = {
-          label: aktifPenjamin.kelas.nama,
-          value: aktifPenjamin.kelas.id,
-          alias: aktifPenjamin.kelas.alias,
-        };
-
-        const findKepesertaan = state.data.options_status_kepersetaan.find(
-          (row) => row.value === aktifPenjamin.id_kepersertaan
-        );
-        draft.selectedOption.id_kepersertaan = {
-          label: findKepesertaan ? findKepesertaan.label : '',
-          value: aktifPenjamin.id_kepersertaan,
-        };
+          const findKepesertaan = state.data.options_status_kepersetaan.find(
+            (row) => row.value === aktifPenjamin.id_kepersertaan
+          );
+          draft.selectedOption.id_kepersertaan = {
+            label: findKepesertaan ? findKepesertaan.label : '',
+            value: aktifPenjamin.id_kepersertaan,
+          };
+        }
 
         draft.data.options_status_pasien = [
           ...payload.data.penjamin_pasien_options,
@@ -594,6 +603,10 @@ export default (state = initialState, action) =>
         return;
       case actionTypes.GET_SETTING_KELAS_PENJAMIN_FAILURE:
         draft.loaderSettingKelasPenjamin = false;
+        return;
+
+      case actionTypes.CHANGE_TAB:
+        draft.activeTabIndex = payload.data.activeIndex;
         return;
 
       default:

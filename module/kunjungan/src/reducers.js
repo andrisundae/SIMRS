@@ -1,13 +1,16 @@
 import { combineReducers } from 'redux';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 
-import { aclReducer } from '@simrs/main/src/modules/auth';
 import { loaderReducer, datatableMultiReducer } from '@simrs/components';
-import { reducer } from './pages/index';
+import { reducer, penjaminPasienReducer } from './pages/index';
+
+const moduleReducer = combineReducers({
+  kunjungan: reducer,
+  penjaminPasien: penjaminPasienReducer,
+});
 
 export default combineReducers({
-  module: reducer,
-  acl: aclReducer,
+  module: moduleReducer,
   toastr: toastrReducer,
   loader: loaderReducer,
   datatable: datatableMultiReducer,

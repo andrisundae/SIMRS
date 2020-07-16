@@ -122,4 +122,6 @@ export default {
     post: {},
   },
   detailRangkaianKunjungan: {},
+  activeTabIndex: 0,
+  permissions: [],
 };

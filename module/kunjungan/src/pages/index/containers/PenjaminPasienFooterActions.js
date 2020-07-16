@@ -13,16 +13,14 @@ import {
   DeleteButton,
   CancelButton,
   AddButton,
-  FinishButton,
-  PrintButton,
   confirmation,
 } from '@simrs/components';
 import { getPermissions } from '@simrs/main/src/modules/auth';
 
-import { isDisable } from '../redux/selectors';
-import actions from '../redux/actions';
+import * as actions from '../redux/penjaminPasienActions';
+import * as actionTypes from '../redux/penjaminPasienActionTypes';
 
-class FooterActions extends Component {
+class PenjamninPasienFooterActions extends Component {
   constructor(props) {
     super(props);
 
@@ -35,30 +33,14 @@ class FooterActions extends Component {
   }
 
   onAdd = () => {
-    if (this.props.post.id_pasien) {
-      this.props.action.onAddWithSelected(this.props.resource);
-    } else {
-      this.props.action.onAdd(this.props.resource);
-    }
+    this.props.action.onAdd(this.props.resource);
   };
 
   onCancel = () => {
-    if (this.props.post.id_pasien) {
-      this.props.action.onCancelWithSelected(this.props.resource);
-    } else {
-      this.props.action.onCancel(this.props.resource);
-    }
+    this.props.action.onCancel(this.props.resource);
   };
 
-  onFinish = () => {
-    this.props.action.onFinish(this.props.resource);
-  };
-
-  onEdit = () => {
-    this.props.action.onCheckEdit(this.props.resource, {
-      idKunjunganUnit: this.props.post.id_kunjungan_unit,
-    });
-  };
+  onEdit = () => {};
 
   onDelete = () => {
     const { t, resource, action, post } = this.props;
@@ -75,45 +57,75 @@ class FooterActions extends Component {
   };
 
   isCanAdd = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('add', statusForm);
-    return isEnableStatus;
+    let { permissions, statusForm } = this.props;
+    let isValid = false;
+    if (
+      permissions.canAdd &&
+      (statusForm === actionTypes.READY_PENJAMIN_PASIEN ||
+        statusForm === actionTypes.CANCEL_PENJAMIN_PASIEN ||
+        statusForm === actionTypes.SELECTED_PENJAMIN_PASIEN)
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
   };
 
   isCanEdit = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('edit', statusForm);
-    return isEnableStatus;
+    let { permissions, statusForm, selectedRow } = this.props;
+    let isValid = false;
+    if (
+      permissions.canEdit &&
+      selectedRow &&
+      (statusForm === actionTypes.CANCEL_PENJAMIN_PASIEN ||
+        statusForm === actionTypes.SELECTED_PENJAMIN_PASIEN)
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
   };
 
   isCanDelete = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('delete', statusForm);
-    return isEnableStatus;
+    let { permissions, statusForm, selectedRow } = this.props;
+    let isValid = false;
+    if (
+      permissions.canDelete &&
+      selectedRow &&
+      (statusForm === actionTypes.CANCEL_PENJAMIN_PASIEN ||
+        statusForm === actionTypes.SELECTED_PENJAMIN_PASIEN)
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
   };
 
   isCanSave = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('save', statusForm);
-    return isEnableStatus;
+    let { permissions, statusForm } = this.props;
+    let isValid = false;
+    if (
+      (permissions.canAdd || permissions.canEdit) &&
+      (statusForm === actionTypes.ADD_PENJAMIN_PASIEN ||
+        statusForm === actionTypes.EDIT_PENJAMIN_PASIEN)
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
   };
 
   isCanCancel = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('cancel', statusForm);
-    return isEnableStatus;
-  };
+    let { statusForm } = this.props;
+    let isValid = false;
+    if (
+      statusForm === actionTypes.ADD_PENJAMIN_PASIEN ||
+      statusForm === actionTypes.EDIT_PENJAMIN_PASIEN
+    ) {
+      isValid = true;
+    }
 
-  isCanPrint = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('preview', statusForm);
-    return isEnableStatus;
-  };
-
-  isCanFinish = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('finish', statusForm);
-    return isEnableStatus;
+    return isValid;
   };
 
   render() {
@@ -165,24 +177,6 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          {this.isCanPrint() && (
-            <Menu.Item style={{ marginLeft: '20%', paddingRight: 5 }}>
-              <PrintButton
-                onClick={this._onCancel}
-                inputRef={this.cancel}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this.isCanFinish() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <FinishButton
-                onClick={this.onFinish}
-                inputRef={this.finish}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
         </Fragment>
       </FooterActionsContainer>
     );
@@ -222,11 +216,16 @@ class FooterActions extends Component {
   }
 }
 
-const mapStateToProps = function (state, props) {
-  const { post, focusElement, statusForm } = state.module.kunjungan;
+const mapStateToProps = function (state) {
+  const {
+    post,
+    focusElement,
+    statusForm,
+    permissions,
+  } = state.module.penjaminPasien;
 
   return {
-    customPermissions: getPermissions(props.permissions),
+    permissions: getPermissions(permissions),
     post,
     focusElement,
     statusForm,
@@ -237,14 +236,10 @@ const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(
       {
-        onSave: actions.save.request,
+        // onSave: actions.save.request,
         onAdd: actions.onAdd,
-        onCheckEdit: actions.onCheckEdit,
-        onCheckDelete: actions.onCheckDelete,
+        onEdit: actions.onEdit,
         onCancel: actions.onCancel,
-        onAddWithSelected: actions.onAddWithSelected,
-        onCancelWithSelected: actions.onCancelWithSelected,
-        onFinish: actions.onFinish,
         onFocusElement: actions.onFocusElement,
       },
       dispatch
@@ -252,9 +247,8 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-FooterActions.propTypes = {
-  permissions: PropTypes.array,
-  customPermissions: PropTypes.object,
+PenjamninPasienFooterActions.propTypes = {
+  permissions: PropTypes.object,
   action: PropTypes.object,
   post: PropTypes.object,
   focusElement: PropTypes.string,
@@ -263,4 +257,7 @@ FooterActions.propTypes = {
   statusForm: PropTypes.string,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PenjamninPasienFooterActions);

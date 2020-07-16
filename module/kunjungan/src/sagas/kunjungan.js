@@ -1,9 +1,9 @@
 import { put, call, takeLatest, all, select } from 'redux-saga/effects';
 import _ from 'lodash';
-import { ipcRenderer } from 'electron';
 import dayjs from 'dayjs';
 
 import { validator as commonValidator, toastr } from '@simrs/common';
+import aclActions from '@simrs/main/src/modules/auth/aclActions';
 import {
   loaderActions,
   messageBox,
@@ -20,11 +20,14 @@ const validator = commonValidator.default;
 const TABLE_PASIEN = 'table_pasien';
 const TABLE_KUNJUNGAN = 'table_kunjungan';
 const TABLE_WILAYAH = 'table_wilayah';
+const TABLE_PENJAMIN_PASIEN = 'table_penjamin_pasien';
 
 function* openForm({ meta }) {
   yield put(datatableActions.onInitialize(TABLE_PASIEN));
   yield put(datatableActions.onInitialize(TABLE_KUNJUNGAN));
   yield put(datatableActions.onInitialize(TABLE_WILAYAH));
+  yield put(datatableActions.onInitialize(TABLE_PENJAMIN_PASIEN));
+  yield put(aclActions.getGranted.request('_billing_master_penjamin_pasien'));
   yield put(actions.populateForm.request(meta.resource));
   yield put(actions.onReady(meta.resource));
 }

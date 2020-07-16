@@ -1,17 +1,17 @@
 import { includes } from 'lodash';
 
 import actionTypes from './actionTypes';
-import { statusesElements } from './static';
+import { statusesElements } from '../static';
 
-export const getPost = (state) => state.module.post;
+export const getPost = (state) => state.module.kunjungan.post;
 export const isPasienBaru = (state) => {
-  return state.module.statusForm === actionTypes.ADD;
+  return state.module.kunjungan.statusForm === actionTypes.ADD;
 };
 
 export const isDisabledKelompok = (state) => {
   let disabled = true;
   if (state.module) {
-    const statusForm = state.module.statusForm;
+    const statusForm = state.module.kunjungan.statusForm;
     if (
       includes([actionTypes.ADD, actionTypes.ADD_WITH_SELECTED], statusForm)
     ) {
@@ -27,7 +27,7 @@ export const isDisabledKelompok = (state) => {
 export const isDisabledUnitLayanan = (state) => {
   let disabled = true;
   if (state.module) {
-    const statusForm = state.module.statusForm;
+    const statusForm = state.module.kunjungan.statusForm;
     if (
       statusForm === actionTypes.ADD ||
       statusForm === actionTypes.ADD_WITH_SELECTED
@@ -35,7 +35,7 @@ export const isDisabledUnitLayanan = (state) => {
       disabled = false;
     } else if (statusForm === actionTypes.EDIT) {
       disabled = false;
-      const detail = state.module.detailRangkaianKunjungan;
+      const detail = state.module.kunjungan.detailRangkaianKunjungan;
       if (detail.st_inap === 1) {
         if (
           detail.is_entries_obat ||
@@ -70,7 +70,7 @@ export const isDisabledUnitLayanan = (state) => {
 export const isDisabledBiayaLain = (state) => {
   let disabled = true;
   if (state.module) {
-    const statusForm = state.module.statusForm;
+    const statusForm = state.module.kunjungan.statusForm;
     if (
       statusForm === actionTypes.ADD ||
       statusForm === actionTypes.ADD_WITH_SELECTED
@@ -78,7 +78,7 @@ export const isDisabledBiayaLain = (state) => {
       disabled = false;
     } else if (statusForm === actionTypes.EDIT) {
       disabled = false;
-      const detail = state.module.detailRangkaianKunjungan;
+      const detail = state.module.kunjungan.detailRangkaianKunjungan;
       if (detail.is_bayar) {
         disabled = true;
       }

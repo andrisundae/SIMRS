@@ -250,7 +250,7 @@ export default {
     createAction(
       actionTypes.GET_ALL_PASIEN_REQUEST,
       { data },
-      { resource, log: createActivity(resource, activity.SIMPAN), tableParams }
+      { resource, tableParams }
     ),
 
   loadAllWilayah: (resource, data, tableParams) =>
@@ -340,4 +340,6 @@ export default {
     createAction(actionTypes.FILTER_SELECTED_WILAYAH, { data }, { resource }),
   onSelectedKunjungan: (resource, data) =>
     createAction(actionTypes.FILTER_SELECTED_KUNJUNGAN, { data }, { resource }),
+  onChangeTab: (resource, data) =>
+    createAction(actionTypes.CHANGE_TAB, { data }, { resource }),
 };

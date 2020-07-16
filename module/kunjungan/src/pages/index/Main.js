@@ -6,7 +6,8 @@ import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 import { PageLoader } from '@simrs/components';
 import Create from './containers/Create';
 import FooterActions from './containers/FooterActions';
-import actions from './actions';
+import PenjaminPasienFooterActions from './containers/PenjaminPasienFooterActions';
+import actions from './redux/actions';
 
 import '../../assets/css/styles.css';
 
@@ -27,10 +28,17 @@ class Main extends Component {
             </Grid.Row>
           </Grid>
         </Segment>
-        <FooterActions
-          resource={this.props.resource}
-          permissions={this.props.permissions}
-        />
+        {this.props.activeTabIndex === 0 ? (
+          <FooterActions
+            resource={this.props.resource}
+            permissions={this.props.permissions}
+          />
+        ) : (
+          <PenjaminPasienFooterActions
+            resource={this.props.resource}
+            permissions={this.props.permissions}
+          />
+        )}
         <PageLoader
           active={this.props.isLoading}
           message={this.props.loaderMessage}
@@ -43,6 +51,7 @@ class Main extends Component {
 const mapStateToProps = function (state) {
   return {
     isLoading: state.loader.count > 0,
+    activeTabIndex: state.module.kunjungan.activeTabIndex,
   };
 };
 
@@ -59,6 +68,7 @@ Main.propTypes = {
   t: PropTypes.func.isRequired,
   i18n: PropTypes.object.isRequired,
   permissions: PropTypes.array.isRequired,
+  activeTabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

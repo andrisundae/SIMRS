@@ -1,4 +1,4 @@
-import actionTypes from './actionTypes';
+import actionTypes from './redux/actionTypes';
 
 const staticConst = {
   NON_KELAS: 'non_kelas',
@@ -30,5 +30,8 @@ const statusesElements = {
   ],
   [actionTypes.EDIT]: ['penjamin_pasien', 'kunjungan_pasien', 'cancel', 'save'],
 };
+
+export const TAB_KUNJUNGAN = 0;
+export const TAB_PENJAMIN_PASIEN = 1;
 
 export { staticConst, statusesElements };

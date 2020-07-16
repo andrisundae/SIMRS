@@ -17,14 +17,14 @@ import {
   AsalKunjunganSingleValue,
 } from '../components/CustomOptions';
 
-import actions from '../actions';
-import actionTypes from '../actionTypes';
+import actions from '../redux/actions';
+import actionTypes from '../redux/actionTypes';
 import {
   isDisable,
   isDisabledKelompok,
   isDisabledUnitLayanan,
   isDisabledBiayaLain,
-} from '../selectors';
+} from '../redux/selectors';
 import { staticConst } from '../static';
 
 class InputPasien extends Component {
@@ -944,7 +944,7 @@ const mapStateToProps = function (state) {
     statusForm,
     loaderJenisKlasifikasiRegistrasi,
     loaderSettingKelasPenjamin,
-  } = state.module;
+  } = state.module.kunjungan;
 
   const disabledDetail = isDisable('detail_pasien', statusForm);
   const disabledPenjamin = isDisable('penjamin_pasien', statusForm);
@@ -968,7 +968,9 @@ const mapStateToProps = function (state) {
     datatable: state.datatable.datatables['table_wilayah'],
     filterWilayah,
     statusForm,
-    optionsKelasPenjamin: data.options_setting_kelas_penjamin,
+    optionsKelasPenjamin: data.options_setting_kelas_penjamin.filter(
+      (row) => row.value !== staticConst.ID_NON_KELAS
+    ),
     optionsPenjamin: data.options_penjamin.filter(
       (row) => row.value !== staticConst.ID_PENJAMIN_UMUM
     ),
@@ -990,6 +992,33 @@ const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(actions, dispatch),
   };
+};
+
+InputPasien.propTypes = {
+  action: PropTypes.object,
+  post: PropTypes.object,
+  focusElement: PropTypes.string,
+  statusForm: PropTypes.string,
+  data: PropTypes.object,
+  selectedOption: PropTypes.object,
+  resource: PropTypes.string.isRequired,
+  t: PropTypes.func,
+  datatable: PropTypes.object,
+  showCariWilayah: PropTypes.bool,
+  filterWilayah: PropTypes.object,
+  loaderOptionsByUnitLayanan: PropTypes.bool,
+  loaderSettingKelasPenjamin: PropTypes.bool,
+  optionsKelasPenjamin: PropTypes.array,
+  optionsPenjamin: PropTypes.array,
+  disabledDetail: PropTypes.bool,
+  disabledPenjamin: PropTypes.bool,
+  disabledKunjungan: PropTypes.bool,
+  disabledTglLahir: PropTypes.bool,
+  disabledUmur: PropTypes.bool,
+  disabledTglSep: PropTypes.bool,
+  disabledKelompok: PropTypes.bool,
+  disabledUnitLayanan: PropTypes.bool,
+  disabledBiayaLain: PropTypes.bool,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputPasien);

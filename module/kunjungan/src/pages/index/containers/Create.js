@@ -13,9 +13,9 @@ import NormModal from '../components/NormModal';
 import PenjaminPasien from './PenjaminPasien';
 import InputPasien from './InputPasien';
 
-import actions from '../actions';
-import actionTypes from '../actionTypes';
-import { isDisable } from '../selectors';
+import actions from '../redux/actions';
+import actionTypes from '../redux/actionTypes';
+import { isDisable } from '../redux/selectors';
 
 class Create extends Component {
   constructor(props) {
@@ -139,6 +139,37 @@ class Create extends Component {
     this.props.action.onSelectedKunjungan(this.props.resource, data);
   };
 
+  getPanes = () => {
+    const { resource, t, post } = this.props;
+
+    return [
+      {
+        menuItem: { key: 'pasien', content: '1. Pasien' },
+        render: () => {
+          return (
+            <Tab.Pane attached="top">
+              <InputPasien t={t} resource={resource} />
+            </Tab.Pane>
+          );
+        },
+      },
+      {
+        menuItem: {
+          key: 'penjamin_pasien',
+          content: '2. Penjamin Pasien',
+          disabled: !post.id_pasien,
+        },
+        render: () => {
+          return (
+            <Tab.Pane attached="top">
+              <PenjaminPasien t={t} resource={resource} />
+            </Tab.Pane>
+          );
+        },
+      },
+    ];
+  };
+
   render() {
     const {
       post,
@@ -152,33 +183,12 @@ class Create extends Component {
       resource,
       statusForm,
       selectedOption,
+      activeTabIndex,
     } = this.props;
-
-    const panes = [
-      {
-        menuItem: '1. Pasien',
-        render: () => {
-          return (
-            <Tab.Pane attached="top">
-              <InputPasien t={this.props.t} resource={this.props.resource} />
-            </Tab.Pane>
-          );
-        },
-      },
-      {
-        menuItem: '2. Penjamin Pasien',
-        render: () => {
-          return (
-            <Tab.Pane attached="top">
-              <PenjaminPasien t={this.props.t} resource={this.props.resource} />
-            </Tab.Pane>
-          );
-        },
-      },
-    ];
 
     const disabledDetail = isDisable('detail_pasien', statusForm);
     const disableNoRm = isDisable('norm', statusForm);
+    const datatablePasienState = this.getStateDatatables('table_pasien');
 
     return (
       <Form
@@ -328,7 +338,14 @@ class Create extends Component {
             </Grid.Row>
           </Grid>
         </Segment>
-        <Tab menu={{ attached: 'bottom' }} panes={panes} />
+        <Tab
+          menu={{ attached: 'bottom' }}
+          panes={this.getPanes()}
+          onTabChange={(e, { activeIndex }) =>
+            this.props.action.onChangeTab(resource, { activeIndex })
+          }
+          activeIndex={activeTabIndex}
+        />
         {showCariPasien && (
           <CariPasien
             show={showCariPasien}
@@ -339,8 +356,8 @@ class Create extends Component {
             dataSource={this.dataSourcePasien}
             onChange={action.onChangeFilterPasien}
             onSubmit={action.onSubmitFilterPasien}
-            isReloadGrid={this.getStateDatatables('table_pasien').isReload}
-            reloadType={this.getStateDatatables('table_pasien').reloadType}
+            isReloadGrid={datatablePasienState.isReload}
+            reloadType={datatablePasienState.reloadType}
           />
         )}
         {showCariKunjungan && (
@@ -383,7 +400,8 @@ const mapStateToProps = function (state) {
     filterPasien,
     statusForm,
     selectedOption,
-  } = state.module;
+    activeTabIndex,
+  } = state.module.kunjungan;
 
   return {
     post,
@@ -396,6 +414,7 @@ const mapStateToProps = function (state) {
     datatables: state.datatable.datatables,
     statusForm,
     selectedOption,
+    activeTabIndex,
   };
 };
 
@@ -411,9 +430,18 @@ Create.propTypes = {
   action: PropTypes.object,
   post: PropTypes.object,
   focusElement: PropTypes.string,
+  statusForm: PropTypes.string,
   data: PropTypes.object,
+  selectedOption: PropTypes.object,
   resource: PropTypes.string.isRequired,
   t: PropTypes.func,
+  onGetPasien: PropTypes.func,
+  showCariPasien: PropTypes.bool,
+  showCariKunjungan: PropTypes.bool,
+  showNormModal: PropTypes.bool,
+  filterPasien: PropTypes.object,
+  datatables: PropTypes.object,
+  activeTabIndex: PropTypes.number,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Create);
