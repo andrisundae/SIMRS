@@ -40,16 +40,45 @@ class FilterableSettingList extends Component {
     this.search_setting = createRef();
   }
 
+  getColumns = () => {
+    const { columnDefs, withActiveColumn } = this.props;
+    if (withActiveColumn) {
+      columnDefs.splice(0, 0, {
+        headerName: '',
+        field: 'aktif',
+        cellRenderer: 'checkboxRenderer',
+        width: 25,
+        cellStyle: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      });
+    }
+
+    return columnDefs;
+  };
+
+  cellValueChangedHandler = (params) => {
+    const colId = params.column.getId();
+    if (colId === 'aktif') {
+      if (this.props.onAktifChanged) {
+        this.props.onAktifChanged(params);
+      }
+    }
+  };
+
   render() {
     let {
       sizeColumnsToFit,
-      columnDefs,
       filterGrid,
       containerHeight,
       minCharSearch,
       t,
       resource,
     } = this.props;
+
+    const columnDefs = this.getColumns();
 
     return (
       <Fragment>
@@ -83,6 +112,7 @@ class FilterableSettingList extends Component {
           sizeColumnsToFit={sizeColumnsToFit}
           onRowDoubleClicked={this._onRowDoubleClick}
           defaultColDef={{ sortable: true }}
+          onCellValueChanged={this.cellValueChangedHandler}
         />
       </Fragment>
     );
@@ -304,6 +334,7 @@ FilterableSettingList.propTypes = {
   post: PropTypes.object,
   selectedRows: PropTypes.array,
   isReloadGrid: PropTypes.bool,
+  withActiveColumn: PropTypes.bool,
   reloadType: PropTypes.string,
   resource: PropTypes.string.isRequired,
   onRowDoubleClicked: PropTypes.func,
@@ -312,6 +343,7 @@ FilterableSettingList.propTypes = {
   containerHeight: PropTypes.string,
   t: PropTypes.func.isRequired,
   i18n: PropTypes.object.isRequired,
+  onAktifChanged: PropTypes.func,
 };
 
 FilterableSettingList.defaultProps = {
