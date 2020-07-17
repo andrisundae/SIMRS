@@ -41,8 +41,8 @@ class FilterableSettingList extends Component {
   }
 
   getColumns = () => {
-    const { columnDefs, withActiveColumn } = this.props;
-    if (withActiveColumn) {
+    const { columnDefs, withColumnAktif } = this.props;
+    if (withColumnAktif) {
       columnDefs.splice(0, 0, {
         headerName: '',
         field: 'aktif',
@@ -334,7 +334,7 @@ FilterableSettingList.propTypes = {
   post: PropTypes.object,
   selectedRows: PropTypes.array,
   isReloadGrid: PropTypes.bool,
-  withActiveColumn: PropTypes.bool,
+  withColumnAktif: PropTypes.bool,
   reloadType: PropTypes.string,
   resource: PropTypes.string.isRequired,
   onRowDoubleClicked: PropTypes.func,

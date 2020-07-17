@@ -36,7 +36,7 @@ class Main extends Component {
       containerHeightSetting,
       containerHeightSumber,
       settings,
-      withActiveColumn,
+      withColumnAktif,
       onAktifChanged,
     } = this.props;
 
@@ -84,7 +84,7 @@ class Main extends Component {
                   i18n={i18n}
                   containerHeight={containerHeightSetting}
                   settings={settings}
-                  withActiveColumn={withActiveColumn}
+                  withColumnAktif={withColumnAktif}
                   onAktifChanged={onAktifChanged}
                 />
               </Grid.Column>
@@ -173,7 +173,7 @@ Main.propTypes = {
   containerHeightSetting: PropTypes.string,
   containerHeightSumber: PropTypes.string,
   settings: PropTypes.array,
-  withActiveColumn: PropTypes.bool,
+  withColumnAktif: PropTypes.bool,
   onAktifChanged: PropTypes.func,
 };
 
