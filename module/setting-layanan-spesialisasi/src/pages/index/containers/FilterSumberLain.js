@@ -16,12 +16,9 @@ class FilterSumberLain extends Component {
   constructor(props) {
     super(props);
 
-    this.versi_tarif = createRef();
-    this.instalasi = createRef();
-    this.unit_layanan = createRef();
+    this.spesialisasi = createRef();
     this.klasifikasi = createRef();
     this.kelompok = createRef();
-    this.kelas = createRef();
   }
 
   componentDidUpdate() {
@@ -34,32 +31,33 @@ class FilterSumberLain extends Component {
     }
   }
 
+  componentDidCatch() {
+    this.setState({ hasError: true });
+  }
+
+  _handleSelect2SumberLain(name, selected) {
+    this.props.action.onSelect2SumberLainChange(
+      this.props.resource,
+      name,
+      selected
+    );
+  }
+
   _handleSelect2Filter(name, selected) {
     let type = '';
     let filter = {};
     switch (name) {
-      case 'unit_layanan':
       case 'klasifikasi':
-      case 'versi_tarif':
-        type = 'needed';
-        if (name === 'unit_layanan') {
-          filter = {
-            target: 'filter',
-            name: 'klasifikasi',
-            by: 'unit_layanan',
-          };
-        } else if (name === 'klasifikasi') {
-          filter = { target: 'filter', name: 'kelompok', by: 'klasifikasi' };
+      case 'spesialisasi':
+        {
+          type = 'needed';
+          if (name === 'klasifikasi') {
+            filter = { target: 'filter', name: 'kelompok', by: 'klasifikasi' };
+          }
         }
         break;
-
       case 'kelompok':
-      case 'kelas':
-      case 'instalasi':
         type = 'optional';
-        if (name === 'instalasi') {
-          filter = { target: 'filter', name: 'unit_layanan', by: 'instalasi' };
-        }
         break;
       default:
         break;
@@ -73,18 +71,16 @@ class FilterSumberLain extends Component {
     let value = null;
 
     switch (name) {
-      case 'unit_layanan':
-      case 'versi_tarif':
+      case 'spesialisasi':
         {
           let selectedValue = this.props.postNeeded[name];
           if (selectedValue > 0) {
-            value = this.props.dataFilter.data_filter_sumber[name].find(
+            value = this.props.dataSumberLain[name].find(
               (row) => row.value === selectedValue
             );
           }
         }
         break;
-
       case 'klasifikasi':
         {
           let selectedValue = this.props.postNeeded[name];
@@ -95,20 +91,7 @@ class FilterSumberLain extends Component {
           }
         }
         break;
-
-      case 'instalasi':
-        {
-          let selectedValue = this.props.postOptional[name];
-          if (selectedValue > 0) {
-            value = this.props.dataFilter.filter_sumber_lain[name].find(
-              (row) => row.value === selectedValue
-            );
-          }
-        }
-        break;
-
       case 'kelompok':
-      case 'kelas':
         {
           let selectedValue = this.props.postOptional[name];
           if (selectedValue > 0) {
@@ -135,16 +118,12 @@ class FilterSumberLain extends Component {
     }
   }
 
-  componentDidCatch() {
-    this.setState({ hasError: true });
-  }
-
   _getKey(key) {
     return `${this.props.resource}:${key}`;
   }
 
   render() {
-    const { dataFilter, t } = this.props;
+    const { dataFilter, dataSumberLain, t, postNeeded } = this.props;
 
     return (
       <Form id={this.formId} size="mini">
@@ -153,66 +132,27 @@ class FilterSumberLain extends Component {
             <Grid.Column>
               <Grid className="form-grid">
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>
                       <Trans
-                        i18nKey={this._getKey('label.field.versi_tarif')}
+                        i18nKey={this._getKey('label.field.spesialisasi')}
                       />
                     </label>
                   </Grid.Column>
-                  <Grid.Column width="10" className="field">
+                  <Grid.Column width="9" className="field">
                     <Select
-                      name="versi_tarif"
+                      name="spesialisasi"
                       placeholder={t(
-                        this._getKey('placeholder.field.versi_tarif')
+                        this._getKey('placeholder.field.spesialisasi')
                       )}
-                      inputRef={this.versi_tarif}
-                      value={this._getSelect2Value('versi_tarif')}
+                      inputRef={this.spesialisasi}
+                      value={this._getSelect2Value('spesialisasi')}
                       onChange={(selected) =>
-                        this._handleSelect2Filter('versi_tarif', selected)
+                        this._handleSelect2SumberLain('spesialisasi', selected)
                       }
-                      onKeyDown={(e) => this._onFocusElement(e, 'instalasi')}
-                      options={dataFilter.data_filter_sumber.versi_tarif}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
-                    <label>{t(this._getKey('label.field.instalasi'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="10" className="field">
-                    <Select
-                      name="instalasi"
-                      placeholder={t(
-                        this._getKey('placeholder.field.instalasi')
-                      )}
-                      inputRef={this.instalasi}
-                      value={this._getSelect2Value('instalasi')}
-                      onChange={(selected) =>
-                        this._handleSelect2Filter('instalasi', selected)
-                      }
-                      onKeyDown={(e) => this._onFocusElement(e, 'unit_layanan')}
-                      options={dataFilter.filter_sumber_lain.instalasi}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
-                    <label>{t(this._getKey('label.field.unit_layanan'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="10" className="field">
-                    <Select
-                      name="unit_layanan"
-                      placeholder={t(
-                        this._getKey('placeholder.field.unit_layanan')
-                      )}
-                      inputRef={this.unit_layanan}
-                      value={this._getSelect2Value('unit_layanan')}
-                      onChange={(selected) =>
-                        this._handleSelect2Filter('unit_layanan', selected)
-                      }
+                      options={dataSumberLain.spesialisasi}
                       onKeyDown={(e) => this._onFocusElement(e, 'klasifikasi')}
-                      options={dataFilter.data_filter_sumber.unit_layanan}
+                      isClearable={false}
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -224,10 +164,10 @@ class FilterSumberLain extends Component {
             <Grid.Column>
               <Grid className="form-grid">
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(this._getKey('label.field.klasifikasi'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="10" className="field">
+                  <Grid.Column width="9" className="field">
                     <Select
                       name="klasifikasi"
                       placeholder={t(
@@ -238,16 +178,16 @@ class FilterSumberLain extends Component {
                       onChange={(selected) =>
                         this._handleSelect2Filter('klasifikasi', selected)
                       }
-                      onKeyDown={(e) => this._onFocusElement(e, 'kelompok')}
                       options={dataFilter.filter_sumber.klasifikasi}
+                      isDisabled={postNeeded.spesialisasi ? false : true}
                     />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(this._getKey('label.field.kelompok'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="10" className="field">
+                  <Grid.Column width="9" className="field">
                     <Select
                       name="kelompok"
                       placeholder={t(
@@ -258,29 +198,8 @@ class FilterSumberLain extends Component {
                       onChange={(selected) =>
                         this._handleSelect2Filter('kelompok', selected)
                       }
-                      onKeyDown={(e) => this._onFocusElement(e, 'kelas')}
                       options={dataFilter.data_filter_sumber.kelompok}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Grid.Column>
-            <Grid.Column>
-              <Grid className="form-grid">
-                <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
-                    <label>{t(this._getKey('label.field.kelas'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="10" className="field">
-                    <Select
-                      name="kelas"
-                      placeholder={t(this._getKey('placeholder.field.kelas'))}
-                      inputRef={this.kelas}
-                      value={this._getSelect2Value('kelas')}
-                      onChange={(selected) =>
-                        this._handleSelect2Filter('kelas', selected)
-                      }
-                      options={dataFilter.data_filter_sumber.kelas}
+                      isDisabled={postNeeded.klasifikasi ? false : true}
                     />
                   </Grid.Column>
                 </Grid.Row>

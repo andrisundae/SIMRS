@@ -203,6 +203,11 @@ const routers = [
       import('@module/setting-jenis-klasifikasi-registrasi')
     ),
   },
+  {
+    key: '_billing_setting_layanan_spesialisasi',
+    path: '/billing/setting/layanan-spesialisasi',
+    component: lazy(() => import('@module/setting-layanan-spesialisasi')),
+  },
 ];
 
 export default routers;
