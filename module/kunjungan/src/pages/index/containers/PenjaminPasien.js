@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Segment, Input, Divider } from 'semantic-ui-react';
-import { Select, Checkbox } from '@simrs/components';
+import { Select, Checkbox, constDatatable } from '@simrs/components';
 
 import Datatable from '../components/PenjaminPasienTable';
 import * as actions from '../redux/penjaminPasienActions';
@@ -15,10 +15,10 @@ class PenjaminPasien extends Component {
     super(props);
 
     this.tableName = 'penjamin_pasien';
-    this.resource = '_billing_master_penjamin_pasien';
+    this.resource = staticConst.PENJAMIN_PASIEN_RESOURCE;
     this.dataTable = createRef();
 
-    this.id_penjamin_pasien = createRef();
+    this.id_penjamin = createRef();
     this.nomor_anggota = createRef();
     this.id_kelas_penjamin_pasien = createRef();
     this.id_kepersertaan = createRef();
@@ -43,9 +43,10 @@ class PenjaminPasien extends Component {
       }
     }
 
-    if (!datatable.isReload) {
+    if (datatable.isReload) {
+      this.reload(datatable.reloadType);
+    } else {
       const gridApi = this.gridApi();
-      console.log(gridApi);
       if (gridApi) {
         switch (statusForm) {
           case actionTypes.ADD_PENJAMIN_PASIEN:
@@ -58,9 +59,6 @@ class PenjaminPasien extends Component {
               this.selectRow(prevProps.selectedRow);
             }
             break;
-          // case actionTypes.AFTER_SAVE:
-          //   this._selectRow(selectedRow);
-          //   break;
           case actionTypes.READY_PENJAMIN_PASIEN:
             if (prevProps.selectedRow) {
               this.selectRow(prevProps.selectedRow);
@@ -90,21 +88,33 @@ class PenjaminPasien extends Component {
   };
 
   selectRow = (id) => {
-    this.gridApi().deselectAll();
-    this.gridApi().clearFocusedCell();
+    const gridApi = this.gridApi();
+    gridApi.deselectAll();
+    gridApi.clearFocusedCell();
 
-    let node = this.gridApi().getRowNode(id);
+    let node = gridApi.getRowNode(id);
     if (node) {
       this.setFocusedCell(node.rowIndex);
       node.setSelected(true, true);
     }
   };
 
+  reload = (reloadType) => {
+    const gridApi = this.gridApi();
+    if (reloadType === constDatatable.reloadType.purge) {
+      gridApi.setInfiniteRowCount(1);
+      gridApi.purgeInfiniteCache();
+    } else if (reloadType === constDatatable.reloadType.refresh) {
+      gridApi.refreshInfiniteCache();
+    }
+  };
+
   setFocusedCell(rowIndex) {
-    this.gridApi().ensureIndexVisible(0);
+    const gridApi = this.gridApi();
+    gridApi.ensureIndexVisible(0);
     const firstCol = this.columnApi().getAllDisplayedColumns()[0];
-    this.gridApi().ensureColumnVisible(firstCol);
-    this.gridApi().setFocusedCell(rowIndex, firstCol);
+    gridApi.ensureColumnVisible(firstCol);
+    gridApi.setFocusedCell(rowIndex, firstCol);
   }
 
   _getDataSource = () => {
@@ -152,6 +162,17 @@ class PenjaminPasien extends Component {
     this.props.onSelectedRow(this.props.resource, data);
   };
 
+  inputChangeHandler = (e) => {
+    const { name, value, checked, type } = e.target;
+    let val = '';
+    if (type === 'checkbox') {
+      val = checked ? true : '';
+    } else {
+      val = value;
+    }
+    this.props.onChangeInput(this.props.resource, { name, value: val });
+  };
+
   render() {
     const {
       t,
@@ -165,7 +186,7 @@ class PenjaminPasien extends Component {
       post,
     } = this.props;
     const isDisabledHakKelas =
-      isDisableForm || !post.id_penjamin_pasien || loaderSettingKelasPenjamin;
+      isDisableForm || !post.id_penjamin || loaderSettingKelasPenjamin;
 
     return (
       <Grid className="content-grid">
@@ -185,6 +206,7 @@ class PenjaminPasien extends Component {
               reloadType={datatable.reloadType}
               ref={this.dataTable}
               name={this.tableName}
+              disabled={!isDisableForm}
             />
           </Grid.Column>
         </Grid.Row>
@@ -203,15 +225,12 @@ class PenjaminPasien extends Component {
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
                           <Select
-                            inputRef={this.id_penjamin_pasien}
+                            inputRef={this.id_penjamin}
                             options={optionsPenjamin}
                             isDisabled={isDisableForm}
-                            value={selectedOption.id_penjamin_pasien}
+                            value={selectedOption.id_penjamin}
                             onChange={(selected) =>
-                              this.select2ChangeHanlder(
-                                'id_penjamin_pasien',
-                                selected
-                              )
+                              this.select2ChangeHanlder('id_penjamin', selected)
                             }
                             isClearable={false}
                             onKeyDown={(e) =>
@@ -339,7 +358,7 @@ const mapStateToProps = function (state) {
   } = state.module.penjaminPasien;
 
   return {
-    datatable: state.datatable.datatables.table_penjamin_pasien,
+    datatable: state.datatable.datatables[staticConst.PENJAMIN_PASIEN_RESOURCE],
     idPasien: postKunjungan.id_pasien,
     isDisableForm: isDisableForm(state.module.penjaminPasien),
     optionsKelasPenjamin: dataPenjaminPasien.options_setting_kelas_penjamin.filter(
@@ -369,6 +388,8 @@ const mapDispatchToProps = function (dispatch) {
       dispatch(actions.onSelected(resource, data)),
     onChangeSelect2: (resource, name, data) =>
       dispatch(actions.onChangeSelect2(resource, name, data)),
+    onChangeInput: (resource, data) =>
+      dispatch(actions.onChangeInput(resource, data)),
   };
 };
 
@@ -382,6 +403,7 @@ PenjaminPasien.propTypes = {
   onLoadPenjaminPasien: PropTypes.func,
   onReady: PropTypes.func,
   onChangeSelect2: PropTypes.func,
+  onChangeInput: PropTypes.func,
   onFocusElement: PropTypes.func,
   onSelectedRow: PropTypes.func,
   isDisableForm: PropTypes.bool,

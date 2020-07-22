@@ -13,21 +13,21 @@ import {
 } from '@simrs/components';
 import api from '../services/models/kunjunganModel';
 import { actions, actionTypes, getPost, isPasienBaru } from '../pages/index';
+import { staticConst } from '../pages/index/static';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
-const TABLE_PASIEN = 'table_pasien';
-const TABLE_KUNJUNGAN = 'table_kunjungan';
-const TABLE_WILAYAH = 'table_wilayah';
-const TABLE_PENJAMIN_PASIEN = 'table_penjamin_pasien';
-
 function* openForm({ meta }) {
-  yield put(datatableActions.onInitialize(TABLE_PASIEN));
-  yield put(datatableActions.onInitialize(TABLE_KUNJUNGAN));
-  yield put(datatableActions.onInitialize(TABLE_WILAYAH));
-  yield put(datatableActions.onInitialize(TABLE_PENJAMIN_PASIEN));
-  yield put(aclActions.getGranted.request('_billing_master_penjamin_pasien'));
+  yield put(datatableActions.onInitialize(staticConst.TABLE_PASIEN));
+  yield put(datatableActions.onInitialize(staticConst.TABLE_KUNJUNGAN));
+  yield put(datatableActions.onInitialize(staticConst.TABLE_WILAYAH));
+  yield put(
+    datatableActions.onInitialize(staticConst.PENJAMIN_PASIEN_RESOURCE)
+  );
+  yield put(
+    aclActions.getGranted.request(staticConst.PENJAMIN_PASIEN_RESOURCE)
+  );
   yield put(actions.populateForm.request(meta.resource));
   yield put(actions.onReady(meta.resource));
 }
@@ -389,7 +389,7 @@ function* loadAllPasien({ payload, meta }) {
   } catch (error) {
     failCallback();
   }
-  yield put(datatableActions.onReloaded(TABLE_PASIEN));
+  yield put(datatableActions.onReloaded(staticConst.TABLE_PASIEN));
 }
 
 function* loadAllWilayah({ payload, meta }) {
@@ -405,13 +405,16 @@ function* loadAllWilayah({ payload, meta }) {
   } catch (error) {
     failCallback();
   }
-  yield put(datatableActions.onReloaded(TABLE_WILAYAH));
+  yield put(datatableActions.onReloaded(staticConst.TABLE_WILAYAH));
 }
 
 function* searchPasienHandler() {
   try {
     yield put(
-      datatableActions.onReload(TABLE_PASIEN, constDatatable.reloadType.purge)
+      datatableActions.onReload(
+        staticConst.TABLE_PASIEN,
+        constDatatable.reloadType.purge
+      )
     );
   } catch (error) {
     yield toastr.error(error.message);
@@ -435,7 +438,10 @@ function* selectedKunjunganHandler({ meta, payload }) {
 function* searchWilayahHandler() {
   try {
     yield put(
-      datatableActions.onReload(TABLE_WILAYAH, constDatatable.reloadType.purge)
+      datatableActions.onReload(
+        staticConst.TABLE_WILAYAH,
+        constDatatable.reloadType.purge
+      )
     );
   } catch (error) {
     yield toastr.error(error.message);

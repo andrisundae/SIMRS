@@ -10,6 +10,10 @@ const staticConst = {
   RAWAT_INAP_ALIAS: 'rawat_inap',
   ID_NON_KELAS: 4,
   TEMPAT_TIDUR: 'tempat_tidur',
+  PENJAMIN_PASIEN_RESOURCE: '_billing_master_penjamin_pasien',
+  TABLE_PASIEN: 'table_pasien',
+  TABLE_KUNJUNGAN: 'table_kunjungan',
+  TABLE_WILAYAH: 'table_wilayah',
 };
 
 const statusesElements = {

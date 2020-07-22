@@ -17,10 +17,10 @@ export const onAdd = (resource) =>
     {},
     { resource, log: createActivity(resource, activity.TAMBAH) }
   );
-export const onEdit = (resource) =>
+export const onEdit = (resource, data) =>
   createAction(
     actionTypes.EDIT_PENJAMIN_PASIEN,
-    {},
+    { data },
     { resource, log: createActivity(resource, activity.KOREKSI) }
   );
 export const onReady = (resource) =>
@@ -65,3 +65,53 @@ export const settingKelasPenjamin = {
 };
 export const onSelected = (resource, data) =>
   createAction(actionTypes.SELECTED_PENJAMIN_PASIEN, { data }, { resource });
+export const save = {
+  request: (resource, data) =>
+    createAction(
+      actionTypes.SAVE_PENJAMIN_PASIEN_REQUEST,
+      { data },
+      { resource, log: createActivity(resource, activity.SIMPAN) }
+    ),
+  requestSuccess: (resource, data) =>
+    createAction(
+      actionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS,
+      { data },
+      { resource, log: createActivity(resource, activity.SIMPAN, 'sukses') }
+    ),
+  requestFailure: (resource, errors) =>
+    createAction(
+      actionTypes.SAVE_PENJAMIN_PASIEN_FAILURE,
+      { errors },
+      { resource, log: createActivity(resource, activity.SIMPAN, 'gagal') }
+    ),
+};
+export const deletePenjamin = {
+  request: (resource, data) =>
+    createAction(
+      actionTypes.DELETE_PENJAMIN_PASIEN_REQUEST,
+      { data },
+      {
+        resource,
+        log: createActivity(resource, activity.HAPUS),
+      }
+    ),
+  requestSuccess: (resource, data) =>
+    createAction(
+      actionTypes.DELETE_PENJAMIN_PASIEN_SUCCESS,
+      { data },
+      { resource, log: createActivity(resource, activity.HAPUS, 'sukses') }
+    ),
+  requestFailure: (resource, errors) =>
+    createAction(
+      actionTypes.DELETE_PENJAMIN_PASIEN_FAILURE,
+      { errors },
+      { resource, log: createActivity(resource, activity.HAPUS, 'gagal') }
+    ),
+};
+
+export const onChangeInput = (resource, data) =>
+  createAction(
+    actionTypes.CHANGE_INPUT_PENJAMIN_PASIEN,
+    { data },
+    { resource }
+  );

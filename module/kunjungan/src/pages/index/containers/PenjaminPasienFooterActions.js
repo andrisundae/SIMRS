@@ -14,6 +14,7 @@ import {
   CancelButton,
   AddButton,
   confirmation,
+  withAppConsumer,
 } from '@simrs/components';
 import { getPermissions } from '@simrs/main/src/modules/auth';
 
@@ -28,19 +29,47 @@ class PenjamninPasienFooterActions extends Component {
     this.save = createRef();
   }
 
+  componentDidMount() {
+    this._bindKey();
+  }
+
+  componentDidUpdate() {
+    let { focusElement } = this.props;
+
+    if (this[focusElement]) {
+      if (this[focusElement].current) {
+        this[focusElement].current.focus();
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this._unbindKey();
+  }
+
   _onSave() {
-    this.props.action.onSave(this.props.resource, this.props.post);
+    const data = {
+      ...this.props.post,
+      id_pasien: this.props.idPasien,
+      norm: this.props.norm,
+    };
+    this.props.action.onSave(this.props.resource, data);
   }
 
   onAdd = () => {
     this.props.action.onAdd(this.props.resource);
+    this.props.appContext.toggleMainMenu();
   };
 
   onCancel = () => {
     this.props.action.onCancel(this.props.resource);
+    this.props.appContext.toggleMainMenu();
   };
 
-  onEdit = () => {};
+  onEdit = () => {
+    this.props.action.onEdit(this.props.resource, this.props.post);
+    this.props.appContext.toggleMainMenu();
+  };
 
   onDelete = () => {
     const { t, resource, action, post } = this.props;
@@ -128,6 +157,21 @@ class PenjamninPasienFooterActions extends Component {
     return isValid;
   };
 
+  _unbindKey() {
+    MouseTrap.unbind('alt+s');
+  }
+
+  _bindKey() {
+    let _this = this;
+
+    MouseTrap.bindGlobal('alt+s', function (e) {
+      e.preventDefault();
+      if (_this._isCanSave()) {
+        _this._onSave();
+      }
+    });
+  }
+
   render() {
     return (
       <FooterActionsContainer>
@@ -181,39 +225,6 @@ class PenjamninPasienFooterActions extends Component {
       </FooterActionsContainer>
     );
   }
-
-  componentDidMount() {
-    this._bindKey();
-  }
-
-  componentDidUpdate() {
-    let { focusElement } = this.props;
-
-    if (this[focusElement]) {
-      if (this[focusElement].current) {
-        this[focusElement].current.focus();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this._unbindKey();
-  }
-
-  _unbindKey() {
-    MouseTrap.unbind('alt+s');
-  }
-
-  _bindKey() {
-    let _this = this;
-
-    MouseTrap.bindGlobal('alt+s', function (e) {
-      e.preventDefault();
-      if (_this._isCanSave()) {
-        _this._onSave();
-      }
-    });
-  }
 }
 
 const mapStateToProps = function (state) {
@@ -222,13 +233,18 @@ const mapStateToProps = function (state) {
     focusElement,
     statusForm,
     permissions,
+    selectedRow,
   } = state.module.penjaminPasien;
+  const { post: postKunjungan } = state.module.kunjungan;
 
   return {
     permissions: getPermissions(permissions),
     post,
     focusElement,
     statusForm,
+    idPasien: postKunjungan.id_pasien,
+    norm: postKunjungan.norm,
+    selectedRow,
   };
 };
 
@@ -236,7 +252,7 @@ const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(
       {
-        // onSave: actions.save.request,
+        onSave: actions.save.request,
         onAdd: actions.onAdd,
         onEdit: actions.onEdit,
         onCancel: actions.onCancel,
@@ -255,9 +271,13 @@ PenjamninPasienFooterActions.propTypes = {
   resource: PropTypes.string.isRequired,
   t: PropTypes.func,
   statusForm: PropTypes.string,
+  appContext: PropTypes.object,
+  selectedRow: PropTypes.number,
+  idPasien: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+  norm: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PenjamninPasienFooterActions);
+)(withAppConsumer(PenjamninPasienFooterActions));

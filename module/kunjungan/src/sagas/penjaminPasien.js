@@ -8,16 +8,16 @@ import {
   messageBox,
   constDatatable,
   datatableActions,
+  datatableActionTypes,
 } from '@simrs/components';
 import api from '../services/models/penjaminPasienModel';
 import apiKunjungan from '../services/models/kunjunganModel';
 import * as actions from '../pages/index/redux/penjaminPasienActions';
 import * as actionTypes from '../pages/index/redux/penjaminPasienActionTypes';
+import { staticConst } from '../pages/index/static';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
-
-const TABLE_PENJAMIN_PASIEN = 'table_penjamin_pasien';
 
 // function* populateForm({ meta }) {
 //   try {
@@ -50,13 +50,13 @@ function* loadAllPenjaminPasien({ payload, meta }) {
   } catch (error) {
     failCallback();
   }
-  yield put(datatableActions.onReloaded(TABLE_PENJAMIN_PASIEN));
+  yield put(datatableActions.onReloaded(staticConst.PENJAMIN_PASIEN_RESOURCE));
 }
 
 function* changeSelect2({ meta, payload }) {
   try {
     switch (payload.name) {
-      case 'id_penjamin_pasien':
+      case 'id_penjamin':
         yield put(
           actions.settingKelasPenjamin.request(meta.resource, payload.data)
         );
@@ -96,7 +96,65 @@ function* settingKelasPenjaminRequestHandler({ meta, payload }) {
 }
 
 function* addHandler({ meta }) {
-  yield put(actions.onFocusElement(meta.resource, 'id_penjamin_pasien'));
+  yield put(actions.onFocusElement(meta.resource, 'id_penjamin'));
+}
+
+function* editHandler({ meta }) {
+  yield put(actions.onFocusElement(meta.resource, 'id_penjamin'));
+}
+
+function* handleSave({ payload, meta }) {
+  let { resource } = meta;
+  try {
+    yield put(loaderActions.show('Proses simpan...'));
+    let { rules, messages } = api.validationRules(resource);
+    let post = payload.data;
+    let method = post.id ? 'koreksi' : 'tambah';
+    let errors = validator(post, rules, messages);
+    let isError = false;
+
+    if (_.isEmpty(errors)) {
+      let response = yield call(api.save, method, post);
+      if (response.status) {
+        response.action = method;
+        yield put(actions.save.requestSuccess(resource, response));
+      } else {
+        isError = true;
+        errors = response.data;
+      }
+    } else {
+      isError = true;
+    }
+
+    if (isError) {
+      yield toastr.warning(getFirstError(errors));
+      yield put(actions.save.requestFailure(resource, errors));
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* handleSaveSuccess({ payload, meta }) {
+  try {
+    yield put(datatableActions.onReload(meta.resource));
+    yield toastr.success(payload.data.message);
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* handleSaveFailure({ payload, meta }) {
+  let { resource } = meta;
+  yield put(
+    actions.onFocusElement(resource, getFirstElementError(payload.errors))
+  );
+}
+
+function* handleReloaded({ meta }) {
+  yield put(actions.onReady(meta.resource));
 }
 
 export default function* watchAuthActions() {
@@ -104,9 +162,14 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.LOAD_ALL_PENJAMIN_PASIEN, loadAllPenjaminPasien),
     takeLatest(actionTypes.CHANGE_SELECT2_PENJAMIN_PASIEN, changeSelect2),
     takeLatest(actionTypes.ADD_PENJAMIN_PASIEN, addHandler),
+    takeLatest(actionTypes.EDIT_PENJAMIN_PASIEN, editHandler),
     takeLatest(
       actionTypes.GET_SETTING_KELAS_PENJAMIN_PASIEN_REQUEST,
       settingKelasPenjaminRequestHandler
     ),
+    takeLatest(actionTypes.SAVE_PENJAMIN_PASIEN_REQUEST, handleSave),
+    takeLatest(actionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS, handleSaveSuccess),
+    takeLatest(actionTypes.SAVE_PENJAMIN_PASIEN_FAILURE, handleSaveFailure),
+    takeLatest(datatableActionTypes.RELOADED, handleReloaded),
   ]);
 }

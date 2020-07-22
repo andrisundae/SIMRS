@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { DatatableServerSide, constDatatable } from '@simrs/components';
+import { DatatableServerSide } from '@simrs/components';
 
 class PenjaminPasienTable extends Component {
   constructor(props) {
@@ -40,24 +40,8 @@ class PenjaminPasienTable extends Component {
     this.columnApi = refDatatable.columnApi;
   }
 
-  componentDidUpdate() {
-    const { isReload, reloadType } = this.props;
-    if (isReload) {
-      this.reload(reloadType);
-    }
-  }
-
   getRefDatatable() {
     return this.props.innerRef.current.refs[this.props.name];
-  }
-
-  reload(reloadType) {
-    if (reloadType === constDatatable.reloadType.purge) {
-      this.gridApi.setInfiniteRowCount(1);
-      this.gridApi.purgeInfiniteCache();
-    } else if (reloadType === constDatatable.reloadType.refresh) {
-      this.gridApi.refreshInfiniteCache();
-    }
   }
 
   clickRowHandler() {
@@ -67,8 +51,12 @@ class PenjaminPasienTable extends Component {
     }
   }
 
+  getRowNodeId(item) {
+    return item.id;
+  }
+
   render() {
-    const { dataSource, innerRef, name } = this.props;
+    const { dataSource, innerRef, name, disabled } = this.props;
 
     return (
       <DatatableServerSide
@@ -84,7 +72,9 @@ class PenjaminPasienTable extends Component {
         cacheBlockSize={25}
         containerHeight="230.5px"
         sizeColumnsToFit={true}
+        disabled={disabled}
         onRowSelected={this.clickRowHandler}
+        getRowNodeId={this.getRowNodeId}
       />
     );
   }
@@ -95,6 +85,7 @@ PenjaminPasienTable.propTypes = {
   dataSource: PropTypes.func.isRequired,
   onRowSelected: PropTypes.func,
   isReload: PropTypes.bool,
+  disabled: PropTypes.bool,
   reloadType: PropTypes.string,
   innerRef: PropTypes.object,
 };

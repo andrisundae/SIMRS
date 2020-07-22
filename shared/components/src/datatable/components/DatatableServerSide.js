@@ -18,7 +18,6 @@ import imgLoading from '../../static/media/img/loading-spinner-grey.gif';
 
 import alias from '../const';
 import HeaderCheckboxRenderer from './HederCheckboxRenderer';
-import { Checkbox } from '../../input';
 
 class DataTableServerSide extends Component {
   constructor(props, context) {
