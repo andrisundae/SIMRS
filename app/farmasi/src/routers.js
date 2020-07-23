@@ -2,16 +2,6 @@ import { lazy } from 'react';
 
 const routers = [
   {
-    key: '_farmasi_master_supplier',
-    path: '/farmasi/master/supplier',
-    component: lazy(() => import('@module/supplier')),
-  },
-  {
-    key: '_farmasi_master_barang',
-    path: '/farmasi/master/barang',
-    component: lazy(() => import('@module/barang')),
-  },
-  {
     key: '_system_portal_change_password',
     path: '/system/portal/change-password',
     component: lazy(() => import('@module/change-password')),
@@ -20,6 +10,16 @@ const routers = [
     key: '_billing_master_referensi_umum',
     path: '/billing/master/referensi-umum',
     component: lazy(() => import('@module/referensi-umum')),
+  },
+  {
+    key: '_farmasi_master_supplier',
+    path: '/farmasi/master/supplier',
+    component: lazy(() => import('@module/supplier')),
+  },
+  {
+    key: '_farmasi_master_barang',
+    path: '/farmasi/master/barang',
+    component: lazy(() => import('@module/barang')),
   },
   {
     key: '_farmasi_setting_unit_farmasi',
@@ -35,6 +35,11 @@ const routers = [
     key: '_farmasi_setting_barang_supplier',
     path: '/farmasi/setting/barang-supplier',
     component: lazy(() => import('@module/setting-barang-supplier')),
+  },
+  {
+    key: '_farmasi_setting_barang_unit',
+    path: '/farmasi/setting/barang-unit',
+    component: lazy(() => import('@module/setting-barang-unit')),
   },
 ];
 
