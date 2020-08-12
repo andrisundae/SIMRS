@@ -41,6 +41,11 @@ const routers = [
     path: '/farmasi/setting/barang-unit',
     component: lazy(() => import('@module/setting-barang-unit')),
   },
+  {
+    key: '_farmasi_setting_stok_minimum_unit',
+    path: '/farmasi/setting/stok-minimum-unit',
+    component: lazy(() => import('@module/setting-stok-minimum-unit')),
+  },
 ];
 
 export default routers;

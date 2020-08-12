@@ -6,6 +6,8 @@ const types = {
   MAXLENGTH: 'maxlength',
   NUMBER: 'number',
   MAXNUMBER: 'maxnumber',
+  MINNUMBER: 'minnumber',
+  GREATERTHAN: 'graeterthan',
 };
 
 const defaultMessage = {
@@ -49,6 +51,27 @@ const checkMaxNumber = (value, max) => {
 
   if (isValid) {
     isValid = value <= max ? true : false;
+  }
+
+  return isValid;
+};
+
+const checkMinNumber = (value, min) => {
+  let isValid = _.isNumber(parseFloat(value));
+
+  if (isValid) {
+    isValid = value >= min ? true : false;
+  }
+
+  return isValid;
+};
+
+const greaterThan = (value, greater) => {
+  let isNumber = _.isNumber(parseFloat(greater));
+  let isValid = _.isNumber(parseFloat(value));
+
+  if (isNumber && isValid) {
+    isValid = value > greater ? true : false;
   }
 
   return isValid;
@@ -101,6 +124,7 @@ export default (values, rules, messages) => {
     if (typeof values[field] !== 'undefined' && values[field] !== null) {
       value = values[field];
     }
+
     let fieldMessages = messages[field] ? messages[field] : {};
     let error = [];
 
@@ -128,6 +152,12 @@ export default (values, rules, messages) => {
           break;
         case types.MAXNUMBER:
           isValid = checkMaxNumber(value, ruleValue);
+          break;
+        case types.MINNUMBER:
+          isValid = checkMinNumber(value, ruleValue);
+          break;
+        case types.GREATERTHAN:
+          isValid = greaterThan(value, ruleValue);
           break;
         default:
           break;
