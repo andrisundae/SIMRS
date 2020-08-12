@@ -84,7 +84,7 @@ function* handleSave({ payload, meta }) {
         yield put(moduleActions.save.requestSuccess(resource, response));
       } else {
         isError = true;
-        errors = response.data;
+        errors = [response.message];
       }
     } else {
       isError = true;
