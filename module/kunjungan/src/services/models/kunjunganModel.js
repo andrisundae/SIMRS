@@ -4,15 +4,79 @@ import i18n from 'i18next';
 const validationRules = (resource) => {
   return {
     rules: {
-      oldPassword: { required: true },
-      newPassword: { required: true },
+      norm: { required: true },
+      nama: { required: true },
+      id_jenis_kelamin: { required: true },
+      nama_ortu: { required: true },
+      tgl_lahir: { required: true },
+      // umur: { required: true },
+      alamat: { required: true },
+      rt: { required: true },
+      rw: { required: true },
+      id_desa: { required: true },
+      tgl_kunjungan: { required: true },
+      id_asal_masuk: { required: true },
+      id_asal_masuk_detail: { required: true },
+      id_penjamin: { required: true },
+      id_kelompok: { required: true },
+      id_instalasi: { required: true },
+      id_unit_layanan: { required: true },
+      id_dpjp: { required: true },
     },
     messages: {
-      oldPassword: {
-        required: i18n.t(`${resource}:validator.oldPassword.required`),
+      norm: {
+        required: i18n.t(`${resource}:validator.norm.required`),
       },
-      newPassword: {
-        required: i18n.t(`${resource}:validator.newPassword.required`),
+      nama_ortu: {
+        required: i18n.t(`${resource}:validator.nama_ortu.required`),
+      },
+      nama: {
+        required: i18n.t(`${resource}:validator.nama.required`),
+      },
+      id_jenis_kelamin: {
+        required: i18n.t(`${resource}:validator.id_jenis_kelamin.required`),
+      },
+      tgl_lahir: {
+        required: i18n.t(`${resource}:validator.tgl_lahir.required`),
+      },
+      umur: {
+        required: i18n.t(`${resource}:validator.umur.required`),
+      },
+      alamat: {
+        required: i18n.t(`${resource}:validator.alamat.required`),
+      },
+      rt: {
+        required: i18n.t(`${resource}:validator.rt.required`),
+      },
+      rw: {
+        required: i18n.t(`${resource}:validator.rw.required`),
+      },
+      id_desa: {
+        required: i18n.t(`${resource}:validator.id_desa.required`),
+      },
+      tgl_kunjungan: {
+        required: i18n.t(`${resource}:validator.tgl_kunjungan.required`),
+      },
+      id_asal_masuk: {
+        required: i18n.t(`${resource}:validator.id_asal_masuk.required`),
+      },
+      id_asal_masuk_detail: {
+        required: i18n.t(`${resource}:validator.id_asal_masuk_detail.required`),
+      },
+      id_penjamin: {
+        required: i18n.t(`${resource}:validator.status_pasien.required`),
+      },
+      id_kelompok: {
+        required: i18n.t(`${resource}:validator.id_kelompok.required`),
+      },
+      id_instalasi: {
+        required: i18n.t(`${resource}:validator.id_instalasi.required`),
+      },
+      id_unit_layanan: {
+        required: i18n.t(`${resource}:validator.id_unit_layanan.required`),
+      },
+      id_dpjp: {
+        required: i18n.t(`${resource}:validator.id_dpjp.required`),
       },
     },
   };
@@ -47,7 +111,7 @@ export default {
   },
   getUnitLayananOptions: async (idInstalasi) => {
     let response = await request.get(
-      `${path}/unitlayanan-options/${idInstalasi}`
+      `${path}/options-unit-layanan/${idInstalasi}`
     );
     return response;
   },
@@ -97,6 +161,10 @@ export default {
     let response = await request.get(
       `${path}/setting-kelas-penjamin/${idPenjamin}`
     );
+    return response;
+  },
+  getKunjunganHariIni: async (params) => {
+    let response = await request.get(`${path}/kunjungan-hari-ini`, params);
     return response;
   },
   validationRules,

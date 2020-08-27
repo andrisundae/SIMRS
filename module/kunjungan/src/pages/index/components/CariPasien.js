@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Grid, Form, Modal, Icon } from 'semantic-ui-react';
+import copy from 'copy-to-clipboard';
 import {
   DatatableServerSide,
   CancelButton,
@@ -16,6 +17,14 @@ class CariPasien extends Component {
     this.onClickSelectedHandler = this.onClickSelectedHandler.bind(this);
     this.onRowDoubleClickHandler = this.onRowDoubleClickHandler.bind(this);
     this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
+
+    this.state = {
+      post: {
+        nama: '',
+        desa: '',
+        norm: '',
+      },
+    };
   }
 
   columns = [
@@ -72,12 +81,19 @@ class CariPasien extends Component {
 
   filterChangeHandler = (e) => {
     const { name, value } = e.target;
-    this.props.onChange(this.props.resource, { name, value });
+    this.setState((prevState) => {
+      return {
+        post: {
+          ...prevState.post,
+          [name]: value,
+        },
+      };
+    });
   };
 
   onSubmitHandler = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.props.resource, this.props.data.post);
+    this.props.onSubmit(this.props.resource, this.state.post);
   };
 
   onClickSelectedHandler() {
@@ -101,8 +117,27 @@ class CariPasien extends Component {
     return item.id;
   }
 
+  dataSource = () => {
+    return {
+      rowCount: null,
+      getRows: (params) => {
+        let sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
+        let post = {
+          length: 25,
+          start: params.startRow,
+          sort_name: sortModel.colId ? sortModel.colId : '',
+          sort_order: sortModel.colId ? sortModel.sort : '',
+          filters: { ...this.state.post },
+        };
+
+        this.props.onLoadData(this.props.resource, post, params);
+      },
+    };
+  };
+
   render() {
-    const { show, onHide, dataSource, data } = this.props;
+    const { show, onHide } = this.props;
+    const { post } = this.state;
 
     return (
       <Modal
@@ -127,7 +162,7 @@ class CariPasien extends Component {
                       width="7"
                       label="Nama pasien"
                       placeholder="Nama pasien"
-                      value={data.post.nama}
+                      value={post.nama}
                       onChange={this.filterChangeHandler}
                       name="nama"
                     />
@@ -135,7 +170,7 @@ class CariPasien extends Component {
                       width="7"
                       label="Desa / Kelurahan"
                       placeholder="Desa / Kelurahan"
-                      value={data.post.desa}
+                      value={post.desa}
                       onChange={this.filterChangeHandler}
                       name="desa"
                     />
@@ -154,8 +189,7 @@ class CariPasien extends Component {
                   columns={this.columns}
                   name="pasien"
                   navigateToSelect={true}
-                  // enableServerSideSorting={true}
-                  datasource={dataSource()}
+                  datasource={this.dataSource()}
                   rowBuffer={0}
                   maxConcurrentDatasourceRequests={1}
                   infiniteInitialRowCount={1}
@@ -165,6 +199,16 @@ class CariPasien extends Component {
                   onRowEntered={this.onRowEnteredHandler}
                   sizeColumnsToFit={true}
                   getRowNodeId={this.getRowNodeId}
+                  autoSizeColumn={false}
+                  contextMenuItems={[
+                    {
+                      title: 'Copy Norm',
+                      icon: 'copy outline',
+                      onClick: (gridApi, data) => {
+                        copy(data.norm);
+                      },
+                    },
+                  ]}
                 />
               </Grid.Column>
             </Grid.Row>

@@ -15,6 +15,7 @@ import {
   OptionInstalasi,
   OptionKelasKamar,
   AsalKunjunganSingleValue,
+  OptionStatusPasien,
 } from '../components/CustomOptions';
 
 import actions from '../redux/actions';
@@ -69,7 +70,6 @@ class InputPasien extends Component {
 
   setFocus() {
     let { statusForm, focusElement } = this.props;
-
     if (
       statusForm === actionTypes.READY ||
       statusForm === actionTypes.ADD ||
@@ -111,24 +111,6 @@ class InputPasien extends Component {
       selected,
       isTindakan
     );
-  };
-
-  dataSourceWilayah = () => {
-    return {
-      rowCount: null,
-      getRows: (params) => {
-        let sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
-        let post = {
-          length: 25,
-          start: params.startRow,
-          sort_name: sortModel.colId ? sortModel.colId : '',
-          sort_order: sortModel.colId ? sortModel.sort : '',
-          ...this.props.filterWilayah.post,
-        };
-
-        this.props.action.loadAllWilayah(this.props.resource, post, params);
-      },
-    };
   };
 
   onSelectedWilayahHandler = (data) => {
@@ -235,8 +217,8 @@ class InputPasien extends Component {
               name={key}
               options={dataSetting.options}
               isDisabled={disabledBiayaLain}
-              isClearable={false}
-              value={selectedOption[key] ? selectedOption[key] : {}}
+              // isClearable={false}
+              value={selectedOption[key] ? selectedOption[key] : null}
               onChange={(selected) =>
                 this.select2ChangeHanlder(key, selected, true)
               }
@@ -291,6 +273,20 @@ class InputPasien extends Component {
     return Object.keys(data.jenis_klasifikasi_registrasi)[0];
   };
 
+  openMenuStatusPasienHandler = () => {
+    this.props.action.onOpenMenuStatusPasien(this.props.resource);
+  };
+
+  keyDownDesaHandler = (e) => {
+    if (e.which === 13) {
+      if (!e.target.value) {
+        this.props.action.toggleShowCariWilayah(this.props.resource);
+      } else {
+        this._onFocusElement(e, 'id_penjamin_pasien');
+      }
+    }
+  };
+
   render() {
     const {
       t,
@@ -315,6 +311,8 @@ class InputPasien extends Component {
       disabledKelompok,
       disabledUnitLayanan,
     } = this.props;
+
+    console.log(data.options_status_pasien);
 
     return (
       <Grid columns="2" divided>
@@ -440,7 +438,7 @@ class InputPasien extends Component {
                     name="rw"
                     ref={this.rw}
                     onChange={this.inputChangeHandler}
-                    onKeyDown={(e) => this._onFocusElement(e, 'id_desa')}
+                    onKeyDown={(e) => this._onFocusElement(e, 'nama_desa')}
                     disabled={disabledDetail}
                     value={post.rw}
                   />
@@ -456,15 +454,13 @@ class InputPasien extends Component {
                     ref={this.id_desa}
                     action={{
                       content: 'Cari',
-                      onClick: action.toggleShowCariWilayah,
+                      onClick: () => action.toggleShowCariWilayah(resource),
                       disabled: disabledDetail,
                       color: 'blue',
                     }}
                     disabled={disabledDetail}
-                    value={post.id_desa}
-                    onKeyDown={(e) =>
-                      this._onFocusElement(e, 'id_penjamin_pasien')
-                    }
+                    value={post.nama_desa}
+                    onKeyDown={this.keyDownDesaHandler}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -510,7 +506,6 @@ class InputPasien extends Component {
                     onChange={(selected) =>
                       this.select2ChangeHanlder('id_penjamin_pasien', selected)
                     }
-                    isClearable={false}
                     onKeyDown={(e) => this._onFocusElement(e, 'nomor_anggota')}
                   />
                 </Grid.Column>
@@ -540,11 +535,7 @@ class InputPasien extends Component {
                   <Select
                     inputRef={this.id_kelas_penjamin_pasien}
                     options={optionsKelasPenjamin}
-                    isDisabled={
-                      disabledPenjamin ||
-                      !post.id_penjamin_pasien ||
-                      loaderSettingKelasPenjamin
-                    }
+                    isDisabled={disabledPenjamin}
                     value={selectedOption.id_kelas_penjamin_pasien}
                     onChange={(selected) =>
                       this.select2ChangeHanlder(
@@ -596,7 +587,7 @@ class InputPasien extends Component {
                     name="tgl_kunjungan"
                     inputRef={this.tgl_kunjungan}
                     dateFormat="dd/MM/yyyy"
-                    disabled={disabledKunjungan}
+                    disabled
                     selected={post.tgl_kunjungan}
                     onChange={(date) =>
                       this.dateTimeChangeHandler('tgl_kunjungan', date)
@@ -610,7 +601,7 @@ class InputPasien extends Component {
                   <DatePicker
                     inputRef={this.jam_kunjungan}
                     selected={post.jam_kunjungan}
-                    disabled={disabledKunjungan}
+                    disabled
                     onChange={(date) =>
                       this.dateTimeChangeHandler('jam_kunjungan', date)
                     }
@@ -684,6 +675,8 @@ class InputPasien extends Component {
                     name="id_penjamin"
                     inputRef={this.id_penjamin}
                     onKeyDown={(e) => this._onFocusElement(e, 'id_kelompok')}
+                    onMenuOpen={this.openMenuStatusPasienHandler}
+                    components={{ Option: OptionStatusPasien }}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -917,9 +910,8 @@ class InputPasien extends Component {
             onSelect={this.onSelectedWilayahHandler}
             data={filterWilayah}
             resource={resource}
-            dataSource={this.dataSourceWilayah}
-            onChange={action.onChangeFilterWilayah}
             onSubmit={action.onSubmitFilterWilayah}
+            onLoadData={action.loadAllWilayah}
             isReloadGrid={datatable.isReload}
             reloadType={datatable.reloadType}
           />

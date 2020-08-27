@@ -11,6 +11,26 @@ export const loadAllPenjaminPasien = (resource, data, tableParams) =>
     { data },
     { resource, tableParams }
   );
+export const getAllPenjaminPasien = {
+  request: (resource, data, tableParams) =>
+    createAction(
+      actionTypes.GET_ALL_PENJAMIN_PASIEN_REQUEST,
+      { data },
+      { resource, tableParams }
+    ),
+  requestSuccess: (resource, data) =>
+    createAction(
+      actionTypes.GET_ALL_PENJAMIN_PASIEN_SUCCESS,
+      { data },
+      { resource }
+    ),
+  requestFailure: (resource, error) =>
+    createAction(
+      actionTypes.GET_ALL_PENJAMIN_PASIEN_FAILURE,
+      { error },
+      { resource }
+    ),
+};
 export const onAdd = (resource) =>
   createAction(
     actionTypes.ADD_PENJAMIN_PASIEN,

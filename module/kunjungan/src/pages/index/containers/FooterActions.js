@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Button, Icon } from 'semantic-ui-react';
 
 import {
   FooterActionsContainer,
@@ -26,13 +26,84 @@ class FooterActions extends Component {
   constructor(props) {
     super(props);
 
-    this._onSave = this._onSave.bind(this);
+    this.add = createRef();
+    this.edit = createRef();
+    this.delete = createRef();
+    this.cancel = createRef();
     this.save = createRef();
   }
 
-  _onSave() {
-    this.props.action.onSave(this.props.resource, this.props.post);
+  componentDidMount() {
+    this.bindKey();
   }
+
+  componentDidUpdate() {
+    let { focusElement } = this.props;
+
+    if (this[focusElement]) {
+      if (this[focusElement].current) {
+        this[focusElement].current.focus();
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.unbindKey();
+  }
+
+  unbindKey() {
+    MouseTrap.unbind('alt+t');
+    MouseTrap.unbind('alt+k');
+    MouseTrap.unbind('alt+h');
+    MouseTrap.unbind('alt+s');
+    MouseTrap.unbind('alt+b');
+  }
+
+  bindKey() {
+    let _this = this;
+
+    MouseTrap.bindGlobal('alt+t', function (e) {
+      e.preventDefault();
+      if (_this.isCanAdd()) {
+        _this.add.current.focus();
+        _this.onAdd();
+      }
+    });
+
+    MouseTrap.bindGlobal('alt+k', function (e) {
+      e.preventDefault();
+      if (_this.isCanEdit()) {
+        _this.edit.current.focus();
+        _this.onEdit();
+      }
+    });
+
+    MouseTrap.bindGlobal('alt+h', function (e) {
+      e.preventDefault();
+      if (_this.isCanDelete()) {
+        _this.delete.current.focus();
+        _this.onDelete();
+      }
+    });
+
+    MouseTrap.bindGlobal('alt+s', function (e) {
+      e.preventDefault();
+      if (_this.isCanSave()) {
+        _this.onSave();
+      }
+    });
+
+    MouseTrap.bindGlobal(['alt+b', 'esc'], function (e) {
+      e.preventDefault();
+      if (_this.isCanCancel()) {
+        _this.onCancel();
+      }
+    });
+  }
+
+  onSave = () => {
+    this.props.action.onSave(this.props.resource, this.props.post);
+  };
 
   onAdd = () => {
     if (this.props.post.id_pasien) {
@@ -116,7 +187,13 @@ class FooterActions extends Component {
     return isEnableStatus;
   };
 
+  _getKey(key) {
+    return `${this.props.resource}:${key}`;
+  }
+
   render() {
+    const { t } = this.props;
+
     return (
       <FooterActionsContainer>
         <Fragment>
@@ -150,7 +227,7 @@ class FooterActions extends Component {
           {this.isCanSave() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <SaveButton
-                onClick={this._onSave}
+                onClick={this.onSave}
                 inputRef={this.save}
                 onKeyDown={this._onFocusElement}
               />
@@ -165,12 +242,22 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
+          <Menu.Item style={{ marginLeft: '20%', paddingRight: 5 }}>
+            <Button
+              name="kunjungan_hari_ini"
+              size="mini"
+              onClick={this.props.action.onToggleShowKunjunganHariIni}
+            >
+              <Icon name="list" />
+              {t(this._getKey('kunjungan_hari_ini'))}
+            </Button>
+          </Menu.Item>
           {this.isCanPrint() && (
-            <Menu.Item style={{ marginLeft: '20%', paddingRight: 5 }}>
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <PrintButton
-                onClick={this._onCancel}
-                inputRef={this.cancel}
-                onKeyDown={this._onFocusElement}
+              // onClick={this._onCancel}
+              // inputRef={this.cancel}
+              // onKeyDown={this._onFocusElement}
               />
             </Menu.Item>
           )}
@@ -186,39 +273,6 @@ class FooterActions extends Component {
         </Fragment>
       </FooterActionsContainer>
     );
-  }
-
-  componentDidMount() {
-    this._bindKey();
-  }
-
-  componentDidUpdate() {
-    let { focusElement } = this.props;
-
-    if (this[focusElement]) {
-      if (this[focusElement].current) {
-        this[focusElement].current.focus();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this._unbindKey();
-  }
-
-  _unbindKey() {
-    MouseTrap.unbind('alt+s');
-  }
-
-  _bindKey() {
-    let _this = this;
-
-    MouseTrap.bindGlobal('alt+s', function (e) {
-      e.preventDefault();
-      if (_this._isCanSave()) {
-        _this._onSave();
-      }
-    });
   }
 }
 
@@ -246,6 +300,7 @@ const mapDispatchToProps = function (dispatch) {
         onCancelWithSelected: actions.onCancelWithSelected,
         onFinish: actions.onFinish,
         onFocusElement: actions.onFocusElement,
+        onToggleShowKunjunganHariIni: actions.toggleShowKunjunganHariIni,
       },
       dispatch
     ),

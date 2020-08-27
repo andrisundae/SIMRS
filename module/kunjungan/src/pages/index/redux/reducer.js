@@ -1,7 +1,9 @@
 import produce from 'immer';
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import initialState from './state';
 import actionTypes from './actionTypes';
+import * as penjaminPasienActionTypes from './penjaminPasienActionTypes';
 import { staticConst } from '../static';
 
 const defaultJenisUmur = (data) => {
@@ -70,6 +72,10 @@ export default (state = initialState, action) =>
         draft.showNormModal = !state.showNormModal;
         return;
 
+      case actionTypes.TOGGLE_SHOW_KUNJUNGAN_HARI_INI:
+        draft.kunjunganHariIni.show = !state.kunjunganHariIni.show;
+        return;
+
       case actionTypes.POPULATE_FORM_SUCCESS:
         draft.data.options_jenis_kelamin = payload.data.jenis_kelamin;
         draft.data.options_kelas = payload.data.kelas;
@@ -83,25 +89,56 @@ export default (state = initialState, action) =>
         draft.data.options_status_kepersetaan = payload.data.status_kepersetaan;
         draft.data.options_status_pasien_default = payload.data.status_pasien;
         draft.data.options_status_pasien = payload.data.status_pasien;
+
+        draft.kunjunganHariIni.data.options_instalasi =
+          payload.data.all_instalasi;
         return;
 
       case actionTypes.CHANGE_SELECT2: {
         draft.focusElement = '';
-        draft.post[payload.name] = payload.data.value;
+        draft.post[payload.name] = payload.data ? payload.data.value : '';
         draft.selectedOption[payload.name] = payload.data;
         if (payload.name === 'id_penjamin_pasien' && payload.data) {
           draft.post.id_penjamin = '';
           draft.selectedOption.id_penjamin = null;
           draft.post.penjamin_pasien = '';
-          draft.data.options_status_pasien = [
-            payload.data,
-            ...draft.data.options_status_pasien_default,
-          ];
+
+          draft.post.id_kelas_penjamin_pasien = '';
+          draft.selectedOption.id_kelas_penjamin_pasien = null;
         } else if (payload.name === 'id_penjamin' && payload.data) {
-          if (payload.data.label.toUpperCase() === staticConst.UMUM) {
+          if (payload.data.value === staticConst.ID_PENJAMIN_UMUM) {
             draft.post.penjamin_pasien = staticConst.BAYAR_SENDIRI;
           } else {
             draft.post.penjamin_pasien = payload.data.label.toUpperCase();
+            // Jika selected pasien, input penjamin di kembalikan berdasarkan yg dipilih di penjamin pasien
+            if (state.post.id_pasien) {
+              const selected = payload.data;
+              draft.post = {
+                ...draft.post,
+                id_penjamin_pasien: selected.value,
+                nomor_anggota: selected.nomor_anggota,
+                id_kelas_penjamin_pasien: selected.id_kelas,
+                id_kepersertaan: selected.id_kepersertaan,
+              };
+
+              draft.selectedOption.id_penjamin_pasien = {
+                label: selected.label,
+                value: selected.value,
+              };
+
+              draft.selectedOption.id_kelas_penjamin_pasien = {
+                label: selected.nama_kelas,
+                value: selected.id_kelas,
+                alias: selected.alias,
+              };
+
+              const findKepesertaan = state.data.options_status_kepersetaan.find(
+                (row) => row.value === selected.id_kepersertaan
+              );
+              if (findKepesertaan) {
+                draft.selectedOption.id_kepersertaan = findKepesertaan;
+              }
+            }
           }
         } else if (
           payload.name === 'id_asal_masuk' &&
@@ -224,11 +261,14 @@ export default (state = initialState, action) =>
         draft.data.options_asal_kunjungan = payload.data.asal_kunjungan;
         draft.loaderOptionsByUnitLayanan = false;
 
-        Object.keys(payload.data.jenis_klasifikasi_registrasi).forEach(
-          (key) => {
-            draft.selectedOption[key] = null;
-          }
-        );
+        // Jika perlu reset biaya pilihan tindakan
+        if (payload.data.resetJenisKlasifikasiRegistrasi) {
+          Object.keys(payload.data.jenis_klasifikasi_registrasi).forEach(
+            (key) => {
+              draft.selectedOption[key] = null;
+            }
+          );
+        }
 
         //Jika ada asal kunjungan cuman satu lgsung di select
         if (payload.data.asal_kunjungan.length === 1) {
@@ -266,23 +306,32 @@ export default (state = initialState, action) =>
         return;
       case actionTypes.CANCEL:
       case actionTypes.FINISH:
-      case actionTypes.READY:
+      case actionTypes.READY: {
         draft.statusForm = actionTypes.READY;
         draft.filterPasien.selected = {};
         draft.post = { ...initialState.post };
         draft.selectedOption = { ...initialState.selectedOption };
         draft.data.jenis_klasifikasi_registrasi = {};
         draft.data.kunjungan_terakhir = [];
+        // Reset status pasien
+        draft.data.options_status_pasien =
+          state.data.options_status_pasien_default;
+        draft.data.options_status_pasien_sebelumnya = [];
+
         draft.temp = { ...initialState.temp };
         draft.focusElement = 'norm';
         return;
+      }
       case actionTypes.ADD:
         draft.statusForm = actionTypes.ADD;
         draft.post.tgl_lahir = toDateNow;
+        draft.post.umur = '0';
         draft.post.tgl_kunjungan = toDateNow;
         draft.post.tgl_jaminan = toDateNow;
         draft.post.tgl_cetak_jaminan = toDateNow;
         draft.post.jam_kunjungan = toDateNow;
+        draft.post.rt = '0';
+        draft.post.rw = '0';
 
         draft.post.jenis_umur = jenisUmur.value;
         draft.selectedOption.jenis_umur = jenisUmur;
@@ -363,6 +412,8 @@ export default (state = initialState, action) =>
           penjamin_pasien: '',
           nama_non_kelas: '',
           id: '',
+          rt: '0',
+          rw: '0',
         };
         draft.data = {
           ...state.data,
@@ -379,6 +430,12 @@ export default (state = initialState, action) =>
           id_penjamin: null,
           id_dpjp: null,
         };
+
+        // Ketika tambah kunjungan pasien, reset status penjamin yang dimiliki pasien
+        draft.data.options_status_pasien = [
+          ...state.data.options_status_pasien_sebelumnya,
+          ...state.data.options_status_pasien_default,
+        ];
         return;
       }
       case actionTypes.EDIT:
@@ -419,6 +476,7 @@ export default (state = initialState, action) =>
           jenis_klasifikasi_registrasi: jenisKlasifikasiRegistrasi,
           tindakan,
           id,
+          aktif_penjamin: aktifPenjamin,
         } = payload.data;
         const tglKunjungan = dayjs(tgl_kunjungan).toDate();
 
@@ -542,13 +600,9 @@ export default (state = initialState, action) =>
           };
         }
 
-        return;
-      }
-      case actionTypes.GET_PENJAMIN_PASIEN_SUCCESS: {
-        const { aktif_penjamin: aktifPenjamin } = payload.data;
         if (aktifPenjamin) {
           draft.post = {
-            ...state.post,
+            ...draft.post,
             id_penjamin_pasien: aktifPenjamin.id_penjamin,
             nomor_anggota: aktifPenjamin.nomor_anggota,
             id_kelas_penjamin_pasien: aktifPenjamin.kelas
@@ -577,9 +631,14 @@ export default (state = initialState, action) =>
           };
         }
 
+        return;
+      }
+      case actionTypes.GET_PENJAMIN_PASIEN_SUCCESS: {
+        draft.data.options_status_pasien_sebelumnya =
+          payload.data.penjamin_pasien_options;
         draft.data.options_status_pasien = [
           ...payload.data.penjamin_pasien_options,
-          ...draft.data.options_status_pasien_default,
+          ...state.data.options_status_pasien_default,
         ];
         return;
       }
@@ -608,6 +667,155 @@ export default (state = initialState, action) =>
       case actionTypes.CHANGE_TAB:
         draft.activeTabIndex = payload.data.activeIndex;
         return;
+
+      case actionTypes.SAVE_FAILURE:
+        draft.focusElement = '';
+        return;
+      case actionTypes.SAVE_REQUEST:
+        draft.focusElement = '';
+        return;
+
+      // case penjaminPasienActionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS: {
+      //   const data = payload.data.data;
+      //   const findData = draft.data.options_status_pasien.find(row => row.id === data.id);
+      //   if (findData) {
+      //     // Update yang sudah ada
+      //     draft.data.options_status_pasien = draft.data.options_status_pasien.map(row => {
+      //       if (row.id === data.id) {
+      //         return { value: data.penjamin.id, label: data.penjamin.nama, id: data.id }
+      //       }
+
+      //       return row;
+      //     })
+      //   } else {
+      //     // Tambah baru
+      //     draft.data.options_status_pasien = [
+      //       { value: data.penjamin.id, label: data.penjamin.nama, id: data.id },
+      //       ...draft.data.options_status_pasien
+      //     ]
+      //   }
+
+      //   return;
+      // }
+
+      // case penjaminPasienActionTypes.DELETE_PENJAMIN_PASIEN_SUCCESS: {
+      //   const data = payload.data.data;
+      //   draft.data.options_status_pasien = draft.data.options_status_pasien.filter(row => row.id !== data.id)
+      //   return
+
+      //   ;
+      // }
+
+      case actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_REQUEST:
+        draft.kunjunganHariIni.loaderUnitLayanan = true;
+        return;
+      case actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_SUCCESS:
+        draft.kunjunganHariIni.data.options_unit_layanan = payload.data;
+        draft.kunjunganHariIni.loaderUnitLayanan = false;
+        return;
+      case actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_FAILURE:
+        draft.kunjunganHariIni.loaderUnitLayanan = false;
+        return;
+
+      case actionTypes.OPEN_MENU_STATUS_PASIEN: {
+        draft.focusElement = 'id_penjamin';
+        if (!_.isEmpty(state.selectedOption.id_penjamin_pasien)) {
+          const selectedHakKelas =
+            state.selectedOption.id_kelas_penjamin_pasien;
+          const selectedKepesertaan = state.selectedOption.id_kepersetaan;
+          const kelasId = selectedHakKelas ? selectedHakKelas.value : '';
+          const selectedPenjaminPasien = {
+            ...state.selectedOption.id_penjamin_pasien,
+            nomor_anggota: state.post.nomor_anggota,
+            nama_kelas: selectedHakKelas ? selectedHakKelas.label : '',
+            alias: selectedHakKelas ? selectedHakKelas.alias : '',
+            id_kelas: kelasId,
+            id_kepersertaan: selectedKepesertaan
+              ? selectedKepesertaan.value
+              : '',
+          };
+
+          // Jika pasien lama
+          if (state.post.id_pasien) {
+            const statusPenjaminPasien = [
+              ...state.data.options_status_pasien_sebelumnya,
+              ...state.data.options_status_pasien_default,
+            ];
+            draft.data.options_status_pasien = statusPenjaminPasien;
+
+            const findStatusPasienBaru = state.data.options_status_pasien.find(
+              (row) => {
+                if (
+                  row.nomor_anggota === selectedPenjaminPasien.nomor_anggota &&
+                  row.id_kelas === kelasId &&
+                  row.value === selectedPenjaminPasien.value
+                ) {
+                  return true;
+                }
+
+                return false;
+              }
+            );
+
+            if (
+              !findStatusPasienBaru &&
+              state.post.nomor_anggota != '' &&
+              kelasId > 0
+            ) {
+              draft.data.options_status_pasien = [
+                selectedPenjaminPasien,
+                ...statusPenjaminPasien,
+              ];
+            }
+
+            if (!state.post.nomor_anggota || !kelasId) {
+              draft.data.options_status_pasien = statusPenjaminPasien;
+            }
+          } else {
+            if (state.post.nomor_anggota != '' && kelasId > 0) {
+              draft.data.options_status_pasien = [
+                selectedPenjaminPasien,
+                ...state.data.options_status_pasien_default,
+              ];
+            } else {
+              draft.data.options_status_pasien = [
+                ...state.data.options_status_pasien_default,
+              ];
+            }
+          }
+        }
+        return draft;
+      }
+
+      // Action dari datatable tab penjamin pasien
+      case penjaminPasienActionTypes.GET_ALL_PENJAMIN_PASIEN_SUCCESS: {
+        const penjaminPasien = state.data.options_status_pasien_sebelumnya;
+        const data = _.filter(payload.data, { aktif: 1 });
+        if (data.length > 0) {
+          data.forEach((row) => {
+            const findIndex = _.findIndex(penjaminPasien, { id: row.id });
+            const newRow = {
+              alias: row.alias,
+              id: row.id,
+              id_kelas: row.id_kelas,
+              id_kepersertaan: row.id_kepersertaan,
+              label: row.nama_penjamin,
+              nama_kelas: row.nama_kelas,
+              nomor_anggota: row.nomor_anggota,
+              value: row.id_penjamin,
+            };
+            if (findIndex === -1) {
+              penjaminPasien.push(newRow);
+            } else {
+              if (penjaminPasien[findIndex]) {
+                penjaminPasien[findIndex] = newRow;
+              }
+            }
+          });
+          draft.data.options_status_pasien_sebelumnya = [...penjaminPasien];
+        }
+        return;
+      }
 
       default:
         return state;

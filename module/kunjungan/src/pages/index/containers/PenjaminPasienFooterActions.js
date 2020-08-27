@@ -25,12 +25,15 @@ class PenjamninPasienFooterActions extends Component {
   constructor(props) {
     super(props);
 
-    this._onSave = this._onSave.bind(this);
+    this.add = createRef();
+    this.edit = createRef();
+    this.delete = createRef();
+    this.cancel = createRef();
     this.save = createRef();
   }
 
   componentDidMount() {
-    this._bindKey();
+    this.bindKey();
   }
 
   componentDidUpdate() {
@@ -44,17 +47,17 @@ class PenjamninPasienFooterActions extends Component {
   }
 
   componentWillUnmount() {
-    this._unbindKey();
+    this.unbindKey();
   }
 
-  _onSave() {
+  onSave = () => {
     const data = {
       ...this.props.post,
       id_pasien: this.props.idPasien,
       norm: this.props.norm,
     };
     this.props.action.onSave(this.props.resource, data);
-  }
+  };
 
   onAdd = () => {
     this.props.action.onAdd(this.props.resource);
@@ -77,11 +80,7 @@ class PenjamninPasienFooterActions extends Component {
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
       buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-      onOk: () =>
-        action.onCheckDelete(resource, {
-          id: post.id,
-          idKunjunganUnit: post.id_kunjungan_unit,
-        }),
+      onOk: () => action.onDelete(resource, post),
     });
   };
 
@@ -157,17 +156,52 @@ class PenjamninPasienFooterActions extends Component {
     return isValid;
   };
 
-  _unbindKey() {
+  unbindKey() {
+    MouseTrap.unbind('alt+t');
+    MouseTrap.unbind('alt+k');
+    MouseTrap.unbind('alt+h');
     MouseTrap.unbind('alt+s');
+    MouseTrap.unbind('alt+b');
   }
 
-  _bindKey() {
+  bindKey() {
     let _this = this;
+
+    MouseTrap.bindGlobal('alt+t', function (e) {
+      e.preventDefault();
+      if (_this.isCanAdd()) {
+        _this.add.current.focus();
+        _this.onAdd();
+      }
+    });
+
+    MouseTrap.bindGlobal('alt+k', function (e) {
+      e.preventDefault();
+      if (_this.isCanEdit()) {
+        _this.edit.current.focus();
+        _this.onEdit();
+      }
+    });
+
+    MouseTrap.bindGlobal('alt+h', function (e) {
+      e.preventDefault();
+      if (_this.isCanDelete()) {
+        _this.delete.current.focus();
+        _this.onDelete();
+      }
+    });
 
     MouseTrap.bindGlobal('alt+s', function (e) {
       e.preventDefault();
-      if (_this._isCanSave()) {
-        _this._onSave();
+      if (_this.isCanSave()) {
+        _this.onSave();
+      }
+    });
+
+    MouseTrap.bindGlobal(['alt+b', 'esc'], function (e) {
+      e.preventDefault();
+      if (_this.isCanCancel()) {
+        _this.onCancel();
       }
     });
   }
@@ -197,7 +231,7 @@ class PenjamninPasienFooterActions extends Component {
           {this.isCanDelete() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <DeleteButton
-                onClick={this._onDelete}
+                onClick={this.onDelete}
                 inputRef={this.delete}
                 onKeyDown={this._onFocusElement}
               />
@@ -206,7 +240,7 @@ class PenjamninPasienFooterActions extends Component {
           {this.isCanSave() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <SaveButton
-                onClick={this._onSave}
+                onClick={this.onSave}
                 inputRef={this.save}
                 onKeyDown={this._onFocusElement}
               />
@@ -253,6 +287,7 @@ const mapDispatchToProps = function (dispatch) {
     action: bindActionCreators(
       {
         onSave: actions.save.request,
+        onDelete: actions.deletePenjamin.request,
         onAdd: actions.onAdd,
         onEdit: actions.onEdit,
         onCancel: actions.onCancel,

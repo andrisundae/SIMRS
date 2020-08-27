@@ -20,8 +20,10 @@ export default {
     options_umur: [],
     jenis_klasifikasi_registrasi: {},
     options_status_pasien_default: [],
+    options_status_pasien_sebelumnya: [],
     kunjungan_terakhir: [],
     options_setting_kelas_penjamin: [],
+    penjamin_pasien: [],
   },
   post: {
     kode_kunjungan: '',
@@ -99,7 +101,7 @@ export default {
     id_dpjp: null,
     id_karcis: null,
     jenis_umur: null,
-    id_kepersetaan: null,
+    id_kepersertaan: null,
     id_penjamin_pasien: null,
     id_penjamin: null,
     id_kunjungan_asal: null,
@@ -124,4 +126,18 @@ export default {
   detailRangkaianKunjungan: {},
   activeTabIndex: 0,
   permissions: [],
+  kunjunganHariIni: {
+    show: false,
+    data: {
+      options_instalasi: [],
+      options_unit_layanan: [],
+    },
+    post: {
+      intalasi_id: null,
+      unit_layanan_id: null,
+      nama_pasien: '',
+      norm: '',
+    },
+    loaderUnitLayanan: false,
+  },
 };
