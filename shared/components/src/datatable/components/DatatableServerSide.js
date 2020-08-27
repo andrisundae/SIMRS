@@ -6,7 +6,7 @@ import {
   ContextMenuTrigger,
 } from 'react-contextmenu';
 import PropTypes from 'prop-types';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Icon } from 'semantic-ui-react';
 
 import { formatter } from '@simrs/common';
 
@@ -160,6 +160,15 @@ class DataTableServerSide extends Component {
     window.removeEventListener('resize', this._handleResizeWindow);
   }
 
+  autoSizeAll = (params) => {
+    var allColumnIds = [];
+    params.columnApi.getAllColumns().forEach(function (column) {
+      allColumnIds.push(column.colId);
+    });
+
+    params.columnApi.autoSizeColumns(allColumnIds, false);
+  };
+
   _onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -171,6 +180,8 @@ class DataTableServerSide extends Component {
     if (this.props.sizeColumnsToFit) {
       this.gridApi.sizeColumnsToFit();
     }
+
+    // this.autoSizeAll();
 
     window.addEventListener('resize', this._handleResizeWindow);
   }
@@ -253,6 +264,10 @@ class DataTableServerSide extends Component {
     if (this.props.sizeColumnsToFit) {
       gridApi.sizeColumnsToFit();
     }
+
+    if (this.props.autoSizeColumn) {
+      this.autoSizeAll(params);
+    }
   }
 
   _renderContextMenu() {
@@ -267,15 +282,15 @@ class DataTableServerSide extends Component {
                 <Item
                   key={index}
                   onClick={() => {
-                    item.action(this.gridApi, this.state.focusData);
+                    if (item.onClick) {
+                      item.onClick(this.gridApi, this.state.focusData);
+                    }
                   }}
                 >
                   <div className="row">
                     <div className="col-md-6">
-                      {/* {item.icon &&
-                                                    <FontAwesome name={item.icon} />
-                                                } */}
-                      {' ' + item.name}
+                      {item.icon && <Icon name={item.icon} />}
+                      {' ' + item.title}
                     </div>
                     {item.shortcut && (
                       <div className="col-md-6 text-right">{item.shortcut}</div>
@@ -472,6 +487,7 @@ DataTableServerSide.propTypes = {
   rowSelection: PropTypes.string,
   onRowEntered: PropTypes.func,
   sizeColumnsToFit: PropTypes.bool,
+  autoSizeColumn: PropTypes.bool,
   onModelUpdated: PropTypes.func,
   rowHeight: PropTypes.number,
 };
@@ -483,7 +499,6 @@ DataTableServerSide.defaultProps = {
   containerHeight: '326px',
   containerWidth: '100%',
   enableSorting: false,
-  contextMenuItems: [],
   copyInColumn: '',
   navigateToSelect: true,
   rowDeselection: false,
@@ -492,6 +507,8 @@ DataTableServerSide.defaultProps = {
   cacheBlockSize: 10,
   rowHeight: 30,
   sizeColumnsToFit: true,
+  autoSizeColumn: true,
+  contextMenuItems: [],
 };
 
 export default DataTableServerSide;
