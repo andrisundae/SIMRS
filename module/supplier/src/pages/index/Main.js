@@ -10,7 +10,7 @@ class Main extends Component {
     return (
       <Module
         {...this.props}
-        icon={`address book icon`}
+        icon={`address book`}
         filter={<Filter {...this.props} />}
         list={
           <List

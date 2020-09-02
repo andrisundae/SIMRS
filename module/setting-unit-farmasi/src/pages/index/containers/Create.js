@@ -56,10 +56,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column
-                    width="7"
-                    className="required field left aligned"
-                  >
+                  <Grid.Column width="7" className="field left aligned">
                     <label>
                       {t(this._getKey('label.field.status_gudang'))}
                     </label>
@@ -78,10 +75,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column
-                    width="7"
-                    className="required field left aligned"
-                  >
+                  <Grid.Column width="7" className="field left aligned">
                     <label>{t(this._getKey('label.field.penjualan'))}</label>
                   </Grid.Column>
                   <Grid.Column width="9" className="field">
@@ -100,10 +94,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column
-                    width="7"
-                    className="required field left aligned"
-                  >
+                  <Grid.Column width="7" className="field left aligned">
                     <label>
                       {t(this._getKey('label.field.terima_e_resep'))}
                     </label>
@@ -124,10 +115,7 @@ class Create extends Component {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column
-                    width="7"
-                    className="required field left aligned"
-                  >
+                  <Grid.Column width="7" className="field left aligned">
                     <label>
                       {t(this._getKey('label.field.unit_bank_darah'))}
                     </label>

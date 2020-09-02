@@ -34,7 +34,6 @@ class Filter extends Component {
           </label>
           <Select
             name="filter_index"
-            ref={this.filterIndex}
             onChange={this._handleSelectionChange}
             value={post.filter_index}
             disabled={isDisableForm}
