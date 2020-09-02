@@ -31,8 +31,7 @@ class Create extends Component {
   }
 
   componentDidUpdate() {
-    let { statusForm, focusElement } = this.props;
-
+    const { statusForm, focusElement } = this.props;
     if (
       statusForm === actionTypes.READY ||
       statusForm === actionTypes.ADD ||
@@ -62,24 +61,6 @@ class Create extends Component {
         this.props.onGetPasien(this.props.resource, { norm: e.target.value });
       }
     }
-  };
-
-  dataSourcePasien = () => {
-    return {
-      rowCount: null,
-      getRows: (params) => {
-        let sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
-        let post = {
-          length: 25,
-          start: params.startRow,
-          sort_name: sortModel.colId ? sortModel.colId : '',
-          sort_order: sortModel.colId ? sortModel.sort : '',
-          filters: { ...this.props.filterPasien.post },
-        };
-
-        this.props.action.loadAllPasien(this.props.resource, post, params);
-      },
-    };
   };
 
   dataSourceKunjunganTerakhir = () => {
@@ -140,7 +121,11 @@ class Create extends Component {
   };
 
   getPanes = () => {
-    const { resource, t, post } = this.props;
+    const { resource, t, statusForm } = this.props;
+    const disableTabPenjaminPasien = isDisable(
+      'tab_penjamin_pasien',
+      statusForm
+    );
 
     return [
       {
@@ -157,7 +142,7 @@ class Create extends Component {
         menuItem: {
           key: 'penjamin_pasien',
           content: '2. Penjamin Pasien',
-          disabled: !post.id_pasien,
+          disabled: disableTabPenjaminPasien,
         },
         render: () => {
           return (
@@ -178,7 +163,6 @@ class Create extends Component {
       showCariPasien,
       showCariKunjungan,
       showNormModal,
-      filterPasien,
       action,
       resource,
       statusForm,
@@ -351,13 +335,12 @@ class Create extends Component {
             show={showCariPasien}
             onHide={action.toggleShowCariPasien}
             onSelect={this.onSelectedPasienHandler}
-            data={filterPasien}
             resource={resource}
-            dataSource={this.dataSourcePasien}
             onChange={action.onChangeFilterPasien}
             onSubmit={action.onSubmitFilterPasien}
             isReloadGrid={datatablePasienState.isReload}
             reloadType={datatablePasienState.reloadType}
+            onLoadData={action.loadAllPasien}
           />
         )}
         {showCariKunjungan && (
@@ -397,7 +380,6 @@ const mapStateToProps = function (state) {
     showCariPasien,
     showCariKunjungan,
     showNormModal,
-    filterPasien,
     statusForm,
     selectedOption,
     activeTabIndex,
@@ -410,7 +392,6 @@ const mapStateToProps = function (state) {
     showCariPasien,
     showCariKunjungan,
     showNormModal,
-    filterPasien,
     datatables: state.datatable.datatables,
     statusForm,
     selectedOption,
@@ -439,7 +420,6 @@ Create.propTypes = {
   showCariPasien: PropTypes.bool,
   showCariKunjungan: PropTypes.bool,
   showNormModal: PropTypes.bool,
-  filterPasien: PropTypes.object,
   datatables: PropTypes.object,
   activeTabIndex: PropTypes.number,
 };

@@ -16,6 +16,15 @@ class CariPasien extends Component {
     this.onClickSelectedHandler = this.onClickSelectedHandler.bind(this);
     this.onRowDoubleClickHandler = this.onRowDoubleClickHandler.bind(this);
     this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
+
+    this.state = {
+      post: {
+        desa: '',
+        kecamatan: '',
+        kota: '',
+        provinsi: '',
+      },
+    };
   }
 
   columns = [
@@ -71,12 +80,20 @@ class CariPasien extends Component {
 
   filterChangeHandler = (e) => {
     const { name, value } = e.target;
-    this.props.onChange(this.props.resource, { name, value });
+    this.setState((prevState) => {
+      return {
+        post: {
+          ...prevState.post,
+          [name]: value,
+        },
+      };
+    });
+    // this.props.onChange(this.props.resource, { name, value });
   };
 
   onSubmitHandler = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.props.resource, this.props.data.post);
+    this.props.onSubmit(this.props.resource, this.state.post);
   };
 
   onClickSelectedHandler() {
@@ -96,8 +113,27 @@ class CariPasien extends Component {
     this.onClickSelectedHandler();
   }
 
+  dataSource = () => {
+    return {
+      rowCount: null,
+      getRows: (params) => {
+        let sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
+        let post = {
+          length: 25,
+          start: params.startRow,
+          sort_name: sortModel.colId ? sortModel.colId : '',
+          sort_order: sortModel.colId ? sortModel.sort : '',
+          ...this.state.post,
+        };
+
+        this.props.onLoadData(this.props.resource, post, params);
+      },
+    };
+  };
+
   render() {
-    const { show, onHide, data, dataSource } = this.props;
+    const { show, onHide } = this.props;
+    const { post } = this.state;
 
     return (
       <Modal
@@ -121,7 +157,7 @@ class CariPasien extends Component {
                       width="3"
                       label="Desa / Kelurahan"
                       placeholder="Desa / Kelurahan"
-                      value={data.post.desa}
+                      value={post.desa}
                       onChange={this.filterChangeHandler}
                       name="desa"
                     />
@@ -129,7 +165,7 @@ class CariPasien extends Component {
                       width="3"
                       label="Kecamatan"
                       placeholder="Kecamatan"
-                      value={data.post.kecamatan}
+                      value={post.kecamatan}
                       onChange={this.filterChangeHandler}
                       name="kecamatan"
                     />
@@ -137,7 +173,7 @@ class CariPasien extends Component {
                       width="3"
                       label="Kota / Kabupaten"
                       placeholder="Kota / Kabupaten"
-                      value={data.post.kota}
+                      value={post.kota}
                       onChange={this.filterChangeHandler}
                       name="kota"
                     />
@@ -145,7 +181,7 @@ class CariPasien extends Component {
                       width="3"
                       label="Provinsi"
                       placeholder="Provinsi"
-                      value={data.post.provinsi}
+                      value={post.provinsi}
                       onChange={this.filterChangeHandler}
                       name="provinsi"
                     />
@@ -164,8 +200,7 @@ class CariPasien extends Component {
                   columns={this.columns}
                   name="wilayah"
                   navigateToSelect={true}
-                  // enableServerSideSorting={true}
-                  datasource={dataSource()}
+                  datasource={this.dataSource()}
                   rowBuffer={0}
                   maxConcurrentDatasourceRequests={1}
                   infiniteInitialRowCount={1}
@@ -173,7 +208,7 @@ class CariPasien extends Component {
                   containerHeight="335px"
                   onRowDoubleClicked={this.onRowDoubleClickHandler}
                   onRowEntered={this.onRowEnteredHandler}
-                  sizeColumnsToFit={true}
+                  autoSizeColumn={false}
                 />
               </Grid.Column>
             </Grid.Row>

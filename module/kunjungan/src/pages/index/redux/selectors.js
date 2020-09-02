@@ -4,6 +4,8 @@ import actionTypes from './actionTypes';
 import { statusesElements } from '../static';
 
 export const getPost = (state) => state.module.kunjungan.post;
+export const getSelectedOption = (state) =>
+  state.module.kunjungan.selectedOption;
 export const isPasienBaru = (state) => {
   return state.module.kunjungan.statusForm === actionTypes.ADD;
 };

@@ -12,7 +12,13 @@ import {
   datatableActions,
 } from '@simrs/components';
 import api from '../services/models/kunjunganModel';
-import { actions, actionTypes, getPost, isPasienBaru } from '../pages/index';
+import {
+  actions,
+  actionTypes,
+  getPost,
+  isPasienBaru,
+  getSelectedOption,
+} from '../pages/index';
 import { staticConst } from '../pages/index/static';
 
 const { getFirstError, getFirstElementError } = commonValidator;
@@ -26,6 +32,9 @@ function* openForm({ meta }) {
     datatableActions.onInitialize(staticConst.PENJAMIN_PASIEN_RESOURCE)
   );
   yield put(
+    datatableActions.onInitialize(staticConst.TABLE_KUNJUNGAN_HARI_INI)
+  );
+  yield put(
     aclActions.getGranted.request(staticConst.PENJAMIN_PASIEN_RESOURCE)
   );
   yield put(actions.populateForm.request(meta.resource));
@@ -37,23 +46,7 @@ function* handleSave({ payload, meta }) {
   const { data } = payload;
   try {
     yield put(loaderActions.show());
-    // let { rules, messages } = api.validationRules(resource);
-    // let post = payload.data;
-    // let errors = validator(post, rules, messages);
-
-    // if (_.isEmpty(errors)) {
-    //     let response = yield call(api.save, post);
-    //     if (response.status) {
-    //         yield put(actions.save.requestSuccess(resource, response));
-    //     } else {
-    //         yield put(actions.save.requestFailure(resource, errors));
-    //         yield toastr.warning(response.message);
-    //         yield put(actions.onFocusElement(resource, 'oldPassword'));
-    //     }
-    // } else {
-    //     yield put(actions.onFocusElement(resource, getFirstElementError(errors)));
-    //     yield toastr.warning(getFirstError(errors));
-    // }
+    const { rules, messages } = api.validationRules(resource);
     const prevPost = yield select(getPost);
     const jamKunjungan = dayjs(data.jam_kunjungan).format('HH:mm');
     const post = {
@@ -84,6 +77,8 @@ function* handleSave({ payload, meta }) {
       ),
       id_tindakan: prevPost.id_tindakan.map((item) => item.value),
       id_kelas: data.id_kelas,
+      id_kelompok: data.id_kelompok,
+      id_instalasi: data.id_instalasi,
       id_kunjungan_asal: data.id_kunjungan_asal || '',
     };
 
@@ -98,16 +93,30 @@ function* handleSave({ payload, meta }) {
     }
 
     const method = post.id ? 'koreksi' : 'tambah';
-    // let errors = validator(post, rules, messages);
+    let errors = validator(post, rules, messages);
+    let isError = false;
 
-    let response = yield call(api.save, method, post);
-    if (response.status) {
-      const showNormModal = yield select(isPasienBaru);
-      if (showNormModal) {
-        yield put(actions.toggleShowNormModal(resource));
+    if (_.isEmpty(errors)) {
+      const response = yield call(api.save, method, post);
+      if (response.status) {
+        const showNormModal = yield select(isPasienBaru);
+        if (showNormModal) {
+          yield put(actions.toggleShowNormModal(meta.resource));
+        }
+        yield put(actions.save.requestSuccess(resource, response));
+      } else {
+        isError = true;
+        errors = response.data;
       }
-      yield put(actions.save.requestSuccess(resource, response));
+    } else {
+      isError = true;
     }
+
+    if (isError) {
+      yield toastr.warning(getFirstError(errors));
+      yield put(actions.save.requestFailure(resource, errors));
+    }
+
     yield put(loaderActions.hide());
   } catch (error) {
     yield put(loaderActions.hide());
@@ -117,6 +126,13 @@ function* handleSave({ payload, meta }) {
 
 function* handleSaveSuccess({ payload }) {
   yield toastr.success(payload.data.message);
+}
+
+function* saveFailureHandler({ payload, meta }) {
+  let { resource } = meta;
+  yield put(
+    actions.onFocusElement(resource, getFirstElementError(payload.errors))
+  );
 }
 
 function* populateForm({ meta }) {
@@ -142,7 +158,10 @@ function* changeSelect2({ meta, payload }) {
     switch (payload.name) {
       case 'id_unit_layanan':
         yield put(
-          actions.optionsByUnitLayanan.request(meta.resource, payload.data)
+          actions.optionsByUnitLayanan.request(meta.resource, {
+            ...payload.data,
+            resetJenisKlasifikasiRegistrasi: true,
+          })
         );
         break;
       case 'id_penjamin_pasien':
@@ -210,7 +229,7 @@ function* unitLayananRequest({ meta, payload }) {
   }
 }
 
-function* optionsByUnitLayananRequest({ meta, payload }) {
+function* optionsByUnitLayananRequestHandler({ meta, payload }) {
   try {
     const prevPost = yield select(getPost);
     let response = yield call(api.getOptionsByUnitLayanan, payload.data.value, {
@@ -218,10 +237,11 @@ function* optionsByUnitLayananRequest({ meta, payload }) {
     });
     if (response.status) {
       yield put(
-        actions.optionsByUnitLayanan.requestSuccess(
-          meta.resource,
-          response.data
-        )
+        actions.optionsByUnitLayanan.requestSuccess(meta.resource, {
+          ...response.data,
+          resetJenisKlasifikasiRegistrasi:
+            payload.data.resetJenisKlasifikasiRegistrasi,
+        })
       );
     } else {
       yield put(
@@ -348,6 +368,24 @@ function* getKunjunganDetailRequestHandler({ meta, payload }) {
   }
 }
 
+function* kunjunganDetailSuccessHandler({ meta, payload }) {
+  if (payload.data.kunjungan_unit.unit_layanan.id) {
+    yield put(
+      actions.optionsByUnitLayanan.request(meta.resource, {
+        value: payload.data.kunjungan_unit.unit_layanan.id,
+      })
+    );
+  }
+
+  if (payload.data.id_penjamin) {
+    yield put(
+      actions.settingKelasPenjamin.request(meta.resource, {
+        value: payload.data.id_penjamin,
+      })
+    );
+  }
+}
+
 function* getPenjaminPasienRequestHandler({ meta, payload }) {
   try {
     yield put(loaderActions.show());
@@ -408,6 +446,35 @@ function* loadAllWilayah({ payload, meta }) {
   yield put(datatableActions.onReloaded(staticConst.TABLE_WILAYAH));
 }
 
+function* loadAllKunjunganHariIni({ payload, meta }) {
+  const { successCallback, failCallback } = meta.tableParams;
+
+  try {
+    let response = yield call(api.getKunjunganHariIni, payload.data);
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      failCallback();
+    }
+  } catch (error) {
+    failCallback();
+  }
+  yield put(datatableActions.onReloaded(staticConst.TABLE_KUNJUNGAN_HARI_INI));
+}
+
+function* searchKunjunganHariIniHandler() {
+  try {
+    yield put(
+      datatableActions.onReload(
+        staticConst.TABLE_KUNJUNGAN_HARI_INI,
+        constDatatable.reloadType.purge
+      )
+    );
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
 function* searchPasienHandler() {
   try {
     yield put(
@@ -450,6 +517,7 @@ function* searchWilayahHandler() {
 
 function* selectedWilayahHandler({ meta }) {
   yield put(actions.toggleShowCariWilayah(meta.resource));
+  yield put(actions.onFocusElement(meta.resource, 'id_penjamin_pasien'));
 }
 
 function* addHandler({ meta }) {
@@ -615,17 +683,50 @@ function* deleteSuccessHandler({ meta, payload }) {
 
 function* settingKelasPenjaminRequestHandler({ meta, payload }) {
   try {
-    let response = yield call(api.getSettingKelasPenjamin, payload.data.value);
+    if (payload.data) {
+      const response = yield call(
+        api.getSettingKelasPenjamin,
+        payload.data.value
+      );
+      if (response.status) {
+        yield put(
+          actions.settingKelasPenjamin.requestSuccess(
+            meta.resource,
+            response.data
+          )
+        );
+      } else {
+        yield put(
+          actions.settingKelasPenjamin.requestFailure(
+            meta.resource,
+            response.message
+          )
+        );
+      }
+    } else {
+      yield put(actions.settingKelasPenjamin.requestSuccess(meta.resource, []));
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* unitLayananKunjunganHariIniRequestHandler({ meta, payload }) {
+  try {
+    let response = yield call(
+      api.getUnitLayananOptions,
+      payload.data.instalasi_id
+    );
     if (response.status) {
       yield put(
-        actions.settingKelasPenjamin.requestSuccess(
+        actions.getUnitLayananKunjunganHariIni.requestSuccess(
           meta.resource,
           response.data
         )
       );
     } else {
       yield put(
-        actions.settingKelasPenjamin.requestFailure(
+        actions.getUnitLayananKunjunganHariIni.requestFailure(
           meta.resource,
           response.message
         )
@@ -636,6 +737,18 @@ function* settingKelasPenjaminRequestHandler({ meta, payload }) {
   }
 }
 
+function* openMenuStatusPasienHandler() {
+  const selectedOption = yield select(getSelectedOption);
+  const post = yield select(getPost);
+  if (
+    !_.isEmpty(selectedOption.id_penjamin_pasien) &&
+    (_.isEmpty(post.nomor_anggota) ||
+      _.isEmpty(selectedOption.id_kelas_penjamin_pasien))
+  ) {
+    yield toastr.warning('Lengkapi penjamin pasien');
+  }
+}
+
 export default function* watchAuthActions() {
   yield all([
     takeLatest(actionTypes.CHECK_EDIT, checkEditHandler),
@@ -643,6 +756,7 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.ADD_WITH_SELECTED, addSelectedHandler),
     takeLatest(actionTypes.SAVE_REQUEST, handleSave),
     takeLatest(actionTypes.SAVE_SUCCESS, handleSaveSuccess),
+    takeLatest(actionTypes.SAVE_FAILURE, saveFailureHandler),
     takeLatest(actionTypes.OPEN_FORM, openForm),
     takeLatest(actionTypes.POPULATE_FORM_REQUEST, populateForm),
     takeLatest(actionTypes.CHANGE_SELECT2, changeSelect2),
@@ -650,8 +764,12 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.INSTALASI_REQUEST, instalasiRequest),
     takeLatest(actionTypes.UNIT_LAYANAN_REQUEST, unitLayananRequest),
     takeLatest(
+      actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_REQUEST,
+      unitLayananKunjunganHariIniRequestHandler
+    ),
+    takeLatest(
       actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST,
-      optionsByUnitLayananRequest
+      optionsByUnitLayananRequestHandler
     ),
     takeLatest(actionTypes.NEXT_NORM_REQUEST, nextNormRequest),
     takeLatest(actionTypes.GET_PASIEN_REQUEST, getPasienRequestHandler),
@@ -662,6 +780,10 @@ export default function* watchAuthActions() {
     takeLatest(
       actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST,
       getKunjunganDetailRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS,
+      kunjunganDetailSuccessHandler
     ),
     takeLatest(
       actionTypes.GET_PENJAMIN_PASIEN_REQUEST,
@@ -683,6 +805,18 @@ export default function* watchAuthActions() {
     takeLatest(
       actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST,
       settingKelasPenjaminRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_ALL_KUNJUNGAN_HARI_INI_REQUEST,
+      loadAllKunjunganHariIni
+    ),
+    takeLatest(
+      actionTypes.FILTER_SUBMIT_KUNJUNGAN_HARI_INI,
+      searchKunjunganHariIniHandler
+    ),
+    takeLatest(
+      actionTypes.OPEN_MENU_STATUS_PASIEN,
+      openMenuStatusPasienHandler
     ),
   ]);
 }

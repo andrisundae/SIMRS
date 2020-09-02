@@ -43,37 +43,42 @@ class PenjaminPasien extends Component {
       }
     }
 
-    if (datatable.isReload) {
-      this.reload(datatable.reloadType);
-    } else {
-      const gridApi = this.gridApi();
-      if (gridApi) {
-        switch (statusForm) {
-          case actionTypes.ADD_PENJAMIN_PASIEN:
-            if (isDisableForm) {
-              this.gridApi().deselectAll();
-            }
-            break;
-          case actionTypes.CANCEL_PENJAMIN_PASIEN:
-            if (prevProps.selectedRow) {
-              this.selectRow(prevProps.selectedRow);
-            }
-            break;
-          case actionTypes.READY_PENJAMIN_PASIEN:
-            if (prevProps.selectedRow) {
-              this.selectRow(prevProps.selectedRow);
-            } else {
-              if (selectedRow) {
-                this.selectRow(selectedRow);
-              } else {
+    if (
+      prevProps.datatable.isReload !== datatable.isReload ||
+      prevProps.statusForm !== statusForm
+    ) {
+      if (datatable.isReload) {
+        this.reload(datatable.reloadType);
+      } else {
+        const gridApi = this.gridApi();
+        if (gridApi) {
+          switch (statusForm) {
+            case actionTypes.ADD_PENJAMIN_PASIEN:
+              if (isDisableForm) {
                 this.gridApi().deselectAll();
-                this.gridApi().clearFocusedCell();
               }
-            }
+              break;
+            case actionTypes.CANCEL_PENJAMIN_PASIEN:
+              if (prevProps.selectedRow) {
+                this.selectRow(prevProps.selectedRow);
+              }
+              break;
+            case actionTypes.READY_PENJAMIN_PASIEN:
+              if (prevProps.selectedRow) {
+                this.selectRow(prevProps.selectedRow);
+              } else {
+                if (selectedRow) {
+                  this.selectRow(selectedRow);
+                } else {
+                  this.gridApi().deselectAll();
+                  this.gridApi().clearFocusedCell();
+                }
+              }
 
-            break;
-          default:
-            return;
+              break;
+            default:
+              return;
+          }
         }
       }
     }
@@ -117,7 +122,7 @@ class PenjaminPasien extends Component {
     gridApi.setFocusedCell(rowIndex, firstCol);
   }
 
-  _getDataSource = () => {
+  dataSource = () => {
     return {
       rowCount: null,
       getRows: (params) => {
@@ -141,9 +146,9 @@ class PenjaminPasien extends Component {
     };
   };
 
-  _getKey(key) {
+  getKey = (key) => {
     return `${this.props.resource}:${key}`;
-  }
+  };
 
   select2ChangeHanlder = (name, selected) => {
     this.props.onChangeSelect2(this.resource, name, selected);
@@ -200,7 +205,7 @@ class PenjaminPasien extends Component {
         <Grid.Row>
           <Grid.Column>
             <Datatable
-              dataSource={this._getDataSource}
+              dataSource={this.dataSource}
               onRowSelected={this.selectedRowHandler}
               isReload={datatable.isReload}
               reloadType={datatable.reloadType}
@@ -220,7 +225,7 @@ class PenjaminPasien extends Component {
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>
-                            {t(this._getKey('label.field.penjamin'))}
+                            {t(this.getKey('label.field.penjamin'))}
                           </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
@@ -242,7 +247,7 @@ class PenjaminPasien extends Component {
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>
-                            {t(this._getKey('label.field.no_anggota'))}
+                            {t(this.getKey('label.field.no_anggota'))}
                           </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
@@ -266,7 +271,7 @@ class PenjaminPasien extends Component {
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>
-                            {t(this._getKey('label.field.hak_kelas'))}
+                            {t(this.getKey('label.field.hak_kelas'))}
                           </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
@@ -292,7 +297,7 @@ class PenjaminPasien extends Component {
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>
-                            {t(this._getKey('label.field.status_kepersetaan'))}
+                            {t(this.getKey('label.field.status_kepersetaan'))}
                           </label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
@@ -316,7 +321,7 @@ class PenjaminPasien extends Component {
                       </Grid.Row>
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
-                          <label>{t(this._getKey('label.field.status'))}</label>
+                          <label>{t(this.getKey('label.field.status'))}</label>
                         </Grid.Column>
                         <Grid.Column width="12" className="field">
                           <Checkbox
@@ -329,7 +334,7 @@ class PenjaminPasien extends Component {
                               this.focusElementHanlder(e, 'save')
                             }
                             inputRef={this.aktif}
-                            label={t(this._getKey('sublabel.field.status'))}
+                            label={t(this.getKey('sublabel.field.status'))}
                           />
                         </Grid.Column>
                       </Grid.Row>
@@ -380,7 +385,9 @@ const mapStateToProps = function (state) {
 const mapDispatchToProps = function (dispatch) {
   return {
     onLoadPenjaminPasien: (resource, post, tableParams) =>
-      dispatch(actions.loadAllPenjaminPasien(resource, post, tableParams)),
+      dispatch(
+        actions.getAllPenjaminPasien.request(resource, post, tableParams)
+      ),
     onReady: (resource) => dispatch(actions.onReady(resource)),
     onFocusElement: (resource, element) =>
       dispatch(actions.onFocusElement(resource, element)),

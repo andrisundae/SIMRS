@@ -1,4 +1,5 @@
 import produce from 'immer';
+import _ from 'lodash';
 import { aclActions } from '@simrs/main/src/modules/auth';
 import initialState from './penjaminPasienState';
 import * as actionTypes from './penjaminPasienActionTypes';
@@ -21,6 +22,7 @@ export default (state = initialState, action) =>
 
       case actionTypes.CANCEL_PENJAMIN_PASIEN:
         draft.statusForm = actionTypes.CANCEL_PENJAMIN_PASIEN;
+        draft.focusElement = '';
         draft.post = initialState.post;
         draft.selectedRow = 0;
         draft.selectedOption = { ...initialState.selectedOption };
@@ -69,10 +71,22 @@ export default (state = initialState, action) =>
       case actionTypes.GET_SETTING_KELAS_PENJAMIN_PASIEN_REQUEST:
         draft.loaderSettingKelasPenjamin = true;
         return;
-      case actionTypes.GET_SETTING_KELAS_PENJAMIN_PASIEN_SUCCESS:
-        draft.data.options_setting_kelas_penjamin = payload.data;
+      case actionTypes.GET_SETTING_KELAS_PENJAMIN_PASIEN_SUCCESS: {
+        const options = payload.data || [];
+        draft.data.options_setting_kelas_penjamin = options;
         draft.loaderSettingKelasPenjamin = false;
+
+        if (draft.post.id_kelas_penjamin_pasien) {
+          const findData = options.find(
+            (row) => row.value === draft.post.id_kelas_penjamin_pasien
+          );
+          if (!findData) {
+            draft.post.id_kelas_penjamin_pasien = '';
+            draft.selectedOption.id_kelas_penjamin_pasien = null;
+          }
+        }
         return;
+      }
       case actionTypes.GET_SETTING_KELAS_PENJAMIN_PASIEN_FAILURE:
         draft.loaderSettingKelasPenjamin = false;
         return;

@@ -246,6 +246,26 @@ export default {
         { resource }
       ),
   },
+  getUnitLayananKunjunganHariIni: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_UNITLAYANAN_KUNJUNGAN_HARI_INI_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   loadAllPasien: (resource, data, tableParams) =>
     createAction(
       actionTypes.GET_ALL_PASIEN_REQUEST,
@@ -256,6 +276,12 @@ export default {
   loadAllWilayah: (resource, data, tableParams) =>
     createAction(
       actionTypes.GET_ALL_WILAYAH_REQUEST,
+      { data },
+      { tableParams, resource }
+    ),
+  loadAllKunjunganHariIni: (resource, data, tableParams) =>
+    createAction(
+      actionTypes.GET_ALL_KUNJUNGAN_HARI_INI_REQUEST,
       { data },
       { tableParams, resource }
     ),
@@ -308,6 +334,8 @@ export default {
     createAction(actionTypes.TOGGLE_SHOW_CARI_KUNJUNGAN, {}, { resource }),
   toggleShowNormModal: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_NORM_MODAL, {}, { resource }),
+  toggleShowKunjunganHariIni: (resource) =>
+    createAction(actionTypes.TOGGLE_SHOW_KUNJUNGAN_HARI_INI, {}, { resource }),
 
   onChangeFilterPasien: (resource, data) =>
     createAction(actionTypes.FILTER_CHANGE_PASIEN, { data }, { resource }),
@@ -342,4 +370,12 @@ export default {
     createAction(actionTypes.FILTER_SELECTED_KUNJUNGAN, { data }, { resource }),
   onChangeTab: (resource, data) =>
     createAction(actionTypes.CHANGE_TAB, { data }, { resource }),
+  onSubmitFilterKunjunganHariIni: (resource, data) =>
+    createAction(
+      actionTypes.FILTER_SUBMIT_KUNJUNGAN_HARI_INI,
+      { data },
+      { resource, log: createActivity(resource, activity.CARI) }
+    ),
+  onOpenMenuStatusPasien: (resource) =>
+    createAction(actionTypes.OPEN_MENU_STATUS_PASIEN, {}, { resource }),
 };

@@ -54,3 +54,25 @@ export const AsalKunjunganSingleValue = ({ data, ...props }) => (
     {`${formatter.dateFormatClient(data.tgl_kunjungan)} | ${data.label}`}
   </components.SingleValue>
 );
+
+export const OptionStatusPasien = (props) => {
+  const { data } = props;
+  const isUmum = data.value === 0;
+
+  return (
+    <components.Option {...props}>
+      <div className="react-select__option-label">{data.label}</div>
+      {!isUmum && (
+        <div className="react-select__option-caption">
+          {`${data.nomor_anggota || '-'} | Hak kelas : ${
+            data.nama_kelas || '-'
+          }`}
+        </div>
+      )}
+    </components.Option>
+  );
+};
+
+OptionStatusPasien.propTypes = {
+  data: PropTypes.object.isRequired,
+};

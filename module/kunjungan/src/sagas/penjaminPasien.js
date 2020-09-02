@@ -44,6 +44,12 @@ function* loadAllPenjaminPasien({ payload, meta }) {
     let response = yield call(api.getAll, payload.data);
     if (response.status) {
       successCallback(response.data, response.recordsTotal);
+      yield put(
+        actions.getAllPenjaminPasien.requestSuccess(
+          meta.resource,
+          response.data
+        )
+      );
     } else {
       failCallback();
     }
@@ -99,7 +105,12 @@ function* addHandler({ meta }) {
   yield put(actions.onFocusElement(meta.resource, 'id_penjamin'));
 }
 
-function* editHandler({ meta }) {
+function* editHandler({ meta, payload }) {
+  yield put(
+    actions.settingKelasPenjamin.request(meta.resource, {
+      value: payload.data.id_penjamin,
+    })
+  );
   yield put(actions.onFocusElement(meta.resource, 'id_penjamin'));
 }
 
@@ -154,12 +165,49 @@ function* handleSaveFailure({ payload, meta }) {
 }
 
 function* handleReloaded({ meta }) {
-  yield put(actions.onReady(meta.resource));
+  if (meta.resource === staticConst.PENJAMIN_PASIEN_RESOURCE) {
+    yield put(actions.onReady(meta.resource));
+  }
+}
+
+function* handleDelete({ payload, meta }) {
+  try {
+    yield put(loaderActions.show('Proses hapus...'));
+    let post = payload.data;
+
+    let response = yield call(api.delete, { id: post.id });
+    if (response.status) {
+      yield put(actions.deletePenjamin.requestSuccess(meta.resource, response));
+    } else {
+      if (response.info.type === 'warning') {
+        yield toastr.warning(response.message);
+      } else {
+        yield toastr.error(response.message);
+      }
+    }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* handleDeleteSuccess({ payload, meta }) {
+  try {
+    yield put(datatableActions.onReload(meta.resource));
+    yield toastr.success(payload.data.message);
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 export default function* watchAuthActions() {
   yield all([
-    takeLatest(actionTypes.LOAD_ALL_PENJAMIN_PASIEN, loadAllPenjaminPasien),
+    takeLatest(
+      actionTypes.GET_ALL_PENJAMIN_PASIEN_REQUEST,
+      loadAllPenjaminPasien
+    ),
     takeLatest(actionTypes.CHANGE_SELECT2_PENJAMIN_PASIEN, changeSelect2),
     takeLatest(actionTypes.ADD_PENJAMIN_PASIEN, addHandler),
     takeLatest(actionTypes.EDIT_PENJAMIN_PASIEN, editHandler),
@@ -171,5 +219,7 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS, handleSaveSuccess),
     takeLatest(actionTypes.SAVE_PENJAMIN_PASIEN_FAILURE, handleSaveFailure),
     takeLatest(datatableActionTypes.RELOADED, handleReloaded),
+    takeLatest(actionTypes.DELETE_PENJAMIN_PASIEN_REQUEST, handleDelete),
+    takeLatest(actionTypes.DELETE_PENJAMIN_PASIEN_SUCCESS, handleDeleteSuccess),
   ]);
 }

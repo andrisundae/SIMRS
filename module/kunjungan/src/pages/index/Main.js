@@ -7,6 +7,7 @@ import { PageLoader } from '@simrs/components';
 import Create from './containers/Create';
 import FooterActions from './containers/FooterActions';
 import PenjaminPasienFooterActions from './containers/PenjaminPasienFooterActions';
+import KunjunganHariIni from './containers/KunjunganHariIni';
 import actions from './redux/actions';
 import { staticConst } from './static';
 
@@ -33,13 +34,16 @@ class Main extends Component {
           <FooterActions
             resource={this.props.resource}
             permissions={this.props.permissions}
+            t={this.props.t}
           />
         ) : (
           <PenjaminPasienFooterActions
             resource={staticConst.PENJAMIN_PASIEN_RESOURCE}
             permissions={this.props.permissions}
+            t={this.props.t}
           />
         )}
+        <KunjunganHariIni resource={this.props.resource} t={this.props.t} />
         <PageLoader
           active={this.props.isLoading}
           message={this.props.loaderMessage}

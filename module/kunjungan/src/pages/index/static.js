@@ -14,11 +14,19 @@ const staticConst = {
   TABLE_PASIEN: 'table_pasien',
   TABLE_KUNJUNGAN: 'table_kunjungan',
   TABLE_WILAYAH: 'table_wilayah',
+  TABLE_KUNJUNGAN_HARI_INI: 'table_kunjungan_hari_ini',
 };
 
 const statusesElements = {
   [actionTypes.READY]: ['norm', 'search', 'add', 'exit'],
-  [actionTypes.SELECTED]: ['add', 'edit', 'delete', 'preview', 'finish'],
+  [actionTypes.SELECTED]: [
+    'add',
+    'edit',
+    'delete',
+    'preview',
+    'finish',
+    'tab_penjamin_pasien',
+  ],
   [actionTypes.ADD]: [
     'detail_pasien',
     'penjamin_pasien',
