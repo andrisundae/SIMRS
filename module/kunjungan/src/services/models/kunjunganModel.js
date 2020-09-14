@@ -7,7 +7,7 @@ const validationRules = (resource) => {
       norm: { required: true },
       nama: { required: true },
       id_jenis_kelamin: { required: true },
-      nama_ortu: { required: true },
+      // nama_ortu: { required: true },
       tgl_lahir: { required: true },
       // umur: { required: true },
       alamat: { required: true },
@@ -105,16 +105,6 @@ export default {
     );
     return response;
   },
-  getInstalasiOptions: async (idKelompok) => {
-    let response = await request.get(`${path}/instalasi-options/${idKelompok}`);
-    return response;
-  },
-  getUnitLayananOptions: async (idInstalasi) => {
-    let response = await request.get(
-      `${path}/options-unit-layanan/${idInstalasi}`
-    );
-    return response;
-  },
   getAllPasien: async (params) => {
     let response = await request.post('/billing/master/pasien/view', params);
 
@@ -132,7 +122,9 @@ export default {
     return response;
   },
   getNextNorm: async () => {
-    let response = await request.get(`${path}/norm/next`);
+    let response = await request.get(
+      '/system/generate/no-transaksi/master_pasien'
+    );
     return response;
   },
   getPasienByNorm: async (norm) => {

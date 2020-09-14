@@ -8,17 +8,22 @@ import { simrsHeaders } from './request';
 import { main } from '../store';
 
 const fetch = new Backend(null, {
-    loadPath: (lngs, namespace) => {
-    return `${main.get('config.api')}/translation/${lngs}/${namespace}`
-    },
-    stringify: JSON.stringify,
-    allowMultiLoading: false,
-    multiSeparator: '+',
-    requestOptions: {
-        mode: 'cors',
-        cache: 'no-cache',
-        headers: simrsHeaders()
-    },
+  loadPath: (lngs, namespace) => {
+    return `${main.get('config.api')}/translation/${lngs}/${namespace}`;
+  },
+  stringify: JSON.stringify,
+  allowMultiLoading: false,
+  multiSeparator: '+',
+  requestOptions: {
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: simrsHeaders(),
+  },
+  // parse: (data) => {
+  //   const parseData = JSON.parse(data);
+
+  //   return parseData.data;
+  // },
 });
 
 i18n
@@ -37,7 +42,7 @@ i18n
     },
     interpolation: {
       escapeValue: false,
-    }
+    },
   });
 
-export {i18n};
+export { i18n };

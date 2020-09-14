@@ -16,6 +16,7 @@ import {
   FinishButton,
   PrintButton,
   confirmation,
+  withAppConsumer,
 } from '@simrs/components';
 import { getPermissions } from '@simrs/main/src/modules/auth';
 
@@ -103,6 +104,7 @@ class FooterActions extends Component {
 
   onSave = () => {
     this.props.action.onSave(this.props.resource, this.props.post);
+    this.props.appContext.toggleMainMenu();
   };
 
   onAdd = () => {
@@ -111,6 +113,7 @@ class FooterActions extends Component {
     } else {
       this.props.action.onAdd(this.props.resource);
     }
+    this.props.appContext.toggleMainMenu();
   };
 
   onCancel = () => {
@@ -119,6 +122,7 @@ class FooterActions extends Component {
     } else {
       this.props.action.onCancel(this.props.resource);
     }
+    this.props.appContext.toggleMainMenu();
   };
 
   onFinish = () => {
@@ -129,6 +133,7 @@ class FooterActions extends Component {
     this.props.action.onCheckEdit(this.props.resource, {
       idKunjunganUnit: this.props.post.id_kunjungan_unit,
     });
+    this.props.appContext.toggleMainMenu();
   };
 
   onDelete = () => {
@@ -316,6 +321,10 @@ FooterActions.propTypes = {
   resource: PropTypes.string.isRequired,
   t: PropTypes.func,
   statusForm: PropTypes.string,
+  appContext: PropTypes.object,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAppConsumer(FooterActions));
