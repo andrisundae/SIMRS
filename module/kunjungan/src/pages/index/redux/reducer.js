@@ -48,6 +48,7 @@ export default (state = initialState, action) =>
           id_pasien: idPasien,
           id_kunjungan_unit: idKunjunganUnit,
         };
+        draft.focusElement = '';
 
         return;
       }
@@ -414,6 +415,7 @@ export default (state = initialState, action) =>
           id: '',
           rt: '0',
           rw: '0',
+          id_kunjungan_unit: '',
         };
         draft.data = {
           ...state.data,

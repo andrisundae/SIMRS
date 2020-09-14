@@ -312,8 +312,6 @@ class InputPasien extends Component {
       disabledUnitLayanan,
     } = this.props;
 
-    console.log(data.options_status_pasien);
-
     return (
       <Grid columns="2" divided>
         <Grid.Row>
