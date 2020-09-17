@@ -110,7 +110,7 @@ class Main extends Component {
         width: 150,
       },
       {
-        headerName: this.props.t(`${this.props.resource}:header.column.status`),
+        headerName: this.props.t(`${this.props.resource}:header.column.aktif`),
         field: 'str_aktif',
         width: 60,
       },
