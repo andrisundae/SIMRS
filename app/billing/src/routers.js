@@ -213,6 +213,11 @@ const routers = [
     path: '/billing/antrian/kunjungan',
     component: lazy(() => import('@module/antrian-kunjungan')),
   },
+  {
+    key: '_billing_informasi_kunjungan',
+    path: '/billing/informasi/kunjungan',
+    component: lazy(() => import('@module/informasi-kunjungan')),
+  },
 ];
 
 export default routers;

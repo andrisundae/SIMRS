@@ -24,3 +24,5 @@ export const sortData = (sortModel, data) => {
 
   return resultOfSort;
 };
+
+export * from './formatter';

@@ -96,12 +96,18 @@ class FooterActions extends Component {
     this._bindKey();
   }
 
-  componentDidUpdate() {
-    let { focusElement } = this.props;
+  componentDidUpdate(prevProps) {
+    let { focusElement, appContext } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
+      }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        appContext.toggleMainMenu();
       }
     }
   }
@@ -254,7 +260,6 @@ class FooterActions extends Component {
 
   _onSave() {
     this.props.action.onSave(this.props.resource, this.props.post);
-    this.props.appContext.toggleMainMenu();
   }
 
   _onCancel() {
@@ -304,6 +309,7 @@ const mapStateToProps = function (state, props) {
     selectedRow: module.selectedRow,
     post: module.post,
     focusElement: module.focusElement,
+    saveSuccess: module.saveSuccess,
   };
 };
 

@@ -26,7 +26,7 @@ import _ from 'lodash';
   dayjs.locale('id');
 })();
 
-export const dateFormatDB = (date, format = 'YYYY-MM-DD HH:mm') => {
+export const dateFormatDB = (date, format = 'YYYY-MM-DD') => {
   const newDate = dayjs(date);
 
   return newDate.isValid() ? newDate.format(format) : date;
@@ -61,4 +61,23 @@ export const textSplitter = (text, splitter = '.', len = 2) => {
   const joinText = split.join(splitter);
 
   return joinText;
+};
+
+export const displayAge = (tglMulai, tglSelesai) => {
+  const start = dayjs(tglMulai);
+  const end = dayjs(tglSelesai);
+
+  if (!start.isValid() || !end.isValid()) {
+    return '-';
+  }
+
+  const years = end.diff(start, 'year');
+  const start1 = start.add(years, 'years');
+
+  const months = end.diff(start1, 'months');
+  const start2 = start1.add(months, 'months');
+
+  const days = end.diff(start2, 'days');
+
+  return `${years} Tahun ${months} Bulan ${days} Hari `;
 };
