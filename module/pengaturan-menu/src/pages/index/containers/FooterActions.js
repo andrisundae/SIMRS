@@ -15,6 +15,7 @@ import {
   SaveButton,
   CancelButton,
   confirmation,
+  withAppConsumer,
 } from '@simrs/components';
 import { toastr } from '@simrs/common';
 import { getPermissions } from '@simrs/main/src/modules/auth';
@@ -39,70 +40,22 @@ class FooterActions extends Component {
     this.save = createRef();
   }
 
-  render() {
-    return (
-      <FooterActionsContainer>
-        <Fragment>
-          {this._isCanAdd() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
-              <AddButton
-                onClick={this._onAdd}
-                inputRef={this.add}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanEdit() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <EditButton
-                onClick={this._onEdit}
-                inputRef={this.edit}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanDelete() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <DeleteButton
-                onClick={this._onDelete}
-                inputRef={this.delete}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanSave() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
-              <SaveButton
-                onClick={this._onSave}
-                inputRef={this.save}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanCancel() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <CancelButton
-                onClick={this._onCancel}
-                inputRef={this.cancel}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-        </Fragment>
-      </FooterActionsContainer>
-    );
-  }
-
   componentDidMount() {
     this._bindKey();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let { focusElement } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
+      }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        this.props.appActions.activateMainMenu();
       }
     }
   }
@@ -234,7 +187,7 @@ class FooterActions extends Component {
   _onAdd() {
     if (this.props.selectedKeys.length > 0) {
       this.props.action.onAdd(this.props.resource);
-      ipcRenderer.send('disable-header');
+      this.props.appActions.deactivateMainMenu();
     } else {
       toastr.warning('Menu parent belum dipilih!');
     }
@@ -242,7 +195,7 @@ class FooterActions extends Component {
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDelete() {
@@ -261,7 +214,7 @@ class FooterActions extends Component {
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource);
-    ipcRenderer.send('enable-header');
+    this.props.appActions.activateMainMenu();
   }
 
   _onFocusElement(e) {
@@ -295,10 +248,64 @@ class FooterActions extends Component {
       this.props.action.onFocusElement(this.props.resource, nextElement);
     }
   }
+
+  render() {
+    return (
+      <FooterActionsContainer>
+        <Fragment>
+          {this._isCanAdd() && (
+            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+              <AddButton
+                onClick={this._onAdd}
+                inputRef={this.add}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanEdit() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <EditButton
+                onClick={this._onEdit}
+                inputRef={this.edit}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanDelete() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <DeleteButton
+                onClick={this._onDelete}
+                inputRef={this.delete}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanSave() && (
+            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+              <SaveButton
+                onClick={this._onSave}
+                inputRef={this.save}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanCancel() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <CancelButton
+                onClick={this._onCancel}
+                inputRef={this.cancel}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+        </Fragment>
+      </FooterActionsContainer>
+    );
+  }
 }
 
 const mapStateToProps = function (state, props) {
-  const { statusForm, post, data, focusElement } = state.module;
+  const { statusForm, post, data, focusElement, saveSuccess } = state.module;
 
   return {
     customPermissions: getPermissions(props.permissions),
@@ -306,6 +313,7 @@ const mapStateToProps = function (state, props) {
     post,
     focusElement,
     selectedKeys: data.selectedKeys,
+    saveSuccess,
   };
 };
 
@@ -334,6 +342,12 @@ FooterActions.propTypes = {
   post: PropTypes.object,
   focusElement: PropTypes.string,
   resource: PropTypes.string.isRequired,
+  saveSuccess: PropTypes.bool,
+  appActions: PropTypes.object,
+  t: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAppConsumer(FooterActions));

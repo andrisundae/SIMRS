@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
-import { ipcRenderer } from 'electron';
 
 import {
   FooterActionsContainer,
@@ -16,6 +15,7 @@ import {
   CancelButton,
   DuplicationButton,
   confirmation,
+  withAppConsumer,
 } from '@simrs/components';
 import { isGranted } from '@simrs/main/src/modules/auth';
 import {
@@ -111,13 +111,26 @@ class FooterActions extends Component {
     this._bindKey();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let { focusElement } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
       }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        this.props.appActions.activateMainMenu();
+      }
+    }
+
+    if (
+      prevProps.isDuplicationShowing !== this.props.isDuplicationShowing &&
+      !this.props.isDuplicationShowing
+    ) {
+      this._bindKey();
     }
   }
 
@@ -274,12 +287,12 @@ class FooterActions extends Component {
 
   _onAdd() {
     this.props.action.onAdd(this.props.resource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDelete() {
@@ -298,7 +311,7 @@ class FooterActions extends Component {
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource);
-    ipcRenderer.send('enable-header');
+    this.props.appActions.activateMainMenu();
   }
 
   _onDuplication() {
@@ -359,6 +372,8 @@ const mapStateToProps = function (state, props) {
     selectedRow: module.selectedRow,
     post: module.post,
     focusElement: module.focusElement,
+    isDuplicationShowing: module.duplication.show,
+    saveSuccess: module.saveSuccess,
   };
 };
 
@@ -384,7 +399,14 @@ FooterActions.propTypes = {
   selectedRow: PropTypes.number,
   post: PropTypes.object,
   focusElement: PropTypes.string,
+  isDuplicationShowing: PropTypes.bool,
   resource: PropTypes.string.isRequired,
+  appActions: PropTypes.object,
+  t: PropTypes.func,
+  saveSuccess: PropTypes.bool,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAppConsumer(FooterActions));

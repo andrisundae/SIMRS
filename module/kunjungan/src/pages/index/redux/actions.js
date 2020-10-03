@@ -378,4 +378,6 @@ export default {
     ),
   onOpenMenuStatusPasien: (resource) =>
     createAction(actionTypes.OPEN_MENU_STATUS_PASIEN, {}, { resource }),
+  resetKunjunganDetail: (resource) =>
+    createAction(actionTypes.RESET_KUNJUNGAN_DETAIL, {}, { resource }),
 };

@@ -1,5 +1,4 @@
 import { put, call, takeLatest, all } from 'redux-saga/effects';
-import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 
 import { validator as commonValidator, toastr } from '@simrs/common';
@@ -130,7 +129,6 @@ function* handleSave({ payload, meta }) {
 function* handleSaveSuccess({ payload, meta }) {
   try {
     yield put(actions.onReady(meta.resource));
-    yield ipcRenderer.send('enable-header');
     yield toastr.success(payload.data.message);
   } catch (error) {
     yield toastr.error(error.message);

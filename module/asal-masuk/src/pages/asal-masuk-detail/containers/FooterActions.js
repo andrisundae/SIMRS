@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
-import { ipcRenderer } from 'electron';
 
 import {
   FooterActionsContainer,
@@ -16,6 +15,7 @@ import {
   CancelButton,
   ImportButton,
   confirmation,
+  withAppConsumer,
 } from '@simrs/components';
 import { isGranted } from '@simrs/main/src/modules/auth';
 import {
@@ -44,78 +44,11 @@ class FooterActions extends Component {
     this.import = createRef();
   }
 
-  render() {
-    return (
-      <FooterActionsContainer>
-        <div
-          style={{
-            position: 'absolute',
-            display: 'flex',
-            width: '100%',
-            backgroundColor: '#1b1c1d',
-            bottom: 0,
-          }}
-        >
-          {this._isCanAdd() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
-              <AddButton
-                onClick={this._onAdd}
-                inputRef={this.add}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanEdit() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <EditButton
-                onClick={this._onEdit}
-                inputRef={this.edit}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanDelete() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <DeleteButton
-                onClick={this._onDelete}
-                inputRef={this.delete}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanSave() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
-              <SaveButton
-                onClick={this._onSave}
-                inputRef={this.save}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanCancel() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <CancelButton
-                onClick={this._onCancel}
-                inputRef={this.cancel}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this._isCanImport() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <ImportButton
-                onClick={this._onImport}
-                inputRef={this.import}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-        </div>
-      </FooterActionsContainer>
-    );
+  componentDidMount() {
+    this._bindKey();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let { focusElement } = this.props;
 
     if (this[focusElement]) {
@@ -123,7 +56,24 @@ class FooterActions extends Component {
         this[focusElement].current.focus();
       }
     }
-    this._bindKey();
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        this.props.appActions.activateMainMenu();
+      }
+    }
+
+    if (
+      prevProps.isImportDetailShowing !== this.props.isImportDetailShowing &&
+      !this.props.isImportDetailShowing
+    ) {
+      this._bindKey();
+    } else if (
+      !prevProps.isImportDetailShowing &&
+      !this.props.isImportDetailShowing
+    ) {
+      this._bindKey();
+    }
   }
 
   componentWillUnmount() {
@@ -144,17 +94,9 @@ class FooterActions extends Component {
 
     MouseTrap.bindGlobal('alt+t', function (e) {
       e.preventDefault();
-      if (_this.props.importDetail.show === true) {
-        const { importDetail, resource, subResource, reference } = _this.props;
-        _this.props.action.onSaveImportDetail(resource, subResource, {
-          ...reference,
-          list_unit_layanan: importDetail.selectedRows,
-        });
-      } else {
-        if (_this._isCanAdd()) {
-          _this.add.current.focus();
-          _this._onAdd();
-        }
+      if (_this._isCanAdd()) {
+        _this.add.current.focus();
+        _this._onAdd();
       }
     });
 
@@ -285,12 +227,12 @@ class FooterActions extends Component {
 
   _onAdd() {
     this.props.action.onAdd(this.props.resource, this.props.subResource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource, this.props.subResource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDelete() {
@@ -310,7 +252,7 @@ class FooterActions extends Component {
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource, this.props.subResource);
-    ipcRenderer.send('enable-header');
+    this.props.appActions.activateMainMenu();
   }
 
   _onImport() {
@@ -321,29 +263,30 @@ class FooterActions extends Component {
     if (e.which === 37 || e.which === 39) {
       e.preventDefault();
 
-      let { name } = e.target;
+      const { name } = e.target;
+      const { canEdit, canImport, canAdd } = this.props.customPermissions;
 
       let nextElement = '';
       switch (name) {
         case 'add':
-          if (this.props.selectedRow && this.props.canEdit) {
+          if (this.props.selectedRow && canEdit) {
             nextElement = 'edit';
           } else {
-            if (this.props.canImport) {
+            if (canImport) {
               nextElement = 'import';
             }
           }
           break;
         case 'edit':
-          if (this.props.selectedRow && this.props.canEdit) {
+          if (this.props.selectedRow && canEdit) {
             nextElement = 'delete';
           }
           break;
         case 'delete':
-          if (this.props.canImport) {
+          if (canImport) {
             nextElement = 'import';
           } else {
-            if (this.props.canAdd) {
+            if (canAdd) {
               nextElement = 'add';
             }
           }
@@ -355,7 +298,7 @@ class FooterActions extends Component {
           nextElement = 'save';
           break;
         case 'import':
-          if (this.props.canAdd) {
+          if (canAdd) {
             nextElement = 'add';
           }
           break;
@@ -371,6 +314,77 @@ class FooterActions extends Component {
       );
     }
   }
+
+  render() {
+    return (
+      <FooterActionsContainer>
+        <div
+          style={{
+            position: 'absolute',
+            display: 'flex',
+            width: '100%',
+            backgroundColor: '#1b1c1d',
+            bottom: 0,
+          }}
+        >
+          {this._isCanAdd() && (
+            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+              <AddButton
+                onClick={this._onAdd}
+                inputRef={this.add}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanEdit() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <EditButton
+                onClick={this._onEdit}
+                inputRef={this.edit}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanDelete() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <DeleteButton
+                onClick={this._onDelete}
+                inputRef={this.delete}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanSave() && (
+            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+              <SaveButton
+                onClick={this._onSave}
+                inputRef={this.save}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanCancel() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <CancelButton
+                onClick={this._onCancel}
+                inputRef={this.cancel}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+          {this._isCanImport() && (
+            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+              <ImportButton
+                onClick={this._onImport}
+                inputRef={this.import}
+                onKeyDown={this._onFocusElement}
+              />
+            </Menu.Item>
+          )}
+        </div>
+      </FooterActionsContainer>
+    );
+  }
 }
 
 const mapStateToProps = function (state, props) {
@@ -381,6 +395,7 @@ const mapStateToProps = function (state, props) {
     post,
     focusElement,
     importDetail,
+    saveSuccess,
   } = state.nested.module;
 
   return {
@@ -396,6 +411,8 @@ const mapStateToProps = function (state, props) {
     post,
     focusElement,
     importDetail,
+    isImportDetailShowing: importDetail.show,
+    saveSuccess,
   };
 };
 
@@ -427,6 +444,13 @@ FooterActions.propTypes = {
   subResource: PropTypes.string.isRequired,
   reference: PropTypes.object,
   importDetail: PropTypes.object,
+  saveSuccess: PropTypes.bool,
+  appActions: PropTypes.object,
+  t: PropTypes.func,
+  isImportDetailShowing: PropTypes.bool,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAppConsumer(FooterActions));

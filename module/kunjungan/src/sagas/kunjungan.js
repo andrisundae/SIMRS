@@ -325,6 +325,8 @@ function* getKunjunganTerakhirRequestHandler({ meta, payload }) {
               idKunjunganUnit: data[0].id_kunjungan_unit,
             })
           );
+        } else {
+          yield put(actions.resetKunjunganDetail(meta.resource));
         }
       }
     } else {
@@ -675,7 +677,11 @@ function* deleteHandler({ payload, meta }) {
 function* deleteSuccessHandler({ meta, payload }) {
   try {
     yield toastr.success(payload.data.message);
-    yield put(actions.getPasien.request(meta.resource, { norm: payload.norm }));
+    const idPasien = payload.data.data.id_pasien;
+    yield put(actions.getPenjaminPasien.request(meta.resource, { idPasien }));
+    yield put(
+      actions.getKunjunganTerakhir.request(meta.resource, { idPasien })
+    );
   } catch (error) {
     yield toastr.error(error.message);
   }

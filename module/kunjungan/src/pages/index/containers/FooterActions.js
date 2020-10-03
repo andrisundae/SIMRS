@@ -38,12 +38,18 @@ class FooterActions extends Component {
     this.bindKey();
   }
 
-  componentDidUpdate() {
-    let { focusElement } = this.props;
+  componentDidUpdate(prevProps) {
+    let { focusElement, appContext } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
+      }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        appContext.toggleMainMenu();
       }
     }
   }
@@ -223,7 +229,7 @@ class FooterActions extends Component {
           {this.isCanDelete() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <DeleteButton
-                onClick={this._onDelete}
+                onClick={this.onDelete}
                 inputRef={this.delete}
                 onKeyDown={this._onFocusElement}
               />
@@ -275,6 +281,13 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
+          <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+            <PrintButton
+              onClick={this.props.action.onToggleShowNorm}
+              // inputRef={this.cancel}
+              // onKeyDown={this._onFocusElement}
+            />
+          </Menu.Item>
         </Fragment>
       </FooterActionsContainer>
     );
@@ -282,17 +295,23 @@ class FooterActions extends Component {
 }
 
 const mapStateToProps = function (state, props) {
-  const { post, focusElement, statusForm } = state.module.kunjungan;
+  const {
+    post,
+    focusElement,
+    statusForm,
+    saveSuccess,
+  } = state.module.kunjungan;
 
   return {
     customPermissions: getPermissions(props.permissions),
     post,
     focusElement,
     statusForm,
+    saveSuccess,
   };
 };
 
-const mapDispatchToProps = function (dispatch) {
+const mapDispatchToProps = function (dispatch, props) {
   return {
     action: bindActionCreators(
       {
@@ -306,6 +325,7 @@ const mapDispatchToProps = function (dispatch) {
         onFinish: actions.onFinish,
         onFocusElement: actions.onFocusElement,
         onToggleShowKunjunganHariIni: actions.toggleShowKunjunganHariIni,
+        onToggleShowNorm: () => actions.toggleShowNormModal(props.resource),
       },
       dispatch
     ),
@@ -322,6 +342,7 @@ FooterActions.propTypes = {
   t: PropTypes.func,
   statusForm: PropTypes.string,
   appContext: PropTypes.object,
+  saveSuccess: PropTypes.bool,
 };
 
 export default connect(

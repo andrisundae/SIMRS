@@ -1,6 +1,5 @@
 import { put, call, takeLatest, all } from 'redux-saga/effects';
 import _ from 'lodash';
-import { ipcRenderer } from 'electron';
 
 import { validator as commonValidator, toastrActions } from '@simrs/common';
 import {
@@ -55,12 +54,17 @@ function* loadAllDetail({ payload, meta }) {
 }
 
 function* handleSave({ payload, meta }) {
-  let { resource, subResource } = meta;
+  const { resource, subResource } = meta;
   try {
     yield put(loaderActions.show('Proses simpan...'));
-    let { rules, messages } = api.validationRules(resource);
-    let post = payload.data;
-    let method = post.id ? 'koreksi' : 'tambah';
+    const { rules, messages } = api.validationRules(resource);
+    const data = payload.data;
+    const post = {
+      nama: data.nama,
+      asal_masuk: data.asal_masuk,
+      aktif: data.aktif,
+    };
+    const method = post.id ? 'koreksi' : 'tambah';
     let errors = validator(post, rules, messages);
     let isError = false;
 
@@ -89,7 +93,6 @@ function* handleSave({ payload, meta }) {
   } catch (error) {
     yield put(loaderActions.hide());
     yield put(toastrActions.error(error.message));
-    yield ipcRenderer.send('enable-header');
   }
 }
 
@@ -97,7 +100,6 @@ function* handleSaveSuccess({ payload, meta }) {
   try {
     yield put(toastrActions.success(payload.data.message));
     yield put(datatableActions.onReload(meta.subResource));
-    yield ipcRenderer.send('enable-header');
   } catch (error) {
     yield put(toastrActions.error(error.message));
   }
@@ -260,10 +262,6 @@ function* handleChangeInstalasi({ meta }) {
   yield put(actions.onReload(meta.resource, meta.subResource));
 }
 
-function* handleFocusElement() {
-  yield ipcRenderer.send('focusing-field');
-}
-
 export default function* watchActions() {
   yield all([
     takeLatest(moduleActionTypes.LOAD_ALL, loadAll),
@@ -276,7 +274,6 @@ export default function* watchActions() {
     takeLatest(moduleActionTypes.EDIT, handleEdit),
     takeLatest(filterActionTypes.FILTER_SUBMIT, handleSearch),
     takeLatest(datatableActionTypes.RELOADED, handleReloaded),
-    takeLatest(moduleActionTypes.ON_FOCUS_ELEMENT, handleFocusElement),
 
     takeLatest(actionTypes.LOAD_DATA_ON_IMPORT_DETAIL, loadAllDetail),
     takeLatest(actionTypes.GET_OPTIONS_INSTALASI_REQUEST, populateForm),

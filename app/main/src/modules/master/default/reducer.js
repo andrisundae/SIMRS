@@ -42,23 +42,19 @@ const moduleReducer = (state, action, initialState) =>
         return;
 
       case moduleActionTypes.SAVE_REQUEST:
-        draft.submitting = true;
         draft.post = payload.data;
-        draft.isSubmitted = true;
         draft.saveSuccess = false;
         return;
 
       case moduleActionTypes.SAVE_FAILURE:
         draft.errors = payload.errors;
         draft.focusElement = '';
-        draft.submitting = false;
         draft.saveSuccess = false;
         return;
 
       case moduleActionTypes.SAVE_SUCCESS:
         draft.dataAfterSave = payload.data;
         draft.selectedRow = payload.data.data.id;
-        draft.submitting = false;
         draft.saveSuccess = true;
         return;
 

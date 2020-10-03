@@ -100,10 +100,17 @@ export default (state = moduleState, action) =>
 
       case actionTypes.SAVE_REQUEST:
         draft.post = payload.data;
+        draft.saveSuccess = false;
         return;
 
       case actionTypes.SAVE_FAILURE:
         draft.errors = payload.error;
+        draft.saveSuccess = false;
+        return;
+
+      case actionTypes.SAVE_SUCCESS:
+        draft.focusElement = '';
+        draft.saveSuccess = true;
         return;
 
       case actionTypes.SAVE_DETAIL_REQUEST:

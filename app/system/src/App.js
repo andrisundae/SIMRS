@@ -14,7 +14,6 @@ import {
   PermissionDenied,
   PageLoader,
   AppProvider,
-  ModuleProvier,
 } from '@simrs/components';
 import { store, menu } from '@simrs/common';
 import apiSettingAplikasi from '@simrs/main/src/services/models/aturanAplikasiModel';
@@ -76,20 +75,12 @@ function Page() {
                           route={router.key}
                           {...props}
                           render={(permissions) => (
-                            <ModuleProvier
-                              value={{
-                                settings,
-                                permissions,
-                                resource: 'router.key',
-                              }}
-                            >
-                              <Component
-                                settings={settings}
-                                permissions={permissions}
-                                resource={router.key}
-                                {...props}
-                              />
-                            </ModuleProvier>
+                            <Component
+                              settings={settings}
+                              permissions={permissions}
+                              resource={router.key}
+                              {...props}
+                            />
                           )}
                         />
                       )}

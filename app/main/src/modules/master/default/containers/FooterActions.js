@@ -97,7 +97,7 @@ class FooterActions extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let { focusElement, appContext } = this.props;
+    let { focusElement } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
@@ -107,7 +107,7 @@ class FooterActions extends Component {
 
     if (prevProps.saveSuccess !== this.props.saveSuccess) {
       if (this.props.saveSuccess) {
-        appContext.toggleMainMenu();
+        this.props.appActions.activateMainMenu();
       }
     }
   }
@@ -240,12 +240,12 @@ class FooterActions extends Component {
 
   _onAdd = () => {
     this.props.action.onAdd(this.props.resource);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.deactivateMainMenu();
   };
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDelete() {
@@ -264,7 +264,7 @@ class FooterActions extends Component {
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.activateMainMenu();
   }
 
   _onFocusElement(e) {

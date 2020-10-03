@@ -19,4 +19,5 @@ export default {
   focusElement: '',
   statusForm: '',
   loaderSettingKelasPenjamin: false,
+  saveSuccess: false,
 };

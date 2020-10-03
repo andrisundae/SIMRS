@@ -36,12 +36,18 @@ class PenjamninPasienFooterActions extends Component {
     this.bindKey();
   }
 
-  componentDidUpdate() {
-    let { focusElement } = this.props;
+  componentDidUpdate(prevProps) {
+    let { focusElement, appContext } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
+      }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        appContext.toggleMainMenu();
       }
     }
   }
@@ -268,6 +274,7 @@ const mapStateToProps = function (state) {
     statusForm,
     permissions,
     selectedRow,
+    saveSuccess,
   } = state.module.penjaminPasien;
   const { post: postKunjungan } = state.module.kunjungan;
 
@@ -279,6 +286,7 @@ const mapStateToProps = function (state) {
     idPasien: postKunjungan.id_pasien,
     norm: postKunjungan.norm,
     selectedRow,
+    saveSuccess,
   };
 };
 
@@ -308,6 +316,7 @@ PenjamninPasienFooterActions.propTypes = {
   statusForm: PropTypes.string,
   appContext: PropTypes.object,
   selectedRow: PropTypes.number,
+  saveSuccess: PropTypes.bool,
   idPasien: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
   norm: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
 };

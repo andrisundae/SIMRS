@@ -1,6 +1,5 @@
 import { put, call, takeLatest, all } from 'redux-saga/effects';
 import _ from 'lodash';
-import { ipcRenderer } from 'electron';
 
 import { validator as commonValidator, toastrActions } from '@simrs/common';
 import {
@@ -71,7 +70,6 @@ function* handleSave({ payload, meta }) {
   } catch (error) {
     yield put(loaderActions.hide());
     yield put(toastrActions.error(error.message));
-    yield ipcRenderer.send('enable-header');
   }
 }
 
@@ -79,7 +77,6 @@ function* handleSaveSuccess({ payload, meta }) {
   try {
     yield put(toastrActions.success(payload.data.message));
     yield put(datatableActions.onReload(meta.subResource));
-    yield ipcRenderer.send('enable-header');
   } catch (error) {
     yield put(toastrActions.error(error.message));
   }
@@ -163,10 +160,6 @@ function* handleEdit({ meta }) {
   );
 }
 
-function* handleFocusElement() {
-  yield ipcRenderer.send('focusing-field');
-}
-
 export default function* watchActions() {
   yield all([
     takeLatest(moduleActionTypes.LOAD_ALL, loadAll),
@@ -179,6 +172,5 @@ export default function* watchActions() {
     takeLatest(moduleActionTypes.EDIT, handleEdit),
     takeLatest(filterActionTypes.FILTER_SUBMIT, handleSearch),
     takeLatest(datatableActionTypes.RELOADED, handleReloaded),
-    takeLatest(moduleActionTypes.ON_FOCUS_ELEMENT, handleFocusElement),
   ]);
 }

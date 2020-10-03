@@ -140,4 +140,5 @@ export default {
     },
     loaderUnitLayanan: false,
   },
+  saveSuccess: false,
 };

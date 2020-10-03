@@ -10,7 +10,7 @@ import FooterActions from './containers/FooterActions';
 const containerStyles = {
   zIndex: 21,
   position: 'absolute',
-  top: 42.5,
+  top: 0,
   width: '100%',
 };
 
@@ -30,23 +30,25 @@ class Main extends Component {
 
     const { isChildren, showFooterActions } = this.props;
     // const childrenStyles = isChildren ?{ ...bodyStyles } : { ...bodyStyles};
-    let containerProps = {
-      size: 'mini',
-    };
+    let containerProps = {};
 
     if (isChildren) {
       containerProps = { ...containerProps, style: containerStyles };
     }
 
     return (
-      <Fragment>
-        <Segment secondary className="content-header">
+      <div {...containerProps}>
+        <Segment
+          style={{ marginBottom: 0 }}
+          secondary
+          className="content-header"
+        >
           <Header as="h4">
             <Icon name={this.props.icon} />
             {this.props.caption || this.props.t(`${this.props.resource}:title`)}
           </Header>
         </Segment>
-        <Segment {...containerProps}>
+        <Segment style={{ marginTop: -1, minHeight: 550 }}>
           <Grid className="content-grid">
             <Grid.Row>
               <Grid.Column>
@@ -57,13 +59,11 @@ class Main extends Component {
               <Grid.Column>{this.props.list}</Grid.Column>
             </Grid.Row>
             {this.props.create && (
-              <Fragment>
-                <Grid.Row>
-                  <Grid.Column>
-                    <Segment padded>{this.props.create}</Segment>
-                  </Grid.Column>
-                </Grid.Row>
-              </Fragment>
+              <Grid.Row>
+                <Grid.Column>
+                  <Segment padded>{this.props.create}</Segment>
+                </Grid.Column>
+              </Grid.Row>
             )}
           </Grid>
         </Segment>
@@ -72,7 +72,7 @@ class Main extends Component {
           active={this.props.isLoading}
           message={this.props.loaderMessage}
         />
-      </Fragment>
+      </div>
       // <Segment {...containerProps} className="content-container">
       //     <Header as='h5' style={{ marginBottom: 10 }}>
       //         <Icon name={this.props.icon} />

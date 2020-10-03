@@ -64,37 +64,6 @@ class Main extends Component {
           message={this.props.loaderMessage}
         />
       </Fragment>
-      // <Segment size="mini" className="content-container">
-      //     <Header as='h5' style={{ marginBottom: 10 }}>
-      //         <Icon name={this.props.icon} />
-      //         {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-      //     </Header>
-      //     <Segment size="mini" style={{marginTop: 10}}>
-      //         <Grid className="content-grid">
-      //             <Grid.Row style={{marginTop: 5}}>
-      //                 <Grid.Column>
-      //                     <Segment padded>
-      //                         {this.props.filter}
-      //                     </Segment>
-      //                 </Grid.Column>
-      //             </Grid.Row>
-      //             <Grid.Row>
-      //                 <Grid.Column>
-      //                     {this.props.list}
-      //                 </Grid.Column>
-      //             </Grid.Row>
-      //             <Grid.Row style={{ marginBottom: 5 }}>
-      //                 <Grid.Column>
-      //                     <Segment padded>
-      //                         {this.props.create}
-      //                     </Segment>
-      //                 </Grid.Column>
-      //             </Grid.Row>
-      //         </Grid>
-      //     </Segment>
-      //     {footer}
-      //     <PageLoader active={this.props.isLoading} message={this.props.loaderMessage}/>
-      // </Segment>
     );
   }
 

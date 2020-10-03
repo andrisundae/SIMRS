@@ -117,7 +117,6 @@ function* handleSave({ payload, meta }) {
   } catch (error) {
     yield put(loaderActions.hide());
     yield put(toastrActions.error(error.message));
-    yield ipcRenderer.send('enable-header');
   }
 }
 
@@ -125,7 +124,6 @@ function* handleSaveSuccess({ payload, meta }) {
   try {
     yield put(toastrActions.success(payload.data.message));
     yield put(datatableActions.onReload(meta.subResource));
-    yield ipcRenderer.send('enable-header');
   } catch (error) {
     yield put(toastrActions.error(error.message));
   }
@@ -136,7 +134,6 @@ function* handleSaveFailure({ payload, meta }) {
   let elementError = getFirstElementError(payload.errors);
   yield put(moduleActions.onFocusElement(resource, subResource, elementError));
   if (elementError === 'total_tarif') {
-    yield ipcRenderer.send('enable-header');
     yield ipcRenderer.send('status-not-balance');
   } else {
     yield put(toastrActions.warning(getFirstError(payload.errors)));

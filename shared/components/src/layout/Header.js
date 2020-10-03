@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Link } from 'react-router-dom';
-import { remote } from 'electron';
+import { withRouter } from 'react-router-dom';
 
 import { Icon, Header as SmHeader } from 'semantic-ui-react';
-import { AppConsumer } from '@simrs/components';
+import { useAppState } from '@simrs/components';
 
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
@@ -13,74 +12,49 @@ import 'xel/themes/macos.css';
 
 import 'xel/xel.min.js';
 
-const { ipcMain } = remote;
-
 function Header({ logo, match, username, contexts, routers, history }) {
-  const [isDisabled, setDisabled] = useState(false);
-
-  function handleDisableHeader() {
-    setDisabled(true);
-  }
-
-  function handleEnableHeader() {
-    setDisabled(false);
-  }
-
-  // useEffect(() => {
-  //     ipcMain.on('disable-header', handleDisableHeader);
-  //     ipcMain.on('enable-header', handleEnableHeader);
-
-  //     return () => {
-  //         console.log('test')
-  //         ipcMain.removeListener('disable-header', handleDisableHeader);
-  //         ipcMain.removeListener('enable-header', handleEnableHeader);
-  //     };
-  // }, [isDisabled]);
+  const { disabledMainMenu } = useAppState();
 
   return (
-    <AppConsumer>
-      {({ disabledMainMenu }) => (
-        <x-menubar
-          class="layout-header"
-          style={{
-            height: 40,
-            zIndex: 28,
-            top: 0,
-            position: 'fixed',
-            left: 0,
-            right: 'auto',
-            bottom: 'auto',
-            width: '100%',
-            margin: 0,
-          }}
+    <x-menubar
+      class="layout-header"
+      style={{
+        height: 40,
+        zIndex: 28,
+        top: 0,
+        position: 'fixed',
+        left: 0,
+        right: 'auto',
+        bottom: 'auto',
+        width: '100%',
+        margin: 0,
+      }}
+    >
+      <div style={{ marginLeft: 10 }}>
+        <SmHeader
+          as="h6"
+          icon
+          style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}
         >
-          <div style={{ marginLeft: 10 }}>
-            <SmHeader
-              as="h6"
-              icon
-              style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}
-            >
-              {logo === 'BILLING' && (
-                <Icon name="bold" style={{ fontSize: '2em' }} />
-              )}
-              {logo === 'SISTEM' && (
-                <Icon name="stripe s" style={{ fontSize: '2em' }} />
-              )}
-            </SmHeader>
-          </div>
-          <MainMenu
-            disabled={disabledMainMenu}
-            contexts={contexts}
-            routers={routers}
-          />
-          <RightMenu
-            disabled={disabledMainMenu}
-            username={username}
-            routers={routers}
-          />
-        </x-menubar>
-      )}
-    </AppConsumer>
+          {logo === 'BILLING' && (
+            <Icon name="bold" style={{ fontSize: '2em' }} />
+          )}
+          {logo === 'SISTEM' && (
+            <Icon name="stripe s" style={{ fontSize: '2em' }} />
+          )}
+        </SmHeader>
+      </div>
+      <MainMenu
+        disabled={disabledMainMenu}
+        contexts={contexts}
+        routers={routers}
+      />
+      <RightMenu
+        disabled={disabledMainMenu}
+        username={username}
+        routers={routers}
+      />
+    </x-menubar>
   );
 }
 

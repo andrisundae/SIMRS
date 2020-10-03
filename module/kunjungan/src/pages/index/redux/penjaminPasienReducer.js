@@ -102,15 +102,22 @@ export default (state = initialState, action) =>
         draft.focusElement = payload.element;
         return;
 
+      case actionTypes.SAVE_PENJAMIN_PASIEN_REQUEST:
+        draft.focusElement = '';
+        draft.saveSuccess = false;
+        return;
+
       case actionTypes.SAVE_PENJAMIN_PASIEN_FAILURE:
         draft.errors = payload.errors;
         draft.focusElement = '';
+        draft.saveSuccess = false;
         return;
 
       case actionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS:
         draft.dataAfterSave = payload.data;
         draft.selectedRow = payload.data.data.id;
         draft.focusElement = '';
+        draft.saveSuccess = true;
         return;
 
       case actionTypes.CHANGE_INPUT_PENJAMIN_PASIEN:

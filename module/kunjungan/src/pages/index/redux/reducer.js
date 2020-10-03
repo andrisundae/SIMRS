@@ -49,6 +49,7 @@ export default (state = initialState, action) =>
           id_kunjungan_unit: idKunjunganUnit,
         };
         draft.focusElement = '';
+        draft.saveSuccess = true;
 
         return;
       }
@@ -229,28 +230,6 @@ export default (state = initialState, action) =>
         draft.loaderAsalMasukDetail = false;
         return;
 
-      case actionTypes.INSTALASI_REQUEST:
-        draft.loaderInstalasi = true;
-        return;
-      case actionTypes.INSTALASI_SUCCESS:
-        draft.data.options_instalasi = payload.data;
-        draft.loaderInstalasi = false;
-        return;
-      case actionTypes.INSTALASI_FAILURE:
-        draft.loaderInstalasi = false;
-        return;
-
-      case actionTypes.UNIT_LAYANAN_REQUEST:
-        draft.loaderUnitLayanan = true;
-        return;
-      case actionTypes.UNIT_LAYANAN_SUCCESS:
-        draft.data.options_unit_layanan = payload.data;
-        draft.loaderUnitLayanan = false;
-        return;
-      case actionTypes.UNIT_LAYANAN_FAILURE:
-        draft.loaderUnitLayanan = false;
-        return;
-
       case actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST:
         draft.loaderOptionsByUnitLayanan = true;
         return;
@@ -395,42 +374,19 @@ export default (state = initialState, action) =>
           post: { ...state.post },
           selectedOption: { ...state.selectedOption },
         };
+        const newDraft = resetKunjunganDetail(draft);
         draft.post = {
-          ...state.post,
+          ...newDraft.post,
           tgl_kunjungan: toDateNow,
           tgl_jaminan: toDateNow,
           tgl_cetak_jaminan: toDateNow,
           jam_kunjungan: toDateNow,
-          id_asal_masuk: '',
-          id_asal_masuk_detail: '',
-          id_penjamin: '',
-          id_kelompok: '',
-          id_instalasi: '',
-          id_tindakan: [],
-          id_dpjp: '',
-          id_unit_layanan: '',
-          id_kelas: '',
-          penjamin_pasien: '',
-          nama_non_kelas: '',
-          id: '',
-          rt: '0',
-          rw: '0',
-          id_kunjungan_unit: '',
         };
         draft.data = {
-          ...state.data,
-          jenis_klasifikasi_registrasi: {},
+          ...newDraft.data,
         };
         draft.selectedOption = {
-          ...state.selectedOption,
-          id_kelompok: null,
-          id_instalasi: null,
-          id_asal_masuk: null,
-          id_asal_masuk_detail: null,
-          id_unit_layanan: null,
-          id_kelas: null,
-          id_penjamin: null,
-          id_dpjp: null,
+          ...newDraft.selectedOption,
         };
 
         // Ketika tambah kunjungan pasien, reset status penjamin yang dimiliki pasien
@@ -454,6 +410,7 @@ export default (state = initialState, action) =>
         draft.data = { ...state.temp.data };
         draft.post = { ...state.temp.post };
         draft.selectedOption = { ...state.temp.selectedOption };
+        draft.focusElement = '';
         return;
 
       case actionTypes.GET_DETAIL_RANGKAIAN_KUNJUNGAN_SUCCESS:
@@ -672,9 +629,11 @@ export default (state = initialState, action) =>
 
       case actionTypes.SAVE_FAILURE:
         draft.focusElement = '';
+        draft.saveSuccess = false;
         return;
       case actionTypes.SAVE_REQUEST:
         draft.focusElement = '';
+        draft.saveSuccess = false;
         return;
 
       // case penjaminPasienActionTypes.SAVE_PENJAMIN_PASIEN_SUCCESS: {
@@ -819,7 +778,63 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.RESET_KUNJUNGAN_DETAIL: {
+        const newDraft = resetKunjunganDetail(draft);
+        draft.post = {
+          ...newDraft.post,
+        };
+        draft.data = {
+          ...newDraft.data,
+        };
+        draft.selectedOption = {
+          ...newDraft.selectedOption,
+        };
+
+        return;
+      }
+
       default:
         return state;
     }
   });
+
+const resetKunjunganDetail = (state) => {
+  const draft = _.cloneDeep(state);
+  draft.post = {
+    ...state.post,
+    tgl_kunjungan: '',
+    tgl_jaminan: '',
+    tgl_cetak_jaminan: '',
+    jam_kunjungan: '',
+    id_asal_masuk: '',
+    id_asal_masuk_detail: '',
+    id_penjamin: '',
+    id_kelompok: '',
+    id_instalasi: '',
+    id_tindakan: [],
+    id_dpjp: '',
+    id_unit_layanan: '',
+    id_kelas: '',
+    penjamin_pasien: '',
+    nama_non_kelas: '',
+    id: '',
+    id_kunjungan_unit: '',
+  };
+  draft.data = {
+    ...state.data,
+    jenis_klasifikasi_registrasi: {},
+  };
+  draft.selectedOption = {
+    ...state.selectedOption,
+    id_kelompok: null,
+    id_instalasi: null,
+    id_asal_masuk: null,
+    id_asal_masuk_detail: null,
+    id_unit_layanan: null,
+    id_kelas: null,
+    id_penjamin: null,
+    id_dpjp: null,
+  };
+
+  return draft;
+};
