@@ -5,7 +5,7 @@ import { Segment } from 'semantic-ui-react';
 function Content(props) {
   return (
     <Segment.Group
-      style={{ marginTop: 38, borderRadius: 'none', marginBottom: 30 }}
+      style={{ marginTop: 38, borderRadius: 'none', marginBottom: 0 }}
     >
       {props.children}
     </Segment.Group>

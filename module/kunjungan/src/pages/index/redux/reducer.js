@@ -469,6 +469,7 @@ export default (state = initialState, action) =>
           id_kunjungan_unit_asal: ku.id_kunjungan_unit_asal,
           id_kunjungan_asal: kunjungan.id_kunjungan_asal,
           id_kunjungan_unit: ku.id,
+          st_pulang: kunjungan.st_pulang,
         };
 
         draft.selectedOption.id_asal_masuk = {

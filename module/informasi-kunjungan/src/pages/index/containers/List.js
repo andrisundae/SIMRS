@@ -159,7 +159,7 @@ class List extends Component {
 
           let tglSelesai = data.tgl_sekarang;
           if (data.st_pulang) {
-            tglSelesai = data.selesai;
+            tglSelesai = data.tgl_selesai;
           }
           return displayAge(data.tgl_lahir, tglSelesai);
         },

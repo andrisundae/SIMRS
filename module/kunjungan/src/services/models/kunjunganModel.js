@@ -128,7 +128,7 @@ export default {
     return response;
   },
   getPasienByNorm: async (norm) => {
-    let response = await request.post(`/billing/master/pasien/${norm}`);
+    let response = await request.get(`/billing/master/pasien/${norm}`);
     return response;
   },
   getKunjunganDetail: async (idKunjunganUnit) => {

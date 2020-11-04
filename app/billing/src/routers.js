@@ -218,6 +218,11 @@ const routers = [
     path: '/billing/informasi/kunjungan',
     component: lazy(() => import('@module/informasi-kunjungan')),
   },
+  {
+    key: '_billing_transaksi_tindakan',
+    path: '/billing/transaksi/tindakan',
+    component: lazy(() => import('@module/tindakan-kunjungan')),
+  },
 ];
 
 export default routers;

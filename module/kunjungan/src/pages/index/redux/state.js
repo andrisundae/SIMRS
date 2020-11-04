@@ -71,6 +71,7 @@ export default {
     id_kunjungan_asal: '',
     id: '',
     id_kunjungan_unit: '',
+    st_pulang: '',
   },
   filterPasien: {
     post: {

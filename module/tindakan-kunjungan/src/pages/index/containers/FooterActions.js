@@ -4,28 +4,28 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
-import { Menu, Button, Icon } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 
 import {
   FooterActionsContainer,
-  SaveButton,
+  AddButton,
   EditButton,
   DeleteButton,
+  SaveButton,
   CancelButton,
-  AddButton,
-  FinishButton,
-  PrintButton,
   confirmation,
   withAppConsumer,
+  FinishButton
 } from '@simrs/components';
-import { getPermissions } from '@simrs/main/src/modules/auth';
-
-import { isDisable } from '../redux/selectors';
+import { isGranted } from '@simrs/main/src/modules/auth';
 import actions from '../redux/actions';
+import {disabledElement} from '../redux/selector';
 
 class FooterActions extends Component {
   constructor(props) {
     super(props);
+
+    this._onFocusElement = this._onFocusElement.bind(this);
 
     this.add = createRef();
     this.edit = createRef();
@@ -35,11 +35,11 @@ class FooterActions extends Component {
   }
 
   componentDidMount() {
-    this.bindKey();
+    this._bindKey();
   }
 
   componentDidUpdate(prevProps) {
-    let { focusElement, appActions } = this.props;
+    const { focusElement } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
@@ -49,16 +49,16 @@ class FooterActions extends Component {
 
     if (prevProps.saveSuccess !== this.props.saveSuccess) {
       if (this.props.saveSuccess) {
-        appActions.activateMainMenu();
+        this.props.appActions.activateMainMenu();
       }
     }
   }
 
   componentWillUnmount() {
-    this.unbindKey();
+    this._unbindKey();
   }
 
-  unbindKey() {
+  _unbindKey() {
     MouseTrap.unbind('alt+t');
     MouseTrap.unbind('alt+k');
     MouseTrap.unbind('alt+h');
@@ -66,7 +66,7 @@ class FooterActions extends Component {
     MouseTrap.unbind('alt+b');
   }
 
-  bindKey() {
+  _bindKey() {
     let _this = this;
 
     MouseTrap.bindGlobal('alt+t', function (e) {
@@ -108,38 +108,67 @@ class FooterActions extends Component {
     });
   }
 
-  onSave = () => {
-    this.props.action.onSave(this.props.resource, this.props.post);
+  isCanAdd = () => {
+    const { customPermissions, disabledActions } = this.props;
+    let isValid = false;
+    if (customPermissions.canAdd && !disabledActions.add) {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  isCanFinish = () => {
+    const { disabledActions } = this.props;
+    return !disabledActions.finish;
   };
+
+  isCanEdit = () => {
+    const { customPermissions, disabledActions, selectedRow } = this.props;
+    let isValid = false;
+    if (customPermissions.canEdit && selectedRow && !disabledActions.edit
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  isCanDelete = () => {
+    const { customPermissions, selectedRow, disabledActions, data } = this.props;
+    let isValid = false;
+    if (customPermissions.canDelete && selectedRow && !disabledActions.delete && data.st_kunjungan !== 1
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  isCanSave = () => {
+    let { customPermissions, disabledActions } = this.props;
+    let isValid = false;
+    if ((customPermissions.canAdd || customPermissions.canEdit) && !disabledActions.save) {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  isCanCancel() {
+    const { disabledActions } = this.props;
+    return !disabledActions.cancel;
+  }
 
   onAdd = () => {
-    if (this.props.post.id_pasien) {
-      this.props.action.onAddWithSelected(this.props.resource);
-    } else {
-      this.props.action.onAdd(this.props.resource);
-    }
+    this.props.action.onAdd(this.props.resource);
     this.props.appActions.deactivateMainMenu();
-  };
-
-  onCancel = () => {
-    if (this.props.post.id_pasien) {
-      this.props.action.onCancelWithSelected(this.props.resource);
-    } else {
-      this.props.action.onCancel(this.props.resource);
-    }
-    this.props.appActions.activateMainMenu();
-  };
-
-  onFinish = () => {
-    this.props.action.onFinish(this.props.resource);
-  };
+  }
 
   onEdit = () => {
-    this.props.action.onCheckEdit(this.props.resource, {
-      idKunjunganUnit: this.props.post.id_kunjungan_unit,
-    });
+    this.props.action.onEdit(this.props.resource);
     this.props.appActions.deactivateMainMenu();
-  };
+  }
 
   onDelete = () => {
     const { t, resource, action, post } = this.props;
@@ -147,63 +176,73 @@ class FooterActions extends Component {
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
       buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-      onOk: () =>
-        action.onCheckDelete(resource, {
-          id: post.id,
-          idKunjunganUnit: post.id_kunjungan_unit,
-        }),
+      onOk: () => action.onDelete(resource, post),
     });
-  };
+  }
 
-  isCanAdd = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('add', statusForm);
-    return isEnableStatus;
-  };
+  onSave = () => {
+    const {post, data} = this.props;
+    const payload = {
+      id_kunjungan_unit: post.id_kunjungan_unit,
+      umur_hari: post.umur,
+      id_unit_layanan: post.id_unit_layanan,
+      tgl: data.tanggal,
+      id_tindakan: data.id_tindakan,
+      id_pelaksana: data.id_pelaksana,
+      jumlah: data.jumlah,
+      id_kelas: data.id_kelas,
+    };
+    if (data.id) {
+      payload.id = data.id;
+    }
+    this.props.action.onSave(this.props.resource, payload);
+  }
 
-  isCanEdit = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('edit', statusForm);
-    return isEnableStatus;
-  };
+  onCancel = () => {
+    this.props.action.onCancel(this.props.resource);
+    this.props.appActions.activateMainMenu();
+  }
 
-  isCanDelete = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('delete', statusForm);
-    return isEnableStatus;
-  };
+  onFinish = () => {
+    this.props.action.onFinish(this.props.resource);
+  }
 
-  isCanSave = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('save', statusForm);
-    return isEnableStatus;
-  };
+  _onFocusElement(e) {
+    if (e.which === 37 || e.which === 39) {
+      e.preventDefault();
 
-  isCanCancel = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('cancel', statusForm);
-    return isEnableStatus;
-  };
+      let { name } = e.target;
 
-  isCanPrint = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('preview', statusForm);
-    return isEnableStatus;
-  };
+      let nextElement = '';
+      switch (name) {
+        case 'add':
+          nextElement = 'edit';
+          break;
+        case 'edit':
+          nextElement = 'delete';
+          break;
+        case 'delete':
+          nextElement = 'add';
+          break;
+        case 'save':
+          nextElement = 'cancel';
+          break;
+        case 'cancel':
+          nextElement = 'save';
+          break;
+        case 'duplication':
+          nextElement = 'add';
+          break;
+        default:
+          nextElement = '';
+          break;
+      }
 
-  isCanFinish = () => {
-    const { statusForm } = this.props;
-    const isEnableStatus = !isDisable('finish', statusForm);
-    return isEnableStatus;
-  };
-
-  _getKey(key) {
-    return `${this.props.resource}:${key}`;
+      this.props.action.onFocusElement(this.props.resource, nextElement);
+    }
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <FooterActionsContainer>
         <Fragment>
@@ -235,7 +274,7 @@ class FooterActions extends Component {
             </Menu.Item>
           )}
           {this.isCanSave() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
               <SaveButton
                 onClick={this.onSave}
                 inputRef={this.save}
@@ -252,25 +291,6 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          <Menu.Item style={{ marginLeft: '20%', paddingRight: 5 }}>
-            <Button
-              name="kunjungan_hari_ini"
-              size="mini"
-              onClick={this.props.action.onToggleShowKunjunganHariIni}
-            >
-              <Icon name="list" />
-              {t(this._getKey('kunjungan_hari_ini'))}
-            </Button>
-          </Menu.Item>
-          {this.isCanPrint() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <PrintButton
-              // onClick={this._onCancel}
-              // inputRef={this.cancel}
-              // onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
           {this.isCanFinish() && (
             <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
               <FinishButton
@@ -280,13 +300,6 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <PrintButton
-              onClick={this.props.action.onToggleShowNorm}
-              // inputRef={this.cancel}
-              // onKeyDown={this._onFocusElement}
-            />
-          </Menu.Item>
         </Fragment>
       </FooterActionsContainer>
     );
@@ -294,37 +307,41 @@ class FooterActions extends Component {
 }
 
 const mapStateToProps = function (state, props) {
-  const {
-    post,
-    focusElement,
-    statusForm,
-    saveSuccess,
-  } = state.module.kunjungan;
-
+  const module = state.default;
   return {
-    customPermissions: getPermissions(props.permissions),
-    post,
-    focusElement,
-    statusForm,
-    saveSuccess,
+    customPermissions: {
+      canAdd: isGranted(props.permissions, 'tambah'),
+      canEdit: isGranted(props.permissions, 'koreksi'),
+      canDelete: isGranted(props.permissions, 'hapus'),
+    },
+    statusForm: module.statusForm,
+    selectedRow: module.selectedRow,
+    post: module.post,
+    data: module.postItem,
+    focusElement: module.focusElement,
+    saveSuccess: module.saveSuccess,
+    disabledActions: {
+      add: disabledElement(state, 'add'),
+      edit: disabledElement(state, 'edit'),
+      delete: disabledElement(state, 'delete'),
+      finish: disabledElement(state, 'finish'),
+      cancel: disabledElement(state, 'cancel'),
+      save: disabledElement(state, 'save'),
+    }
   };
 };
 
-const mapDispatchToProps = function (dispatch, props) {
+const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(
       {
         onSave: actions.save.request,
+        onDelete: actions.delete.request,
         onAdd: actions.onAdd,
-        onCheckEdit: actions.onCheckEdit,
-        onCheckDelete: actions.onCheckDelete,
         onCancel: actions.onCancel,
-        onAddWithSelected: actions.onAddWithSelected,
-        onCancelWithSelected: actions.onCancelWithSelected,
+        onEdit: actions.onEdit,
         onFinish: actions.onFinish,
         onFocusElement: actions.onFocusElement,
-        onToggleShowKunjunganHariIni: actions.toggleShowKunjunganHariIni,
-        onToggleShowNorm: () => actions.toggleShowNormModal(props.resource),
       },
       dispatch
     ),
@@ -335,12 +352,14 @@ FooterActions.propTypes = {
   permissions: PropTypes.array,
   customPermissions: PropTypes.object,
   action: PropTypes.object,
+  statusForm: PropTypes.string,
+  selectedRow: PropTypes.number,
   post: PropTypes.object,
   focusElement: PropTypes.string,
+  isDuplicationShowing: PropTypes.bool,
   resource: PropTypes.string.isRequired,
-  t: PropTypes.func,
-  statusForm: PropTypes.string,
   appActions: PropTypes.object,
+  t: PropTypes.func,
   saveSuccess: PropTypes.bool,
 };
 

@@ -305,7 +305,9 @@ class Create extends Component {
                     {post.id && (
                       <Grid.Column width="6" style={{ textAlign: 'right' }}>
                         <h5 style={{ marginTop: 0 }}>
-                          <strong>Kunjungan Aktif</strong>
+                          <strong>
+                            {post.st_pulang ? t(this._getKey('kunjungan_selesai')) : t(this._getKey('kunjungan_aktif'))}
+                          </strong>
                         </h5>
                         <h5 style={{ marginTop: 0 }}>
                           <strong>

@@ -68,6 +68,24 @@ class DataTableServerSide extends Component {
     // }
   }
 
+  setFocusedCell = (rowIndex) => {
+    this.gridApi.ensureIndexVisible(0);
+    let firstCol = this.columnApi.getAllDisplayedColumns()[0];
+    this.gridApi.ensureColumnVisible(firstCol);
+    this.gridApi.setFocusedCell(rowIndex, firstCol);
+  }
+
+  setFirstRowSelected = () => {
+    this.setFocusedCell(0);
+    let cell = this.gridApi.getFocusedCell();
+    if (cell) {
+      let node = this.gridApi.getModel().getRow(cell.rowIndex);
+      if (node) {
+        node.setSelected(true, true);
+      }
+    }
+  }
+
   render() {
     const {
       data,
@@ -179,6 +197,10 @@ class DataTableServerSide extends Component {
 
     if (this.props.sizeColumnsToFit) {
       this.gridApi.sizeColumnsToFit();
+    }
+
+    if (this.props.onGridReady) {
+      this.props.onGridReady(params);
     }
 
     // this.autoSizeAll();
@@ -468,8 +490,6 @@ class DataTableServerSide extends Component {
 
     return keysToSuppress.indexOf(key) >= 0 ? false : true;
   }
-
-  componentDidMount() {}
 }
 
 DataTableServerSide.propTypes = {
