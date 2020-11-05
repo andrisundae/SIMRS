@@ -1,7 +1,5 @@
-import * as Yup from 'yup';
-import { request } from '@simrs/common';
-
 import i18n from 'i18next';
+import { request } from '@simrs/common';
 
 export const validationRules = (resource) => {
   return {
