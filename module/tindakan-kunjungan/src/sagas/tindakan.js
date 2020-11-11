@@ -357,7 +357,7 @@ export default function* watchActions() {
     takeLatest(actionTypes.SHOW_CARI_TINDAKAN, showTindakanSuggestionHandler),
     takeLatest(actionTypes.SELECTED_TINDAKAN_SUGGESTION, selectedTindakanSuggestionHandler),
     takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequestHandler),
-    takeLatest(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST, kunjunganDetailRequestHandler),
+    takeLatest(actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST, kunjunganDetailRequestHandler),
     takeLatest(actionTypes.SAVE_REQUEST, saveHandler),
     takeLatest(actionTypes.SAVE_SUCCESS, saveSuccessHandler),
     takeLatest(actionTypes.SAVE_FAILURE, saveFailureHandler),

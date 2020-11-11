@@ -45,7 +45,7 @@ export default {
     return response;
   },
   getKunjunganDetail: async (idKunjungan) => {
-    const response = await request.get(`billing/kunjungan/${idKunjungan}`);
+    const response = await request.get(`/billing/transaksi/kunjungan/${idKunjungan}`);
 
     return response;
   },
