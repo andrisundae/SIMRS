@@ -47,6 +47,8 @@ class FooterActions extends Component {
       }
     }
 
+    console.log(prevProps.saveSuccess);
+    console.log(this.props.saveSuccess);
     if (prevProps.saveSuccess !== this.props.saveSuccess) {
       if (this.props.saveSuccess) {
         this.props.appActions.activateMainMenu();
@@ -171,12 +173,12 @@ class FooterActions extends Component {
   }
 
   onDelete = () => {
-    const { t, resource, action, post } = this.props;
+    const { t, resource, action, data } = this.props;
     confirmation({
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
       buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-      onOk: () => action.onDelete(resource, post),
+      onOk: () => action.onDelete(resource, {id: data.id}),
     });
   }
 
@@ -184,7 +186,7 @@ class FooterActions extends Component {
     const {post, data} = this.props;
     const payload = {
       id_kunjungan_unit: post.id_kunjungan_unit,
-      umur_hari: post.umur,
+      tgl_lahir: post.tgl_lahir,
       id_unit_layanan: post.id_unit_layanan,
       tgl: data.tanggal,
       id_tindakan: data.id_tindakan,

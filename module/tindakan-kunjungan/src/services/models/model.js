@@ -30,12 +30,22 @@ export default {
 
     return response;
   },
+  delete: async (params) => {
+    const response = await request.post(`${path}/hapus`, params, {}, false);
+
+    return response;
+  },
   getPasienByNorm: async (norm) => {
     const response = await request.get(`/billing/master/pasien/${norm}`);
     return response;
   },
   getKunjungan: async (idPasien) => {
     const response = await request.get(`${path}/kunjungan/${idPasien}`);
+
+    return response;
+  },
+  getKunjunganDetail: async (idKunjungan) => {
+    const response = await request.get(`billing/kunjungan/${idKunjungan}`);
 
     return response;
   },

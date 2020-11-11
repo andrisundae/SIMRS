@@ -83,7 +83,7 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <Segment secondary className="content-header">
+      <Segment secondary className="content-header" style={{paddingTop: 8, paddingBottom: 0}} >
         <Header as="h4">
           <Icon name="list" />
           {props.t(getKey('title'))}

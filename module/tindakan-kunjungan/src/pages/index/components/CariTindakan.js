@@ -167,6 +167,10 @@ class CariTindakan extends Component {
     if (e.which === 13) {
       e.preventDefault();
       this.props.onSubmit(this.props.resource, { search: this.state.search });
+    } else if (e.which === 40) {
+      if (!this.state.search) {
+        this.dataTable.current.setFirstRowSelected();
+      }
     }
   }
 

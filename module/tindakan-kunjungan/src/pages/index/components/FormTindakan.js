@@ -18,6 +18,7 @@ const FormTindakan = ({
   React.useEffect(() => {
     if (focusElement && inputRef[focusElement]) {
       if (inputRef[focusElement].current) {
+        console.log(focusElement);
         inputRef[focusElement].current.focus();
       }
     }
@@ -26,6 +27,14 @@ const FormTindakan = ({
   const getKey = (key) => {
     return `${resource}:${key}`;
   }
+
+  const keyDownKodePanggilHandler = (e) => {
+    if (13 === e.which) {
+      onShowCariTindakan();
+    }
+  }
+
+  const kurang = kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
 
   return (
     <Form
@@ -77,14 +86,13 @@ const FormTindakan = ({
                     <Input
                       name="kode_panggil"
                       ref={inputRef.id_tindakan}
-                      // onKeyDown={(e) =>
-                      //   this._onFocusElement(e, 'id_jenis_kelamin')
-                      // }
+                      onKeyDown={keyDownKodePanggilHandler}
                       action={{
                         content: 'Cari',
                         onClick: onShowCariTindakan,
-                        // disabled: isDisable('search', statusForm),
+                        disabled: disabled,
                         color: 'blue',
+                        type: 'button'
                       }}
                       disabled={disabled}
                       value={data.kode_panggil}
@@ -256,7 +264,7 @@ const FormTindakan = ({
                           <label>{t(getKey('keringanan'))}</label>
                         </Grid.Column>
                         <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
-                          1.000
+                          {formatter.currency(kunjungan.keringanan)}
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row className="form-row">
@@ -264,13 +272,13 @@ const FormTindakan = ({
                           <label>{t(getKey('sudah_dibayar'))}</label>
                         </Grid.Column>
                         <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
-                          10.000
+                          {formatter.currency(kunjungan.bayar)}
                         </Grid.Column>
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('pengembalian'))}</label>
                         </Grid.Column>
                         <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
-                          10.000
+                          {formatter.currency(kunjungan.pengembalian)}
                         </Grid.Column>
                       </Grid.Row>
                       <Divider style={{margin: 0}} />
@@ -279,13 +287,13 @@ const FormTindakan = ({
                           <label>{t(getKey('total_biaya_pengunjung'))}</label>
                         </Grid.Column>
                         <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
-                          10.000
+                          {formatter.currency(kunjungan.biaya)}
                         </Grid.Column>
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('kurang'))}</label>
                         </Grid.Column>
                         <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
-                          10.000
+                          {formatter.currency(kurang)}
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>

@@ -28,7 +28,12 @@ export default {
     id_kelas: '',
     nama_dpjp: '',
     id_penjamin: '',
-    kode_kunjungan_unit: ''
+    kode_kunjungan_unit: '',
+    keringanan: 0,
+    bayar: 0,
+    pengembalian: 0,
+    biaya: 0,
+    total_biaya: 0,
   },
   postItem: {
     id: '',
@@ -62,4 +67,5 @@ export default {
   loaderDpjp: false,
   showCariKunjungan: false,
   showCariTindakan: false,
+  saveSuccess: false
 };

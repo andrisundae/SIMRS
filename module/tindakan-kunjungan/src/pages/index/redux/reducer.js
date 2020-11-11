@@ -71,6 +71,10 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.EDIT:
+        draft.statusForm = actionTypes.EDIT;
+        return;
+
       case actionTypes.POPULATE_ADD: {
         const data = payload.data;
         draft.postItem = {
@@ -86,7 +90,7 @@ export default (state = initialState, action) =>
         draft.postItem = {
           ...state.postItem,
           ...data,
-          tanggal: formatter.dateFormatDB(data.tanggal)
+          tanggal: formatter.dateFormatDB(data.tanggal, 'YYYY-MM-DD HH:mm')
         };
         draft.selectedRow = data.id;
         draft.selectedOption.id_pelaksana = {
@@ -173,12 +177,42 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS: {
+        const data = payload.data;
+        draft.post = {
+          ...state.post,
+          keringanan: data.keringanan || 0,
+          bayar: data.bayar || 0,
+          pengembalian: data.pengembalian || 0,
+          biaya: data.biaya || 0,
+          total_biaya: data.total_biaya || 0,
+        };
+        return;
+      }
+
       case actionTypes.CHANGE_PELAKSANA: {
         draft.selectedOption.id_pelaksana = payload.data;
         draft.postItem.id_pelaksana = payload.data.value;
         draft.focusElement = '';
         return;
       }
+
+      case actionTypes.SAVE_REQUEST:
+        draft.saveSuccess = false;
+        // draft.focusElement = '';
+        return;
+
+      case actionTypes.SAVE_FAILURE:
+        draft.errors = payload.errors;
+        draft.saveSuccess = false;
+        return;
+
+      case actionTypes.SAVE_SUCCESS:
+        draft.statusForm = actionTypes.SELECTED_KUNJUNGAN;
+        draft.selectedRow = payload.data.data.id;
+        draft.saveSuccess = true;
+        draft.focusElement = '';
+        return;
 
       case actionTypes.RESET:
       default:

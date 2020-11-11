@@ -169,11 +169,23 @@ function* finishHandler() {
 
 function* addHandler({ meta }) {
   try {
-    yield put(actions.onFocusElement(meta.resource, 'kode_panggil'));
+    yield put(actions.onFocusElement(meta.resource, 'id_tindakan'));
     const response = yield call(apiCommon.getInfoSystem);
     if (response.status) {
       yield put(actions.populateAdd(meta.resource, response.data));
     }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* editHandler({ meta }) {
+  try {
+    yield put(actions.onFocusElement(meta.resource, 'id_tindakan'));
+    // const response = yield call(apiCommon.getInfoSystem);
+    // if (response.status) {
+    //   yield put(actions.populateAdd(meta.resource, response.data));
+    // }
   } catch (error) {
     yield toastr.error(error.message);
   }
@@ -227,6 +239,9 @@ function* saveHandler({ payload, meta }) {
   let { resource } = meta;
   try {
     yield put(loaderActions.show('Proses simpan...'));
+    yield put(
+      actions.onFocusElement(resource, '')
+    );
     let { rules, messages } = validationRules(resource);
     let post = payload.data;
     let method = post.id ? 'koreksi' : 'tambah';
@@ -236,6 +251,7 @@ function* saveHandler({ payload, meta }) {
     if (_.isEmpty(errors)) {
       let response = yield call(api.save, method, post);
       if (response.status) {
+        yield toastr.success(response.data.message);
         response.action = method;
         yield put(actions.save.requestSuccess(resource, response));
       } else {
@@ -257,13 +273,11 @@ function* saveHandler({ payload, meta }) {
   }
 }
 
-function* saveSuccessHandler({ payload, meta }) {
-  try {
-    yield put(datatableActions.onReload(meta.resource));
-    yield toastr.success(payload.data.message);
-  } catch (error) {
-    yield toastr.error(error.message);
-  }
+function* saveSuccessHandler({ meta }) {
+  yield put(datatableActions.onReload(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
+  yield put(
+    actions.kunjunganDetail.request(meta.resource)
+  );
 }
 
 function* saveFailureHandler({ payload, meta }) {
@@ -271,6 +285,58 @@ function* saveFailureHandler({ payload, meta }) {
   yield put(
     actions.onFocusElement(resource, getFirstElementError(payload.errors))
   );
+}
+
+function* deleteHandler({ payload, meta }) {
+  try {
+    yield put(loaderActions.show('Proses hapus...'));
+    let post = payload.data;
+
+    let response = yield call(api.delete, { id: post.id });
+    if (response.status) {
+      yield put(actions.delete.requestSuccess(meta.resource, response));
+    } else {
+      if (response.info.type === 'warning') {
+        yield toastr.warning(response.message);
+      } else {
+        yield toastr.error(response.message);
+      }
+    }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* deleteSuccessHandler({ payload, meta }) {
+  yield put(datatableActions.onReload(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
+  yield toastr.success(payload.data.message);
+  yield put(
+    actions.kunjunganDetail.request(meta.resource)
+  );
+}
+
+function* kunjunganDetailRequestHandler({ meta }) {
+  try {
+    const post = yield select(postSelector);
+    const response = yield call(api.getKunjunganDetail, post.id);
+    if (response.status) {
+      yield put(
+        actions.kunjunganDetail.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.kunjunganDetail.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
 }
 
 export default function* watchActions() {
@@ -291,8 +357,12 @@ export default function* watchActions() {
     takeLatest(actionTypes.SHOW_CARI_TINDAKAN, showTindakanSuggestionHandler),
     takeLatest(actionTypes.SELECTED_TINDAKAN_SUGGESTION, selectedTindakanSuggestionHandler),
     takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequestHandler),
+    takeLatest(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST, kunjunganDetailRequestHandler),
     takeLatest(actionTypes.SAVE_REQUEST, saveHandler),
     takeLatest(actionTypes.SAVE_SUCCESS, saveSuccessHandler),
     takeLatest(actionTypes.SAVE_FAILURE, saveFailureHandler),
+    takeLatest(actionTypes.EDIT, editHandler),
+    takeLatest(actionTypes.DELETE_REQUEST, deleteHandler),
+    takeLatest(actionTypes.DELETE_SUCCESS, deleteSuccessHandler),
   ]);
 }

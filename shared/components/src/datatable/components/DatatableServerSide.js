@@ -70,19 +70,30 @@ class DataTableServerSide extends Component {
 
   setFocusedCell = (rowIndex) => {
     this.gridApi.ensureIndexVisible(0);
-    let firstCol = this.columnApi.getAllDisplayedColumns()[0];
+    const firstCol = this.columnApi.getAllDisplayedColumns()[0];
     this.gridApi.ensureColumnVisible(firstCol);
     this.gridApi.setFocusedCell(rowIndex, firstCol);
   }
 
   setFirstRowSelected = () => {
     this.setFocusedCell(0);
-    let cell = this.gridApi.getFocusedCell();
+    const cell = this.gridApi.getFocusedCell();
     if (cell) {
-      let node = this.gridApi.getModel().getRow(cell.rowIndex);
+      const node = this.gridApi.getModel().getRow(cell.rowIndex);
       if (node) {
         node.setSelected(true, true);
       }
+    }
+  }
+
+  selectRow(id) {
+    this.gridApi.deselectAll();
+    this.gridApi.clearFocusedCell();
+
+    const node = this.gridApi.getRowNode(id);
+    if (node) {
+      this.setFocusedCell(node.rowIndex);
+      node.setSelected(true, true);
     }
   }
 
@@ -525,7 +536,7 @@ DataTableServerSide.defaultProps = {
   disabled: false,
   messageDisabled: '',
   cacheBlockSize: 10,
-  rowHeight: 30,
+  rowHeight: 25,
   sizeColumnsToFit: true,
   autoSizeColumn: true,
   contextMenuItems: [],

@@ -8,6 +8,7 @@ import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { DatatableServerSide, constDatatable } from '@simrs/components';
 
 import actions from '../redux/actions';
+import actionTypes from '../redux/actionTypes';
 import {staticConst} from '../static';
 import { disabledElement } from '../redux/selector';
 
@@ -29,12 +30,45 @@ class List extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let { isReloadGrid, reloadType } = this.props;
+    let { isReloadGrid, reloadType, statusForm, disabled } = this.props;
     if (isReloadGrid && !prevProps.isReloadGrid) {
       this.reload(reloadType);
+    } else {
+      switch (statusForm) {
+        case actionTypes.ADD:
+          if (disabled) {
+            this.gridApi.deselectAll();
+          }
+          break;
+        case actionTypes.CANCEL:
+          if (prevProps.selectedRow) {
+            this.selectRow(prevProps.selectedRow);
+          }
+          break;
+        case actionTypes.SELECTED_KUNJUNGAN:
+          if (prevProps.selectedRow) {
+            this.selectRow(prevProps.selectedRow);
+          } else {
+            if (this.props.selectedRow) {
+              this.selectRow(this.props.selectedRow);
+            } else {
+              this.gridApi.deselectAll();
+              this.gridApi.clearFocusedCell();
+            }
+          }
+          break;
+        default:
+          return
+      }
     }
 
     this._bindKey();
+  }
+
+  selectRow = (id) => {
+    if (this.dataTable.current) {
+      this.dataTable.current.selectRow(id);
+    }
   }
 
   shouldComponentUpdate(nextProps) {
@@ -65,6 +99,7 @@ class List extends Component {
 
     MouseTrap.bindGlobal('f2', function (e) {
       e.preventDefault();
+      _this.dataTable.current.setFirstRowSelected();
     });
 
     MouseTrap.bindGlobal('alt+r', function (e) {
@@ -244,6 +279,7 @@ List.propTypes = {
   error: PropTypes.bool,
   disabled: PropTypes.bool,
   selectedRow: PropTypes.number,
+  statusForm: PropTypes.string,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

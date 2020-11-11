@@ -118,6 +118,14 @@ export default {
     requestFailure: (resource, error) =>
       createAction(actionTypes.GET_TINDAKAN_SUGGESTION_FAILURE, { error }, { resource }),
   },
+  kunjunganDetail: {
+    request: (resource) =>
+      createAction(actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST, {}, { resource }),
+    requestSuccess: (resource, data) =>
+      createAction(actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS, { data }, { resource }),
+    requestFailure: (resource, error) =>
+      createAction(actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE, { error }, { resource }),
+  },
   optionsByUnitLayanan: {
     request: (resource, data) =>
       createAction(
