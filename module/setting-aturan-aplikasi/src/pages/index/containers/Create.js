@@ -7,9 +7,34 @@ import { Header, Grid, Form, Input, Segment, Divider, Placeholder } from 'semant
 import {
   Select
 } from '@simrs/components';
+import CustomInput from '../components/CustomInput';
 import actions from '../actions';
 import selectors from '../selectors';
+import { elementType } from '../../../static';
 
+const CardPlaceholder = () => (
+  <Grid.Column>
+    <Segment raised>
+      <Placeholder>
+        <Placeholder.Header image>
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Header>
+        <Placeholder.Paragraph>
+          <Placeholder.Line length='medium' />
+          <Placeholder.Line length='short' />
+        </Placeholder.Paragraph>
+      </Placeholder>
+    </Segment>
+  </Grid.Column>
+);
+
+const Loader = () => (
+  <Grid columns={2} stackable>
+    <CardPlaceholder />
+    <CardPlaceholder />
+  </Grid>
+);
 
 class Create extends Component {
   constructor(props) {
@@ -19,55 +44,11 @@ class Create extends Component {
     this._onFocusElement = this._onFocusElement.bind(this);
   }
 
-  render() {
-    const { post, isLoading } = this.props;
-
-    return (
-      <Form size="mini">
-        <Grid columns="2">
-          <Grid.Row>
-            <Grid.Column>
-              {isLoading ? (
-                <Placeholder fluid style={{marginTop: 20}}>
-                  <Placeholder.Header image>
-                    <Placeholder.Line />
-                    <Placeholder.Line />
-                  </Placeholder.Header>
-                  <Placeholder.Paragraph>
-                    <Placeholder.Line />
-                    <Placeholder.Line />
-                    <Placeholder.Line />
-                  </Placeholder.Paragraph>
-                </Placeholder>
-              ) : (
-                post.daftarKelompok.map((row, index) => {
-                  return (
-                    <Fragment key={index}>
-                      <Divider fitted hidden />
-                      <Header as='h4' attached='top' style={{ marginTop: 10 }}>
-                        {row.label}
-                      </Header>
-                      <Segment attached>
-                        <Grid className="form-grid">
-                          {this._renderFormElements(index, row.daftarAturan)}
-                        </Grid>
-                      </Segment>
-                    </Fragment>
-                  )
-                })
-              )}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Form>
-    )
-  }
-
   componentDidUpdate() {
     let { focusElement } = this.props;
 
     if (this[focusElement]) {
-      if (this[focusElement]) {
+      if (this[focusElement] && this[focusElement].focus) {
         this[focusElement].focus();
       }
     }
@@ -89,14 +70,61 @@ class Create extends Component {
 
     return (
       daftarAturan.map((aturan, key) => {
-        const nextElement = daftarAturan[key + 1] ? daftarAturan[key + 1].aturan : 'save';
+        const nextElement = this.getNextElement(indexKelompok, key);
+        let inputProps = {
+          onKeyDown: (e) => this._onFocusElement(e, nextElement),
+          onChange: (e) => this._handleInputChange(e, indexKelompok, key),
+          disabled: this.props.isDisableForm,
+          name: aturan.aturan
+        };
+        switch (aturan.tipe_element) {
+          case elementType.COMBOBOX: {
+            inputProps = {
+              ...inputProps,
+              options: aturan.pilihan_nilai.map(option => {
+                option.label = option.value;
+                return option
+              }),
+              onChange: (selected) => this.handleSelectedChange(selected, aturan.aturan, indexKelompok, key),
+              inputRef: (e) => this[aturan.aturan] = e,
+              value: { label: aturan.nilai, value: aturan.nilai },
+              isDisabled: this.props.isDisableForm,
+              isClearable: false
+            }
+
+            break;
+          }
+          case elementType.CHECKBOX: {
+            inputProps = {
+              ...inputProps,
+              inputRef: (e) => this[aturan.aturan] = e,
+              value: aturan.nilai,
+              checked: aturan.nilai === '1',
+              label: 'Ya',
+            }
+            break;
+          }
+
+          default: {
+            inputProps = {
+              ...inputProps,
+              value: aturan.nilai,
+              ref: (e) => this[aturan.aturan] = e,
+              type: aturan.is_angka === 0 ? 'text' : 'number'
+            };
+          }
+        }
         return (
           <Grid.Row className="form-row" key={key}>
             <Grid.Column width="7" className="field">
               <label>{aturan.label}</label>
             </Grid.Column>
             <Grid.Column width="9" className="field">
-              {aturan.is_combo_box === 0 &&
+              <CustomInput
+                {...inputProps}
+                elementType={aturan.tipe_element}
+              />
+              {/* {aturan.is_combo_box === 0 &&
                 <Input
                   name={aturan.aturan}
                   type={aturan.is_angka === 0 ? 'text' : 'number'}
@@ -122,7 +150,7 @@ class Create extends Component {
                     return option
                   })}
                 />
-              }
+              } */}
             </Grid.Column>
           </Grid.Row>
         )
@@ -131,8 +159,14 @@ class Create extends Component {
   }
 
   _handleInputChange(e, indexKelompok, indexAturan) {
-    const { name, value } = e.target;
-    this.props.action.onChangeInput(this.props.resource, { name, value, indexKelompok, indexAturan });
+    const { name, value, checked, type } = e.target;
+    let val = '';
+    if (type === 'checkbox') {
+      val = checked ? '1' : '0';
+    } else {
+      val = value;
+    }
+    this.props.action.onChangeInput(this.props.resource, { name, value: val, indexKelompok, indexAturan });
   }
 
   _onFocusElement(e, name) {
@@ -141,10 +175,63 @@ class Create extends Component {
       this.props.action.onFocusElement(this.props.resource, name);
     }
   }
+
+  getNextElement = (indexKelompok, indexAturan) => {
+    const {post} = this.props;
+    let nextElement = 'save';
+    if (post.daftarKelompok[indexKelompok]) {
+      indexAturan+=1;
+      if (post.daftarKelompok[indexKelompok].daftarAturan[indexAturan]) {
+        nextElement = post.daftarKelompok[indexKelompok].daftarAturan[indexAturan].aturan;
+      } else {
+        indexKelompok+=1;
+        indexAturan = 0;
+        if (post.daftarKelompok[indexKelompok]) {
+          if (post.daftarKelompok[indexKelompok].daftarAturan[indexAturan]) {
+            nextElement = post.daftarKelompok[indexKelompok].daftarAturan[indexAturan].aturan;
+          }
+        }
+      }
+    }
+
+    return nextElement;
+  }
+
+  render() {
+    const { post, loadingDetail } = this.props;
+
+    return (
+      <Form size="mini">
+        {loadingDetail ? (
+          <Loader />
+        ) : (
+          <Grid columns="2">
+            <Grid.Row>
+              {post.daftarKelompok.map((row, index) => {
+                return (
+                  <Grid.Column key={index}>
+                    <Divider fitted hidden />
+                    <Header as='h4' attached='top' style={{ marginTop: 10 }}>
+                      {row.label}
+                    </Header>
+                    <Segment attached>
+                      <Grid className="form-grid">
+                        {this._renderFormElements(index, row.daftarAturan)}
+                      </Grid>
+                    </Segment>
+                  </Grid.Column>
+                )
+              })}
+            </Grid.Row>
+          </Grid>
+        )}
+      </Form>
+    )
+  }
 }
 
 const mapStateToProps = function (state) {
-  const { post, focusElement, data, statusForm } = state.module;
+  const { post, focusElement, data, statusForm, loadingDetail } = state.module;
 
   return {
     post,
@@ -153,6 +240,7 @@ const mapStateToProps = function (state) {
     data,
     isDisableForm: selectors.isDisableForm(state.module),
     isLoading: state.loader.count > 0,
+    loadingDetail
   }
 }
 

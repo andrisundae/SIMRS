@@ -343,6 +343,7 @@ class Create extends Component {
             isReloadGrid={datatablePasienState.isReload}
             reloadType={datatablePasienState.reloadType}
             onLoadData={action.loadAllPasien}
+            t={t}
           />
         )}
         {showCariKunjungan && (
@@ -351,6 +352,7 @@ class Create extends Component {
             onHide={action.toggleShowCariKunjungan}
             dataSource={this.dataSourceKunjunganTerakhir}
             onSelect={this.onSelectKunjunganHandler}
+            t={t}
           />
         )}
         {showNormModal && (

@@ -5,12 +5,15 @@ const validationPushRules = (resource) => {
   return {
     rules: {
       status_batasan: { required: true },
-      jumlah: { required: true },
+      jumlah: { required: true, minnumber: 1 },
       sumber: { required: true },
     },
     messages: {
       status_batasan: { required: i18n.t(`${resource}:validator.status_batasan.required`) },
-      jumlah: { required: i18n.t(`${resource}:validator.jumlah.required`) },
+      jumlah: {
+        required: i18n.t(`${resource}:validator.jumlah.required`),
+        minnumber: i18n.t(`${resource}:validator.jumlah.minnumber`),
+      },
       sumber: { required: i18n.t(`${resource}:validator.sumber.required`) }
     }
   }
@@ -20,11 +23,14 @@ const validationPushAllRules = (resource) => {
   return {
     rules: {
       status_batasan: { required: true },
-      jumlah: { required: true },
+      jumlah: { required: true, minnumber: 1 },
     },
     messages: {
       status_batasan: { required: i18n.t(`${resource}:validator.status_batasan.required`) },
-      jumlah: { required: i18n.t(`${resource}:validator.jumlah.required`) },
+      jumlah: {
+        required: i18n.t(`${resource}:validator.jumlah.required`),
+        minnumber: i18n.t(`${resource}:validator.jumlah.minnumber`)
+      },
     }
   }
 }

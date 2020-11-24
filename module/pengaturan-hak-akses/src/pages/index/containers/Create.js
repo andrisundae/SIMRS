@@ -137,10 +137,10 @@ class Create extends Component {
     checkedKeys.forEach((key) => {
       let node = this.tree.current._getNode(key);
       if (node) {
-        let props = node.props;
-        if (props.children.length === 0) {
-          leafKeys.push(props.id);
+        if (!node.children) {
+          leafKeys.push(node.id);
         }
+        
       }
     });
     this.props.action.onCheck(this.props.resource, { checkedKeys, leafKeys });

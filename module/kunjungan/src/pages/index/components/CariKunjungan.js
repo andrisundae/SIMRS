@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Grid, Modal, Icon } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import {
   DatatableServerSide,
   CancelButton,
@@ -16,44 +17,51 @@ class CariKunjungan extends Component {
     this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
   }
 
-  columns = [
-    {
-      headerName: 'Tgl. Masuk',
-      field: 'tgl_kunjungan',
-      sortable: true,
-      cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
-      cellRenderer: 'dateRenderer',
-      cellClass: 'ag-date-cell',
-    },
-    {
-      headerName: 'Tgl. Keluar',
-      field: 'tgl_pulang',
-      cellRenderer: 'dateRenderer',
-      cellClass: 'ag-date-cell',
-    },
-    {
-      headerName: 'No. RM',
-      field: 'norm',
-    },
-    {
-      headerName: 'No. Billing',
-      field: 'kode_kunjungan',
-    },
-    {
-      headerName: 'Nama Pasien',
-      field: 'nama_pasien',
-    },
-    {
-      headerName: 'Tempat Layanan',
-      field: 'nama_unit_layanan',
-    },
-  ];
+  getColumnDefs = () => {
+    const {t} = this.props;
+    return [
+      {
+        headerName: t(this.getKey('tanggal_masuk')),
+        field: 'tgl_kunjungan',
+        sortable: true,
+        cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
+        cellRenderer: 'dateRenderer',
+        cellClass: 'ag-date-cell',
+      },
+      {
+        headerName: t(this.getKey('tanggal_keluar')),
+        field: 'tgl_pulang',
+        cellRenderer: 'dateRenderer',
+        cellClass: 'ag-date-cell',
+      },
+      {
+        headerName: t(this.getKey('norm')),
+        field: 'norm',
+      },
+      {
+        headerName: t(this.getKey('no_billing')),
+        field: 'kode_kunjungan',
+      },
+      {
+        headerName: t(this.getKey('nama_pasien')),
+        field: 'nama_pasien',
+      },
+      {
+        headerName: t(this.getKey('unit_layanan')),
+        field: 'nama_unit_layanan',
+      },
+    ];
+  }
 
   componentDidMount() {
     let refDatatable = this.getRefDatatable();
     this.gridApi = refDatatable.api;
     this.columnApi = refDatatable.columnApi;
   }
+
+  getKey = (key) => {
+    return `${this.props.resource}:${key}`;
+  };
 
   getRefDatatable() {
     return this.dataTable.current.refs['kunjungan_terakhir'];
@@ -80,8 +88,12 @@ class CariKunjungan extends Component {
     return item.id;
   }
 
+  gridReadyHandler = () => {
+    this.dataTable.current.setFirstRowSelected();
+  }
+
   render() {
-    const { show, onHide, dataSource } = this.props;
+    const { show, onHide, dataSource, t } = this.props;
 
     return (
       <Modal
@@ -93,7 +105,7 @@ class CariKunjungan extends Component {
       >
         <Modal.Header>
           <Icon name="search" />
-          Cari Kunjungan
+          {t(this.getKey('cari_kunjungan'))}
         </Modal.Header>
         <Modal.Content style={{ backgroundColor: '#ECECEC' }}>
           <Grid className="content-grid">
@@ -101,7 +113,7 @@ class CariKunjungan extends Component {
               <Grid.Column>
                 <DatatableServerSide
                   ref={this.dataTable}
-                  columns={this.columns}
+                  columns={this.getColumnDefs()}
                   name="kunjungan_terakhir"
                   navigateToSelect={true}
                   datasource={dataSource()}
@@ -114,6 +126,7 @@ class CariKunjungan extends Component {
                   sizeColumnsToFit={true}
                   onRowDoubleClicked={this.onRowDoubleClickHandler}
                   onRowEntered={this.onRowEnteredHandler}
+                  onGridReady={this.gridReadyHandler}
                 />
               </Grid.Column>
             </Grid.Row>
@@ -127,5 +140,14 @@ class CariKunjungan extends Component {
     );
   }
 }
+
+CariKunjungan.propTypes = {
+  t: PropTypes.func,
+  resource: PropTypes.string.isRequired,
+  dataSource: PropTypes.func,
+  show: PropTypes.bool,
+  onHide: PropTypes.func,
+  onSelect: PropTypes.func,
+};
 
 export default CariKunjungan;

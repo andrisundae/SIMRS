@@ -6,13 +6,16 @@ const validationPushRules = (resource) => {
     rules: {
       unit_layanan: { required: true },
       status_batasan: { required: true },
-      jumlah: { required: true },
+      jumlah: { required: true, minnumber: 1 },
       sumber: { required: true },
     },
     messages: {
       unit_layanan: { required: i18n.t(`${resource}:validator.unit_layanan.required`) },
       status_batasan: { required: i18n.t(`${resource}:validator.status_batasan.required`) },
-      jumlah: { required: i18n.t(`${resource}:validator.jumlah.required`) },
+      jumlah: {
+        required: i18n.t(`${resource}:validator.jumlah.required`),
+        minnumber: i18n.t(`${resource}:validator.jumlah.minnumber`),
+      },
       sumber: { required: i18n.t(`${resource}:validator.sumber.required`) }
     }
   }
@@ -23,12 +26,15 @@ const validationPushAllRules = (resource) => {
     rules: {
       unit_layanan: { required: true },
       status_batasan: { required: true },
-      jumlah: { required: true },
+      jumlah: { required: true, minnumber: 1 },
     },
     messages: {
       unit_layanan: { required: i18n.t(`${resource}:validator.unit_layanan.required`) },
       status_batasan: { required: i18n.t(`${resource}:validator.status_batasan.required`) },
-      jumlah: { required: i18n.t(`${resource}:validator.jumlah.required`) },
+      jumlah: {
+        required: i18n.t(`${resource}:validator.jumlah.required`),
+        minnumber: i18n.t(`${resource}:validator.jumlah.minnumber`),
+      },
     }
   }
 }

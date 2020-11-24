@@ -209,8 +209,13 @@ function* showTindakanSuggestionHandler({ meta }) {
   yield put(actions.onFocusElement(meta.resource, 'search_tindakan'));
 }
 
-function* selectedTindakanSuggestionHandler({ meta }) {
+function* selectedTindakanSuggestionHandler({ payload, meta }) {
+  const idLayanan = payload.data.id_layanan;
+  const post = yield select(postSelector);
   yield put(actions.hideCariTindakan(meta.resource));
+  yield put(
+    actions.getPelaksana.request(meta.resource, {id_layanan: idLayanan, id_unit_layanan: post.id_unit_layanan})
+  );
   yield put(actions.onFocusElement(meta.resource, 'id_pelaksana'));
 }
 
@@ -225,6 +230,26 @@ function* optionsByUnitLayananRequestHandler({ meta }) {
     } else {
       yield put(
         actions.optionsByUnitLayanan.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* pelaksanaRequestHandler({ payload, meta }) {
+  try {
+    const response = yield call(api.getPelaksana, payload.data.id_unit_layanan, payload.data.id_layanan);
+    if (response.status) {
+      yield put(
+        actions.getPelaksana.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.getPelaksana.requestFailure(
           meta.resource,
           response.message
         )
@@ -364,5 +389,6 @@ export default function* watchActions() {
     takeLatest(actionTypes.EDIT, editHandler),
     takeLatest(actionTypes.DELETE_REQUEST, deleteHandler),
     takeLatest(actionTypes.DELETE_SUCCESS, deleteSuccessHandler),
+    takeLatest(actionTypes.GET_PELAKSANA_REQUEST, pelaksanaRequestHandler),
   ]);
 }

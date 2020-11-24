@@ -126,6 +126,14 @@ export default {
     requestFailure: (resource, error) =>
       createAction(actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE, { error }, { resource }),
   },
+  getPelaksana: {
+    request: (resource, data) =>
+      createAction(actionTypes.GET_PELAKSANA_REQUEST, {data}, { resource }),
+    requestSuccess: (resource, data) =>
+      createAction(actionTypes.GET_PELAKSANA_SUCCESS, { data }, { resource }),
+    requestFailure: (resource, error) =>
+      createAction(actionTypes.GET_PELAKSANA_FAILURE, { error }, { resource }),
+  },
   optionsByUnitLayanan: {
     request: (resource, data) =>
       createAction(

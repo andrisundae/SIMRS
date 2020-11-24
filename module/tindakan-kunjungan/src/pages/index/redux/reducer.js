@@ -68,6 +68,7 @@ export default (state = initialState, action) =>
         draft.statusForm = actionTypes.SELECTED_KUNJUNGAN;
         draft.postItem = { ...initialState.postItem };
         draft.focusElement = '';
+        draft.selectedOption.id_pelaksana = null;
         return;
       }
 
@@ -174,6 +175,19 @@ export default (state = initialState, action) =>
 
       case actionTypes.OPTIONS_BY_UNITLAYANAN_SUCCESS: {
         draft.data.pelaksana = payload.data.pelaksana;
+        draft.selectedOption.id_pelaksana = null;
+        return;
+      }
+
+      case actionTypes.GET_PELAKSANA_SUCCESS: {
+        draft.data.pelaksana = payload.data;
+        draft.selectedOption.id_pelaksana = null;
+        return;
+      }
+
+      case actionTypes.GET_PELAKSANA_FAILURE: {
+        draft.data.pelaksana = [];
+        draft.selectedOption.id_pelaksana = null;
         return;
       }
 

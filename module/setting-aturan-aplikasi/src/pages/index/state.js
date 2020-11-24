@@ -8,4 +8,6 @@ export default {
     focusElement: '',
     statusForm: '',
     errors: {},
+    saveSuccess: false,
+    loadingDetail: false
 };

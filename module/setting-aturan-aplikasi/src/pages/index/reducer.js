@@ -26,11 +26,29 @@ export default (state = initialState, action) =>
 
             case actionTypes.SAVE_REQUEST:
                 draft.focusElement = '';
+                draft.saveSuccess = false;
+                return
+            
+            case actionTypes.SAVE_SUCCESS:
+                draft.saveSuccess = true;
+                return
+            
+            case actionTypes.SAVE_FAILURE:
+                draft.saveSuccess = false;
+                return
+
+            case actionTypes.POPULATE_FORM_REQUEST:
+                draft.loadingDetail = true;
+                return
+
+            case actionTypes.POPULATE_FORM_FAILURE:
+                draft.loadingDetail = false;
                 return
 
             case actionTypes.POPULATE_FORM_SUCCESS:
                 draft.data.daftarKelompok = payload.data;
                 draft.post.daftarKelompok = payload.data;
+                draft.loadingDetail = false;
                 return
 
             case actionTypes.ON_FOCUS_ELEMENT:

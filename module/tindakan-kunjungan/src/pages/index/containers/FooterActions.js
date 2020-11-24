@@ -47,8 +47,6 @@ class FooterActions extends Component {
       }
     }
 
-    console.log(prevProps.saveSuccess);
-    console.log(this.props.saveSuccess);
     if (prevProps.saveSuccess !== this.props.saveSuccess) {
       if (this.props.saveSuccess) {
         this.props.appActions.activateMainMenu();
@@ -185,6 +183,7 @@ class FooterActions extends Component {
   onSave = () => {
     const {post, data} = this.props;
     const payload = {
+      id_kunjungan: post.id,
       id_kunjungan_unit: post.id_kunjungan_unit,
       tgl_lahir: post.tgl_lahir,
       id_unit_layanan: post.id_unit_layanan,
@@ -193,6 +192,7 @@ class FooterActions extends Component {
       id_pelaksana: data.id_pelaksana,
       jumlah: data.jumlah,
       id_kelas: data.id_kelas,
+      id_layanan: data.id_layanan
     };
     if (data.id) {
       payload.id = data.id;
