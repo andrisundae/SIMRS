@@ -69,7 +69,7 @@ function* handleSaveSuccess({ meta, payload }) {
 
 function* populateForm({ meta }) {
   try {
-    yield put(loaderActions.show());
+    // yield put(loaderActions.show());
     let { populateForm } = actions;
 
     let response = yield call(api.getData);
@@ -80,10 +80,10 @@ function* populateForm({ meta }) {
       yield toastr.error(response.message);
     }
     yield put(actions.onReady(meta.resource));
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
   } catch (error) {
     yield put(actions.onReady(meta.resource));
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
     yield toastr.error(error.message);
   }
 }

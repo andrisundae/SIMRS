@@ -44,6 +44,12 @@ export default {
 
     return response;
   },
+  getPelaksana: async (idUnitLayanan, idLayanan) => {
+    const params = {idUnitLayanan, idLayanan};
+    const response = await request.get(`${path}/pelaksana`, params);
+
+    return response;
+  },
   getKunjunganDetail: async (idKunjungan) => {
     const response = await request.get(`/billing/transaksi/kunjungan/${idKunjungan}`);
 

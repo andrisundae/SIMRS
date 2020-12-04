@@ -5,13 +5,13 @@ import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
-import { ipcRenderer } from 'electron';
 
 import {
   FooterActionsContainer,
   SaveButton,
   EditButton,
   CancelButton,
+  withAppConsumer
 } from '@simrs/components';
 import { getPermissions } from '@simrs/main/src/modules/auth';
 import actions from '../actions';
@@ -71,12 +71,18 @@ class FooterActions extends Component {
     this._bindKey();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     let { focusElement } = this.props;
 
     if (this[focusElement]) {
       if (this[focusElement].current) {
         this[focusElement].current.focus();
+      }
+    }
+
+    if (prevProps.saveSuccess !== this.props.saveSuccess) {
+      if (this.props.saveSuccess) {
+        this.props.appActions.activateMainMenu();
       }
     }
   }
@@ -152,7 +158,7 @@ class FooterActions extends Component {
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource);
-    ipcRenderer.send('disable-header');
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onSave() {
@@ -161,7 +167,7 @@ class FooterActions extends Component {
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource);
-    ipcRenderer.send('enable-header');
+    this.props.appActions.activateMainMenu();
   }
 
   _onFocusElement(e) {
@@ -189,13 +195,14 @@ class FooterActions extends Component {
 }
 
 const mapStateToProps = function (state, props) {
-  const { statusForm, post, focusElement } = state.module;
+  const { statusForm, post, focusElement, saveSuccess } = state.module;
 
   return {
     customPermissions: getPermissions(props.permissions),
     statusForm,
     post,
     focusElement,
+    saveSuccess
   };
 };
 
@@ -220,7 +227,9 @@ FooterActions.propTypes = {
   statusForm: PropTypes.string,
   post: PropTypes.object,
   focusElement: PropTypes.string,
+  saveSuccess: PropTypes.bool,
+  appActions: PropTypes.object,
   resource: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterActions);
+export default connect(mapStateToProps, mapDispatchToProps)(withAppConsumer(FooterActions));
