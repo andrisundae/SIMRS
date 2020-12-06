@@ -4,7 +4,6 @@ const appState = {
   disabledMainMenu: false,
   settings: {},
   resource: '',
-  permissions: {},
 };
 
 const appActionTypes = {

@@ -5,6 +5,7 @@ import { parse } from 'querystring';
 
 import { request } from '@simrs/common';
 import { PageLoader } from '@simrs/components';
+import { withModuleConsumer } from './provider';
 
 const getGranted = async (route) => {
   let response = await request.post('/acl/tabel/fitur/granted', {
@@ -34,7 +35,15 @@ class Restriced extends Component {
         const isGranted = response.data.find(
           (permission) => permission === this.props.role
         );
-        this.setState({ isCheck: true, isGranted, permission: response.data });
+        this.setState(
+          { isCheck: true, isGranted, permission: response.data },
+          () => {
+            const moduleActions = this.props.moduleActions(
+              this.props.moduleDispatch
+            );
+            moduleActions.setPermissions(response.data);
+          }
+        );
       } else {
         this.setState({ isCheck: true, isGranted: false });
       }
@@ -79,4 +88,4 @@ Restriced.defaultProps = {
   role: 'view',
 };
 
-export default Restriced;
+export default withModuleConsumer(Restriced);

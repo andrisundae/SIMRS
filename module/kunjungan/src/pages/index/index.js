@@ -6,6 +6,7 @@ import penjaminPasienReducer from './redux/penjaminPasienReducer';
 import * as penjaminPasienActionTypes from './redux/penjaminPasienActionTypes';
 import * as penjaminPasienActions from './redux/penjaminPasienActions';
 export * from './redux/selectors';
+export * from './components';
 
 export {
   Main as default,

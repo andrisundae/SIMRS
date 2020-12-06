@@ -116,6 +116,7 @@ export default {
   CHANGE_SELECT2: createType('CHANGE_SELECT2'),
   CHECK_EDIT: createType('CHECK_EDIT'),
   CHECK_DELETE: createType('CHECK_DELETE'),
+  CHECK_ADD: createType('CHECK_ADD'),
   CHANGE_TAB: createType('CHANGE_TAB'),
 
   TOGGLE_SHOW_CARI_PASIEN: createType('TOGGLE_SHOW_CARI_PASIEN'),

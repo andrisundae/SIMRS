@@ -301,6 +301,8 @@ export default {
   onCancel: (resource) => createAction(actionTypes.CANCEL, {}, { resource }),
   onCheckEdit: (resource, data) =>
     createAction(actionTypes.CHECK_EDIT, { data }, { resource }),
+  onCheckAdd: (resource, data) =>
+    createAction(actionTypes.CHECK_ADD, { data }, { resource }),
   onCheckDelete: (resource, data) =>
     createAction(actionTypes.CHECK_DELETE, { data }, { resource }),
   onSelected: (resource, data) =>

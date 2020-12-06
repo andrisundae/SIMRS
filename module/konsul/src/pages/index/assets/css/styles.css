@@ -1,0 +1,57 @@
+.content-grid #form-konsul .row {
+  padding-top: 5px !important;
+}
+
+#form-konsul .field > label {
+  font-size: 12px !important;
+}
+
+#form-konsul .column.field {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+#form-konsul .ui .input input,
+#form-konsul .react-datepicker__input-container input,
+#form-konsul .react-select__control {
+  height: 23px !important;
+  font-size: 10px !important;
+}
+
+#form-konsul .react-select__option-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#form-konsul .react-select__option-caption {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgb(59, 59, 59);
+}
+
+#form-konsul .react-select__menu {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+#form-konsul .react-select__placeholder,
+.react-select__single-value {
+  top: 10px !important;
+  /* vertical-align: middle !important; */
+}
+
+#form-konsul .react-select__indicator-separator {
+  /* margin-top: 4px !important; */
+  margin-bottom: 7px !important;
+  margin-top: 0px !important;
+}
+
+#form-konsul .react-select__dropdown-indicator,
+.react-select__clear-indicator {
+  padding-top: 0px !important;
+}
+
+#form-konsul .ui.action.input button {
+  height: 23px !important;
+  font-size: 10px !important;
+}

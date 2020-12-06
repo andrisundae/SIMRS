@@ -306,7 +306,9 @@ class Create extends Component {
                       <Grid.Column width="6" style={{ textAlign: 'right' }}>
                         <h5 style={{ marginTop: 0 }}>
                           <strong>
-                            {post.st_pulang ? t(this._getKey('kunjungan_selesai')) : t(this._getKey('kunjungan_aktif'))}
+                            {post.st_pulang
+                              ? t(this._getKey('kunjungan_selesai'))
+                              : t(this._getKey('kunjungan_aktif'))}
                           </strong>
                         </h5>
                         <h5 style={{ marginTop: 0 }}>
@@ -352,6 +354,7 @@ class Create extends Component {
             onHide={action.toggleShowCariKunjungan}
             dataSource={this.dataSourceKunjunganTerakhir}
             onSelect={this.onSelectKunjunganHandler}
+            resource={resource}
             t={t}
           />
         )}

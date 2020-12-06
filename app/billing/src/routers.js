@@ -226,7 +226,14 @@ const routers = [
   {
     key: '_billing_setting_layanan_spesialisasi_pelaksana',
     path: '/billing/setting/layanan-spesialisasi-pelaksana',
-    component: lazy(() => import('@module/setting-layanan-spesialisasi-pelaksana')),
+    component: lazy(() =>
+      import('@module/setting-layanan-spesialisasi-pelaksana')
+    ),
+  },
+  {
+    key: '_billing_transaksi_konsul',
+    path: '/billing/transaksi/konsul',
+    component: lazy(() => import('@module/konsul')),
   },
 ];
 

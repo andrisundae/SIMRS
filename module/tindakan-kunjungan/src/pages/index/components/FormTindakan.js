@@ -1,13 +1,31 @@
 import React from 'react';
-import { Grid, Form, Input, Segment, Button, Icon, Header, Divider } from 'semantic-ui-react';
+import {
+  Grid,
+  Form,
+  Input,
+  Segment,
+  Button,
+  Icon,
+  Header,
+  Divider,
+} from 'semantic-ui-react';
 import { Select } from '@simrs/components';
 import { formatter } from '@simrs/common';
 import PropTypes from 'prop-types';
 
 const FormTindakan = ({
-  t, data, resource, disabled, dataForm, selectedOption,
-  kunjungan, focusElement, onShowCariTindakan, onChangePelaksana,
-  onChangeInput, onFocusElement
+  t,
+  data,
+  resource,
+  disabled,
+  dataForm,
+  selectedOption,
+  kunjungan,
+  focusElement,
+  onShowCariTindakan,
+  onChangePelaksana,
+  onChangeInput,
+  onFocusElement,
 }) => {
   const inputRef = {
     id_tindakan: React.useRef(),
@@ -26,15 +44,16 @@ const FormTindakan = ({
 
   const getKey = (key) => {
     return `${resource}:${key}`;
-  }
+  };
 
   const keyDownKodePanggilHandler = (e) => {
     if (13 === e.which) {
       onShowCariTindakan();
     }
-  }
+  };
 
-  const kurang = kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
+  const kurang =
+    kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
 
   return (
     <Form
@@ -42,45 +61,14 @@ const FormTindakan = ({
       size="mini"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Segment
-        size="mini"
-        style={{ paddingTop: 8, marginBottom: 8 }}
-      >
+      <Segment size="mini" style={{ paddingTop: 8, marginBottom: 8 }}>
         <Grid columns="2" style={{ marginTop: 10 }}>
           <Grid.Row>
             <Grid.Column>
               <Grid>
-                {/* <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
-                    <label>{t(getKey('jenis_layanan'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="12" className="field">
-                    <Input
-                      name="jenis_layanan"
-                      disabled
-                      value={kunjungan.nama_instalasi}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="4" className="field">
-                    <label>{t(getKey('unit_layanan'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="12" className="field">
-                    <Input
-                      name="unit_layanan"
-                      value={kunjungan.nama_unit_layanan}
-                      disabled
-                    />
-                  </Grid.Column>
-                </Grid.Row> */}
-                <Grid.Row
-                  className="form-row"
-                >
-                  <Grid.Column width="4" className="field">
-                    <label>
-                      {t(getKey('kode_panggil'))}
-                    </label>
+                    <label>{t(getKey('kode_panggil'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
                     <Input
@@ -92,7 +80,7 @@ const FormTindakan = ({
                         onClick: onShowCariTindakan,
                         disabled: disabled,
                         color: 'blue',
-                        type: 'button'
+                        type: 'button',
                       }}
                       disabled={disabled}
                       value={data.kode_panggil}
@@ -129,18 +117,16 @@ const FormTindakan = ({
                     <label>{t(getKey('kelas'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
-                    <Input
-                      name="kelas"
-                      disabled
-                      value={data.nama_kelas}
-                    />
+                    <Input name="kelas" disabled value={data.nama_kelas} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="10" className="field">
-                    {kunjungan.nama_dpjp &&
-                      <Header as="h5" color="red">DPJP : {kunjungan.nama_dpjp}</Header>
-                    }
+                    {kunjungan.nama_dpjp && (
+                      <Header as="h5" color="red">
+                        DPJP : {kunjungan.nama_dpjp}
+                      </Header>
+                    )}
                   </Grid.Column>
                   <Grid.Column width="6" className="field">
                     <Button
@@ -148,10 +134,10 @@ const FormTindakan = ({
                       color="orange"
                       // icon
                       // labelPosition='left'
-                      floated='right'
+                      floated="right"
                       compact
                     >
-                      <Icon name='copy outline' />
+                      <Icon name="copy outline" />
                       {t(getKey('sisa_seluruh_tagihan'))}
                     </Button>
                   </Grid.Column>
@@ -162,9 +148,7 @@ const FormTindakan = ({
               <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
-                    <label>
-                      {t(getKey('pelaksana'))}
-                    </label>
+                    <label>{t(getKey('pelaksana'))}</label>
                   </Grid.Column>
                   <Grid.Column width="11" className="field">
                     <Select
@@ -181,9 +165,7 @@ const FormTindakan = ({
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
-                    <label>
-                      {t(getKey('jumlah_tindakan'))}
-                    </label>
+                    <label>{t(getKey('jumlah_tindakan'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
                     <Input
@@ -198,9 +180,7 @@ const FormTindakan = ({
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
-                    <label>
-                      {t(getKey('biaya_per_tindakan'))}
-                    </label>
+                    <label>{t(getKey('biaya_per_tindakan'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
                     <Input
@@ -212,35 +192,28 @@ const FormTindakan = ({
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
-                    <label>
-                      {t(getKey('total_biaya'))}
-                    </label>
+                    <label>{t(getKey('total_biaya'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
-                    <Input
-                      name="biaya"
-                      disabled
-                      value={data.biaya}
-                    />
+                    <Input name="biaya" disabled value={data.biaya} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
-                    <label>
-                      {t(getKey('tanggal'))}
-                    </label>
+                    <label>{t(getKey('tanggal'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
                     <Input
                       name="tanggal"
                       disabled
-                      value={formatter.dateFormatClient(data.tanggal, 'DD/MM/YYYY')}
+                      value={formatter.dateFormatClient(
+                        data.tanggal,
+                        'DD/MM/YYYY'
+                      )}
                     />
                   </Grid.Column>
                   <Grid.Column width="2" className="field">
-                    <label>
-                      {t(getKey('jam'))}
-                    </label>
+                    <label>{t(getKey('jam'))}</label>
                   </Grid.Column>
                   <Grid.Column width="3" className="field">
                     <Input
@@ -263,7 +236,11 @@ const FormTindakan = ({
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('keringanan'))}</label>
                         </Grid.Column>
-                        <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
+                        <Grid.Column
+                          style={{ textAlign: 'right' }}
+                          width="4"
+                          className="field"
+                        >
                           {formatter.currency(kunjungan.keringanan)}
                         </Grid.Column>
                       </Grid.Row>
@@ -271,28 +248,44 @@ const FormTindakan = ({
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('sudah_dibayar'))}</label>
                         </Grid.Column>
-                        <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
+                        <Grid.Column
+                          style={{ textAlign: 'right' }}
+                          width="4"
+                          className="field"
+                        >
                           {formatter.currency(kunjungan.bayar)}
                         </Grid.Column>
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('pengembalian'))}</label>
                         </Grid.Column>
-                        <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
+                        <Grid.Column
+                          style={{ textAlign: 'right' }}
+                          width="4"
+                          className="field"
+                        >
                           {formatter.currency(kunjungan.pengembalian)}
                         </Grid.Column>
                       </Grid.Row>
-                      <Divider style={{margin: 0}} />
+                      <Divider style={{ margin: 0 }} />
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('total_biaya_pengunjung'))}</label>
                         </Grid.Column>
-                        <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
+                        <Grid.Column
+                          style={{ textAlign: 'right' }}
+                          width="4"
+                          className="field"
+                        >
                           {formatter.currency(kunjungan.biaya)}
                         </Grid.Column>
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('kurang'))}</label>
                         </Grid.Column>
-                        <Grid.Column style={{ textAlign: 'right' }} width="4" className="field">
+                        <Grid.Column
+                          style={{ textAlign: 'right' }}
+                          width="4"
+                          className="field"
+                        >
                           {formatter.currency(kurang)}
                         </Grid.Column>
                       </Grid.Row>
@@ -305,8 +298,8 @@ const FormTindakan = ({
         </Grid>
       </Segment>
     </Form>
-  )
-}
+  );
+};
 
 FormTindakan.propTypes = {
   data: PropTypes.object,

@@ -8,7 +8,6 @@ import {
   loaderActions,
   messageBox,
   constDatatable,
-  datatableActionTypes,
   datatableActions,
 } from '@simrs/components';
 import api from '../services/models/kunjunganModel';
