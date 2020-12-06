@@ -46,6 +46,11 @@ const routers = [
     path: '/farmasi/setting/stok-minimum-unit',
     component: lazy(() => import('@module/setting-stok-minimum-unit')),
   },
+  {
+    key: '_farmasi_transaksi_pemesanan_supplier',
+    path: '/farmasi/transaksi/pemesanan-supplier',
+    component: lazy(() => import('@module/transaksi-pemesanan-supplier')),
+  },
 ];
 
 export default routers;

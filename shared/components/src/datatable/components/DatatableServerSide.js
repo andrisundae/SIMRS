@@ -73,7 +73,7 @@ class DataTableServerSide extends Component {
     const firstCol = this.columnApi.getAllDisplayedColumns()[0];
     this.gridApi.ensureColumnVisible(firstCol);
     this.gridApi.setFocusedCell(rowIndex, firstCol);
-  }
+  };
 
   setFirstRowSelected = () => {
     this.setFocusedCell(0);
@@ -84,7 +84,7 @@ class DataTableServerSide extends Component {
         node.setSelected(true, true);
       }
     }
-  }
+  };
 
   selectRow(id) {
     this.gridApi.deselectAll();
@@ -474,6 +474,16 @@ class DataTableServerSide extends Component {
         this.props.onRowEntered();
       }
     }
+
+    if (this.props.enableHandleAlphanumeric === true) {
+      if (e.key.length === 1 && e.key.match(alias.alphanumeric)) {
+        this.props.handleAlphanumeric();
+      }
+
+      if (e.key === ' ' || e.key === 'Backspace') {
+        this.props.handleAlphanumeric();
+      }
+    }
   }
 
   _onSuppressKeyboardEvent(params) {
@@ -521,6 +531,8 @@ DataTableServerSide.propTypes = {
   autoSizeColumn: PropTypes.bool,
   onModelUpdated: PropTypes.func,
   rowHeight: PropTypes.number,
+  enableHandleAlphanumeric: PropTypes.bool,
+  handleAlphanumeric: PropTypes.func,
 };
 
 DataTableServerSide.defaultProps = {
@@ -540,6 +552,8 @@ DataTableServerSide.defaultProps = {
   sizeColumnsToFit: true,
   autoSizeColumn: true,
   contextMenuItems: [],
+  enableHandleAlphanumeric: false,
+  handleAlphanumeric: () => {},
 };
 
 export default DataTableServerSide;
