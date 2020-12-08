@@ -109,12 +109,21 @@ class FooterActions extends Component {
   }
 
   onSave = () => {
-    this.props.action.onSave(this.props.resource, this.props.post);
+    this.props.action.onCheckSave(this.props.resource, {
+      idPasien: this.props.post.id_pasien,
+      idUnitLayanan: this.props.post.id_unit_layanan,
+      callBack: () =>
+        this.props.action.onSave(this.props.resource, this.props.post),
+    });
   };
 
   onAdd = () => {
     if (this.props.post.id_pasien) {
-      this.props.action.onAddWithSelected(this.props.resource);
+      this.props.action.onCheckAdd(this.props.resource, {
+        idPasien: this.props.post.id_pasien,
+        callBack: () =>
+          this.props.action.onAddWithSelected(this.props.resource),
+      });
     } else {
       this.props.action.onAdd(this.props.resource);
     }
@@ -318,6 +327,8 @@ const mapDispatchToProps = function (dispatch, props) {
         onAdd: actions.onAdd,
         onCheckEdit: actions.onCheckEdit,
         onCheckDelete: actions.onCheckDelete,
+        onCheckAdd: actions.onCheckAdd,
+        onCheckSave: actions.onCheckSave,
         onCancel: actions.onCancel,
         onAddWithSelected: actions.onAddWithSelected,
         onCancelWithSelected: actions.onCancelWithSelected,

@@ -117,6 +117,7 @@ export default {
   CHECK_EDIT: createType('CHECK_EDIT'),
   CHECK_DELETE: createType('CHECK_DELETE'),
   CHECK_ADD: createType('CHECK_ADD'),
+  CHECK_SAVE: createType('CHECK_SAVE'),
   CHANGE_TAB: createType('CHANGE_TAB'),
 
   TOGGLE_SHOW_CARI_PASIEN: createType('TOGGLE_SHOW_CARI_PASIEN'),

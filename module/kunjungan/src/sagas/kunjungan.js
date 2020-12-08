@@ -1,4 +1,5 @@
 import { put, call, takeLatest, all, select } from 'redux-saga/effects';
+import i18n from 'i18next';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
@@ -9,6 +10,7 @@ import {
   messageBox,
   constDatatable,
   datatableActions,
+  confirmation,
 } from '@simrs/components';
 import api from '../services/models/kunjunganModel';
 import {
@@ -754,6 +756,60 @@ function* openMenuStatusPasienHandler() {
   }
 }
 
+function* checkAddHandler({ payload, meta }) {
+  try {
+    yield put(loaderActions.show());
+    const response = yield call(api.kunjunganAktif, payload.data.idPasien);
+    if (response.status) {
+      const data = response.data;
+      if (data.is_rawat_inap_aktif) {
+        messageBox({
+          title: 'Info',
+          message: i18n.t('masih_ada_rawat_inap_aktif'),
+        });
+      } else if (data.is_kunjungan_aktif) {
+        confirmation({
+          title: i18n.t(`common:dialog.confirmation.title`),
+          message: i18n.t(`${meta.resource}:masih_ada_kunjungan_aktif`),
+          buttons: [
+            i18n.t(`common:dialog.action.yes`),
+            i18n.t(`common:dialog.action.no`),
+          ],
+          onOk: payload.data.callBack,
+        });
+      }
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+  }
+}
+
+function* checkSaveHandler({ payload, meta }) {
+  try {
+    yield put(loaderActions.show());
+    const response = yield call(
+      api.kunjunganAktif,
+      payload.data.idPasien,
+      payload.data.idUnitLayanan
+    );
+    if (response.status) {
+      confirmation({
+        title: i18n.t(`common:dialog.confirmation.title`),
+        message: i18n.t(`${meta.resource}:masih_ada_kunjungan_aktif`),
+        buttons: [
+          i18n.t(`common:dialog.action.yes`),
+          i18n.t(`common:dialog.action.no`),
+        ],
+        onOk: payload.data.callBack,
+      });
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+  }
+}
+
 export default function* watchAuthActions() {
   yield all([
     takeLatest(actionTypes.CHECK_EDIT, checkEditHandler),
@@ -806,6 +862,8 @@ export default function* watchAuthActions() {
     takeLatest(actionTypes.DELETE_REQUEST, deleteHandler),
     takeLatest(actionTypes.DELETE_SUCCESS, deleteSuccessHandler),
     takeLatest(actionTypes.CHECK_DELETE, checkDeleteHandler),
+    takeLatest(actionTypes.CHECK_ADD, checkAddHandler),
+    takeLatest(actionTypes.CHECK_SAVE, checkSaveHandler),
     takeLatest(actionTypes.EDIT, editHandler),
     takeLatest(
       actionTypes.GET_SETTING_KELAS_PENJAMIN_REQUEST,

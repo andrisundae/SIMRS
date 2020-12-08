@@ -159,5 +159,15 @@ export default {
     let response = await request.get(`${path}/kunjungan-hari-ini`, params);
     return response;
   },
+  kunjunganAktif: async (idPasien) => {
+    let response = await request.get(`${path}/aktif/${idPasien}`);
+    return response;
+  },
+  kunjunganAktifUnitLayanan: async (idPasien, idUnitLayanan) => {
+    let response = await request.get(
+      `${path}/aktif/${idPasien}/${idUnitLayanan}`
+    );
+    return response;
+  },
   validationRules,
 };

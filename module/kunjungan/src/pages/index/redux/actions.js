@@ -303,6 +303,8 @@ export default {
     createAction(actionTypes.CHECK_EDIT, { data }, { resource }),
   onCheckAdd: (resource, data) =>
     createAction(actionTypes.CHECK_ADD, { data }, { resource }),
+  onCheckSave: (resource, data) =>
+    createAction(actionTypes.CHECK_SAVE, { data }, { resource }),
   onCheckDelete: (resource, data) =>
     createAction(actionTypes.CHECK_DELETE, { data }, { resource }),
   onSelected: (resource, data) =>
