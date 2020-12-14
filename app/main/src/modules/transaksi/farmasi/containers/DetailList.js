@@ -22,6 +22,7 @@ class DetailList extends Component {
     this._onRowSelected = this._onRowSelected.bind(this);
     this._getRowNodeId = this._getRowNodeId.bind(this);
     this._getRowStyle = this._getRowStyle.bind(this);
+    this._selectRow = this._selectRow.bind(this);
 
     this.detailTable = createRef();
   }
@@ -45,7 +46,7 @@ class DetailList extends Component {
       reloadType,
     } = this.props;
 
-    if (isReloadGrid) {
+    if (isReloadGrid && !prevProps.isReloadGrid) {
       this._reload(reloadType);
     } else {
       switch (dtStatusForm) {
@@ -59,10 +60,8 @@ class DetailList extends Component {
             this._selectRow(prevProps.selectedRow);
           }
           break;
-        case detailActionTypes.AFTER_SAVE:
-          this._selectRow(selectedRow);
-          break;
         case detailActionTypes.READY:
+          console.log('ready');
           if (prevProps.selectedRow) {
             this._selectRow(prevProps.selectedRow);
           } else {
@@ -103,7 +102,7 @@ class DetailList extends Component {
         ref={this.detailTable}
         columns={this._getColumnDefs()}
         name={tableName}
-        navigateToSelect={!isDisabledList}
+        navigateToSelect={true}
         datasource={this._getDataSource()}
         rowBuffer={0}
         maxConcurrentDatasourceRequests={1}
@@ -111,8 +110,6 @@ class DetailList extends Component {
         cacheBlockSize={25}
         containerHeight={containerHeight}
         onRowSelected={this._onRowSelected}
-        suppressRowClickSelection={isDisabledList}
-        suppressCellSelection={isDisabledList}
         getRowNodeId={this._getRowNodeId}
         disabled={isDisabledList}
         sizeColumnsToFit={sizeColumnsToFit}
@@ -149,20 +146,14 @@ class DetailList extends Component {
 
   _reload(reloadType) {
     if (reloadType === constDatatable.reloadType.purge) {
-      this.gridApi.setInfiniteRowCount(1);
       this.gridApi.purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
       this.gridApi.refreshInfiniteCache();
     }
   }
   _selectRow(id) {
-    this.gridApi.deselectAll();
-    this.gridApi.clearFocusedCell();
-
-    let node = this.gridApi.getRowNode(id);
-    if (node) {
-      this._setFocusedCell(node.rowIndex);
-      node.setSelected(true, true);
+    if (this.detailTable.current) {
+      this.detailTable.current.selectRow(id);
     }
   }
 

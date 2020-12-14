@@ -12,7 +12,6 @@ function MainMenu({ disabled, contexts, routers, history }) {
     let router = routers.find((router) => router.key === keyMenu);
     if (router) {
       history.replace(`${router.path}?route=${keyMenu}`);
-      console.log(router);
       // setCurrentRoute(keyMenu);
     }
     appAction.setResource(router.key);

@@ -46,6 +46,7 @@ const masterReducer = (state = masterState, action) => {
         draft.post.no_transaksi = payload.data.no_transaksi;
         draft.post.tanggal_transaksi = payload.data.tanggal_transaksi;
         draft.statusForm = masterActionTypes.MANAGE;
+        draft.focusElement = '';
       });
 
     default:

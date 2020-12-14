@@ -13,6 +13,7 @@ import { validator as commonValidator, toastr } from '@simrs/common';
 import {
   loaderActions,
   datatableActions,
+  datatableActionTypes,
   constDatatable,
 } from '@simrs/components';
 
@@ -193,8 +194,6 @@ function* handleSaveDetail({ meta, payload }) {
         yield toastr.warning(response.message);
         errors = response.data;
       }
-
-      yield put(detailActions.onReady(meta.resource));
     }
 
     if (!_.isEmpty(errors)) {
@@ -387,6 +386,12 @@ function* handleOpenDialog({ meta, payload }) {
   yield put(filterActions.onFocusElement(meta.resource, nextElement));
 }
 
+function* handleReloaded({ meta }) {
+  if (meta.resource === tableName.DETAIL_LIST) {
+    yield put(detailActions.onReady(meta.resource));
+  }
+}
+
 export default function* watchActions() {
   yield all([
     takeLatest(filterActionTypes.CARI_TRANSAKSI_REQUEST, loadAllTransaksi),
@@ -414,5 +419,6 @@ export default function* watchActions() {
     takeLatest(detailActionTypes.WARNING, showWarning),
     takeLatest(detailActionTypes.DELETE_REQUEST, handleDeleteDetail),
     takeLatest(detailActionTypes.DELETE_SUCCESS, handleSaveDetailSuccess),
+    takeLatest(datatableActionTypes.RELOADED, handleReloaded),
   ]);
 }
