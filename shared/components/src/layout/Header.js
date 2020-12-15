@@ -42,6 +42,9 @@ function Header({ logo, match, username, contexts, routers, history }) {
           {logo === 'SISTEM' && (
             <Icon name="stripe s" style={{ fontSize: '2em' }} />
           )}
+          {logo === 'REKAM_MEDIS' && (
+            <Icon name="heartbeat" style={{ fontSize: '2em' }} />
+          )}
         </SmHeader>
       </div>
       <MainMenu

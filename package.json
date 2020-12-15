@@ -24,6 +24,8 @@
       "**/dotenv/**",
       "**/electron",
       "**/electron/**",
+      "**/electron-store",
+      "**/electron-store/**",
       "**/electron-is-dev",
       "**/electron-is-dev/**",
       "**/electron-devtools-installer",
