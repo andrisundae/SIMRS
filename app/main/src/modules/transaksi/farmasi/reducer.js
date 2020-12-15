@@ -109,7 +109,6 @@ const detailReducer = (state = detailState, action, initialState) =>
       case detailActionTypes.READY:
         draft.statusForm = detailActionTypes.READY;
         draft.post = post;
-        draft.focusElement = 'addDetail';
         return;
 
       case detailActionTypes.ADD:
@@ -151,7 +150,7 @@ const detailReducer = (state = detailState, action, initialState) =>
         return;
 
       case detailActionTypes.SAVE_SUCCESS:
-        draft.focusElement = 'addDetail';
+        draft.focusElement = '';
         draft.dataAfterSave = payload.data;
         draft.data.selectedRow = payload.data.data.id;
         return;

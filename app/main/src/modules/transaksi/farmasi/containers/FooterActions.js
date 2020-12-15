@@ -118,7 +118,6 @@ class FooterActions extends Component {
   }
 
   render() {
-    console.log('render footer');
     return (
       <FooterActionsContainer>
         <Fragment>
