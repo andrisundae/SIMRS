@@ -145,7 +145,7 @@ export default function MainMenu() {
   }
 
   return (
-    <div className="lg:flex">
+    <div className="lg:flex mt-5">
       <div className="flex-1"></div>
       <div className="flex-auto grid grid-cols-2 gap-12 pl-10 pr-10">
         <div>

@@ -1,0 +1,13 @@
+.ui.sortable.table thead th.sorted {
+  background: #e4e4e4 !important;
+}
+
+.ui.table.selectable tbody tr {
+  cursor: pointer;
+}
+
+.item.sticky {
+  position: sticky !important;
+  top: 0;
+  z-index: 50;
+}

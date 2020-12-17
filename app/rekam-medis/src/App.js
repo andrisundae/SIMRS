@@ -11,7 +11,7 @@ import routers from './routers';
 
 export default function App() {
   return (
-    <div className="pt-32">
+    <div className="pt-14">
       <Router>
         <Suspense fallback={<PageLoader active />}>
           <Switch>
