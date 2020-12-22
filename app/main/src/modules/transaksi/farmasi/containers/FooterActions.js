@@ -118,7 +118,6 @@ class FooterActions extends Component {
   }
 
   render() {
-    console.log('render footer');
     return (
       <FooterActionsContainer>
         <Fragment>
@@ -372,12 +371,11 @@ class FooterActions extends Component {
   }
 
   _isCanEditDetail() {
-    let { permissions, dtStatusForm, statusForm } = this.props;
+    let { dtStatusForm, statusForm } = this.props;
     let isValid = false;
     let detStatusForm = [detailActionTypes.SELECTED];
 
     if (
-      permissions.canEdit &&
       detStatusForm.indexOf(dtStatusForm) !== -1 &&
       masterActionTypes.FILLED === statusForm
     ) {

@@ -36,7 +36,6 @@ class CariDetail extends Component {
 
   reload(reloadType) {
     if (reloadType === constDatatable.reloadType.purge) {
-      this.gridApi.setInfiniteRowCount(1);
       this.gridApi.purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
       this.gridApi.refreshInfiniteCache();
