@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { useAppAction } from '@simrs/components';
 
 function MainMenu({ disabled, contexts, routers, history }) {
-  // const [currentRoute, setCurrentRoute] = useState('');
   const disabledProp = disabled ? { disabled: true } : {};
   const appAction = useAppAction();
 
@@ -12,10 +11,8 @@ function MainMenu({ disabled, contexts, routers, history }) {
     let router = routers.find((router) => router.key === keyMenu);
     if (router) {
       history.replace(`${router.path}?route=${keyMenu}`);
-      console.log(router);
-      // setCurrentRoute(keyMenu);
+      appAction.setResource(router.key);
     }
-    appAction.setResource(router.key);
   }
 
   function _renderSubMenu(menu) {

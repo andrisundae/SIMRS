@@ -13,7 +13,7 @@ const makeDisplayAge = (data) => {
     tglSelesai = data.tgl_pulang;
   }
   return utils.displayAge(data.tgl_lahir, tglSelesai);
-} 
+};
 
 export default (state = initialState, action) =>
   produce(state, (draft) => {
@@ -22,6 +22,9 @@ export default (state = initialState, action) =>
     switch (type) {
       case actionTypes.OPEN_FORM:
         draft.post = initialState.post;
+        draft.postItem = initialState.postItem;
+        draft.selectedOption = initialState.selectedOption;
+        draft.selectedRow = initialState.selectedRow;
         return;
 
       case actionTypes.INPUT_CHANGE_IDENTITAS:
@@ -41,18 +44,18 @@ export default (state = initialState, action) =>
         draft.data.instalasi = payload.data.instalasi;
         draft.data.penjamin = payload.data.penjamin;
         draft.data.unitLayanan = payload.data.unit_layanan;
-        return
+        return;
       }
 
       case actionTypes.ON_FOCUS_ELEMENT:
         draft.focusElement = payload.element;
         return;
-      
+
       case actionTypes.FINISH:
       case actionTypes.READY: {
         draft.statusForm = actionTypes.READY;
-        draft.post = {...initialState.post};
-        draft.data = {...initialState.data};
+        draft.post = { ...initialState.post };
+        draft.data = { ...initialState.data };
         draft.focusElement = 'norm';
         return;
       }
@@ -80,7 +83,7 @@ export default (state = initialState, action) =>
         const data = payload.data;
         draft.postItem = {
           ...state.postItem,
-          tanggal: data.tgl_sekarang_formatted
+          tanggal: data.tgl_sekarang_formatted,
         };
         return;
       }
@@ -91,7 +94,7 @@ export default (state = initialState, action) =>
         draft.postItem = {
           ...state.postItem,
           ...data,
-          tanggal: formatter.dateFormatDB(data.tanggal, 'YYYY-MM-DD HH:mm')
+          tanggal: formatter.dateFormatDB(data.tanggal, 'YYYY-MM-DD HH:mm'),
         };
         draft.selectedRow = data.id;
         draft.selectedOption.id_pelaksana = {
@@ -109,8 +112,8 @@ export default (state = initialState, action) =>
         draft.post = {
           ...state.post,
           ...data,
-          umur: makeDisplayAge(data)
-        }
+          umur: makeDisplayAge(data),
+        };
         draft.focusElement = '';
         return;
       }
@@ -126,8 +129,8 @@ export default (state = initialState, action) =>
           alamat: data.alamat,
           jenis_kelamin: data.jenis_kelamin,
           tgl_lahir: data.tgl_lahir,
-        }
-        return
+        };
+        return;
       }
 
       case actionTypes.GET_KUNJUNGAN_SUCCESS: {
@@ -152,6 +155,13 @@ export default (state = initialState, action) =>
         return;
       case actionTypes.HIDE_CARI_TINDAKAN:
         draft.showCariTindakan = false;
+        return;
+
+      case actionTypes.SHOW_PELAKSANA_TAMBAHAN:
+        draft.showPelaksanaTambahan = true;
+        return;
+      case actionTypes.HIDE_PELAKSANA_TAMBAHAN:
+        draft.showPelaksanaTambahan = false;
         return;
 
       case actionTypes.SELECTED_TINDAKAN_SUGGESTION: {

@@ -1,26 +1,37 @@
 import { put, call, takeLatest, all, select } from 'redux-saga/effects';
 import _ from 'lodash';
-import { toastr, models as apiCommon, validator as commonValidator } from '@simrs/common';
+import {
+  toastr,
+  models as apiCommon,
+  validator as commonValidator,
+} from '@simrs/common';
 import {
   loaderActions,
   datatableActions,
   datatableActionTypes,
   messageBox,
-  constDatatable
+  constDatatable,
 } from '@simrs/components';
 import api, { validationRules } from '../services/models/model';
 
 import { actionTypes, actions, staticConst } from '../pages/index';
-import { showCariKunjunganSelector, postSelector } from '../pages/index/redux/selector';
+import * as tambahanPelaksanaActions from '../pages/index/redux/pelaksanaTambahan/actions';
+import {
+  showCariKunjunganSelector,
+  postSelector,
+} from '../pages/index/redux/selector';
 
 const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-  yield put(datatableActions.onInitialize(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
+  yield put(
+    datatableActions.onInitialize(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL)
+  );
   yield put(datatableActions.onInitialize(staticConst.TABLE_KUNJUNGAN));
   yield put(datatableActions.onInitialize(staticConst.TABLE_SEARCH_TINDAKAN));
   yield put(actions.populateForm.request(meta.resource));
+  yield put(tambahanPelaksanaActions.populateForm.request(meta.resource));
   yield put(actions.onReady(meta.resource));
 }
 
@@ -29,7 +40,11 @@ function* loadTindakanUnitHandler({ payload, meta }) {
 
   try {
     if (payload.data.id_kunjungan_unit) {
-      const response = yield call(api.getKunjunganUnitDetail, payload.data.id_kunjungan_unit, payload.data);
+      const response = yield call(
+        api.getKunjunganUnitDetail,
+        payload.data.id_kunjungan_unit,
+        payload.data
+      );
       if (response.status) {
         successCallback(response.data, response.data.length);
       } else {
@@ -42,7 +57,9 @@ function* loadTindakanUnitHandler({ payload, meta }) {
   } catch (error) {
     failCallback();
   }
-  yield put(datatableActions.onReloaded(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
+  yield put(
+    datatableActions.onReloaded(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL)
+  );
 }
 
 function* loadTindakanSuggestionHandler({ payload, meta }) {
@@ -76,7 +93,6 @@ function* populateForm({ meta }) {
   //   } else {
   //     yield put(populateForm.requestFailure(meta.resource, response.message));
   //   }
-
   //   yield put(loaderActions.hide());
   // } catch (error) {
   //   yield put(loaderActions.hide());
@@ -91,7 +107,9 @@ function* getPasienRequestHandler({ meta, payload }) {
     if (response.status) {
       const data = response.data;
       yield put(actions.getPasien.requestSuccess(meta.resource, data));
-      yield put(actions.getKunjungan.request(meta.resource, { idPasien: data.id }));
+      yield put(
+        actions.getKunjungan.request(meta.resource, { idPasien: data.id })
+      );
     } else {
       yield put(
         actions.getPasien.requestFailure(meta.resource, response.message)
@@ -114,17 +132,11 @@ function* getKunjunganRequestHandler({ meta, payload }) {
     const response = yield call(api.getKunjungan, payload.data.idPasien);
     if (response.status) {
       yield put(
-        actions.getKunjungan.requestSuccess(
-          meta.resource,
-          response.data
-        )
+        actions.getKunjungan.requestSuccess(meta.resource, response.data)
       );
     } else {
       yield put(
-        actions.getKunjungan.requestFailure(
-          meta.resource,
-          response.message
-        )
+        actions.getKunjungan.requestFailure(meta.resource, response.message)
       );
     }
     yield put(loaderActions.hide());
@@ -214,7 +226,10 @@ function* selectedTindakanSuggestionHandler({ payload, meta }) {
   const post = yield select(postSelector);
   yield put(actions.hideCariTindakan(meta.resource));
   yield put(
-    actions.getPelaksana.request(meta.resource, {id_layanan: idLayanan, id_unit_layanan: post.id_unit_layanan})
+    actions.getPelaksana.request(meta.resource, {
+      id_layanan: idLayanan,
+      id_unit_layanan: post.id_unit_layanan,
+    })
   );
   yield put(actions.onFocusElement(meta.resource, 'id_pelaksana'));
 }
@@ -222,10 +237,16 @@ function* selectedTindakanSuggestionHandler({ payload, meta }) {
 function* optionsByUnitLayananRequestHandler({ meta }) {
   try {
     const post = yield select(postSelector);
-    const response = yield call(api.getOptionsByUnitLayanan, post.id_unit_layanan);
+    const response = yield call(
+      api.getOptionsByUnitLayanan,
+      post.id_unit_layanan
+    );
     if (response.status) {
       yield put(
-        actions.optionsByUnitLayanan.requestSuccess(meta.resource, response.data)
+        actions.optionsByUnitLayanan.requestSuccess(
+          meta.resource,
+          response.data
+        )
       );
     } else {
       yield put(
@@ -242,17 +263,18 @@ function* optionsByUnitLayananRequestHandler({ meta }) {
 
 function* pelaksanaRequestHandler({ payload, meta }) {
   try {
-    const response = yield call(api.getPelaksana, payload.data.id_unit_layanan, payload.data.id_layanan);
+    const response = yield call(
+      api.getPelaksana,
+      payload.data.id_unit_layanan,
+      payload.data.id_layanan
+    );
     if (response.status) {
       yield put(
         actions.getPelaksana.requestSuccess(meta.resource, response.data)
       );
     } else {
       yield put(
-        actions.getPelaksana.requestFailure(
-          meta.resource,
-          response.message
-        )
+        actions.getPelaksana.requestFailure(meta.resource, response.message)
       );
     }
   } catch (error) {
@@ -264,9 +286,7 @@ function* saveHandler({ payload, meta }) {
   let { resource } = meta;
   try {
     yield put(loaderActions.show('Proses simpan...'));
-    yield put(
-      actions.onFocusElement(resource, '')
-    );
+    yield put(actions.onFocusElement(resource, ''));
     let { rules, messages } = validationRules(resource);
     let post = payload.data;
     let method = post.id ? 'koreksi' : 'tambah';
@@ -300,9 +320,7 @@ function* saveHandler({ payload, meta }) {
 
 function* saveSuccessHandler({ meta }) {
   yield put(datatableActions.onReload(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
-  yield put(
-    actions.kunjunganDetail.request(meta.resource)
-  );
+  yield put(actions.kunjunganDetail.request(meta.resource));
 }
 
 function* saveFailureHandler({ payload, meta }) {
@@ -338,9 +356,7 @@ function* deleteHandler({ payload, meta }) {
 function* deleteSuccessHandler({ payload, meta }) {
   yield put(datatableActions.onReload(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
   yield toastr.success(payload.data.message);
-  yield put(
-    actions.kunjunganDetail.request(meta.resource)
-  );
+  yield put(actions.kunjunganDetail.request(meta.resource));
 }
 
 function* kunjunganDetailRequestHandler({ meta }) {
@@ -353,10 +369,7 @@ function* kunjunganDetailRequestHandler({ meta }) {
       );
     } else {
       yield put(
-        actions.kunjunganDetail.requestFailure(
-          meta.resource,
-          response.message
-        )
+        actions.kunjunganDetail.requestFailure(meta.resource, response.message)
       );
     }
   } catch (error) {
@@ -366,23 +379,47 @@ function* kunjunganDetailRequestHandler({ meta }) {
 
 export default function* watchActions() {
   yield all([
-    takeLatest(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST, loadTindakanUnitHandler),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST,
+      loadTindakanUnitHandler
+    ),
     takeLatest(actionTypes.OPEN_FORM, openForm),
     takeLatest(datatableActionTypes.RELOADED, handleReloaded),
     takeLatest(actionTypes.POPULATE_FORM_REQUEST, populateForm),
     takeLatest(actionTypes.GET_PASIEN_REQUEST, getPasienRequestHandler),
     takeLatest(actionTypes.GET_KUNJUNGAN_REQUEST, getKunjunganRequestHandler),
-    takeLatest(actionTypes.GET_KUNJUNGAN_SUCCESS, getKunjunganRequestSuccessHandler),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_SUCCESS,
+      getKunjunganRequestSuccessHandler
+    ),
     takeLatest(actionTypes.SELECTED_KUNJUNGAN, selectedKunjunganHandler),
     takeLatest(actionTypes.FINISH, finishHandler),
     takeLatest(actionTypes.ADD, addHandler),
-    takeLatest(actionTypes.CANCEL_SELECTED_KUNJUNGAN, cancelSelectedKunjunganHandler),
-    takeLatest(actionTypes.GET_TINDAKAN_SUGGESTION_REQUEST, loadTindakanSuggestionHandler),
-    takeLatest(actionTypes.SUBMIT_FILTER_TINDAKAN_SUGGESTION, submitFilterTindakanSuggestionHandler),
+    takeLatest(
+      actionTypes.CANCEL_SELECTED_KUNJUNGAN,
+      cancelSelectedKunjunganHandler
+    ),
+    takeLatest(
+      actionTypes.GET_TINDAKAN_SUGGESTION_REQUEST,
+      loadTindakanSuggestionHandler
+    ),
+    takeLatest(
+      actionTypes.SUBMIT_FILTER_TINDAKAN_SUGGESTION,
+      submitFilterTindakanSuggestionHandler
+    ),
     takeLatest(actionTypes.SHOW_CARI_TINDAKAN, showTindakanSuggestionHandler),
-    takeLatest(actionTypes.SELECTED_TINDAKAN_SUGGESTION, selectedTindakanSuggestionHandler),
-    takeLatest(actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST, optionsByUnitLayananRequestHandler),
-    takeLatest(actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST, kunjunganDetailRequestHandler),
+    takeLatest(
+      actionTypes.SELECTED_TINDAKAN_SUGGESTION,
+      selectedTindakanSuggestionHandler
+    ),
+    takeLatest(
+      actionTypes.OPTIONS_BY_UNITLAYANAN_REQUEST,
+      optionsByUnitLayananRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST,
+      kunjunganDetailRequestHandler
+    ),
     takeLatest(actionTypes.SAVE_REQUEST, saveHandler),
     takeLatest(actionTypes.SAVE_SUCCESS, saveSuccessHandler),
     takeLatest(actionTypes.SAVE_FAILURE, saveFailureHandler),

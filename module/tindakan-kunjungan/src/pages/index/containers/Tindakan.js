@@ -4,32 +4,57 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import FormTindakan from '../components/FormTindakan';
 import CariTindakan from '../components/CariTindakan';
+import PelaksanaTambahan from './PelaksanaTambahan';
 import {
-  disabledElement, postSelector, focusElementSelector, dataSelector,
-  postItemSelector, showCariTindakanSelector, datatableSelector, selectedOptionSelector
+  disabledElement,
+  postSelector,
+  focusElementSelector,
+  dataSelector,
+  postItemSelector,
+  showCariTindakanSelector,
+  datatableSelector,
+  selectedOptionSelector,
+  showPelaksanaTambahanSelector,
+  showModalPelaksanaTambahanSelector,
 } from '../redux/selector';
-import {actions, staticConst} from '../index';
+import { actions, staticConst } from '../index';
 
-const TindakanContainer = ({t, resource}) => {
+const TindakanContainer = ({ t, resource }) => {
   const dispatch = useDispatch();
-
-  const post = useSelector(state => postSelector(state));
-  const postItem = useSelector(state => postItemSelector(state));
-  const focusElement = useSelector(state => focusElementSelector(state));
-  const disabledInput = useSelector(state => disabledElement(state, 'form_tindakan'));
+  // const [showModalPelaksanaTambahan, setShowModalPelaksanaTambahan] = React.useState(false);
+  const post = useSelector((state) => postSelector(state));
+  const postItem = useSelector((state) => postItemSelector(state));
+  const focusElement = useSelector((state) => focusElementSelector(state));
+  const disabledInput = useSelector((state) =>
+    disabledElement(state, 'form_tindakan')
+  );
   const showCariTindakan = useSelector(showCariTindakanSelector);
   const dataForm = useSelector(dataSelector);
   const datatables = useSelector(datatableSelector);
   const selectedOption = useSelector(selectedOptionSelector);
-  const isReload = datatables[staticConst.TABLE_SEARCH_TINDAKAN] ? datatables[staticConst.TABLE_SEARCH_TINDAKAN].isReload : false;
-  const reloadType = datatables[staticConst.TABLE_SEARCH_TINDAKAN] ? datatables[staticConst.TABLE_SEARCH_TINDAKAN].reloadType : '';
+  const showModalPelaksanaTambahan = useSelector(
+    showModalPelaksanaTambahanSelector
+  );
+  const showPelaksanaTambahan = useSelector(showPelaksanaTambahanSelector);
+  const isReload = datatables[staticConst.TABLE_SEARCH_TINDAKAN]
+    ? datatables[staticConst.TABLE_SEARCH_TINDAKAN].isReload
+    : false;
+  const reloadType = datatables[staticConst.TABLE_SEARCH_TINDAKAN]
+    ? datatables[staticConst.TABLE_SEARCH_TINDAKAN].reloadType
+    : '';
 
-  const showCariTindakanHandler = () => dispatch(actions.showCariTindakan(resource));
-  const hideCariTindakanHandler = () => dispatch(actions.hideCariTindakan(resource));
-  const submitCariTindakanHandler = (params) => dispatch(actions.submitFilterSuggestion(resource, params));
-  const selectTindakanHandler = (data) => dispatch(actions.onSelectTindakanSuggestion(resource, data));
-  const changePelaksanaHandler = (data) => dispatch(actions.onChangePelaksana(resource, data));
-  const loadTindakanSuggestionHandler = (data, tableParams) => dispatch(actions.tindakanSuggestion.request(resource, data, tableParams));
+  const showCariTindakanHandler = () =>
+    dispatch(actions.showCariTindakan(resource));
+  const hideCariTindakanHandler = () =>
+    dispatch(actions.hideCariTindakan(resource));
+  const submitCariTindakanHandler = (params) =>
+    dispatch(actions.submitFilterSuggestion(resource, params));
+  const selectTindakanHandler = (data) =>
+    dispatch(actions.onSelectTindakanSuggestion(resource, data));
+  const changePelaksanaHandler = (data) =>
+    dispatch(actions.onChangePelaksana(resource, data));
+  const loadTindakanSuggestionHandler = (data, tableParams) =>
+    dispatch(actions.tindakanSuggestion.request(resource, data, tableParams));
   const changeInputHandler = (e) => {
     const { value, name } = e.target;
     dispatch(actions.onChangeInputTindakan(resource, { value, name }));
@@ -42,7 +67,12 @@ const TindakanContainer = ({t, resource}) => {
       }
       dispatch(actions.onFocusElement(resource, nameRef));
     }
-  }
+  };
+
+  const showPelaksanaTambahanHandler = () =>
+    dispatch(actions.onShowPelaksanaTambahan(resource));
+  const hidePelaksanaTambahanHandler = () =>
+    dispatch(actions.onHidePelaksanaTambahan(resource));
 
   return (
     <>
@@ -59,6 +89,9 @@ const TindakanContainer = ({t, resource}) => {
         onChangePelaksana={changePelaksanaHandler}
         onChangeInput={changeInputHandler}
         onFocusElement={focusElementHandler}
+        showPelaksanaTambahan={showPelaksanaTambahan}
+        // showPelaksanaTambahan={true}
+        onShowPelaksanaTambahan={showPelaksanaTambahanHandler}
       />
       {showCariTindakan && (
         <CariTindakan
@@ -77,9 +110,15 @@ const TindakanContainer = ({t, resource}) => {
           focusElement={focusElement}
         />
       )}
+      {showModalPelaksanaTambahan && (
+        <PelaksanaTambahan
+          show={showModalPelaksanaTambahan}
+          onHide={hidePelaksanaTambahanHandler}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
 TindakanContainer.propTypes = {
   t: PropTypes.func,

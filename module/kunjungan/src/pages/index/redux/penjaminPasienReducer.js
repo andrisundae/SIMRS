@@ -1,5 +1,4 @@
 import produce from 'immer';
-import _ from 'lodash';
 import { aclActions } from '@simrs/main/src/modules/auth';
 import initialState from './penjaminPasienState';
 import * as actionTypes from './penjaminPasienActionTypes';

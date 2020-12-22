@@ -26,6 +26,8 @@ const FormTindakan = ({
   onChangePelaksana,
   onChangeInput,
   onFocusElement,
+  showPelaksanaTambahan,
+  onShowPelaksanaTambahan,
 }) => {
   const inputRef = {
     id_tindakan: React.useRef(),
@@ -177,6 +179,20 @@ const FormTindakan = ({
                       onKeyDown={(e) => onFocusElement(e, 'save')}
                     />
                   </Grid.Column>
+                  {showPelaksanaTambahan === true && (
+                    <Grid.Column width="6" className="field">
+                      <Button
+                        size="mini"
+                        color="orange"
+                        floated="right"
+                        compact
+                        onClick={onShowPelaksanaTambahan}
+                      >
+                        <Icon name="user" />
+                        {t(getKey('pelaksana_tambahan'))}
+                      </Button>
+                    </Grid.Column>
+                  )}
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">

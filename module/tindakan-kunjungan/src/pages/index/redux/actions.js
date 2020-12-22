@@ -104,31 +104,63 @@ export default {
   },
   getKunjunganUnitDetail: {
     request: (resource, data, tableParams) =>
-      createAction(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST, { data }, { tableParams, resource }),
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_REQUEST,
+        { data },
+        { tableParams, resource }
+      ),
     requestSuccess: (resource, data) =>
-      createAction(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_SUCCESS, { data }, { resource }),
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_SUCCESS,
+        { data },
+        { resource }
+      ),
     requestFailure: (resource, error) =>
-      createAction(actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_FAILURE, { error }, { resource }),
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_DETAIL_FAILURE,
+        { error },
+        { resource }
+      ),
   },
   tindakanSuggestion: {
     request: (resource, data, tableParams) =>
-      createAction(actionTypes.GET_TINDAKAN_SUGGESTION_REQUEST, { data }, { tableParams, resource }),
+      createAction(
+        actionTypes.GET_TINDAKAN_SUGGESTION_REQUEST,
+        { data },
+        { tableParams, resource }
+      ),
     requestSuccess: (resource, data) =>
-      createAction(actionTypes.GET_TINDAKAN_SUGGESTION_SUCCESS, { data }, { resource }),
+      createAction(
+        actionTypes.GET_TINDAKAN_SUGGESTION_SUCCESS,
+        { data },
+        { resource }
+      ),
     requestFailure: (resource, error) =>
-      createAction(actionTypes.GET_TINDAKAN_SUGGESTION_FAILURE, { error }, { resource }),
+      createAction(
+        actionTypes.GET_TINDAKAN_SUGGESTION_FAILURE,
+        { error },
+        { resource }
+      ),
   },
   kunjunganDetail: {
     request: (resource) =>
       createAction(actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST, {}, { resource }),
     requestSuccess: (resource, data) =>
-      createAction(actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS, { data }, { resource }),
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS,
+        { data },
+        { resource }
+      ),
     requestFailure: (resource, error) =>
-      createAction(actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE, { error }, { resource }),
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE,
+        { error },
+        { resource }
+      ),
   },
   getPelaksana: {
     request: (resource, data) =>
-      createAction(actionTypes.GET_PELAKSANA_REQUEST, {data}, { resource }),
+      createAction(actionTypes.GET_PELAKSANA_REQUEST, { data }, { resource }),
     requestSuccess: (resource, data) =>
       createAction(actionTypes.GET_PELAKSANA_SUCCESS, { data }, { resource }),
     requestFailure: (resource, error) =>
@@ -163,9 +195,17 @@ export default {
   cancelSelectedKunjungan: (resource) =>
     createAction(actionTypes.CANCEL_SELECTED_KUNJUNGAN, {}, { resource }),
   submitFilterSuggestion: (resource, data) =>
-    createAction(actionTypes.SUBMIT_FILTER_TINDAKAN_SUGGESTION, {data}, { resource }),
+    createAction(
+      actionTypes.SUBMIT_FILTER_TINDAKAN_SUGGESTION,
+      { data },
+      { resource }
+    ),
   onSelectTindakanSuggestion: (resource, data) =>
-    createAction(actionTypes.SELECTED_TINDAKAN_SUGGESTION, { data }, { resource }),
+    createAction(
+      actionTypes.SELECTED_TINDAKAN_SUGGESTION,
+      { data },
+      { resource }
+    ),
   onAdd: (resource) =>
     createAction(
       actionTypes.ADD,
@@ -182,11 +222,16 @@ export default {
   onSelected: (resource, data) =>
     createAction(actionTypes.SELECTED, { data }, { resource }),
   onFinish: (resource) => createAction(actionTypes.FINISH, {}, { resource }),
-  populateAdd: (resource, data) => createAction(actionTypes.POPULATE_ADD, {data},{ resource}),
+  populateAdd: (resource, data) =>
+    createAction(actionTypes.POPULATE_ADD, { data }, { resource }),
   showCariTindakan: (resource) =>
     createAction(actionTypes.SHOW_CARI_TINDAKAN, {}, { resource }),
   hideCariTindakan: (resource) =>
     createAction(actionTypes.HIDE_CARI_TINDAKAN, {}, { resource }),
   onChangeInputTindakan: (resource, data) =>
     createAction(actionTypes.INPUT_CHANGE_TINDAKAN, { data }, { resource }),
+  onShowPelaksanaTambahan: (resource) =>
+    createAction(actionTypes.SHOW_PELAKSANA_TAMBAHAN, {}, { resource }),
+  onHidePelaksanaTambahan: (resource) =>
+    createAction(actionTypes.HIDE_PELAKSANA_TAMBAHAN, {}, { resource }),
 };

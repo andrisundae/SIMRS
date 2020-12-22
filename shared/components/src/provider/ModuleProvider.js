@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAppState } from './AppProvider';
 
 const moduleState = {
   resource: '',
@@ -66,6 +68,12 @@ export function useModuleDispatch() {
 export function useModuleAction() {
   const dispatch = useModuleDispatch();
   return moduleActions(dispatch);
+}
+
+export function useModuleTrans() {
+  const state = useAppState();
+  const { t } = useTranslation();
+  return (key) => t(`${state.resource}:${key}`);
 }
 
 export function ModuleConsumer({ children }) {

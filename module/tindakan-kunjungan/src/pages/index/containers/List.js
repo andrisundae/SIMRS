@@ -9,7 +9,7 @@ import { DatatableServerSide, constDatatable } from '@simrs/components';
 
 import actions from '../redux/actions';
 import actionTypes from '../redux/actionTypes';
-import {staticConst} from '../static';
+import { staticConst } from '../static';
 import { disabledElement } from '../redux/selector';
 
 class List extends Component {
@@ -58,7 +58,7 @@ class List extends Component {
           }
           break;
         default:
-          return
+          return;
       }
     }
 
@@ -69,13 +69,15 @@ class List extends Component {
     if (this.dataTable.current) {
       this.dataTable.current.selectRow(id);
     }
-  }
+  };
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.isReloadGrid !== this.props.isReloadGrid) {
       return true;
     }
-    if (nextProps.post.id_kunjungan_unit !== this.props.post.id_kunjungan_unit) {
+    if (
+      nextProps.post.id_kunjungan_unit !== this.props.post.id_kunjungan_unit
+    ) {
       return true;
     }
     if (nextProps.disabled !== this.props.disabled) {
@@ -113,7 +115,8 @@ class List extends Component {
     return {
       rowCount: null,
       getRows: (params) => {
-        const sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
+        const sortModel =
+          params.sortModel.length > 0 ? params.sortModel[0] : {};
         const post = {
           length: _this.state.cacheBlockSize,
           start: params.startRow,
@@ -124,7 +127,7 @@ class List extends Component {
         _this.props.action.loadAll(_this.props.resource, post, params);
       },
     };
-  }
+  };
 
   reload = (reloadType) => {
     if (reloadType === constDatatable.reloadType.purge) {
@@ -132,11 +135,11 @@ class List extends Component {
     } else if (reloadType === constDatatable.reloadType.refresh) {
       this.gridApi.refreshInfiniteCache();
     }
-  }
+  };
 
   getRowNodeId = (item) => {
     return item.id;
-  }
+  };
 
   _getRefDatatable() {
     return this.dataTable.current.refs[staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL];
@@ -152,7 +155,7 @@ class List extends Component {
         sortable: true,
         cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
         width: 110,
-        cellClass: "ag-date-cell",
+        cellClass: 'ag-date-cell',
       },
       {
         headerName: t(this.getKey('unit_layanan')),
@@ -178,23 +181,23 @@ class List extends Component {
       },
       {
         headerName: t(this.getKey('tarif')),
-        field: 'tarif',
+        field: 'harga',
         width: 120,
         cellRenderer: 'currencyRenderer',
-        cellClass: "ag-number-cell"
+        cellClass: 'ag-number-cell',
       },
       {
         headerName: t(this.getKey('jumlah')),
         field: 'jumlah',
         width: 120,
-        cellClass: "ag-number-cell"
+        cellClass: 'ag-number-cell',
       },
       {
         headerName: t(this.getKey('biaya')),
         field: 'biaya',
         width: 120,
         cellRenderer: 'currencyRenderer',
-        cellClass: "ag-number-cell"
+        cellClass: 'ag-number-cell',
       },
       {
         headerName: t(this.getKey('petugas_input')),
@@ -212,10 +215,10 @@ class List extends Component {
     if (params.node.isSelected()) {
       this.props.action.onSelected(this.props.resource, params.data);
     }
-  }
+  };
 
   render() {
-    const { disabled} = this.props;
+    const { disabled } = this.props;
     return (
       <DatatableServerSide
         ref={this.dataTable}
@@ -230,8 +233,8 @@ class List extends Component {
         containerHeight="160px"
         getRowNodeId={this.getRowNodeId}
         disabled={disabled}
-        // suppressRowClickSelection={disabled}
-        // suppressCellSelection={disabled}
+        suppressRowClickSelection={disabled}
+        suppressCellSelection={disabled}
         onRowSelected={this.onRowSelected}
       />
     );
@@ -240,7 +243,8 @@ class List extends Component {
 
 const mapStateToProps = function (state) {
   const { post, error, selectedRow, statusForm } = state.default;
-  const datatable = state.datatable.datatables[staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL];
+  const datatable =
+    state.datatable.datatables[staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL];
 
   return {
     post,
@@ -249,7 +253,7 @@ const mapStateToProps = function (state) {
     error,
     selectedRow,
     statusForm,
-    disabled: disabledElement(state, staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL)
+    disabled: disabledElement(state, staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL),
   };
 };
 

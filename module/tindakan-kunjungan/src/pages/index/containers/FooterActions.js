@@ -15,11 +15,11 @@ import {
   CancelButton,
   confirmation,
   withAppConsumer,
-  FinishButton
+  FinishButton,
 } from '@simrs/components';
 import { isGranted } from '@simrs/main/src/modules/auth';
 import actions from '../redux/actions';
-import {disabledElement} from '../redux/selector';
+import { disabledElement } from '../redux/selector';
 
 class FooterActions extends Component {
   constructor(props) {
@@ -51,6 +51,13 @@ class FooterActions extends Component {
       if (this.props.saveSuccess) {
         this.props.appActions.activateMainMenu();
       }
+    }
+
+    if (
+      prevProps.showPelaksanaTambahan !== this.props.showPelaksanaTambahan &&
+      !this.props.showPelaksanaTambahan
+    ) {
+      this._bindKey();
     }
   }
 
@@ -116,7 +123,7 @@ class FooterActions extends Component {
     }
 
     return isValid;
-  }
+  };
 
   isCanFinish = () => {
     const { disabledActions } = this.props;
@@ -126,34 +133,45 @@ class FooterActions extends Component {
   isCanEdit = () => {
     const { customPermissions, disabledActions, selectedRow } = this.props;
     let isValid = false;
-    if (customPermissions.canEdit && selectedRow && !disabledActions.edit
-    ) {
+    if (customPermissions.canEdit && selectedRow && !disabledActions.edit) {
       isValid = true;
     }
 
     return isValid;
-  }
+  };
 
   isCanDelete = () => {
-    const { customPermissions, selectedRow, disabledActions, data } = this.props;
+    const {
+      customPermissions,
+      selectedRow,
+      disabledActions,
+      data,
+    } = this.props;
     let isValid = false;
-    if (customPermissions.canDelete && selectedRow && !disabledActions.delete && data.st_kunjungan !== 1
+    if (
+      customPermissions.canDelete &&
+      selectedRow &&
+      !disabledActions.delete &&
+      data.st_kunjungan !== 1
     ) {
       isValid = true;
     }
 
     return isValid;
-  }
+  };
 
   isCanSave = () => {
     let { customPermissions, disabledActions } = this.props;
     let isValid = false;
-    if ((customPermissions.canAdd || customPermissions.canEdit) && !disabledActions.save) {
+    if (
+      (customPermissions.canAdd || customPermissions.canEdit) &&
+      !disabledActions.save
+    ) {
       isValid = true;
     }
 
     return isValid;
-  }
+  };
 
   isCanCancel() {
     const { disabledActions } = this.props;
@@ -163,12 +181,12 @@ class FooterActions extends Component {
   onAdd = () => {
     this.props.action.onAdd(this.props.resource);
     this.props.appActions.deactivateMainMenu();
-  }
+  };
 
   onEdit = () => {
     this.props.action.onEdit(this.props.resource);
     this.props.appActions.deactivateMainMenu();
-  }
+  };
 
   onDelete = () => {
     const { t, resource, action, data } = this.props;
@@ -176,12 +194,12 @@ class FooterActions extends Component {
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
       buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-      onOk: () => action.onDelete(resource, {id: data.id}),
+      onOk: () => action.onDelete(resource, { id: data.id }),
     });
-  }
+  };
 
   onSave = () => {
-    const {post, data} = this.props;
+    const { post, data } = this.props;
     const payload = {
       id_kunjungan: post.id,
       id_kunjungan_unit: post.id_kunjungan_unit,
@@ -192,22 +210,22 @@ class FooterActions extends Component {
       id_pelaksana: data.id_pelaksana,
       jumlah: data.jumlah,
       id_kelas: data.id_kelas,
-      id_layanan: data.id_layanan
+      id_layanan: data.id_layanan,
     };
     if (data.id) {
       payload.id = data.id;
     }
     this.props.action.onSave(this.props.resource, payload);
-  }
+  };
 
   onCancel = () => {
     this.props.action.onCancel(this.props.resource);
     this.props.appActions.activateMainMenu();
-  }
+  };
 
   onFinish = () => {
     this.props.action.onFinish(this.props.resource);
-  }
+  };
 
   _onFocusElement(e) {
     if (e.which === 37 || e.which === 39) {
@@ -322,6 +340,7 @@ const mapStateToProps = function (state, props) {
     data: module.postItem,
     focusElement: module.focusElement,
     saveSuccess: module.saveSuccess,
+    saveSuccess: module.saveSuccess,
     disabledActions: {
       add: disabledElement(state, 'add'),
       edit: disabledElement(state, 'edit'),
@@ -329,7 +348,8 @@ const mapStateToProps = function (state, props) {
       finish: disabledElement(state, 'finish'),
       cancel: disabledElement(state, 'cancel'),
       save: disabledElement(state, 'save'),
-    }
+    },
+    showPelaksanaTambahan: module.showPelaksanaTambahan,
   };
 };
 
