@@ -21,10 +21,6 @@ class CariDetail extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
 
     this._createFormRef();
-
-    this.state = {
-      firstRowSelect: false,
-    };
   }
 
   _createFormRef() {
@@ -66,7 +62,8 @@ class CariDetail extends Component {
     }
 
     if (40 === e.which) {
-      this.setState({ firstRowSelect: true });
+      e.preventDefault();
+      this.CariDetailContainer._setFirstRowSelected();
       this.props.action.onFocusElement(this.props.resource, '');
     }
   }
@@ -118,8 +115,7 @@ class CariDetail extends Component {
         show={this.props.show}
         columnDefs={this._columnDefs()}
         tableName={tableName.BARANG_LIST}
-        firstRowSelect={this.state.firstRowSelect}
-        focusDefault="filter_value"
+        onRef={(ref) => (this.CariDetailContainer = ref)}
         {...this.props}
       >
         <Grid.Column>
