@@ -1,14 +1,7 @@
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Grid,
-  Label,
-  Header,
-  Loader,
-  Message,
-  Icon,
-  Table,
-} from 'semantic-ui-react';
+import { Grid, Label, Header, Message, Icon, Table } from 'semantic-ui-react';
+import LoaderWithNoDimmer from '../component/LoaderWithNoDimmer';
 
 export default function HasilCariPasien() {
   const { t } = useTranslation();
@@ -105,22 +98,6 @@ export default function HasilCariPasien() {
         </div>
       </div>
     </Fragment>
-  );
-}
-
-function LoaderWithNoDimmer() {
-  const { t } = useTranslation();
-
-  return (
-    <div className="pt-10">
-      <Loader
-        active
-        inverted
-        className="text-gray-900 before:border-gray-500 before:w-6 before:h-6 after:border-gray-300 after:border-r-0 after:w-6 after:h-6"
-      >
-        {t('portal:mencariPasien')}
-      </Loader>
-    </div>
   );
 }
 

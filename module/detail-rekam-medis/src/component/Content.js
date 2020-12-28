@@ -3,40 +3,11 @@ import { Segment } from 'semantic-ui-react';
 import DetailUmum from './DetailUmum';
 import DetailPenunjang from './DetailPenunjang';
 
-export default function Content({
-  activeMenu = 'info-pasien',
-  umum = false,
-  penunjang = false,
-}) {
-  function renderContent() {
-    switch (activeMenu) {
-      case 'cppt':
-        return <div>ke modul CPPT</div>;
-
-      case 'pengkajian-khusus':
-        return <div>ke modul Pengkajian Khusus</div>;
-
-      case 'dokumen':
-        return <div>ke modul Dokumen</div>;
-
-      default:
-        return (
-          <Fragment>
-            {umum && <DetailUmum />}
-            {penunjang && <DetailPenunjang />}
-          </Fragment>
-        );
-    }
-  }
-
+export default function Content({ type }) {
   return (
-    <Segment
-      style={{
-        minHeight: 'calc(100vh - 80px)',
-        width: 'calc(100% - 350px)',
-      }}
-    >
-      {renderContent()}
-    </Segment>
+    <div className="col-start-2 col-span-5 py-4 px-6 overflow-y-auto">
+      {'umum' === type && <DetailUmum />}
+      {'penunjang' === type && <DetailPenunjang />}
+    </div>
   );
 }

@@ -19,44 +19,57 @@ export default function DetailPenunjang() {
 
   return (
     <Fragment>
-      <Header as="h4">LAB. PK</Header>
+      <Header className="mt-0">Lab. PK</Header>
       <Divider />
-      <Segment className="m-0 -mb-0.5 bg-gray-100 font-bold">
-        DAFTAR PASIEN
-        {/* <Icon link name="sync alternate" className="float-right" /> */}
-      </Segment>
-      <TableContainer>
-        <Table className="mt-0 table-fixed" celled striped selectable sortable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell textAlign="center">No.</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">No. RM</Table.HeaderCell>
-              <Table.HeaderCell>Nama Pasien</Table.HeaderCell>
-              <Table.HeaderCell>Asal</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">Permintaan</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">Isi Hasil</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">
-                Interpretasi
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">Publikasi</Table.HeaderCell>
+      {/* <TableContainer> */}
+      <Table className="mt-4" celled striped selectable sortable compact>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell
+              textAlign="center"
+              className="py-2 hover:bg-gray-50 cursor-default"
+            >
+              #
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" className="py-2">
+              No. RM
+            </Table.HeaderCell>
+            <Table.HeaderCell className="py-2">Nama Pasien</Table.HeaderCell>
+            <Table.HeaderCell className="py-2">Asal</Table.HeaderCell>
+            <Table.HeaderCell
+              textAlign="center"
+              className="py-2"
+              sorted="ascending"
+            >
+              Permintaan
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" className="py-2">
+              Isi Hasil
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" className="py-2">
+              Interpretasi
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" className="py-2">
+              Publikasi
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {[...Array(3)].map((i, idx) => (
+            <Table.Row
+              key={idx}
+              onClick={() => history.push('/detail-rekam-medis/penunjang')}
+            >
+              {[...Array(8)].map((ic, idxc) => (
+                <Table.Cell key={idxc}>
+                  {idx !== 0 ? 'Etc.' : dumpDataPenunjang[idxc]}
+                </Table.Cell>
+              ))}
             </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {[...Array(3)].map((i, idx) => (
-              <Table.Row
-                key={idx}
-                onClick={() => history.push('/detail-rekam-medis/penunjang')}
-              >
-                {[...Array(8)].map((ic, idxc) => (
-                  <Table.Cell key={idxc}>
-                    {idx !== 0 ? 'Etc.' : dumpDataPenunjang[idxc]}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </TableContainer>
+          ))}
+        </Table.Body>
+      </Table>
+      {/* </TableContainer> */}
     </Fragment>
   );
 }

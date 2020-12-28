@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
-// import { Link } from 'react-router-dom';
 import TopMenu from '@simrs/rekam-medis/src/component/TopMenu';
-import SidebarMenu from '../component/Sidebar';
+import MainContent from '@simrs/rekam-medis/src/component/MainContent';
+import Sidebar from '../component/Sidebar';
+import Content from '../component/Content';
 
 export default function Main() {
   return (
@@ -10,8 +11,12 @@ export default function Main() {
         title="Antrian Kunjungan Umum"
         leftMenus={[{ text: 'Menu Utama', icon: 'chevron left', to: '/main' }]}
       />
-      {/* <Link to="/detail-rekam-medis/umum">Simulasi ke detail rekam medis</Link> */}
-      <SidebarMenu umum />
+      <MainContent>
+        <div className="grid grid-cols-6 h-full">
+          <Sidebar type="umum" />
+          <Content type="umum" />
+        </div>
+      </MainContent>
     </Fragment>
   );
 }

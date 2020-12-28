@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import TopMenu from '@simrs/rekam-medis/src/component/TopMenu';
-import SidebarMenu from '../component/Sidebar';
+import MainContent from '@simrs/rekam-medis/src/component/MainContent';
+import Sidebar from '../component/Sidebar';
+import Content from '../component/Content';
 
 export default function Main() {
   return (
@@ -18,7 +20,12 @@ export default function Main() {
           { text: 'Menu Utama', icon: 'list layout', to: '/main' },
         ]}
       />
-      <SidebarMenu penunjang />
+      <MainContent>
+        <div className="grid grid-cols-6 h-full">
+          <Sidebar type="penunjang" />
+          <Content type="penunjang" />
+        </div>
+      </MainContent>
     </Fragment>
   );
 }

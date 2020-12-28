@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
-import { Route } from 'react-router-dom';
-import { useLocation, useHistory } from 'react-router';
+import { Route, useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Icon, Input, Modal, Transition } from 'semantic-ui-react';
 import produce from 'immer';

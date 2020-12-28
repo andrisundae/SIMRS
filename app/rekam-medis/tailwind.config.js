@@ -9,6 +9,12 @@ module.exports = {
       outline: {
         blue: '2px solid rgba(147, 197, 253)',
       },
+      inset: {
+        submenu: '-26.9rem',
+      },
+      padding: {
+        '1.2': '0.3rem',
+      },
     },
   },
   important: true,
@@ -18,6 +24,7 @@ module.exports = {
       borderWidth: ['after'],
       width: ['before', 'after'],
       height: ['before', 'after'],
+      inset: ['after'],
       margin: ['first'],
     },
   },

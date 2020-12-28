@@ -1,21 +1,12 @@
-import React, { Fragment } from 'react';
-import { useHistory } from 'react-router';
-import { Segment } from 'semantic-ui-react';
+import React from 'react';
 import DetailUmum from './DetailUmum';
 import DetailPenunjang from './DetailPenunjang';
 
-export default function Content({ umum = false, penunjang = false }) {
+export default function Content({ type }) {
   return (
-    <Segment
-      style={{
-        minHeight: 'calc(100vh - 80px)',
-        width: 'calc(100% - 350px)',
-      }}
-    >
-      <Fragment>
-        {umum && <DetailUmum />}
-        {penunjang && <DetailPenunjang />}
-      </Fragment>
-    </Segment>
+    <div className="col-start-2 col-span-5 p-4 overflow-y-auto">
+      {'umum' === type && <DetailUmum />}
+      {'penunjang' === type && <DetailPenunjang />}
+    </div>
   );
 }

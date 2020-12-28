@@ -11,26 +11,24 @@ import routers from './routers';
 
 export default function App() {
   return (
-    <div className="pt-14">
-      <Router>
-        <Suspense fallback={<PageLoader active />}>
-          <Switch>
-            {routers.map((router, index) => {
-              const Component = withTranslation(router.key)(router.component);
-              return (
-                <Route
-                  path={router.path}
-                  render={(props) => (
-                    <Component resource={router.key} {...props} />
-                  )}
-                  key={index}
-                />
-              );
-            })}
-            <Redirect to={'/main'} />
-          </Switch>
-        </Suspense>
-      </Router>
-    </div>
+    <Router>
+      <Suspense fallback={<PageLoader active />}>
+        <Switch>
+          {routers.map((router, index) => {
+            const Component = withTranslation(router.key)(router.component);
+            return (
+              <Route
+                path={router.path}
+                render={(props) => (
+                  <Component resource={router.key} {...props} />
+                )}
+                key={index}
+              />
+            );
+          })}
+          <Redirect to={'/main'} />
+        </Switch>
+      </Suspense>
+    </Router>
   );
 }
