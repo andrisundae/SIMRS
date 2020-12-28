@@ -32,7 +32,7 @@ export const dateFormatDB = (date, format = 'YYYY-MM-DD') => {
   return newDate.isValid() ? newDate.format(format) : date;
 };
 
-export const dateFormatClient = (date, format = 'DD MMMM YYYY HH:mm') => {
+export const dateFormatClient = (date, format = 'DD/MM/YYYY HH:mm') => {
   const newDate = dayjs(date);
 
   return newDate.isValid() ? newDate.format(format) : date;

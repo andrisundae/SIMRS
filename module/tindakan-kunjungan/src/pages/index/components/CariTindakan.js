@@ -5,7 +5,7 @@ import {
   CancelButton,
   constDatatable,
   SelectedButton,
-  SearchButton
+  SearchButton,
 } from '@simrs/components';
 
 class CariTindakan extends Component {
@@ -19,7 +19,7 @@ class CariTindakan extends Component {
     this.onRowEnteredHandler = this.onRowEnteredHandler.bind(this);
 
     this.state = {
-      search: ''
+      search: '',
     };
   }
 
@@ -32,7 +32,7 @@ class CariTindakan extends Component {
         sortable: true,
         cellStyle: { 'background-color': '#f5f7f7' },
         width: 110,
-        cellClass: "ag-date-cell",
+        cellClass: 'ag-date-cell',
       },
       {
         headerName: this.props.t(this.getKey('kelompok')),
@@ -56,7 +56,7 @@ class CariTindakan extends Component {
         field: 'tarif',
         width: 120,
         cellRenderer: 'currencyRenderer',
-        cellClass: "ag-number-cell"
+        cellClass: 'ag-number-cell',
       },
       {
         headerName: this.props.t(this.getKey('tanggal_aktif')),
@@ -70,7 +70,7 @@ class CariTindakan extends Component {
         width: 120,
       },
     ];
-  }
+  };
 
   componentDidMount() {
     let refDatatable = this.getRefDatatable();
@@ -110,12 +110,12 @@ class CariTindakan extends Component {
 
   filterChangeHandler = (e) => {
     const { value } = e.target;
-    this.setState({search: value});
+    this.setState({ search: value });
   };
 
   onSubmitHandler = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.props.resource, {search: this.state.search});
+    this.props.onSubmit(this.props.resource, { search: this.state.search });
   };
 
   onClickSelectedHandler() {
@@ -137,7 +137,7 @@ class CariTindakan extends Component {
 
   getRowNodeId = (item) => {
     return item.id;
-  }
+  };
 
   dataSource = () => {
     const _this = this;
@@ -145,7 +145,8 @@ class CariTindakan extends Component {
       rowCount: null,
       getRows: (params) => {
         const kunjungan = _this.props.kunjungan;
-        const sortModel = params.sortModel.length > 0 ? params.sortModel[0] : {};
+        const sortModel =
+          params.sortModel.length > 0 ? params.sortModel[0] : {};
         const post = {
           length: 25,
           start: params.startRow,
@@ -168,11 +169,9 @@ class CariTindakan extends Component {
       e.preventDefault();
       this.props.onSubmit(this.props.resource, { search: this.state.search });
     } else if (e.which === 40) {
-      if (!this.state.search) {
-        this.dataTable.current.setFirstRowSelected();
-      }
+      this.dataTable.current.setFirstRowSelected();
     }
-  }
+  };
 
   render() {
     const { show, onHide, name } = this.props;

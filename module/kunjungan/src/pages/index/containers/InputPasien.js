@@ -436,7 +436,7 @@ class InputPasien extends Component {
                     name="rw"
                     ref={this.rw}
                     onChange={this.inputChangeHandler}
-                    onKeyDown={(e) => this._onFocusElement(e, 'nama_desa')}
+                    onKeyDown={(e) => this._onFocusElement(e, 'id_desa')}
                     disabled={disabledDetail}
                     value={post.rw}
                   />

@@ -59,9 +59,9 @@ const Main = (props) => {
 
     let desc = '';
     if (post.id_penjamin === staticConst.ID_PENJAMIN_UMUM) {
-      desc = `Pasien ${post.nama_status_pasien}, Kelas Rumah Sakit ${post.nama_kelas}`;
+      desc = `Pasien ${post.nama_status_pasien}, Kelas RS ${post.nama_kelas}`;
     } else {
-      desc = `Pasien ${post.nama_status_pasien} ${post.nama_hak_kelas}, Kelas Rumah Sakit ${post.nama_kelas}`;
+      desc = `Pasien ${post.nama_status_pasien} Hak Kelas ${post.nama_hak_kelas} | Kelas RS ${post.nama_kelas}`;
     }
 
     return <Header as="h5">{desc}</Header>;
@@ -113,16 +113,16 @@ const Main = (props) => {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ top: -20 }}>
-            <Grid.Column>
-              <List {...props} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={{ top: -34 }}>
-            <Grid.Column width={8} floated="left">
+            <Grid.Column width={16} textAlign="right">
               {renderDetailStatusPasien()}
             </Grid.Column>
-            <Grid.Column width={8} floated="right" textAlign="right">
+            {/* <Grid.Column width={8} floated="right" textAlign="right">
               {renderDetailUnitLayanan()}
+            </Grid.Column> */}
+          </Grid.Row>
+          <Grid.Row style={{ top: -34 }}>
+            <Grid.Column>
+              <List {...props} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ top: -48 }}>

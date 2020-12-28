@@ -109,12 +109,17 @@ class FooterActions extends Component {
   }
 
   onSave = () => {
-    this.props.action.onCheckSave(this.props.resource, {
-      idPasien: this.props.post.id_pasien,
-      idUnitLayanan: this.props.post.id_unit_layanan,
-      callBack: () =>
-        this.props.action.onSave(this.props.resource, this.props.post),
-    });
+    // if (this.props.post.id_pasien) {
+    //   this.props.action.onCheckSave(this.props.resource, {
+    //     idPasien: this.props.post.id_pasien,
+    //     idUnitLayanan: this.props.post.id_unit_layanan,
+    //     callBack: () =>
+    //       this.props.action.onSave(this.props.resource, this.props.post),
+    //   });
+    // } else {
+    //   this.props.action.onSave(this.props.resource, this.props.post);
+    // }
+    this.props.action.onSave(this.props.resource, this.props.post);
   };
 
   onAdd = () => {

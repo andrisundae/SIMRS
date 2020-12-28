@@ -29,7 +29,7 @@ class CariKunjungan extends Component {
   };
 
   getColumnDefs = () => {
-    const {t} = this.props;
+    const { t } = this.props;
     const columns = [
       {
         headerName: t(this.getKey('tanggal_masuk')),
@@ -64,7 +64,7 @@ class CariKunjungan extends Component {
     ];
 
     return columns;
-  }
+  };
 
   getRefDatatable() {
     return this.dataTable.current.refs[staticConst.TABLE_KUNJUNGAN];
@@ -88,12 +88,12 @@ class CariKunjungan extends Component {
   }
 
   getRowNodeId = (item) => {
-    return item.id;
-  }
+    return item.id_kunjungan_unit;
+  };
 
   gridReadyHandler = () => {
     this.dataTable.current.setFirstRowSelected();
-  }
+  };
 
   render() {
     const { show, onHide, dataSource, t } = this.props;

@@ -3,11 +3,16 @@ import { Grid, Form, Input, Segment, Divider, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const IdentitasPasien = ({
-  t, data, resource, onEnterNorm,
-  focusElement, isDisabledNorm, onChangeInput
+  t,
+  data,
+  resource,
+  onEnterNorm,
+  focusElement,
+  isDisabledNorm,
+  onChangeInput,
 }) => {
   const inputRef = {
-    norm: React.useRef()
+    norm: React.useRef(),
   };
 
   React.useEffect(() => {
@@ -20,7 +25,7 @@ const IdentitasPasien = ({
 
   const getKey = (key) => {
     return `${resource}:${key}`;
-  }
+  };
 
   return (
     <Form
@@ -59,9 +64,7 @@ const IdentitasPasien = ({
                     />
                   </Grid.Column>
                   <Grid.Column width="3" className="field">
-                    <label>
-                      {t(getKey('no_billing'))}
-                    </label>
+                    <label>{t(getKey('no_billing'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
                     <Input
@@ -77,20 +80,12 @@ const IdentitasPasien = ({
                     <label>{t(getKey('nama'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
-                    <Input
-                      name="nama"
-                      disabled
-                      value={data.nama_pasien}
-                    />
+                    <Input name="nama" disabled value={data.nama_pasien} />
                   </Grid.Column>
                 </Grid.Row>
-                <Grid.Row
-                  className="form-row"
-                >
+                <Grid.Row className="form-row">
                   <Grid.Column width="4" className="field">
-                    <label>
-                      {t(getKey('jenis_kelamin'))}
-                    </label>
+                    <label>{t(getKey('jenis_kelamin'))}</label>
                   </Grid.Column>
                   <Grid.Column width="4" className="field">
                     <Input
@@ -100,7 +95,9 @@ const IdentitasPasien = ({
                     />
                   </Grid.Column>
                   <Grid.Column width="8" className="field">
-                    <Header as="h4" color="grey" style={{marginTop: 3}}>{data.umur}</Header>
+                    <Header as="h4" color="grey" style={{ marginTop: 3 }}>
+                      {data.umur}
+                    </Header>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
@@ -109,49 +106,43 @@ const IdentitasPasien = ({
               <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="6" className="field">
-                    <label>
-                      {t(getKey('nama_ortu'))}
-                    </label>
+                    <label>{t(getKey('nama_ortu'))}</label>
                   </Grid.Column>
                   <Grid.Column width="10" className="field">
-                    <Input
-                      name="nama_ortu"
-                      disabled
-                      value={data.nama_ortu}
-                    />
+                    <Input name="nama_ortu" disabled value={data.nama_ortu} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="6" className="field">
-                    <label>
-                      {t(getKey('alamat'))}
-                    </label>
+                    <label>{t(getKey('alamat'))}</label>
                   </Grid.Column>
                   <Grid.Column width="10" className="field">
-                    <Input
-                      name="alamat"
-                      disabled
-                      value={data.alamat}
-                    />
+                    <Input name="alamat" disabled value={data.alamat} />
                   </Grid.Column>
                 </Grid.Row>
-                {data.id &&
+                {data.id && (
                   <Grid.Row className="form-row">
                     <Grid.Column width="16" className="field" textAlign="right">
-                      <Header as="h3" color="green" style={{ marginTop: 3 }}>
-                        {data.st_pulang ? t(getKey('kunjungan_selesai')) : t(getKey('kunjungan_aktif'))} - {data.nama_status_pasien}
+                      <Header
+                        as="h3"
+                        style={{ marginTop: 3, color: '#0335CD' }}
+                      >
+                        {data.st_pulang
+                          ? t(getKey('kunjungan_selesai'))
+                          : t(getKey('kunjungan_aktif'))}{' '}
+                        - {data.nama_status_pasien}
                       </Header>
                     </Grid.Column>
                   </Grid.Row>
-                }
+                )}
               </Grid>
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Segment>
     </Form>
-  )
-}
+  );
+};
 
 IdentitasPasien.propTypes = {
   data: PropTypes.object,

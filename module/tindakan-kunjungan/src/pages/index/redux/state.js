@@ -67,5 +67,6 @@ export default {
   loaderDpjp: false,
   showCariKunjungan: false,
   showCariTindakan: false,
-  saveSuccess: false
+  saveSuccess: false,
+  showPelaksanaTambahan: false,
 };

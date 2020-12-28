@@ -112,6 +112,7 @@ class CariDetail extends Component {
 
   componentDidMount() {
     this._bindKey();
+    this.props.onRef(this);
 
     let refDatatable = this.getRefDatatable();
     this.gridApi = refDatatable.api;
@@ -126,14 +127,11 @@ class CariDetail extends Component {
         this.reload(reloadType);
       }
     }
-
-    if (this.props.firstRowSelect && !this.props.focusElement) {
-      this.tableDetail.current.setFirstRowSelected();
-    }
   }
 
   componentWillUnmount() {
     this._unbindKey();
+    this.props.onRef(undefined);
   }
 
   render() {

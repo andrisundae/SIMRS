@@ -50,6 +50,7 @@ class Filter extends Component {
             disabled={isDisableForm}
             options={optionsReferensi}
             placeholder="Pilih Referensi"
+            search
           />
         </FormField>
         <FormField>
