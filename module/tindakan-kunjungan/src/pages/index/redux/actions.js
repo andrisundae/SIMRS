@@ -186,6 +186,26 @@ export default {
         { resource }
       ),
   },
+  hitungHariPerawatan: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.HITUNG_HARI_PERAWATAN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.HITUNG_HARI_PERAWATAN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.HITUNG_HARI_PERAWATAN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   onSelectKunjungan: (resource, data) =>
     createAction(actionTypes.SELECTED_KUNJUNGAN, { data }, { resource }),
   showCariKunjungan: (resource) =>
