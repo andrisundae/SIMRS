@@ -45,13 +45,15 @@ export default {
     return response;
   },
   getPelaksana: async (idUnitLayanan, idLayanan) => {
-    const params = {idUnitLayanan, idLayanan};
+    const params = { idUnitLayanan, idLayanan };
     const response = await request.get(`${path}/pelaksana`, params);
 
     return response;
   },
   getKunjunganDetail: async (idKunjungan) => {
-    const response = await request.get(`/billing/transaksi/kunjungan/${idKunjungan}`);
+    const response = await request.get(
+      `/billing/transaksi/kunjungan/${idKunjungan}`
+    );
 
     return response;
   },
@@ -60,15 +62,28 @@ export default {
     return response;
   },
   getKunjunganUnitDetail: async (idKunjunganUnit) => {
-    const response = await request.get(`${path}/kunjungan-unit-detail/${idKunjunganUnit}`);
+    const response = await request.get(
+      `${path}/kunjungan-unit-detail/${idKunjunganUnit}`
+    );
     return response;
   },
   tindakanSuggestion: async (params) => {
-    const response = await request.get('/billing/master/tindakan/suggestion', params);
+    const response = await request.get(
+      '/billing/master/tindakan/suggestion',
+      params
+    );
     return response;
   },
   getOptionsByUnitLayanan: async (idUnitLayanan) => {
-    const response = await request.get(`${path}/options-by-unitlayanan/${idUnitLayanan}`);
+    const response = await request.get(
+      `${path}/options-by-unitlayanan/${idUnitLayanan}`
+    );
+    return response;
+  },
+  hitungHariPerawatan: async (idKunjunganUnit) => {
+    const response = await request.post(
+      `/billing/transaksi/kunjungan/hitungHariPerawatanKamar/${idKunjunganUnit}`
+    );
     return response;
   },
 };

@@ -155,7 +155,12 @@ function* getKunjunganRequestSuccessHandler({ meta, payload }) {
   }
 }
 
-function* selectedKunjunganHandler({ meta }) {
+function* selectedKunjunganHandler({ meta, payload }) {
+  yield put(
+    actions.hitungHariPerawatan.request(meta.resource, {
+      idKunjunganUnit: payload.data.data.id_kunjungan_unit,
+    })
+  );
   const isShowKunjungan = yield select(showCariKunjunganSelector);
   if (isShowKunjungan) {
     yield put(actions.hideCariKunjungan(meta.resource));
@@ -377,6 +382,29 @@ function* kunjunganDetailRequestHandler({ meta }) {
   }
 }
 
+function* hitungHariPerawatanRequestHandler({ payload, meta }) {
+  try {
+    const response = yield call(
+      api.hitungHariPerawatan,
+      payload.data.id_unit_layanan
+    );
+    if (response.status) {
+      yield put(
+        actions.hitungHariPerawatan.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.hitungHariPerawatan.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
 export default function* watchActions() {
   yield all([
     takeLatest(
@@ -427,5 +455,9 @@ export default function* watchActions() {
     takeLatest(actionTypes.DELETE_REQUEST, deleteHandler),
     takeLatest(actionTypes.DELETE_SUCCESS, deleteSuccessHandler),
     takeLatest(actionTypes.GET_PELAKSANA_REQUEST, pelaksanaRequestHandler),
+    takeLatest(
+      actionTypes.HITUNG_HARI_PERAWATAN_REQUEST,
+      hitungHariPerawatanRequestHandler
+    ),
   ]);
 }
