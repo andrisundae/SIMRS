@@ -70,3 +70,15 @@ export const disabledElement = createSelector(
     return true;
   }
 );
+export const statusFormSelector = createSelector(
+  (state) => state.default.statusForm,
+  (data) => data
+);
+export const isRequestingPaseinSelector = createSelector(
+  (state) => state.default.isRequestingPasien,
+  (data) => data
+);
+export const isFromAntrianSelector = createSelector(
+  (state) => state.default.isFromAntrian,
+  (data) => data
+);

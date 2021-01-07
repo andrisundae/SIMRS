@@ -2,6 +2,7 @@ import React, { Component, Fragment, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu } from 'semantic-ui-react';
@@ -388,4 +389,4 @@ FooterActions.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withAppConsumer(FooterActions));
+)(withAppConsumer(withRouter(FooterActions)));

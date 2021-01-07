@@ -277,6 +277,10 @@ class InputPasien extends Component {
     this.props.action.onOpenMenuStatusPasien(this.props.resource);
   };
 
+  closeMenuStatusPasienHandler = () => {
+    this.props.action.onCloseMenuStatusPasien(this.props.resource);
+  };
+
   keyDownDesaHandler = (e) => {
     if (e.which === 13) {
       if (!e.target.value) {
@@ -674,6 +678,7 @@ class InputPasien extends Component {
                     inputRef={this.id_penjamin}
                     onKeyDown={(e) => this._onFocusElement(e, 'id_kelompok')}
                     onMenuOpen={this.openMenuStatusPasienHandler}
+                    onMenuClose={this.closeMenuStatusPasienHandler}
                     components={{ Option: OptionStatusPasien }}
                   />
                 </Grid.Column>

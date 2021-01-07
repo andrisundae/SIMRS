@@ -126,6 +126,7 @@ class FooterActions extends Component {
     if (this.props.post.id_pasien) {
       this.props.action.onCheckAdd(this.props.resource, {
         idPasien: this.props.post.id_pasien,
+        idUnitLayanan: this.props.post.id_unit_layanan,
         callBack: () =>
           this.props.action.onAddWithSelected(this.props.resource),
       });
