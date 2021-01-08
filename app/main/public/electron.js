@@ -2,7 +2,7 @@ require('dotenv').config();
 const os = require('os');
 const path = require('path');
 const { format } = require('url');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, session } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const store = new Store({ encryptionKey: process.env.REACT_APP_SECRET });
@@ -123,7 +123,7 @@ if (!gotTheLock) {
       mainWindow = createMainWindow();
     }
   });
-  app.on('ready', () => {
+  app.on('ready', async () => {
     mainWindow = createMainWindow();
 
     splash = createSplashWindow();
@@ -134,6 +134,10 @@ if (!gotTheLock) {
       mainWindow.show();
       mainWindow.focus();
     });
+
+    await session.defaultSession.loadExtension(
+      path.join(__dirname, '../devtools/react')
+    );
   });
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

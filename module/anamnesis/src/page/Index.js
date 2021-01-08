@@ -9,26 +9,28 @@ import {
   Label,
   Modal,
 } from 'semantic-ui-react';
+import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
 
 export default function Index() {
   const [deleteConfirmIsOpen, setDeleteConfirmIsOpen] = useState(false);
 
   return (
     <Fragment>
+      <FooterActionsContainer>
+        <Button as={Link} color="blue" to="/add" className="m-1">
+          <Icon name="plus" />
+          Tambah
+        </Button>
+      </FooterActionsContainer>
+
       <Header className="mt-0">
         <Icon name="tasks" className="text-lg -mt-4" />
         Anamnesis
       </Header>
       <Divider />
-      <div className="fixed right-6 bottom-4">
-        <Button as={Link} color="blue" to="/add" className="mr-0">
-          <Icon name="plus" />
-          Tambah
-        </Button>
-      </div>
       <div
         className="border rounded overflow-x-auto"
-        style={{ height: 'calc(100vh - 180px)' }}
+        style={{ height: 'calc(100vh - 220px)' }}
       >
         <Table
           striped

@@ -12,7 +12,7 @@ export default function Main() {
         leftMenus={[{ text: 'Menu Utama', icon: 'chevron left', to: '/main' }]}
       />
       <MainContent>
-        <div className="grid grid-cols-6 h-full">
+        <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 h-full">
           <Sidebar type="umum" />
           <Content type="umum" />
         </div>

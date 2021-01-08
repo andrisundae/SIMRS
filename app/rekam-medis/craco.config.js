@@ -38,7 +38,7 @@ module.exports = {
         );
       }
 
-      if (env.BROWSER && 'none' === env.BROWSER) {
+      if (process.env.BROWSER && 'none' === process.env.BROWSER) {
         webpackConfig.target = 'electron-renderer';
       }
 

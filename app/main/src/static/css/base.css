@@ -298,34 +298,6 @@ li.dropdown-submenu:focus,
     padding-bottom: 0px;
 } */
 
-.layout-header {
-  -webkit-app-region: drag;
-}
-
-x-menubar {
-  padding-right: 0px !important;
-}
-
-x-menuitem,
-#right-menu-search input {
-  -webkit-app-region: no-drag;
-  /* cursor: pointer; */
-}
-
-x-menuitem.app-window-button {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-x-menuitem.app-window-button.close:hover {
-  background: #ff0000 !important;
-}
-
-x-menuitem:hover {
-  background-color: rgb(54, 150, 252);
-  color: #ffffff;
-}
-
 .main-menu,
 .right-menu {
   -webkit-app-region: no-drag;
@@ -367,22 +339,6 @@ x-menuitem:hover {
 
 .form-grid {
   padding-bottom: 8px !important;
-}
-
-.ag-grid-segment {
-  border: 0px !important;
-  border-bottom-width: 1px !important;
-  padding: 0px !important;
-  margin-bottom: 0px !important;
-  margin-top: 0px !important;
-}
-
-/* .ag-grid-segment.footer .ag-body-viewport.ag-layout-normal  {
-    overflow-y: hidden !important;
-} */
-
-.ag-grid-segment.ui.loading.segment:before {
-  z-index: 10 !important;
 }
 
 .content-grid .row {
@@ -428,14 +384,6 @@ x-menuitem:hover {
 
 .ui.checkbox input[disabled] ~ label:before {
   background-color: #d9dcde !important;
-}
-
-.ui.loading.segment.ag-grid-segment:before {
-  border-radius: 0px !important;
-}
-
-.ui.loading.segment.ag-grid-segment:after {
-  visibility: hidden !important;
 }
 
 .ui.checkbox input[disabled] ~ .box:after,

@@ -1,0 +1,22 @@
+x-menubar {
+  padding-right: 0px !important;
+}
+
+x-menuitem,
+#right-menu-search input {
+  -webkit-app-region: no-drag;
+}
+
+x-menuitem.app-window-button {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+x-menuitem.app-window-button.close:hover {
+  background: #ff0000 !important;
+}
+
+x-menuitem:hover {
+  background-color: rgb(54, 150, 252);
+  color: #ffffff;
+}

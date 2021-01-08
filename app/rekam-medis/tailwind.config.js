@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false,
@@ -11,15 +13,21 @@ module.exports = {
       },
       inset: {
         submenu: '-26.9rem',
+        '25.5': '6.375rem',
+        '11.5': '2.875rem',
       },
       padding: {
         '1.2': '0.3rem',
+      },
+      height: {
+        'submenu-desktop': 'calc(100vh - 40px)',
       },
     },
   },
   important: true,
   variants: {
     extend: {
+      textColor: ['after'],
       borderColor: ['before', 'after'],
       borderWidth: ['after'],
       width: ['before', 'after'],
@@ -28,5 +36,18 @@ module.exports = {
       margin: ['first'],
     },
   },
-  plugins: [require('tailwindcss-pseudo-elements')],
+  plugins: [
+    require('tailwindcss-pseudo-elements'),
+    plugin(function ({ addUtilities }) {
+      addUtilities(
+        {
+          '.required-flag': {
+            content: '"*"',
+            color: 'rgba(239, 68, 68, 1)',
+          },
+        },
+        ['after']
+      );
+    }),
+  ],
 };

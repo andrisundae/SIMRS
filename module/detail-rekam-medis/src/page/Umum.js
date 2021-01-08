@@ -21,7 +21,7 @@ export default function Main() {
         ]}
       />
       <MainContent>
-        <div className="grid grid-cols-6 h-full">
+        <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 h-full">
           <Sidebar type="umum" />
           <Content type="umum" />
         </div>

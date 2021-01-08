@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { List, Icon, Menu, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames';
+import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
 
 export default function SidebarMenu({ type }) {
   const [submenuIsOpen, setSubmenuIsOpen] = useState(false);
@@ -69,7 +70,7 @@ export default function SidebarMenu({ type }) {
             </div>
           }
           className={classNames('block', {
-            'bg-blue-200': 'pemeriksaan-khusus' === currentMenu,
+            'bg-blue-200': 'pengkajian-khusus' === currentMenu,
           })}
           onOpen={(e) => {
             setSubmenuIsOpen(true);
@@ -78,7 +79,12 @@ export default function SidebarMenu({ type }) {
             setSubmenuIsOpen(false);
           }}
         >
-          <Dropdown.Menu className="z-50 overflow-y-auto h-screen top-submenu p-3">
+          <Dropdown.Menu
+            className={classNames('z-50 overflow-y-auto top-submenu p-3', {
+              'h-submenu-desktop': isDesktop,
+              'h-screen': !isDesktop,
+            })}
+          >
             <Dropdown.Item text="Pre-Hospital" />
             <Dropdown.Item text="TRIAGE" />
             <Dropdown.Divider />

@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-
 import { Icon, Header as SmHeader } from 'semantic-ui-react';
 import { useAppState } from '@simrs/components';
-
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
-
-import 'xel/themes/macos.css';
-
 import 'xel/xel.min.js';
 
 function Header({ logo, match, username, contexts, routers, history }) {
@@ -17,7 +12,6 @@ function Header({ logo, match, username, contexts, routers, history }) {
 
   return (
     <x-menubar
-      class="layout-header"
       style={{
         height: 40,
         zIndex: 28,
@@ -28,6 +22,8 @@ function Header({ logo, match, username, contexts, routers, history }) {
         bottom: 'auto',
         width: '100%',
         margin: 0,
+        WebkitAppRegion: 'drag',
+        paddingRight: 0,
       }}
     >
       <div style={{ marginLeft: 10 }}>

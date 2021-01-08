@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon, Modal, Button } from 'semantic-ui-react';
+import classNames from 'classnames';
 import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
 import CariPasien from './CariPasien';
 
@@ -16,7 +17,15 @@ export default function TopMenu({
 
   return (
     <Fragment>
-      <div className="flex items-center border-b fixed left-0 top-0 right-0 bg-gray-100 h-14">
+      <div
+        className={classNames(
+          'flex items-center border-b fixed left-0 right-0 bg-gray-100 h-14 top-11',
+          {
+            'top-0': !isDesktop,
+            'top-11.5': isDesktop,
+          }
+        )}
+      >
         <div className="flex-1">
           <div className="flex justify-start items-center h-full">
             {leftMenus.map(
