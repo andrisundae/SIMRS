@@ -12,7 +12,7 @@ import PemeriksaanPenunjang from './PemeriksaanPenunjang';
 
 export default function DetailUmum() {
   return (
-    <Router basename="/detail-rekam-medis/umum">
+    <Router basename="/detail-rekam-medis/penunjang">
       <Suspense fallback={<LoaderWithNoDimmer />}>
         <Switch>
           <Route path="/" exact>

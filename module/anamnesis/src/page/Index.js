@@ -10,6 +10,7 @@ import {
   Modal,
 } from 'semantic-ui-react';
 import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
+import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
 
 export default function Index() {
   const [deleteConfirmIsOpen, setDeleteConfirmIsOpen] = useState(false);
@@ -17,10 +18,12 @@ export default function Index() {
   return (
     <Fragment>
       <FooterActionsContainer>
-        <Button as={Link} color="blue" to="/add" className="m-1">
-          <Icon name="plus" />
-          Tambah
-        </Button>
+        <div className="m-1">
+          <Button as={Link} color="blue" to="/add" size="small">
+            <Icon name="plus" />
+            Tambah
+          </Button>
+        </div>
       </FooterActionsContainer>
 
       <Header className="mt-0">
@@ -28,10 +31,11 @@ export default function Index() {
         Anamnesis
       </Header>
       <Divider />
-      <div
+      <TableContainer>
+        {/* <div
         className="border rounded overflow-x-auto"
         style={{ height: 'calc(100vh - 220px)' }}
-      >
+      > */}
         <Table
           striped
           celled
@@ -58,13 +62,17 @@ export default function Index() {
             </Table.Row>
           </Table.Header>
           <Table.Body className="block min-w-max">
-            <Table.Row className="sticky top-11 block z-10">
+            <Table.Row>
               <Table.Cell
                 colSpan="5"
-                className="bg-gray-100"
-                style={{ width: 868 }}
+                className="bg-gray-100 sticky top-11 z-10"
+                // style={{ width: 868 }}
               >
-                <Label ribbon color="teal">
+                <Label
+                  ribbon
+                  color="teal"
+                  className="sticky -ml-8 -left-4 z-10"
+                >
                   Mataram • Kelas 3 • 05/12/2020 17:34
                 </Label>
               </Table.Cell>
@@ -119,13 +127,17 @@ export default function Index() {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </Table.Cell>
             </Table.Row>
-            <Table.Row className="sticky top-11 block z-10">
+            <Table.Row>
               <Table.Cell
                 colSpan="5"
-                className="bg-gray-100"
-                style={{ width: 868 }}
+                className="bg-gray-100 sticky top-11 z-10"
+                // style={{ width: 868 }}
               >
-                <Label ribbon color="teal">
+                <Label
+                  ribbon
+                  color="teal"
+                  className="sticky -ml-8 -left-4 z-10"
+                >
                   Mataram • Kelas 3 • 04/12/2020 17:34
                 </Label>
               </Table.Cell>
@@ -306,13 +318,17 @@ export default function Index() {
                 laboris nisi ut aliquip ex ea commodo consequat.
               </Table.Cell>
             </Table.Row>
-            <Table.Row className="sticky top-11 block z-10">
+            <Table.Row>
               <Table.Cell
                 colSpan="5"
-                className="bg-gray-100"
-                style={{ width: 868 }}
+                className="bg-gray-100 sticky top-11 z-10"
+                // style={{ width: 868 }}
               >
-                <Label ribbon color="teal">
+                <Label
+                  ribbon
+                  color="teal"
+                  className="sticky -ml-8 -left-4 z-10"
+                >
                   Mataram • Kelas 3 • 03/12/2020 17:34
                 </Label>
               </Table.Cell>
@@ -385,7 +401,8 @@ export default function Index() {
             </Table.Row>
           </Table.Body>
         </Table>
-      </div>
+        {/* </div> */}
+      </TableContainer>
 
       <Modal
         closeIcon

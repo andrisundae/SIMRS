@@ -3,47 +3,50 @@ import React, { useState, useCallback } from 'react';
 export default function TableContainer({
   children,
   height = 'auto',
-  maxHeight = 'auto',
-  maxHeightMinus = 50,
+  maxHeight = 'screen-height',
+  maxHeightMinus = 65,
   width = 'auto',
   maxWidth = 'auto',
-  maxWidthMinus = 15,
+  maxWidthMinus = 0,
 }) {
   /**
-   * set maxHeight props to 'screen-height' to set table height auto end of screen
+   * set maxHeight props to 'auto' or '..px' to set table max height manual
    * set height props to '..px' to set table height manual
    * if maxWidth not set, default always use auto and auto calculate to prevent overflow content
    * set width props to '..px' to set table width manual
    */
   const [divHeight, setDivHeight] = useState(
-    height === 'auto' ? window.innerHeight : height
+    height === 'auto' ? window.innerHeight : parseInt(height, 10)
   );
   const [divMaxHeight, setDivMaxHeight] = useState(
-    maxHeight === 'auto' ? window.innerHeight : maxHeight
+    maxHeight === 'auto'
+      ? window.innerHeight
+      : maxHeight.constructor === String
+      ? maxHeight
+      : parseInt(maxHeight, 10)
   );
   const [divWidth, setDivWidth] = useState(
-    width === 'auto' ? window.innerWidth : width
+    width === 'auto' ? window.innerWidth : parseInt(width, 10)
   );
   const [divMaxWidth, setDivMaxWidth] = useState(
-    maxWidth === 'auto' ? window.innerWidth : maxWidth
+    maxWidth === 'auto' ? window.innerWidth : parseInt(maxWidth, 10)
   );
 
   const position = useCallback((node) => {
     if (node !== null && maxHeight === 'screen-height') {
       setDivMaxHeight(
         'calc(100vh - ' +
-          (node.getBoundingClientRect().top + maxHeightMinus) +
+          (node.getBoundingClientRect().top + parseInt(maxHeightMinus, 10)) +
           'px)'
       );
       setDivHeight('unset');
-    } else {
-      setDivMaxHeight('unset');
+    } else if (maxHeight !== 'auto' && height === 'auto') {
       setDivHeight('unset');
     }
     if (node !== null && maxWidth === 'auto') {
       setDivMaxWidth(
         'calc(100vw - ' +
-          (node.getBoundingClientRect().left + maxWidthMinus) +
+          (node.getBoundingClientRect().left + parseInt(maxWidthMinus, 10)) +
           'px)'
       );
       setDivWidth('unset');
@@ -52,10 +55,9 @@ export default function TableContainer({
 
   return (
     <div
-      className="border"
+      className="border rounded overflow-auto"
       ref={position}
       style={{
-        overflow: 'auto',
         height: divHeight,
         maxHeight: divMaxHeight,
         width: divWidth,

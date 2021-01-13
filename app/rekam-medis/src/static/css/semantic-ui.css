@@ -36,9 +36,29 @@
 .ui.table thead tr:first-child > th:last-child {
   border-radius: unset;
 }
+.ui.table tbody tr:nth-child(odd) > td {
+  background-color: #ffffff;
+}
+.ui.table tbody tr:nth-child(even) > td {
+  background-color: rgb(249, 250, 251);
+}
 
 /* modal */
 .ui.fullscreen.modal,
 .ui.fullscreen.scrolling.modal {
   left: unset !important;
+}
+.ui.modal > .close,
+.ui.mini.modal > .close,
+.ui.tiny.modal > .close,
+.ui.small.modal > .close,
+.ui.large.modal > .close {
+  top: 1.0535rem !important;
+  right: 1rem !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+/* Dropdown or Select */
+.ui.dropdown > .text {
+  display: initial !important; /* khusus untuk single select agar bisa dicustom tampilannya */
 }
