@@ -4,7 +4,7 @@
   "homepage": ".",
   "scripts": {
     "linking": "yarn link react react-dom",
-    "start": "BROWSER=none craco start",
+    "start": "cross-env BROWSER=none craco start",
     "start:browser": "craco start",
     "build": "craco build"
   },

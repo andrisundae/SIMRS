@@ -8,16 +8,3 @@ import '@simrs/main/src/static/css/menubar.css';
 import '@simrs/main/src/static/css/grid.css';
 import './static/css/tailwind.css';
 import './static/css/semantic-ui.css';
-import React from 'react';
-import { render } from 'react-dom';
-import { i18n } from '@simrs/common';
-import App from './App';
-
-i18n.init({
-  keySeparator: '~',
-  defaultNS: 'common',
-  ns: ['common'],
-  debug: false,
-});
-
-render(<App />, document.getElementById('root'));

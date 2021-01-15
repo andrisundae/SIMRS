@@ -1,4 +1,4 @@
-const { readdirSync } = require('fs');
+const { readdirSync, copyFileSync } = require('fs');
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
 
@@ -38,8 +38,12 @@ module.exports = {
         );
       }
 
+      const srcDir = path.resolve(__dirname + '/src');
       if (process.env.BROWSER && 'none' === process.env.BROWSER) {
         webpackConfig.target = 'electron-renderer';
+        copyFileSync(srcDir + '/index.desktop.js', srcDir + '/index.js');
+      } else {
+        copyFileSync(srcDir + '/index.mobile.js', srcDir + '/index.js');
       }
 
       return webpackConfig;

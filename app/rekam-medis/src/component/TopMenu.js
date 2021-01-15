@@ -19,7 +19,7 @@ export default function TopMenu({
     <Fragment>
       <div
         className={classNames(
-          'flex items-center border-b fixed left-0 right-0 bg-gray-100 h-14 top-11',
+          'flex items-center border-b fixed left-0 right-0 bg-gray-100 h-14',
           {
             'top-0': !isDesktop,
             'top-11.5': isDesktop,
