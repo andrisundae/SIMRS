@@ -6,6 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import PageLoader from '@simrs/components/src/loader/PageLoader';
+import Footer from '@simrs/components/src/layout/Footer';
 import routers from './routers.mobile';
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
           <Redirect to={'/main'} />
         </Switch>
       </Suspense>
+      <Footer actionsPosition="right" className="h-12" />
     </Router>
   );
 }

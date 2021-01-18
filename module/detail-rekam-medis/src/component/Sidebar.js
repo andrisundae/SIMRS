@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { List, Icon, Menu, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames';
 import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
 
 export default function SidebarMenu({ type }) {
+  const pengkajianKhususRef = useRef(null);
   const [submenuIsOpen, setSubmenuIsOpen] = useState(false);
   const location = useLocation();
   const match = useRouteMatch();
@@ -21,7 +22,7 @@ export default function SidebarMenu({ type }) {
         <Menu.Item
           as={Link}
           to="/detail-rekam-medis/umum"
-          className="sticky bg-gray-100 -mx-3 -mt-3"
+          className="sticky top-0 z-10 bg-gray-100 -mx-3 -mt-3"
         >
           <List>
             <List.Item className="font-semibold">20136359</List.Item>
@@ -64,7 +65,7 @@ export default function SidebarMenu({ type }) {
           floating
           icon={null}
           trigger={
-            <div tabIndex="-1">
+            <div ref={pengkajianKhususRef} tabIndex="-1">
               <Icon name="chart bar" /> Pengkajian Khusus
               <Icon name="caret right" className="float-right" />
             </div>
@@ -73,6 +74,7 @@ export default function SidebarMenu({ type }) {
             'bg-blue-200': 'pengkajian-khusus' === currentMenu,
           })}
           onOpen={(e) => {
+            console.log(pengkajianKhususRef.current.getBoundingClientRect());
             setSubmenuIsOpen(true);
           }}
           onClose={() => {
@@ -80,10 +82,17 @@ export default function SidebarMenu({ type }) {
           }}
         >
           <Dropdown.Menu
-            className={classNames('z-50 overflow-y-auto top-submenu p-3', {
-              'h-submenu-desktop': isDesktop,
-              'h-screen': !isDesktop,
-            })}
+            className="z-50 overflow-y-auto p-3"
+            style={{
+              height: `calc(100vh - ${isDesktop ? 85 : 40}px)`,
+              top:
+                null === pengkajianKhususRef.current
+                  ? 0
+                  : -(
+                      pengkajianKhususRef.current.getBoundingClientRect().top -
+                      (isDesktop ? 45 : 2)
+                    ),
+            }}
           >
             <Dropdown.Item text="Pre-Hospital" />
             <Dropdown.Item text="TRIAGE" />

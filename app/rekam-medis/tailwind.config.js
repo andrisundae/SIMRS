@@ -12,15 +12,11 @@ module.exports = {
         blue: '2px solid rgba(147, 197, 253)',
       },
       inset: {
-        submenu: '-26.9rem',
         '25.5': '6.375rem',
         '11.5': '2.875rem',
       },
       padding: {
         '1.2': '0.3rem',
-      },
-      height: {
-        'submenu-desktop': 'calc(100vh - 40px)',
       },
     },
   },
