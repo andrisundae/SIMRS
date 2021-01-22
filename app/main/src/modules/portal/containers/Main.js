@@ -44,13 +44,13 @@ class Main extends Component {
     const config = {
       billing: {},
       farmasi: {},
-      emr: {},
+      rekamMedis: {},
       sistem: {},
     };
     const billingPath = resolveApp('../billing/.env');
     const farmasiPath = resolveApp('../farmasi/.env');
+    const rekamMedisPath = resolveApp('../rekam-medis/.env');
     const sistemPath = resolveApp('../system/.env');
-    const emrPath = resolveApp('../emr/.env');
 
     if (fs.existsSync(billingPath)) {
       config.billing = dotenv.parse(fs.readFileSync(billingPath));
@@ -60,12 +60,12 @@ class Main extends Component {
       config.farmasi = dotenv.parse(fs.readFileSync(farmasiPath));
     }
 
-    if (fs.existsSync(sistemPath)) {
-      config.sistem = dotenv.parse(fs.readFileSync(sistemPath));
+    if (fs.existsSync(rekamMedisPath)) {
+      config.rekamMedis = dotenv.parse(fs.readFileSync(rekamMedisPath));
     }
 
-    if (fs.existsSync(emrPath)) {
-      config.emr = dotenv.parse(fs.readFileSync(emrPath));
+    if (fs.existsSync(sistemPath)) {
+      config.sistem = dotenv.parse(fs.readFileSync(sistemPath));
     }
 
     return config;
@@ -156,8 +156,8 @@ class Main extends Component {
 
   createSplashWindow(conf) {
     let splash = new BrowserWindow({
-      width: 350,
-      height: 200,
+      width: 500,
+      height: 250,
       frame: false,
       transparent: true,
       alwaysOnTop: true,
@@ -221,9 +221,11 @@ class Main extends Component {
         break;
       case '_rekam_medis':
         url = isDev
-          ? `http://localhost:${envApp.emr ? envApp.emr.PORT : '9004'}`
-          : remote.app.getAppPath() + '/build/emr/index.html';
-        titleApp = envApp.emr ? envApp.emr.REACT_APP_NAME : 'RM';
+          ? `http://localhost:${
+              envApp.rekamMedis ? envApp.rekamMedis.PORT : '9004'
+            }`
+          : remote.app.getAppPath() + '/build/rekam-medis/index.html';
+        titleApp = envApp.rekamMedis ? envApp.rekamMedis.REACT_APP_NAME : 'RM';
         color = '#e7505a';
         break;
       case '_system':

@@ -7,7 +7,16 @@ import Content from './Content';
 import Footer from './Footer';
 
 function Layout(props) {
-  const { children, logo, contexts, routers, username } = props;
+  const {
+    children,
+    logo,
+    contexts,
+    routers,
+    username,
+    footer: { actionsPosition = 'left', ...footerProps } = {
+      actionsPosition: 'left',
+    },
+  } = props;
 
   return (
     <Container fluid>
@@ -18,7 +27,7 @@ function Layout(props) {
         username={username}
       />
       <Content>{children}</Content>
-      <Footer logo={logo} />
+      <Footer logo={logo} actionsPosition={actionsPosition} {...footerProps} />
     </Container>
   );
 }

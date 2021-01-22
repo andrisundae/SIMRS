@@ -6,6 +6,7 @@ import Toastr from './Toastr';
 import FileUpload from './FileUpload';
 import TreeView from './TreeView';
 
+export * from './hook';
 export * from './loader';
 export * from './notification';
 export * from './dialog';

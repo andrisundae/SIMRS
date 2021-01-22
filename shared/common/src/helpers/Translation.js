@@ -1,52 +1,51 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
 import Backend from 'i18next-fetch-backend';
-import LanguageDetector from 'i18next-electron-language-detector';
-
-import {simrsHeaders} from './request';
+import { simrsHeaders } from './request';
+import { isDesktop } from '../helpers/deviceDetector';
 
 class Translation {
-    
-    constructor(options) {
-        this.options = options;
-    }
+  constructor(options) {
+    this.options = options;
+  }
 
-    init() {
-        const fetch = new Backend(null, {
-            loadPath: (lngs, namespace) => {
-                return `http://simrs-x.test/translation/${lngs}/${namespace}`
-            },
-            stringify: JSON.stringify,
-            allowMultiLoading: false,
-            multiSeparator: '+',
-            requestOptions: {
-                mode: 'cors',
-                cache: 'no-cache',
-                headers: simrsHeaders()
-            },
-        });
+  init() {
+    const fetch = new Backend(null, {
+      loadPath: (lngs, namespace) => {
+        return `http://simrs-x.test/translation/${lngs}/${namespace}`;
+      },
+      stringify: JSON.stringify,
+      allowMultiLoading: false,
+      multiSeparator: '+',
+      requestOptions: {
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: simrsHeaders(),
+      },
+    });
 
-        i18n
-            .use(fetch)
-            .use(LanguageDetector)
-            .use(initReactI18next)
-            .init({
-                lng: 'id',
-                fallbackLng: 'id',
-                debug: true,
-                keySeparator: '~',
-                defaultNS: 'main',
-                ns: ['main'],
-                react: {
-                    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'u'],
-                },
-                interpolation: {
-                    escapeValue: false,
-                },
-                ...this.options
-            });
+    i18n.use(fetch).use(initReactI18next);
+    if (isDesktop) {
+      const LanguageDetector = window.require(
+        'i18next-electron-language-detector'
+      );
+      i18n.use(LanguageDetector);
     }
+    i18n.init({
+      lng: 'id',
+      fallbackLng: 'id',
+      debug: true,
+      keySeparator: '~',
+      defaultNS: 'main',
+      ns: ['main'],
+      react: {
+        transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'u'],
+      },
+      interpolation: {
+        escapeValue: false,
+      },
+    });
+  }
 }
 
-export {Translation};
+export { Translation };

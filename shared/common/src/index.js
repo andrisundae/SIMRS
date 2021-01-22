@@ -13,6 +13,7 @@ var findNextElement = require('./utils/findNextElement');
 var { id } = require('./utils/locale');
 var utils = require('./utils');
 var models = require('./models');
+const deviceDetector = require('./helpers/deviceDetector');
 
 module.exports = {
   store,
@@ -30,5 +31,6 @@ module.exports = {
   toastrActions: actions,
   localeId: id,
   utils,
-  models
+  models,
+  deviceDetector,
 };
