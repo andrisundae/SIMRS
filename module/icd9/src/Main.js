@@ -8,11 +8,11 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { Toastr } from '@simrs/components';
-import Versi, { store as createVersiStore } from './pages/versi';
-import Diagnosis, { store as createDiagnosisStore } from './pages/diagnosis';
+import VersiIcd9, { store as createVersiIcd9Store } from './pages/versiIcd9';
+import Icd9, { store as createIcd9Store } from './pages/icd9';
 
-const versiStore = createVersiStore();
-const diagnosisStore = createDiagnosisStore();
+const versiIcd9Store = createVersiIcd9Store();
+const icd9Store = createIcd9Store();
 
 class SwitchComponent extends Component {
   constructor(props) {
@@ -26,13 +26,17 @@ class SwitchComponent extends Component {
       <Fragment>
         <Fragment>
           <Switch>
-            <Route exact path="/" render={() => <Redirect to="/versi" />} />
             <Route
               exact
-              path="/versi"
+              path="/"
+              render={() => <Redirect to="/versi-icd9" />}
+            />
+            <Route
+              exact
+              path="/versi-icd9"
               render={(props) => (
-                <Provider store={versiStore}>
-                  <Versi
+                <Provider store={versiIcd9Store}>
+                  <VersiIcd9
                     {...props}
                     resource={resource}
                     t={t}
@@ -45,10 +49,10 @@ class SwitchComponent extends Component {
               )}
             />
             <Route
-              path="/diagnosis/:versi"
+              path="/icd9/:versiIcd9"
               render={(props) => (
-                <Provider store={diagnosisStore}>
-                  <Diagnosis
+                <Provider store={icd9Store}>
+                  <Icd9
                     {...props}
                     resource={resource}
                     t={t}
