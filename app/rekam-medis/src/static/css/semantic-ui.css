@@ -1,3 +1,7 @@
+body {
+  height: unset !important;
+}
+
 /* menu */
 .ui.vertical.menu .dropdown.block:not(.upward) .menu {
   top: -0.5rem;
@@ -56,6 +60,11 @@
   top: 1.0535rem !important;
   right: 1rem !important;
   color: rgba(0, 0, 0, 0.87) !important;
+}
+
+/* field */
+.inline.fields {
+  display: flex !important;
 }
 
 /* Dropdown or Select */
