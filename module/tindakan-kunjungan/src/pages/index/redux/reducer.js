@@ -118,6 +118,16 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.GET_PASIEN_REQUEST: {
+        draft.isRequestingPasien = true;
+        return;
+      }
+
+      case actionTypes.GET_PASIEN_FAILURE: {
+        draft.isRequestingPasien = false;
+        return;
+      }
+
       case actionTypes.GET_PASIEN_SUCCESS: {
         const data = payload.data;
         draft.post = {
@@ -130,6 +140,7 @@ export default (state = initialState, action) =>
           jenis_kelamin: data.jenis_kelamin,
           tgl_lahir: data.tgl_lahir,
         };
+        draft.isRequestingPasien = false;
         return;
       }
 
@@ -237,6 +248,11 @@ export default (state = initialState, action) =>
         draft.saveSuccess = true;
         draft.focusElement = '';
         return;
+
+      case actionTypes.TOGGLE_STATUS_FROM_ANTRIAN: {
+        draft.isFromAntrian = !state.isFromAntrian;
+        return;
+      }
 
       case actionTypes.RESET:
       default:

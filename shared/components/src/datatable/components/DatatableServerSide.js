@@ -340,7 +340,7 @@ class DataTableServerSide extends Component {
 
   _renderLoading(params) {
     if (params.value !== undefined) {
-      return params.value;
+      return params.valueFormatted || params.value;
     } else {
       return "<img src='" + imgLoading + "'/>";
     }

@@ -35,7 +35,7 @@ class List extends Component {
     let { isReloadGrid, reloadType } = this.props;
 
     if (isReloadGrid && !prevProps.isReloadGrid) {
-      this._reload(reloadType);
+      this.reload(reloadType);
     }
 
     this._bindKey();
@@ -59,7 +59,7 @@ class List extends Component {
 
     MouseTrap.bindGlobal('alt+r', function (e) {
       e.preventDefault();
-      _this._reload(constDatatable.reloadType.purge);
+      _this.reload(constDatatable.reloadType.purge);
     });
   }
 
@@ -84,14 +84,13 @@ class List extends Component {
     };
   }
 
-  _reload(reloadType) {
+  reload = (reloadType) => {
     if (reloadType === constDatatable.reloadType.purge) {
-      this.gridApi.setInfiniteRowCount(1);
       this.gridApi.purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
       this.gridApi.refreshInfiniteCache();
     }
-  }
+  };
 
   _getRowNodeId(item) {
     return item.id;
@@ -108,7 +107,13 @@ class List extends Component {
         headerName: t(this.getKey('jenis_layanan')),
         field: 'nama_jenis_layanan',
         cellRenderer: 'loadingRenderer',
-        cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
+        cellStyle: (params) => {
+          const style = { 'background-color': '#f5f7f7' };
+          if (!params.value) {
+            style['text-align'] = 'center';
+          }
+          return style;
+        },
         width: 180,
       },
       {

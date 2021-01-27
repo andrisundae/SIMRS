@@ -158,7 +158,7 @@ function* getKunjunganRequestSuccessHandler({ meta, payload }) {
 function* selectedKunjunganHandler({ meta, payload }) {
   yield put(
     actions.hitungHariPerawatan.request(meta.resource, {
-      idKunjunganUnit: payload.data.data.id_kunjungan_unit,
+      id_kunjungan_unit: payload.data.id_kunjungan_unit,
     })
   );
   const isShowKunjungan = yield select(showCariKunjunganSelector);
@@ -386,7 +386,7 @@ function* hitungHariPerawatanRequestHandler({ payload, meta }) {
   try {
     const response = yield call(
       api.hitungHariPerawatan,
-      payload.data.id_unit_layanan
+      payload.data.id_kunjungan_unit
     );
     if (response.status) {
       yield put(

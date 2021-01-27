@@ -679,12 +679,27 @@ export default (state = initialState, action) =>
         draft.kunjunganHariIni.loaderUnitLayanan = false;
         return;
 
+      // case actionTypes.CLOSE_MENU_STATUS_PASIEN: {
+      //   if (!_.isEmpty(state.selectedOption.id_penjamin_pasien)) {
+      //     // Jika pasien lama
+      //     if (state.post.id_pasien) {
+
+      //     }
+      //     const statusPenjaminPasien = [
+      //       ...state.data.options_status_pasien_sebelumnya,
+      //       ...state.data.options_status_pasien_default,
+      //     ];
+      //     draft.data.options_status_pasien = statusPenjaminPasien;
+      //   }
+      //   return draft;
+      // }
+
       case actionTypes.OPEN_MENU_STATUS_PASIEN: {
         draft.focusElement = 'id_penjamin';
         if (!_.isEmpty(state.selectedOption.id_penjamin_pasien)) {
           const selectedHakKelas =
             state.selectedOption.id_kelas_penjamin_pasien;
-          const selectedKepesertaan = state.selectedOption.id_kepersetaan;
+          const selectedKepesertaan = state.selectedOption.id_kepersertaan;
           const kelasId = selectedHakKelas ? selectedHakKelas.value : '';
           const selectedPenjaminPasien = {
             ...state.selectedOption.id_penjamin_pasien,
@@ -705,7 +720,7 @@ export default (state = initialState, action) =>
             ];
             draft.data.options_status_pasien = statusPenjaminPasien;
 
-            const findStatusPasienBaru = state.data.options_status_pasien.find(
+            const findStatusPasienBaru = draft.data.options_status_pasien.find(
               (row) => {
                 if (
                   row.nomor_anggota === selectedPenjaminPasien.nomor_anggota &&

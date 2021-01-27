@@ -254,4 +254,6 @@ export default {
     createAction(actionTypes.SHOW_PELAKSANA_TAMBAHAN, {}, { resource }),
   onHidePelaksanaTambahan: (resource) =>
     createAction(actionTypes.HIDE_PELAKSANA_TAMBAHAN, {}, { resource }),
+  onToggleStatusFromAntrian: (resource) =>
+    createAction(actionTypes.TOGGLE_STATUS_FROM_ANTRIAN, {}, { resource }),
 };

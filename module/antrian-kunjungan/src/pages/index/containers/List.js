@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import copy from 'copy-to-clipboard';
+import { withRouter } from 'react-router-dom';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
 import { DatatableServerSide, constDatatable } from '@simrs/components';
+import { formatter } from '@simrs/common';
 
 import actions from '../redux/actions';
 
@@ -34,7 +36,7 @@ class List extends Component {
     let { isReloadGrid, reloadType } = this.props;
 
     if (isReloadGrid && !prevProps.isReloadGrid) {
-      this._reload(reloadType);
+      this.reload(reloadType);
     }
 
     this._bindKey();
@@ -58,7 +60,7 @@ class List extends Component {
 
     MouseTrap.bindGlobal('alt+r', function (e) {
       e.preventDefault();
-      _this._reload(constDatatable.reloadType.purge);
+      _this.reload(constDatatable.reloadType.purge);
     });
   }
 
@@ -81,9 +83,8 @@ class List extends Component {
     };
   }
 
-  _reload(reloadType) {
+  reload(reloadType) {
     if (reloadType === constDatatable.reloadType.purge) {
-      this.gridApi.setInfiniteRowCount(1);
       this.gridApi.purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
       this.gridApi.refreshInfiniteCache();
@@ -108,6 +109,12 @@ class List extends Component {
         sortable: true,
         cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
         width: 110,
+        valueFormatter: (params) => {
+          if (!params.value) {
+            return '';
+          }
+          return formatter.dateFormatClient(params.value);
+        },
       },
       {
         headerName: t(this.getKey('nomor_antrian')),
@@ -169,6 +176,12 @@ class List extends Component {
     return `${this.props.resource}:${key}`;
   };
 
+  doubleClickRowHandler = (params) => {
+    this.props.history.replace(
+      `/billing/transaksi/tindakan?route=${this.props.resource}&norm=${params.data.norm}`
+    );
+  };
+
   render() {
     let { resource } = this.props;
 
@@ -196,6 +209,7 @@ class List extends Component {
             },
           },
         ]}
+        onRowDoubleClicked={this.doubleClickRowHandler}
       />
     );
   }
@@ -239,4 +253,4 @@ List.propTypes = {
   selectedRow: PropTypes.number,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(List));

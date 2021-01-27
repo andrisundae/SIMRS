@@ -69,4 +69,6 @@ export default {
   showCariTindakan: false,
   saveSuccess: false,
   showPelaksanaTambahan: false,
+  isRequestingPasien: false,
+  isFromAntrian: false,
 };
