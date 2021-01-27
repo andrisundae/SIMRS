@@ -71,3 +71,12 @@ body {
 .ui.dropdown > .text {
   display: initial !important; /* khusus untuk single select agar bisa dicustom tampilannya */
 }
+
+.ui.menu .ui.dropdown .menu > .item.custom-selected {
+  background: rgba(
+    191,
+    219,
+    254,
+    1
+  ) !important; /* untuk background pada child-menu */
+}

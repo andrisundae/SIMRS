@@ -10,14 +10,14 @@ import { Modal } from 'semantic-ui-react';
 import LoaderWithNoDimmer from '@simrs/rekam-medis/src/component/LoaderWithNoDimmer';
 
 const Index = lazy(() => import('./page/Index'));
-const Ubah = lazy(() => import('./page/Ubah'));
+const Add = lazy(() => import('./page/Add'));
 
 export default function Main() {
   const history = useHistory();
   const location = useLocation();
 
   return (
-    <Router basename="/detail-rekam-medis/umum/pengkajian-khusus/triage">
+    <Router basename="/detail-rekam-medis/umum/pengkajian-khusus/screening-nyeri-anak">
       <Suspense fallback={<LoaderWithNoDimmer />}>
         {/* <Switch> */}
         <Route path="/">
@@ -29,13 +29,15 @@ export default function Main() {
           closeOnDimmerClick={false}
           centered={false}
           size="large"
-          open={'/pengkajian-khusus/triage/ubah' === location.pathname}
+          open={
+            '/pengkajian-khusus/screening-nyeri-anak/add' === location.pathname
+          }
           onClose={() => {
             history.goBack();
           }}
         >
-          <Route path="/ubah">
-            <Ubah />
+          <Route path="/add">
+            <Add />
           </Route>
         </Modal>
 

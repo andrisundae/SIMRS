@@ -17,7 +17,7 @@ export default function Main() {
   const location = useLocation();
 
   return (
-    <Router basename="/detail-rekam-medis/umum/pengkajian-khusus/triage">
+    <Router basename="/detail-rekam-medis/umum/pengkajian-khusus/prehospital">
       <Suspense fallback={<LoaderWithNoDimmer />}>
         {/* <Switch> */}
         <Route path="/">
@@ -29,7 +29,7 @@ export default function Main() {
           closeOnDimmerClick={false}
           centered={false}
           size="large"
-          open={'/pengkajian-khusus/triage/ubah' === location.pathname}
+          open={'/pengkajian-khusus/prehospital/ubah' === location.pathname}
           onClose={() => {
             history.goBack();
           }}

@@ -11,6 +11,12 @@ export default function SidebarMenu({ type }) {
   const match = useRouteMatch();
   const pathname = location.pathname.replace(match.path, '');
   const currentMenu = '' === pathname ? pathname : pathname.split('/')[1];
+  const currentChildMenu =
+    '' === pathname
+      ? pathname
+      : undefined !== pathname.split('/')[2]
+      ? pathname.split('/')[2]
+      : pathname.split('/')[1];
 
   return (
     <div
@@ -74,7 +80,7 @@ export default function SidebarMenu({ type }) {
             'bg-blue-200': 'pengkajian-khusus' === currentMenu,
           })}
           onOpen={(e) => {
-            console.log(pengkajianKhususRef.current.getBoundingClientRect());
+            // console.log(pengkajianKhususRef.current.getBoundingClientRect());
             setSubmenuIsOpen(true);
           }}
           onClose={() => {
@@ -94,41 +100,162 @@ export default function SidebarMenu({ type }) {
                     ),
             }}
           >
-            <Dropdown.Item text="Pre-Hospital" />
-            <Dropdown.Item text="TRIAGE" />
+            <Dropdown.Item
+              className={
+                'prehospital' === currentChildMenu ? 'custom-selected' : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/prehospital`}
+              text="Pre-Hospital"
+            />
+            <Dropdown.Item
+              className={'triage' === currentChildMenu ? 'custom-selected' : ''}
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/triage`}
+              text="TRIAGE"
+            />
             <Dropdown.Divider />
             <Dropdown.Header
               content="Screening Resiko Jatuh"
               className="normal-case text-base font-semibold"
             />
-            <Dropdown.Item text="Morse Fall Scale" description="Dewasa" />
-            <Dropdown.Item text="Humpty Dumpty" description="Anak" />
             <Dropdown.Item
+              className={
+                'screening-resiko-jatuh-dewasa' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-resiko-jatuh-dewasa`}
+              text="Morse Fall Scale"
+              description="Dewasa"
+            />
+            <Dropdown.Item
+              className={
+                'screening-resiko-jatuh-anak' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-resiko-jatuh-anak`}
+              text="Humpty Dumpty"
+              description="Anak"
+            />
+            <Dropdown.Item
+              className={
+                'screening-resiko-jatuh-geriatri' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-resiko-jatuh-geriatri`}
               text="Ontario Modified Stratify"
               description="Geriatri"
             />
-            <Dropdown.Item text="Time Up and Go" description="Rawat Jalan" />
+            <Dropdown.Item
+              className={
+                'screening-resiko-jatuh-rawat-jalan' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-resiko-jatuh-rawat-jalan`}
+              text="Time Up and Go"
+              description="Rawat Jalan"
+            />
             <Dropdown.Divider />
             <Dropdown.Header
               content="Screening Nyeri"
               className="normal-case text-base font-semibold"
             />
             <Dropdown.Item
+              className={
+                'screening-nyeri-dewasa' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-nyeri-dewasa`}
               text="Numeric Rating Scale"
               description="> 7 tahun"
             />
-            <Dropdown.Item text="FLACC" description="7 bulan - 7 tahun" />
-            <Dropdown.Item text="CRIES" description="> 7 bulan" />
-            <Dropdown.Item text="Geriatri" />
+            <Dropdown.Item
+              className={
+                'screening-nyeri-anak' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-nyeri-anak`}
+              text="FLACC"
+              description="7 bulan - 7 tahun"
+            />
+            <Dropdown.Item
+              className={
+                'screening-nyeri-bayi' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-nyeri-bayi`}
+              text="CRIES"
+              description="< 7 bulan"
+            />
+            <Dropdown.Item
+              className={
+                'screening-nyeri-geriatri' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-nyeri-geriatri`}
+              text="Geriatri"
+            />
             <Dropdown.Divider />
             <Dropdown.Header
               content="Screening Gizi"
               className="normal-case text-base font-semibold"
             />
-            <Dropdown.Item text="Dewasa" />
-            <Dropdown.Item text="Anak" />
-            <Dropdown.Item text="Obstetri" />
-            <Dropdown.Item text="Intervensi Gizi" />
+            <Dropdown.Item
+              className={
+                'screening-gizi-dewasa' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-gizi-dewasa`}
+              text="Dewasa"
+            />
+            <Dropdown.Item
+              className={
+                'screening-gizi-anak' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-gizi-anak`}
+              text="Anak"
+            />
+            <Dropdown.Item
+              className={
+                'screening-gizi-obstetri' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-gizi-obstetri`}
+              text="Obstetri"
+            />
+            <Dropdown.Item
+              className={
+                'screening-intervensi-gizi' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-intervensi-gizi`}
+              text="Intervensi Gizi"
+            />
             <Dropdown.Divider />
             <Dropdown.Item text="Screening Activity Daily Living" />
             <Dropdown.Item text="Screening Decubitus Norton Scale" />
