@@ -7,3 +7,5 @@ output
 
 yarn-debug.log*
 yarn-error.log*
+
+app/rekam-medis/src/index.js

@@ -1,0 +1,19 @@
+.ag-grid-segment {
+  border: 0px !important;
+  border-bottom-width: 1px !important;
+  padding: 0px !important;
+  margin-bottom: 0px !important;
+  margin-top: 0px !important;
+}
+
+.ag-grid-segment.ui.loading.segment:before {
+  z-index: 10 !important;
+}
+
+.ui.loading.segment.ag-grid-segment:before {
+  border-radius: 0px !important;
+}
+
+.ui.loading.segment.ag-grid-segment:after {
+  visibility: hidden !important;
+}

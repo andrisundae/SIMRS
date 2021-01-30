@@ -1,15 +1,15 @@
 export const splashTemplate = (config) => {
-    config = {
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Microsoft_Office_2013_logo.svg',
-        brand: 'Linkar',
-        productName: 'SIMRS',
-        text: 'Initializing ...',
-        website: 'www.website.com',
-        color: '#5c97bd',
-        ...config
-    };
-    return (
-        `
+  config = {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/d/dd/Microsoft_Office_2013_logo.svg',
+    brand: 'Linkar',
+    productName: 'SIMRS',
+    text: 'Initializing ...',
+    website: 'www.website.com',
+    color: '#5c97bd',
+    ...config,
+  };
+  return `
 <!DOCTYPE html>
 <meta charset="utf-8">
 <html>
@@ -53,7 +53,7 @@ export const splashTemplate = (config) => {
     #box h2 {
       color: white;
       display: inline-block;
-      font-size: 65px;
+      font-size: 42px;
       position: absolute;
       left: 50%;
       top: 50%;
@@ -130,7 +130,7 @@ export const splashTemplate = (config) => {
       <img id="logo-img" src="${config.logo}" />
       <h6 id="logo-text">${config.brand}</h6>
     </span>
-    <h2 id="product" class="text">${config.productName}</h1>
+    <h2 id="product" class="text">${config.productName}</h2>
     <div class="dot" id="dot1"></div>
     <div class="dot" id="dot2"></div>
     <div class="dot" id="dot3"></div>
@@ -141,6 +141,5 @@ export const splashTemplate = (config) => {
   </div>
 </body>
 </html>
-`
-    )
-}
+`;
+};

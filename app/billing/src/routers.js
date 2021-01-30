@@ -107,16 +107,6 @@ const routers = [
     component: lazy(() => import('@module/penjamin')),
   },
   {
-    key: '_billing_master_diagnosis_ix',
-    path: '/billing/master/diagnosis-ix',
-    component: lazy(() => import('@module/diagnosis-ix')),
-  },
-  {
-    key: '_billing_master_diagnosis_x',
-    path: '/billing/master/diagnosis-x',
-    component: lazy(() => import('@module/diagnosis-x')),
-  },
-  {
     key: '_billing_master_stok_unit_layanan',
     path: '/billing/master/stok-unit-layanan',
     component: lazy(() => import('@module/stok-unit-layanan')),
