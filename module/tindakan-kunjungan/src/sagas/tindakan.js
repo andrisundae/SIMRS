@@ -13,6 +13,7 @@ import {
   constDatatable,
 } from '@simrs/components';
 import api, { validationRules } from '../services/models/model';
+import apiPelaksana from '../services/models/pelaksanaTambahanModel';
 
 import { actionTypes, actions, staticConst } from '../pages/index';
 import * as tambahanPelaksanaActions from '../pages/index/redux/pelaksanaTambahan/actions';
@@ -137,6 +138,35 @@ function* getKunjunganRequestHandler({ meta, payload }) {
     } else {
       yield put(
         actions.getKunjungan.requestFailure(meta.resource, response.message)
+      );
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield toastr.error(error.message);
+    yield put(loaderActions.hide());
+  }
+}
+
+function* getPelaksanaKomponenRequestHandler({ meta, payload }) {
+  try {
+    yield put(loaderActions.show());
+    const response = yield call(
+      api.getPelaksanaKomponen,
+      payload.data.id_kunjungan_unit_detail
+    );
+    if (response.status) {
+      yield put(
+        actions.getPelaksanaKomponen.requestSuccess(
+          meta.resource,
+          response.data
+        )
+      );
+    } else {
+      yield put(
+        actions.getPelaksanaKomponen.requestFailure(
+          meta.resource,
+          response.message
+        )
       );
     }
     yield put(loaderActions.hide());
@@ -301,7 +331,7 @@ function* saveHandler({ payload, meta }) {
     if (_.isEmpty(errors)) {
       let response = yield call(api.save, method, post);
       if (response.status) {
-        yield toastr.success(response.data.message);
+        yield toastr.success(response.message);
         response.action = method;
         yield put(actions.save.requestSuccess(resource, response));
       } else {
@@ -326,6 +356,7 @@ function* saveHandler({ payload, meta }) {
 function* saveSuccessHandler({ meta }) {
   yield put(datatableActions.onReload(staticConst.TABLE_KUNJUNGAN_UNIT_DETAIL));
   yield put(actions.kunjunganDetail.request(meta.resource));
+  yield put(actions.getKunjunganUnit.request(meta.resource));
 }
 
 function* saveFailureHandler({ payload, meta }) {
@@ -382,6 +413,24 @@ function* kunjunganDetailRequestHandler({ meta }) {
   }
 }
 
+function* kunjunganUnitRequestHandler({ meta }) {
+  try {
+    const post = yield select(postSelector);
+    const response = yield call(api.getKunjunganUnit, post.id_kunjungan_unit);
+    if (response.status) {
+      yield put(
+        actions.getKunjunganUnit.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.getKunjunganUnit.requestFailure(meta.resource, response.message)
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
 function* hitungHariPerawatanRequestHandler({ payload, meta }) {
   try {
     const response = yield call(
@@ -403,6 +452,71 @@ function* hitungHariPerawatanRequestHandler({ payload, meta }) {
   } catch (error) {
     yield toastr.error(error.message);
   }
+}
+
+function* changeSpesialisasiHandler({ payload, meta }) {
+  yield put(actions.getPelaksanaOptions.request(meta.resource, payload.data));
+}
+
+// Get data pelaksana by spesialisasi di pelaksana komponen
+function* getPelaksanaOptionsRequestHandler({ meta, payload }) {
+  try {
+    const response = yield call(
+      apiPelaksana.getPelaksana,
+      payload.data.id_spesialisasi,
+      payload.data.id_unit_layanan
+    );
+    if (response.status) {
+      yield put(
+        actions.getPelaksanaOptions.requestSuccess(meta.resource, {
+          data: response.data,
+          idKomponen: payload.data.id_komponen_tarif,
+        })
+      );
+    } else {
+      yield put(
+        actions.getPelaksanaOptions.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* savePelaksanaKomponenHandler({ payload, meta }) {
+  let { resource } = meta;
+  try {
+    yield put(loaderActions.show('Proses simpan...'));
+    let isError = false;
+    let errors = [];
+
+    let response = yield call(api.savePelaksanaKomponen, payload.data);
+    if (response.status) {
+      yield toastr.success(response.message);
+      yield put(
+        actions.savePelaksanaKomponen.requestSuccess(resource, response)
+      );
+    } else {
+      isError = true;
+      errors = response.data;
+    }
+
+    if (isError) {
+      yield toastr.warning(response.message);
+      yield put(actions.savePelaksanaKomponen.requestFailure(resource, errors));
+    }
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* savePelaksanaKomponenSuccessHandler({ meta }) {
+  yield put(actions.onHidePelaksanaKomponen(meta.resource));
 }
 
 export default function* watchActions() {
@@ -458,6 +572,26 @@ export default function* watchActions() {
     takeLatest(
       actionTypes.HITUNG_HARI_PERAWATAN_REQUEST,
       hitungHariPerawatanRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_PELAKSANA_KOMPONEN_REQUEST,
+      getPelaksanaKomponenRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_PELAKSANA_OPTIONS_REQUEST,
+      getPelaksanaOptionsRequestHandler
+    ),
+    takeLatest(
+      actionTypes.SAVE_PELAKSANA_KOMPONEN_REQUEST,
+      savePelaksanaKomponenHandler
+    ),
+    takeLatest(
+      actionTypes.SAVE_PELAKSANA_KOMPONEN_SUCCESS,
+      savePelaksanaKomponenSuccessHandler
+    ),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_UNIT_REQUEST,
+      kunjunganUnitRequestHandler
     ),
   ]);
 }

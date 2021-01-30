@@ -82,3 +82,7 @@ export const isFromAntrianSelector = createSelector(
   (state) => state.default.isFromAntrian,
   (data) => data
 );
+export const showModalPelaksanaKomponenSelector = createSelector(
+  (state) => state.default.showPelaksanaKomponen,
+  (show) => show
+);

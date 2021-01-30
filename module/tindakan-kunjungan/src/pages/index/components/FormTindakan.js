@@ -8,6 +8,8 @@ import {
   Icon,
   Header,
   Divider,
+  Dropdown,
+  Menu,
 } from 'semantic-ui-react';
 import { Select } from '@simrs/components';
 import { formatter } from '@simrs/common';
@@ -28,6 +30,7 @@ const FormTindakan = ({
   onFocusElement,
   showPelaksanaTambahan,
   onShowPelaksanaTambahan,
+  onShowPelaksanaKomponen,
 }) => {
   const inputRef = {
     id_tindakan: React.useRef(),
@@ -179,20 +182,6 @@ const FormTindakan = ({
                       onKeyDown={(e) => onFocusElement(e, 'save')}
                     />
                   </Grid.Column>
-                  {showPelaksanaTambahan === true && (
-                    <Grid.Column width="6" className="field">
-                      <Button
-                        size="mini"
-                        color="orange"
-                        floated="right"
-                        compact
-                        onClick={onShowPelaksanaTambahan}
-                      >
-                        <Icon name="user" />
-                        {t(getKey('pelaksana_tambahan'))}
-                      </Button>
-                    </Grid.Column>
-                  )}
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
@@ -204,6 +193,51 @@ const FormTindakan = ({
                       disabled
                       value={data.harga}
                     />
+                  </Grid.Column>
+                  {/* {showPelaksanaTambahan === true && (
+                  <Grid.Column width="6" className="field" textAlign="right">
+                    <Dropdown
+                      text='Pelaksana'
+                      icon='users'
+                      floating
+                      labeled
+                      button
+                      className='icon'
+                      style={{ paddingTop: 6, paddingBottom: 6 }}
+                      direction="left"
+                    >
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={onShowPelaksanaTambahan} icon='user' text={t(getKey('pelaksana_tambahan'))} />
+                        <Dropdown.Item onClick={onShowPelaksanaKomponen} icon='list' text={t(getKey('pelaksana_komponen'))} />
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Grid.Column>
+                  )
+                  } */}
+                  <Grid.Column width="6" className="field" textAlign="right">
+                    <Dropdown
+                      text="Pelaksana"
+                      icon="users"
+                      floating
+                      labeled
+                      button
+                      className="icon"
+                      style={{ paddingTop: 6, paddingBottom: 6 }}
+                      direction="left"
+                    >
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={onShowPelaksanaTambahan}
+                          icon="user"
+                          text={t(getKey('pelaksana_tambahan'))}
+                        />
+                        <Dropdown.Item
+                          onClick={onShowPelaksanaKomponen}
+                          icon="list"
+                          text={t(getKey('pelaksana_komponen'))}
+                        />
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">

@@ -78,6 +78,8 @@ export default {
     createAction(actionTypes.ON_FOCUS_ELEMENT, { element }, { resource }),
   onChangePelaksana: (resource, data) =>
     createAction(actionTypes.CHANGE_PELAKSANA, { data }, { resource }),
+  onChangeSpesialisasi: (resource, data) =>
+    createAction(actionTypes.CHANGE_SPESIALISASI, { data }, { resource }),
   populateForm: {
     request: (resource, data) =>
       createAction(actionTypes.POPULATE_FORM_REQUEST, { data }, { resource }),
@@ -206,6 +208,86 @@ export default {
         { resource }
       ),
   },
+  getPelaksanaKomponen: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_KOMPONEN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_KOMPONEN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_KOMPONEN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  getKunjunganUnit: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_UNIT_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  savePelaksanaKomponen: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.SAVE_PELAKSANA_KOMPONEN_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.SAVE_PELAKSANA_KOMPONEN_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.SAVE_PELAKSANA_KOMPONEN_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  getPelaksanaOptions: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_OPTIONS_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_OPTIONS_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_PELAKSANA_OPTIONS_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   onSelectKunjungan: (resource, data) =>
     createAction(actionTypes.SELECTED_KUNJUNGAN, { data }, { resource }),
   showCariKunjungan: (resource) =>
@@ -256,4 +338,8 @@ export default {
     createAction(actionTypes.HIDE_PELAKSANA_TAMBAHAN, {}, { resource }),
   onToggleStatusFromAntrian: (resource) =>
     createAction(actionTypes.TOGGLE_STATUS_FROM_ANTRIAN, {}, { resource }),
+  onShowPelaksanaKomponen: (resource) =>
+    createAction(actionTypes.SHOW_PELAKSANA_KOMPONEN, {}, { resource }),
+  onHidePelaksanaKomponen: (resource) =>
+    createAction(actionTypes.HIDE_PELAKSANA_KOMPONEN, {}, { resource }),
 };

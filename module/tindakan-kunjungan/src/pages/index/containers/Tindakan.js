@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import FormTindakan from '../components/FormTindakan';
 import CariTindakan from '../components/CariTindakan';
 import PelaksanaTambahan from './PelaksanaTambahan';
+import PelaksanaKomponen from './PelaksanaKomponen';
 import {
   disabledElement,
   postSelector,
@@ -16,6 +17,7 @@ import {
   selectedOptionSelector,
   showPelaksanaTambahanSelector,
   showModalPelaksanaTambahanSelector,
+  showModalPelaksanaKomponenSelector,
 } from '../redux/selector';
 import { actions, staticConst } from '../index';
 
@@ -34,6 +36,9 @@ const TindakanContainer = ({ t, resource }) => {
   const selectedOption = useSelector(selectedOptionSelector);
   const showModalPelaksanaTambahan = useSelector(
     showModalPelaksanaTambahanSelector
+  );
+  const showModalPelaksanaKomponen = useSelector(
+    showModalPelaksanaKomponenSelector
   );
   const showPelaksanaTambahan = useSelector(showPelaksanaTambahanSelector);
   const isReload = datatables[staticConst.TABLE_SEARCH_TINDAKAN]
@@ -74,6 +79,11 @@ const TindakanContainer = ({ t, resource }) => {
   const hidePelaksanaTambahanHandler = () =>
     dispatch(actions.onHidePelaksanaTambahan(resource));
 
+  const showPelaksanaKomponenHandler = () =>
+    dispatch(actions.onShowPelaksanaKomponen(resource));
+  const hidePelaksanaKomponenHandler = () =>
+    dispatch(actions.onHidePelaksanaKomponen(resource));
+
   return (
     <>
       <FormTindakan
@@ -92,6 +102,7 @@ const TindakanContainer = ({ t, resource }) => {
         showPelaksanaTambahan={showPelaksanaTambahan}
         // showPelaksanaTambahan={true}
         onShowPelaksanaTambahan={showPelaksanaTambahanHandler}
+        onShowPelaksanaKomponen={showPelaksanaKomponenHandler}
       />
       {showCariTindakan && (
         <CariTindakan
@@ -114,6 +125,12 @@ const TindakanContainer = ({ t, resource }) => {
         <PelaksanaTambahan
           show={showModalPelaksanaTambahan}
           onHide={hidePelaksanaTambahanHandler}
+        />
+      )}
+      {showModalPelaksanaKomponen && (
+        <PelaksanaKomponen
+          show={showModalPelaksanaKomponen}
+          onHide={hidePelaksanaKomponenHandler}
         />
       )}
     </>

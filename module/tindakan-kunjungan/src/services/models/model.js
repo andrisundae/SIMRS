@@ -86,4 +86,24 @@ export default {
     );
     return response;
   },
+  getPelaksanaKomponen: async (idKunjunganUnitDetail) => {
+    const response = await request.get(
+      `/billing/transaksi/pelaksana-komponen/${idKunjunganUnitDetail}`
+    );
+    return response;
+  },
+  savePelaksanaKomponen: async (params) => {
+    const response = await request.post(
+      '/billing/transaksi/pelaksana-komponen',
+      params
+    );
+
+    return response;
+  },
+  getKunjunganUnit: async (idKunjunganUnit) => {
+    const response = await request.get(
+      `${path}/kunjungan-unit/${idKunjunganUnit}`
+    );
+    return response;
+  },
 };

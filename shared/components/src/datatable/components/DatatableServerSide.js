@@ -14,6 +14,7 @@ import CurrencyInputRenderer from './CurrencyInputRenderer';
 import NumericInputRenderer from './NumericInputRenderer';
 import FooterPinnedRowRenderer from './FooterPinnedRowRenderer';
 import CheckboxRenderer from './CheckboxRenderer';
+import DropdownSelectRenderer from './DropdownSelectRenderer';
 import imgLoading from '../../static/media/img/loading-spinner-grey.gif';
 
 import alias from '../const';
@@ -143,6 +144,7 @@ class DataTableServerSide extends Component {
         headerCheckboxRenderer: HeaderCheckboxRenderer,
         footerPinnedRowRenderer: FooterPinnedRowRenderer,
         checkboxRenderer: CheckboxRenderer,
+        dropdownSelectRenderer: DropdownSelectRenderer,
       },
     };
 

@@ -4,6 +4,7 @@ export default {
     unitLayanan: [],
     penjamin: [],
     pelaksana: [],
+    pelaksanaKomponen: [],
   },
   post: {
     id_pasien: '',
@@ -69,6 +70,7 @@ export default {
   showCariTindakan: false,
   saveSuccess: false,
   showPelaksanaTambahan: false,
+  showPelaksanaKomponen: false,
   isRequestingPasien: false,
   isFromAntrian: false,
 };

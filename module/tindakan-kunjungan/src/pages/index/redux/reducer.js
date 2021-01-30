@@ -1,4 +1,5 @@
 import produce from 'immer';
+import _ from 'lodash';
 import initialState from './state';
 import actionTypes from './actionTypes';
 import { formatter, utils } from '@simrs/common';
@@ -154,6 +155,34 @@ export default (state = initialState, action) =>
         return;
       }
 
+      case actionTypes.GET_PELAKSANA_KOMPONEN_SUCCESS: {
+        draft.data.pelaksanaKomponen = payload.data.map((row) => {
+          const newRow = { ...row };
+          if (!row.id && row.id_penanggung_jawab) {
+            newRow.id_pelaksana = row.id_penanggung_jawab;
+            newRow.nama_pelaksana = row.nama_penanggung_jawab;
+            newRow.id_spesialisasi = row.id_spesialisasi_penanggung_jawab;
+            newRow.nama_spesialisasi = row.nama_spesialisasi_penanggung_jawab;
+          }
+          return newRow;
+        });
+        return;
+      }
+
+      case actionTypes.GET_KUNJUNGAN_UNIT_SUCCESS: {
+        draft.post = {
+          ...state.post,
+          id_dp: payload.data.id_dpjp,
+          nama_dpjp: payload.data.nama_dpjp,
+        };
+        return;
+      }
+
+      case actionTypes.GET_PELAKSANA_KOMPONEN_FAILURE: {
+        draft.data.pelaksanaKomponen = [];
+        return;
+      }
+
       case actionTypes.SHOW_CARI_KUNJUNGAN:
         draft.showCariKunjungan = true;
         return;
@@ -173,6 +202,13 @@ export default (state = initialState, action) =>
         return;
       case actionTypes.HIDE_PELAKSANA_TAMBAHAN:
         draft.showPelaksanaTambahan = false;
+        return;
+
+      case actionTypes.SHOW_PELAKSANA_KOMPONEN:
+        draft.showPelaksanaKomponen = true;
+        return;
+      case actionTypes.HIDE_PELAKSANA_KOMPONEN:
+        draft.showPelaksanaKomponen = false;
         return;
 
       case actionTypes.SELECTED_TINDAKAN_SUGGESTION: {
@@ -209,6 +245,19 @@ export default (state = initialState, action) =>
       case actionTypes.GET_PELAKSANA_FAILURE: {
         draft.data.pelaksana = [];
         draft.selectedOption.id_pelaksana = null;
+        return;
+      }
+
+      case actionTypes.GET_PELAKSANA_OPTIONS_SUCCESS: {
+        const pelaksanaKomponen = state.data.pelaksanaKomponen;
+        const findIndex = _.findIndex(
+          pelaksanaKomponen,
+          (row) => row.id_komponen_tarif === payload.data.idKomponen
+        );
+        if (pelaksanaKomponen[findIndex]) {
+          pelaksanaKomponen[findIndex].pelaksanaOptions = payload.data.data;
+        }
+        draft.data.pelaksanaKomponen = pelaksanaKomponen;
         return;
       }
 
