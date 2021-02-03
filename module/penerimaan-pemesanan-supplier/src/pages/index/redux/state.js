@@ -67,7 +67,7 @@ const filterState = {
     tgl_akhir: dayjs().toDate(),
     tglAwal: dateFormatDB(dayjs().toDate()),
     tglAkhir: dateFormatDB(dayjs().toDate()),
-    use_tgl: false,
+    use_tgl: true,
     filter_idx: '',
   },
   cari_pemesanan: {
@@ -77,7 +77,7 @@ const filterState = {
     tgl_akhir: dayjs().toDate(),
     tglAwal: dateFormatDB(dayjs().toDate()),
     tglAkhir: dateFormatDB(dayjs().toDate()),
-    use_tgl: false,
+    use_tgl: true,
     filter_idx: '',
   },
   cari_detail: {

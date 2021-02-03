@@ -216,6 +216,8 @@ function* loadInfoBarang({ meta, payload, type }) {
             : payload.data.id_barang,
         id_pemesanan: afterSave.data.id_pemesanan,
         id_pembelian: afterSave.data.id,
+        id_pembelian_detail:
+          detailActionTypes.SET_DATA_DETAIL === type ? 0 : payload.data.id,
       };
 
       let response = yield call(api.getInfotBarang, postData);
