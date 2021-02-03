@@ -51,6 +51,13 @@ const routers = [
     path: '/farmasi/transaksi/pemesanan-supplier',
     component: lazy(() => import('@module/transaksi-pemesanan-supplier')),
   },
+  {
+    key: '_farmasi_transaksi_penerimaan_pemesanan_supplier',
+    path: '/farmasi/transaksi/penerimaan-pemesanan-supplier',
+    component: lazy(() =>
+      import('@module/transaksi-penerimaan-pemesanan-supplier')
+    ),
+  },
 ];
 
 export default routers;

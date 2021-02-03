@@ -537,13 +537,15 @@ class FooterActions extends Component {
       data_detail,
       masterOpen,
       detailOpen,
+      masterSubmitting,
+      detailSubmitting,
     } = this.props;
 
-    if (masterOpen) {
+    if (masterOpen && !masterSubmitting) {
       this.props.action.onSave(resource, post);
     }
 
-    if (detailOpen) {
+    if (detailOpen && !detailSubmitting) {
       let post = {
         ...post_detail,
         master_id: data_detail.master_id,
@@ -655,6 +657,8 @@ const mapStateToProps = function (state, props) {
     focusElement: master.focusElement,
     post: master.post,
     dataAfterSave: master.dataAfterSave.data,
+    masterSubmitting: master.submitting,
+    detailSubmitting: detail.submitting,
     pop_up: filter.filter_modal,
     filter_master: filter.cari_master,
     filter_detail: filter.cari_detail,

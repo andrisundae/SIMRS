@@ -25,7 +25,6 @@ class CariDetail extends Component {
     this._handlePilih = this._handlePilih.bind(this);
     this.focusFilter = this.focusFilter.bind(this);
 
-    this.tableDetail = createRef();
     this._createFormRef();
   }
 
@@ -61,7 +60,7 @@ class CariDetail extends Component {
   }
 
   getRefDatatable() {
-    return this.tableDetail.current.refs[this.props.tableName];
+    return this.props.tableRef.current.refs[this.props.tableName];
   }
 
   getRowNodeId(item) {
@@ -100,7 +99,7 @@ class CariDetail extends Component {
   }
 
   gridReadyHandler = () => {
-    this.tableDetail.current.setFirstRowSelected();
+    this.props.tableRef.current.setFirstRowSelected();
   };
 
   focusFilter() {
@@ -112,7 +111,6 @@ class CariDetail extends Component {
 
   componentDidMount() {
     this._bindKey();
-    this.props.onRef(this);
 
     let refDatatable = this.getRefDatatable();
     this.gridApi = refDatatable.api;
@@ -131,11 +129,10 @@ class CariDetail extends Component {
 
   componentWillUnmount() {
     this._unbindKey();
-    this.props.onRef(undefined);
   }
 
   render() {
-    const { show, children } = this.props;
+    const { show, children, tableRef } = this.props;
 
     return (
       <Modal
@@ -151,7 +148,7 @@ class CariDetail extends Component {
             <Grid.Row>
               <Grid.Column width="16">
                 <DatatableServerSide
-                  ref={this.tableDetail}
+                  ref={tableRef}
                   columns={this.props.columnDefs}
                   name={this.props.tableName}
                   navigateToSelect={true}
@@ -225,16 +222,18 @@ class CariDetail extends Component {
   }
 
   onSelect(selectedData) {
-    let { action, resource, itemList, t } = this.props;
+    let { action, resource, itemList, t, allowDuplicate } = this.props;
 
     action.onSelectedData(resource, selectedData);
     action.onCloseDialog(resource, { idx: 'detail_modal' });
 
-    itemList.forEach((item) => {
-      if (selectedData.id === item.id_barang) {
-        action.setWarning(resource, t(`${resource}:validator.barang.exist`));
-      }
-    });
+    if (allowDuplicate === false) {
+      itemList.forEach((item) => {
+        if (selectedData.id === item.id_barang) {
+          action.setWarning(resource, t(`${resource}:validator.barang.exist`));
+        }
+      });
+    }
   }
 }
 
@@ -271,6 +270,11 @@ CariDetail.propTypes = {
   action: PropTypes.object,
   t: PropTypes.func,
   firstRowSelect: PropTypes.bool,
+  allowDuplicate: PropTypes.bool,
+};
+
+CariDetail.defaultProps = {
+  allowDuplicate: false,
 };
 
 export default connect(
