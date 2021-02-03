@@ -459,7 +459,7 @@ class FooterActions extends Component {
 
   _onAddMaster = () => {
     this.props.action.onAddMaster(this.props.resource);
-    // this.props.appContext.toggleMainMenu();
+    this.props.appActions.deactivateMainMenu();
   };
 
   _onClose() {
@@ -516,7 +516,7 @@ class FooterActions extends Component {
     const { resource, action, post } = this.props;
 
     action.onEditDetail(resource, post);
-    // this.props.appContext.toggleMainMenu();
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDeleteDetail() {
@@ -552,7 +552,6 @@ class FooterActions extends Component {
       };
       this.props.action.onSaveDetail(resource, post);
     }
-    // this.props.appContext.toggleMainMenu();
   }
 
   _onCancel() {
@@ -563,7 +562,7 @@ class FooterActions extends Component {
     if (this.props.detailOpen) {
       this.props.action.onCandelDetail(this.props.resource);
     }
-    // this.props.appContext.toggleMainMenu();
+    this.props.appActions.activateMainMenu();
   }
 
   _onSelesaiTransaksi() {
@@ -592,6 +591,7 @@ class FooterActions extends Component {
 
   _onBatalTransaksi() {
     this.props.action.onBatal(this.props.resource);
+    this.props.appActions.activateMainMenu();
   }
 
   _onFocusElement(e) {
