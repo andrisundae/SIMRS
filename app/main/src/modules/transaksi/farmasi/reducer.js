@@ -121,12 +121,12 @@ const detailReducer = (state = detailState, action, initialState) =>
 
       case detailActionTypes.EDIT:
         draft.statusForm = detailActionTypes.EDIT;
+        draft.openForm = true;
         return;
 
       case detailActionTypes.CANCEL:
-        draft.statusForm = detailActionTypes.CANCEL;
-        draft.post = post;
-        draft.focusElement = 'addDetail';
+        draft.statusForm = detailActionTypes.SELECTED;
+        draft.focusElement = '';
         return;
 
       case detailActionTypes.CHANGE_INPUT:

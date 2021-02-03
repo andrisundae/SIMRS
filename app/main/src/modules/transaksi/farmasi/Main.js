@@ -9,6 +9,7 @@ import { masterActions } from './actions';
 import FooterActions from './containers/FooterActions';
 import { getPermissions } from '../../auth';
 
+import './static/css/main.css';
 class Main extends Component {
   constructor(props) {
     super();
@@ -23,7 +24,8 @@ class Main extends Component {
       return <h1>Something went wrong.</h1>;
     }
 
-    const { permissions, masterForm } = this.props;
+    const { permissions, masterForm, noPaddingTopBot } = this.props;
+    const { marginBottom, marginTop } = this.props.style;
     const footer = this.props.footerActions || (
       <FooterActions
         i18n={this.props.i18n}
@@ -43,15 +45,33 @@ class Main extends Component {
         </Segment>
         <Segment>
           <Grid className="content-grid">
-            <Grid.Row style={{ marginTop: 5 }}>
+            <Grid.Row
+              style={{ marginTop: marginTop }}
+              className={noPaddingTopBot ? 'form-mepet' : ''}
+            >
               <Grid.Column>
                 <Segment padded>{masterForm}</Segment>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row>
+            <Grid.Row className={noPaddingTopBot ? 'form-mepet' : ''}>
               <Grid.Column>{this.props.detailList}</Grid.Column>
             </Grid.Row>
-            <Grid.Row style={{ marginBottom: 5 }}>
+            {this.props.useLabel && (
+              <Grid.Row
+                className={noPaddingTopBot ? 'form-mepet' : ''}
+                style={{
+                  textAlign: 'right',
+                  fontSize: 'initial',
+                  fontWeight: 'bold',
+                }}
+              >
+                <Grid.Column>{this.props.labelHarga}</Grid.Column>
+              </Grid.Row>
+            )}
+            <Grid.Row
+              style={{ marginBottom: marginBottom }}
+              className={noPaddingTopBot ? 'form-mepet' : ''}
+            >
               <Grid.Column>
                 <Segment padded>{this.props.detailForm}</Segment>
               </Grid.Column>
@@ -92,8 +112,11 @@ const mapDispatchToProps = function (dispatch) {
 Main.propTypes = {
   openForm: PropTypes.func,
   isLoading: PropTypes.bool,
+  useLabel: PropTypes.bool.isRequired,
   masterForm: PropTypes.node.isRequired,
+  noPaddingTopBot: PropTypes.bool,
   footerActions: PropTypes.node,
+  labelHarga: PropTypes.node,
   resource: PropTypes.string.isRequired,
   style: PropTypes.object,
   caption: PropTypes.string,
@@ -104,9 +127,11 @@ Main.propTypes = {
 };
 
 Main.defaultProps = {
-  style: { marginLeft: 0, marginRight: 0 },
+  style: { marginTop: 5, marginBottom: 5 },
   icon: 'list',
   permissions: [],
+  useLabel: false,
+  noPaddingTopBot: false,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
