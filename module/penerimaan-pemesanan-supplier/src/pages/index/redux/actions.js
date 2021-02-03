@@ -56,4 +56,6 @@ export default {
     ),
   setInfoBarang: (resource, data) =>
     createAction(actionTypes.SET_INFO_BARANG, { data }, { resource }),
+  resetFilteredData: (resource, data) =>
+    createAction(actionTypes.RESET_FILTERED_DATA, { data }, { resource }),
 };

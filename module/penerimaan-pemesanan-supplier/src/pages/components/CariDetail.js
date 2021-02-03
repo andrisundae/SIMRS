@@ -102,6 +102,7 @@ const CariDetail = (props) => {
         columnDefs={columnDefs()}
         tableName={tableName.BARANG_LIST}
         tableRef={tableRef}
+        allowDuplicate={true}
       >
         <Grid.Column>
           <Segment padded>

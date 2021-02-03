@@ -27,7 +27,7 @@ import CariDetail from '../../components/CariDetail';
 
 import localAction from '../redux/actions';
 
-const DetailForm = ({ resource, focusElement }) => {
+const DetailForm = ({ resource, focusElement, t }) => {
   const dispatch = useDispatch();
   const trans = useModuleTrans();
 
@@ -195,7 +195,7 @@ const DetailForm = ({ resource, focusElement }) => {
                     <Input
                       name="jumlah_terima_sbl"
                       ref={inputRef.jumlah_terima_sbl}
-                      value={post.jumlah_terima_sbl || ''}
+                      value={post.jumlah_terima_sbl || '0'}
                       disabled={true}
                     />
                   </Grid.Column>
@@ -357,7 +357,7 @@ const DetailForm = ({ resource, focusElement }) => {
           </Grid.Row>
         </Grid>
       </Form>
-      {isShown && <CariDetail resource={resource} />}
+      {isShown && <CariDetail resource={resource} t={t} />}
     </Fragment>
   );
 };

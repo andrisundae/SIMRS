@@ -75,6 +75,7 @@ const masterReducer = (state = masterState, action, initialState) =>
 
       case masterActionTypes.RESET:
         draft.post = post;
+        draft.dataAfterSave = masterState.dataAfterSave;
         draft.statusForm = masterActionTypes.READY;
         draft.openForm = false;
         return;

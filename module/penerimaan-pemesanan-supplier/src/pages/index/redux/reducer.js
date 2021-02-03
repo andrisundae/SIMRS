@@ -176,6 +176,14 @@ const filterReducer = (state = filterState, action) => {
         draft[payload.data.form].filter = payload.data.label;
         draft[payload.data.form].filter_idx = payload.data.value;
       });
+    case actionTypes.PEMESANAN_SUCCESS:
+      return produce(state, (draft) => {
+        draft.cari_pemesanan.filtered_data = payload.data.length;
+      });
+    case actionTypes.RESET_FILTERED_DATA:
+      return produce(state, (draft) => {
+        draft[payload.data.form].filtered_data = 0;
+      });
     default:
       return defaultFilterReducer(state, action, filterState);
   }

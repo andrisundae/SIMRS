@@ -204,7 +204,7 @@ class CariTransaksi extends Component {
 
     MouseTrap.bindGlobal('alt+r', function (e) {
       e.preventDefault();
-      that._reload(constDatatable.reloadType.purge);
+      that.reload(constDatatable.reloadType.purge);
     });
   }
 

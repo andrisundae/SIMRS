@@ -204,13 +204,16 @@ function* loadAllTransaksi({ meta, payload }) {
   yield put(datatableActions.onReloaded(tableName.CARI_TRANSAKSI));
 }
 
-function* loadInfoBarang({ meta, payload }) {
+function* loadInfoBarang({ meta, payload, type }) {
   const afterSave = yield select(afterMaster);
 
   try {
     if (afterSave.data) {
       let postData = {
-        id_barang: payload.data.id_barang,
+        id_barang:
+          detailActionTypes.SET_DATA_DETAIL === type
+            ? payload.data.id
+            : payload.data.id_barang,
         id_pemesanan: afterSave.data.id_pemesanan,
         id_pembelian: afterSave.data.id,
       };
@@ -514,7 +517,7 @@ function* onSaveDetailSuccess({ meta, payload }) {
 }
 
 function* onSaveSuccess({ meta, payload }) {
-  yield toastr.success(payload.data.data.message);
+  yield toastr.success(payload.data.message);
   yield put(detailActions.onReady(meta.resource));
   yield put(
     datatableActions.onReload(
@@ -544,12 +547,19 @@ function* countItem({ meta }) {
   );
 }
 
+function* resetFilterenData({ meta }) {
+  yield put(
+    localAction.resetFilteredData(meta.resource, { form: 'cari_pemesanan' })
+  );
+}
+
 export default function* watchActions() {
   yield all([
     takeLatest(filterActionTypes.ON_SUBMIT_TRANSAKSI, onSeacrhTransaksi),
     takeLatest(filterActionTypes.ON_SUBMIT_DETAIL, onSeacrhItem),
     takeLatest(filterActionTypes.CARI_TRANSAKSI_REQUEST, loadAllTransaksi),
     takeLatest(filterActionTypes.CARI_ITEM_REQUEST, loadItemPemesanan),
+    takeLatest(filterActionTypes.CLOSE_DIALOG, resetFilterenData),
 
     takeLatest(masterActionTypes.OPEN_FORM, openForm),
     takeLatest(masterActionTypes.GET_INITIAL_FORM_REQUEST, populateForm),
@@ -577,5 +587,6 @@ export default function* watchActions() {
     takeLatest(detailActionTypes.SAVE_REQUEST, handleSaveDetail),
     takeLatest(detailActionTypes.SAVE_SUCCESS, onSaveDetailSuccess),
     takeLatest(detailActionTypes.SELECTED, loadInfoBarang),
+    takeLatest(detailActionTypes.SET_DATA_DETAIL, loadInfoBarang),
   ]);
 }

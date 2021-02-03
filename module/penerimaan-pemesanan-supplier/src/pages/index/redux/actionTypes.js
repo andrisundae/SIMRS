@@ -25,4 +25,5 @@ export default {
   COUNT_ALL: createType('COUNT_ALL'),
   COUNT_DISKON: createType('COUNT_DISKON'),
   SET_INFO_BARANG: createType('SET_INFO_BARANG'),
+  RESET_FILTERED_DATA: createType('RESET_FILTERED_DATA'),
 };

@@ -222,16 +222,18 @@ class CariDetail extends Component {
   }
 
   onSelect(selectedData) {
-    let { action, resource, itemList, t } = this.props;
+    let { action, resource, itemList, t, allowDuplicate } = this.props;
 
     action.onSelectedData(resource, selectedData);
     action.onCloseDialog(resource, { idx: 'detail_modal' });
 
-    itemList.forEach((item) => {
-      if (selectedData.id === item.id_barang) {
-        action.setWarning(resource, t(`${resource}:validator.barang.exist`));
-      }
-    });
+    if (allowDuplicate === false) {
+      itemList.forEach((item) => {
+        if (selectedData.id === item.id_barang) {
+          action.setWarning(resource, t(`${resource}:validator.barang.exist`));
+        }
+      });
+    }
   }
 }
 
@@ -268,6 +270,11 @@ CariDetail.propTypes = {
   action: PropTypes.object,
   t: PropTypes.func,
   firstRowSelect: PropTypes.bool,
+  allowDuplicate: PropTypes.bool,
+};
+
+CariDetail.defaultProps = {
+  allowDuplicate: false,
 };
 
 export default connect(

@@ -1,10 +1,5 @@
-import React, {
-  Fragment,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
+import MouseTrap from 'mousetrap';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -49,17 +44,20 @@ const CariPemesanan = (props) => {
   const dispatch = useDispatch();
   const trans = useModuleTrans();
 
+  const tableRef = {
+    tableInduk: useRef(),
+    tableDet: useRef(),
+  };
+
   const inputRef = {
-    tableRef: React.useRef(),
-    tabeRefDet: React.useRef(),
-    tgl_awal: React.useRef(),
-    tgl_akhir: React.useRef(),
-    use_tgl: React.useRef(),
-    filter: React.useRef(),
-    kata_kunci: React.useRef(),
-    btnCari: React.useRef(),
-    btn_pilih: React.useRef(),
-    btn_batal: React.useRef(),
+    tgl_awal: useRef(),
+    tgl_akhir: useRef(),
+    use_tgl: useRef(),
+    filter: useRef(),
+    kata_kunci: useRef(),
+    btnCari: useRef(),
+    btn_pilih: useRef(),
+    btn_batal: useRef(),
   };
 
   const post = useSelector((state) => cariPemsanan(state));
@@ -73,20 +71,16 @@ const CariPemesanan = (props) => {
   const optionFilter = useSelector((state) => optionFilterPemesanan(state));
 
   const gridApi = () => {
-    return inputRef.tableRef.current.gridApi;
+    return tableRef.tableInduk.current.gridApi;
   };
 
   const columnApi = () => {
-    return inputRef.tableRef.current.columnApi;
+    return tableRef.tableInduk.current.columnApi;
   };
 
   const gridApiDet = () => {
-    return inputRef.tabeRefDet.current.gridApi;
+    return tableRef.tableDet.current.gridApi;
   };
-
-  // const columnApiDet = () => {
-  //   return inputRef.tabeRefDet.current.columnApi;
-  // }
 
   useEffect(() => {
     if (focusElement && inputRef[focusElement]) {
@@ -112,6 +106,33 @@ const CariPemesanan = (props) => {
   }, [isShown]);
 
   useEffect(() => {
+    if (isShown) {
+      MouseTrap.bindGlobal('alt+p', function (e) {
+        e.preventDefault();
+
+        inputRef.btn_pilih.current.focus();
+        handleRowEnter();
+      });
+
+      MouseTrap.bindGlobal('f2', function (e) {
+        e.preventDefault();
+        tableRef.tableInduk.current.setFirstRowSelected();
+      });
+
+      MouseTrap.bindGlobal('alt+r', function (e) {
+        e.preventDefault();
+        reload(constDatatable.reloadType.purge);
+      });
+    }
+
+    return () => {
+      MouseTrap.unbind('alt+p');
+      MouseTrap.unbind('f2');
+      MouseTrap.unbind('alt+r');
+    };
+  }, [isShown]);
+
+  useEffect(() => {
     if (tablePemesanan.isReload) {
       reload(tablePemesanan.reloadType);
     }
@@ -122,6 +143,12 @@ const CariPemesanan = (props) => {
       reloadDet(tablePemesananDetail.reloadType);
     }
   }, [tablePemesananDetail]);
+
+  useEffect(() => {
+    if (post.filtered_data > 0) {
+      tableRef.tableInduk.current.setFirstRowSelected();
+    }
+  }, [post]);
 
   const onChangeInputHandler = (e) => {
     const { value, name, type, checked } = e.target;
@@ -181,6 +208,7 @@ const CariPemesanan = (props) => {
   const handlePilih = (e) => {
     handleRowEnter();
   };
+
   /** Data Table Main */
   const columnDefs = () => {
     return [
@@ -249,24 +277,6 @@ const CariPemesanan = (props) => {
     return item.id;
   };
 
-  const setFocusedCell = (rowIndex) => {
-    gridApi().ensureIndexVisible(0);
-    let firstCol = columnApi().getAllDisplayedColumns()[0];
-    gridApi().ensureColumnVisible(firstCol);
-    gridApi().setFocusedCell(rowIndex, firstCol);
-  };
-
-  const setFirstRowSelected = () => {
-    setFocusedCell(0);
-    let cell = gridApi().getFocusedCell();
-    if (cell) {
-      let node = gridApi().getModel().getRow(cell.rowIndex);
-      if (node) {
-        node.setSelected(true, true);
-      }
-    }
-  };
-
   const onSelectedRow = (row) => {
     if (row.node.isSelected()) {
       dispatch(
@@ -277,12 +287,6 @@ const CariPemesanan = (props) => {
       );
     }
   };
-
-  // const selectRow = (id) => {
-  //   if (tableRef.current) {
-  //     tableRef.current.selectRow(id);
-  //   }
-  // };
 
   const handleRowEnter = () => {
     const selectedRows = gridApi().getSelectedRows();
@@ -295,6 +299,7 @@ const CariPemesanan = (props) => {
     dispatch(localAction.setPemesanan(resource, selectedData));
     onClose();
   };
+
   /** Data Table Detail */
   const columnDefsDet = () => {
     return [
@@ -469,7 +474,7 @@ const CariPemesanan = (props) => {
             <Grid.Row>
               <Grid.Column width="10">
                 <DatatableServerSide
-                  ref={inputRef.tableRef}
+                  ref={tableRef.tableInduk}
                   columns={columnDefs()}
                   name={tableName.CARI_PEMESANAN}
                   navigateToSelect={true}
@@ -487,7 +492,7 @@ const CariPemesanan = (props) => {
               </Grid.Column>
               <Grid.Column width="6">
                 <DatatableServerSide
-                  ref={inputRef.tabeRefDet}
+                  ref={tableRef.tableDet}
                   columns={columnDefsDet()}
                   name={tableName.DETAIL_PEMESANAN}
                   navigateToSelect={false}
