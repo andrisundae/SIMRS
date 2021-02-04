@@ -37,6 +37,8 @@ export default (state = initialState, action) =>
         draft.postItem[payload.data.name] = payload.data.value;
         if (payload.data.name === 'jumlah') {
           draft.postItem.biaya = payload.data.value * state.postItem.harga;
+        } else if (payload.data.name === 'harga') {
+          draft.postItem.biaya = payload.data.value * state.postItem.jumlah;
         }
         draft.focusElement = '';
         return;
@@ -96,6 +98,8 @@ export default (state = initialState, action) =>
           ...state.postItem,
           ...data,
           tanggal: formatter.dateFormatDB(data.tanggal, 'YYYY-MM-DD HH:mm'),
+          biaya: parseFloat(data.biaya),
+          harga: parseFloat(data.harga),
         };
         draft.selectedRow = data.id;
         draft.selectedOption.id_pelaksana = {
@@ -219,13 +223,14 @@ export default (state = initialState, action) =>
           nama_kelompok: data.nama_kelompok,
           nama_layanan: data.nama_layanan,
           nama_kelas: data.nama_kelas,
-          biaya: data.tarif * 1,
-          harga: data.tarif,
+          biaya: parseFloat(data.tarif) * 1,
+          harga: parseFloat(data.tarif),
           id_tindakan: data.id,
           id_kelas: data.id_kelas,
           id_kelompok: data.id_kelompok,
           id_layanan: data.id_layanan,
           jumlah: 1,
+          st_tarif_manual: data.st_tarif_manual,
         };
         return;
       }

@@ -55,7 +55,7 @@ export const showPelaksanaTambahanSelector = createSelector(
     selectedRowSelector,
     (state) => disabledElement(state, 'pelaksana_tambahan'),
   ],
-  (selectedRow, isDisable) => selectedRow && !isDisable
+  (selectedRow, isDisable) => (selectedRow && !isDisable ? true : false)
 );
 export const disabledElement = createSelector(
   [(state) => state.default.statusForm, (state, element) => element],

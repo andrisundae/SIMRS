@@ -58,6 +58,7 @@ export default {
     st_kunjungan: 0,
     nama_kelompok: '',
     kode_panggil: '',
+    st_tarif_manual: 0,
   },
   selectedOption: {
     id_pelaksana: null,

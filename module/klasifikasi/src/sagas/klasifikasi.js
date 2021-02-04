@@ -42,11 +42,20 @@ function* loadAll({ payload, meta }) {
 }
 
 function* handleSave({ payload, meta }) {
-  let { resource } = meta;
+  const { resource } = meta;
   try {
     yield put(loaderActions.show());
-    let { rules, messages } = api.validationRules(resource);
-    let post = payload.data;
+    const { rules, messages } = api.validationRules(resource);
+    const data = payload.data;
+    const post = {
+      id: data.id,
+      nama: data.nama,
+      jenis_klasifikasi: data.jenis_klasifikasi,
+      aktif: data.aktif,
+    };
+    if (data.st_tarif_manual) {
+      post.st_tarif_manual = 1;
+    }
     let method = post.id ? 'koreksi' : 'tambah';
     let errors = validator(post, rules, messages);
     let isError = false;

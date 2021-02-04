@@ -60,10 +60,6 @@ const TindakanContainer = ({ t, resource }) => {
     dispatch(actions.onChangePelaksana(resource, data));
   const loadTindakanSuggestionHandler = (data, tableParams) =>
     dispatch(actions.tindakanSuggestion.request(resource, data, tableParams));
-  const changeInputHandler = (e) => {
-    const { value, name } = e.target;
-    dispatch(actions.onChangeInputTindakan(resource, { value, name }));
-  };
 
   const focusElementHandler = (e, nameRef) => {
     if (13 === e.which) {
@@ -83,6 +79,9 @@ const TindakanContainer = ({ t, resource }) => {
     dispatch(actions.onShowPelaksanaKomponen(resource));
   const hidePelaksanaKomponenHandler = () =>
     dispatch(actions.onHidePelaksanaKomponen(resource));
+
+  const changeInputHandler = (data) =>
+    dispatch(actions.onChangeInputTindakan(resource, data));
 
   return (
     <>

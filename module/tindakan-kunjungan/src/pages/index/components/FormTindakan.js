@@ -9,9 +9,8 @@ import {
   Header,
   Divider,
   Dropdown,
-  Menu,
 } from 'semantic-ui-react';
-import { Select } from '@simrs/components';
+import { Select, CurrencyInput } from '@simrs/components';
 import { formatter } from '@simrs/common';
 import PropTypes from 'prop-types';
 
@@ -36,12 +35,18 @@ const FormTindakan = ({
     id_tindakan: React.useRef(),
     id_pelaksana: React.useRef(),
     jumlah: React.useRef(),
+    harga: React.useRef(),
   };
 
   React.useEffect(() => {
-    if (focusElement && inputRef[focusElement]) {
-      if (inputRef[focusElement].current) {
-        console.log(focusElement);
+    if (
+      focusElement &&
+      inputRef[focusElement] &&
+      inputRef[focusElement].current
+    ) {
+      if (focusElement === 'harga') {
+        inputRef[focusElement].current.theInput.focus();
+      } else {
         inputRef[focusElement].current.focus();
       }
     }
@@ -56,6 +61,17 @@ const FormTindakan = ({
       onShowCariTindakan();
     }
   };
+
+  const changeInputHandler = (e) => {
+    const { value, name } = e.target;
+    onChangeInput({ value, name });
+  };
+
+  const changeHargaHandler = (e, maskedValue, floatValue) => {
+    onChangeInput({ name: 'harga', value: floatValue });
+  };
+
+  const disabledBiayaPertindakan = disabled || !data.st_tarif_manual;
 
   const kurang =
     kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
@@ -178,8 +194,15 @@ const FormTindakan = ({
                       name="jumlah"
                       disabled={disabled}
                       value={data.jumlah}
-                      onChange={onChangeInput}
-                      onKeyDown={(e) => onFocusElement(e, 'save')}
+                      onChange={changeInputHandler}
+                      onKeyDown={(e) =>
+                        onFocusElement(
+                          e,
+                          !disabledBiayaPertindakan
+                            ? 'biaya_per_tindakan'
+                            : 'save'
+                        )
+                      }
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -188,64 +211,49 @@ const FormTindakan = ({
                     <label>{t(getKey('biaya_per_tindakan'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
-                    <Input
-                      name="biaya_per_tindakan"
-                      disabled
+                    <CurrencyInput
+                      name="harga"
+                      inputRef={inputRef.harga}
                       value={data.harga}
+                      disabled={disabledBiayaPertindakan}
+                      onChangeEvent={changeHargaHandler}
+                      onKeyDown={(e) => onFocusElement(e, 'save')}
                     />
                   </Grid.Column>
-                  {/* {showPelaksanaTambahan === true && (
-                  <Grid.Column width="6" className="field" textAlign="right">
-                    <Dropdown
-                      text='Pelaksana'
-                      icon='users'
-                      floating
-                      labeled
-                      button
-                      className='icon'
-                      style={{ paddingTop: 6, paddingBottom: 6 }}
-                      direction="left"
-                    >
-                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={onShowPelaksanaTambahan} icon='user' text={t(getKey('pelaksana_tambahan'))} />
-                        <Dropdown.Item onClick={onShowPelaksanaKomponen} icon='list' text={t(getKey('pelaksana_komponen'))} />
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </Grid.Column>
-                  )
-                  } */}
-                  <Grid.Column width="6" className="field" textAlign="right">
-                    <Dropdown
-                      text="Pelaksana"
-                      icon="users"
-                      floating
-                      labeled
-                      button
-                      className="icon"
-                      style={{ paddingTop: 6, paddingBottom: 6 }}
-                      direction="left"
-                    >
-                      <Dropdown.Menu>
-                        <Dropdown.Item
-                          onClick={onShowPelaksanaTambahan}
-                          icon="user"
-                          text={t(getKey('pelaksana_tambahan'))}
-                        />
-                        <Dropdown.Item
-                          onClick={onShowPelaksanaKomponen}
-                          icon="list"
-                          text={t(getKey('pelaksana_komponen'))}
-                        />
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </Grid.Column>
+                  {showPelaksanaTambahan === true && (
+                    <Grid.Column width="6" className="field" textAlign="right">
+                      <Dropdown
+                        text="Pelaksana"
+                        icon="users"
+                        floating
+                        labeled
+                        button
+                        className="icon"
+                        style={{ paddingTop: 6, paddingBottom: 6 }}
+                        direction="left"
+                      >
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={onShowPelaksanaTambahan}
+                            icon="user"
+                            text={t(getKey('pelaksana_tambahan'))}
+                          />
+                          <Dropdown.Item
+                            onClick={onShowPelaksanaKomponen}
+                            icon="list"
+                            text={t(getKey('pelaksana_komponen'))}
+                          />
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Grid.Column>
+                  )}
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
                     <label>{t(getKey('total_biaya'))}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
-                    <Input name="biaya" disabled value={data.biaya} />
+                    <CurrencyInput name="biaya" disabled value={data.biaya} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
@@ -358,6 +366,15 @@ FormTindakan.propTypes = {
   disabled: PropTypes.bool,
   kunjungan: PropTypes.object,
   focusElement: PropTypes.string,
+  dataForm: PropTypes.object,
+  selectedOption: PropTypes.object,
+  onShowCariTindakan: PropTypes.func,
+  onChangePelaksana: PropTypes.func,
+  onChangeInput: PropTypes.func,
+  onFocusElement: PropTypes.func,
+  showPelaksanaTambahan: PropTypes.bool,
+  onShowPelaksanaTambahan: PropTypes.func,
+  onShowPelaksanaKomponen: PropTypes.func,
 };
 
 export default FormTindakan;

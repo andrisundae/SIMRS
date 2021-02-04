@@ -212,6 +212,7 @@ class FooterActions extends Component {
       jumlah: data.jumlah,
       id_kelas: data.id_kelas,
       id_layanan: data.id_layanan,
+      harga: data.harga,
     };
     if (data.id) {
       payload.id = data.id;
