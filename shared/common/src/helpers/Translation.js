@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-fetch-backend';
 import { simrsHeaders } from './request';
+import { main } from '../store';
 import { isDesktop } from '../helpers/deviceDetector';
 
 class Translation {
@@ -12,7 +13,7 @@ class Translation {
   init() {
     const fetch = new Backend(null, {
       loadPath: (lngs, namespace) => {
-        return `http://simrs-x.test/translation/${lngs}/${namespace}`;
+        return `${main.get('config.api')}/translation/${lngs}/${namespace}`;
       },
       stringify: JSON.stringify,
       allowMultiLoading: false,

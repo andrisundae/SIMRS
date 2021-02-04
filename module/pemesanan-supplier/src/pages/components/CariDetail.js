@@ -21,6 +21,7 @@ class CariDetail extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
 
     this._createFormRef();
+    this.tableRef = createRef();
   }
 
   _createFormRef() {
@@ -115,7 +116,7 @@ class CariDetail extends Component {
         show={this.props.show}
         columnDefs={this._columnDefs()}
         tableName={tableName.BARANG_LIST}
-        onRef={(ref) => (this.CariDetailContainer = ref)}
+        tableRef={this.tableRef}
         {...this.props}
       >
         <Grid.Column>
