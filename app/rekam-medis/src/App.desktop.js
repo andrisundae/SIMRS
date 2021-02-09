@@ -67,31 +67,40 @@ function AppContent() {
               {routers.map((router, index) => {
                 const Component = withTranslation(router.key)(router.component);
                 return (
-                  <PrivateRoute
-                    key={index}
+                  <Route
                     path={router.path}
                     render={(props) => (
-                      <Restricted
-                        {...props}
-                        route={router.key}
-                        render={(permissions) => (
-                          <Component
-                            settings={settings}
-                            permissions={permissions}
-                            resource={router.key}
-                            {...props}
-                          />
-                        )}
-                      />
+                      <Component resource={router.key} {...props} />
                     )}
+                    key={index}
                   />
                 );
+                // return (
+                //   <PrivateRoute
+                //     key={index}
+                //     path={router.path}
+                //     render={(props) => (
+                //       <Restricted
+                //         {...props}
+                //         route={router.key}
+                //         render={(permissions) => (
+                //           <Component
+                //             settings={settings}
+                //             permissions={permissions}
+                //             resource={router.key}
+                //             {...props}
+                //           />
+                //         )}
+                //       />
+                //     )}
+                //   />
+                // );
               })}
               {/* <Route
               path="/permission-denied"
               render={(props) => <PermissionDenied {...props} />}
             /> */}
-              {/* <Redirect to={'/main'} /> */}
+              <Redirect to={'/main'} />
             </Switch>
           </ModuleProvider>
         </Suspense>

@@ -34,7 +34,7 @@ export default function Index() {
 
   return (
     <Fragment>
-      <FooterActionsContainer a>
+      <FooterActionsContainer>
         <div className="m-1">
           <Button as={Link} color="blue" to="/add" size="small">
             <Icon name="plus" />

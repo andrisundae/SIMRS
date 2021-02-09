@@ -27,4 +27,24 @@ export default [
     path: '/detail-rekam-medis/penunjang',
     component: lazy(() => import('@module/detail-rekam-medis/src/penunjang')),
   },
+  {
+    key: '_rekam_medis_konsul_dokter',
+    path: '/konsul-dokter/pemenuhan',
+    component: lazy(() => import('@module/konsul-dokter/src/pemenuhan')),
+  },
+  {
+    key: '_rekam_medis_rawat_bersama',
+    path: '/rawat-bersama/pemenuhan',
+    component: lazy(() => import('@module/rawat-bersama/src/pemenuhan')),
+  },
+  {
+    key: '_rekam_medis_alih_dpjp',
+    path: '/alih-dpjp/pemenuhan',
+    component: lazy(() => import('@module/alih-dpjp/src/pemenuhan')),
+  },
+  {
+    key: '_rekam_medis_delegasi_tugas',
+    path: '/delegasi-tugas/pemenuhan',
+    component: lazy(() => import('@module/delegasi-tugas/src/pemenuhan')),
+  },
 ];

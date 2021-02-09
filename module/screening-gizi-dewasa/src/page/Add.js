@@ -95,8 +95,6 @@ export default function Add() {
       <Modal.Header className="text-xl">
         <Icon name="plus" className="mr-4" />
         {ScreeningGiziDewasaLabel.headerLabel}
-        <label className="mx-2">&bull;</label>
-        {ScreeningGiziDewasaLabel.descriptionLabel}
       </Modal.Header>
       <Modal.Content scrolling>
         <Grid>
