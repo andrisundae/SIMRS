@@ -18,6 +18,13 @@ module.exports = {
       padding: {
         '1.2': '0.3rem',
       },
+      spacing: {
+        '98': '26rem',
+        '100': '28rem',
+        '102': '30rem',
+        '104': '32rem',
+        '106': '34rem',
+      },
     },
   },
   important: true,

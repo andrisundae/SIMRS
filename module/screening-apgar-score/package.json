@@ -1,0 +1,5 @@
+{
+  "name": "@module/screening-apgar-score",
+  "version": "1.0.0-alpha.0",
+  "main": "src/index.js"
+}
