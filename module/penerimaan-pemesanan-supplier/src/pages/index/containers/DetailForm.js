@@ -331,11 +331,12 @@ const DetailForm = ({ resource, focusElement, t }) => {
                     <label>{trans('label.field.r_p')}</label>
                   </Grid.Column>
                   <Grid.Column width="5" className="field">
-                    <Input
+                    <CurrencyInput
                       name="ppn_rp"
-                      ref={inputRef.ppn_rp}
-                      value={post.ppn_rp || ''}
+                      inputRef={inputRef.ppn_rp}
+                      value={parseFloat(post.ppn_rp)}
                       disabled={true}
+                      thousandSeparator="."
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -344,11 +345,12 @@ const DetailForm = ({ resource, focusElement, t }) => {
                     <label>{trans('label.field.total_harga')}</label>
                   </Grid.Column>
                   <Grid.Column width="10" className="field">
-                    <Input
+                    <CurrencyInput
                       name="total_harga"
-                      ref={inputRef.total_harga}
-                      value={post.total_harga || ''}
+                      inputRef={inputRef.total_harga}
+                      value={parseFloat(post.total_harga)}
                       disabled={true}
+                      thousandSeparator="."
                     />
                   </Grid.Column>
                 </Grid.Row>

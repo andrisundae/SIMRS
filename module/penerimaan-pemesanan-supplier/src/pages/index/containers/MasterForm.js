@@ -141,39 +141,36 @@ const MasterForm = ({ resource, focusElement, t }) => {
             <Grid.Column>
               <Grid>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="6" className="field">
                     <label>{trans('label.field.no_transaksi')}</label>
                   </Grid.Column>
-                  <Grid.Column width="6" className="field">
+                  <Grid.Column width="10" className="field">
                     <Input
                       name="no_transaksi"
                       ref={inputRef.no_transaksi}
                       value={initValue.nomor_transaksi || ''}
-                      disabled={true}
-                    />
-                  </Grid.Column>
-                  <Grid.Column width="6" className="left aligned">
-                    <Button
-                      ref={inputRef.cari_transaksi}
-                      name="cari_transaksi"
-                      size="mini"
-                      color="blue"
-                      onClick={() => onSearch('master_modal')}
                       disabled={
                         isDisableMaster ||
                         statusForm === masterActionTypes.FILLED
                       }
-                    >
-                      <Icon name="search" />
-                      {trans('label.btn.cari_transaksi')}
-                    </Button>
+                      readOnly={true}
+                      action={{
+                        icon: 'search',
+                        onClick: () => onSearch('master_modal'),
+                        color: 'blue',
+                        type: 'button',
+                        disabled:
+                          isDisableMaster ||
+                          statusForm === masterActionTypes.FILLED,
+                      }}
+                    />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="6" className="field">
                     <label>{trans('label.field.tanggal_transaksi')}</label>
                   </Grid.Column>
-                  <Grid.Column width="6" className="field">
+                  <Grid.Column width="10" className="field">
                     <Input
                       name="tanggal_transaksi"
                       ref={inputRef.tanggal_transaksi}
@@ -183,36 +180,36 @@ const MasterForm = ({ resource, focusElement, t }) => {
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="6" className="field">
                     <label>{trans('label.field.no_pemesanan')}</label>
                   </Grid.Column>
-                  <Grid.Column width="6" className="field">
+                  <Grid.Column width="10" className="field">
                     <Input
                       name="no_pemesanan"
                       ref={inputRef.no_pemesanan}
                       value={post.no_pemesanan || ''}
-                      disabled={true}
-                    />
-                  </Grid.Column>
-                  <Grid.Column width="6" className="left aligned">
-                    <Button
-                      ref={inputRef.cari_transaksi}
-                      name="cari_pemesanan"
-                      size="mini"
-                      color="blue"
-                      onClick={() => onSearch('pemesanan_modal')}
                       disabled={!isDisableMaster}
-                    >
-                      <Icon name="search" />
-                      {trans('label.btn.cari_pemesanan')}
-                    </Button>
+                      readOnly={true}
+                      action={{
+                        icon: 'search',
+                        type: 'button',
+                        onClick: () => onSearch('pemesanan_modal'),
+                        color: 'blue',
+                        disabled: !isDisableMaster,
+                      }}
+                      onKeyDown={(e) => {
+                        if ('Enter' === e.key) {
+                          onSearch('pemesanan_modal');
+                        }
+                      }}
+                    />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="6" className="field">
                     <label>{trans('label.field.tanggal_pemesanan')}</label>
                   </Grid.Column>
-                  <Grid.Column width="6" className="field">
+                  <Grid.Column width="10" className="field">
                     <Input
                       name="tanggal_pemesanan"
                       ref={inputRef.tanggal_pemesanan}

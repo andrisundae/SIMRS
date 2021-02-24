@@ -47,6 +47,10 @@ export const disableFormMaster = createSelector(masterState, (master) => {
 });
 
 export const postDetail = createSelector(detailState, (detail) => detail.post);
+export const afterDetail = createSelector(
+  detailState,
+  (detail) => detail.dataAfterSave
+);
 export const dataItemDetail = createSelector(
   detailState,
   (detail) => detail.data.item_list

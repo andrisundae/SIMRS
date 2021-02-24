@@ -29,6 +29,7 @@ import api, {
 import {
   cariPemsanan,
   afterMaster,
+  afterDetail,
   postDetail,
   postMaster,
   selectedData,
@@ -322,7 +323,7 @@ function* onReadyForm({ meta }) {
 }
 
 function* onActiveMaster({ meta }) {
-  yield put(masterActions.onFocusElement(meta.resource, 'cari_transaksi'));
+  yield put(masterActions.onFocusElement(meta.resource, 'no_pemesanan'));
   yield put(detailActions.onReset(meta.resource));
   yield put(
     datatableActions.onReload(
@@ -396,6 +397,8 @@ function* handleSaveDetail({ meta, payload }) {
       id: payload.data.id,
       id_barang: payload.data.id_barang,
       id_pembelian: afterSave.data.id,
+      nama_satuan_terkecil: payload.data.satuan_terkecil,
+      nama_barang: payload.data.nama_barang,
       no_batch: payload.data.no_batch,
       expired_date: dateFormatDB(payload.data.expired_date),
       jumlah_beli: payload.data.jumlah_terima,
@@ -555,6 +558,14 @@ function* resetFilterenData({ meta }) {
   );
 }
 
+function* selectActiveRow({ meta }) {
+  const afterSave = yield select(afterDetail);
+
+  if (meta.resource === tableName.DETAIL_LIST && afterSave.data) {
+    yield put(detailActions.onSelected(meta.resource, afterSave.data));
+  }
+}
+
 export default function* watchActions() {
   yield all([
     takeLatest(filterActionTypes.ON_SUBMIT_TRANSAKSI, onSeacrhTransaksi),
@@ -582,6 +593,7 @@ export default function* watchActions() {
     takeLatest(actionTypes.SELECTED_DATA, selectItemPemesanan),
     takeLatest(actionTypes.SET_PEMESANAN, onFocusFactur),
     takeLatest(actionTypes.SET_ITEM_PEMESANAN, setItemPemesanan),
+    takeLatest(datatableActionTypes.RELOADED, selectActiveRow),
 
     takeLatest(detailActionTypes.GET_DETAIL_REQUEST, loadAllDetail),
     takeLatest(detailActionTypes.EDIT, onFoucusNoBatch),
