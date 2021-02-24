@@ -27,6 +27,7 @@ export default function Main() {
           status:
             '/pengkajian-khusus/screening-downe-score/add' ===
               location.pathname && 'add' === lastPathname,
+          path: '/add',
           component: <Add />,
         };
 
@@ -35,6 +36,7 @@ export default function Main() {
           status:
             '/pengkajian-khusus/screening-downe-score/ubah-kelahiran' ===
               location.pathname && 'ubah-kelahiran' === lastPathname,
+          path: '/ubah-kelahiran',
           component: <UbahKelahiran />,
         };
 
@@ -43,12 +45,14 @@ export default function Main() {
           status:
             '/pengkajian-khusus/screening-downe-score/add-riwayat' ===
               location.pathname && 'add-riwayat' === lastPathname,
+          path: '/add-riwayat',
           component: <AddRiwayat />,
         };
 
       default:
         return {
           status: false,
+          path: '/',
           component: null,
         };
     }
@@ -72,11 +76,7 @@ export default function Main() {
             history.goBack();
           }}
         >
-          <Route path="/add">{checkPathname(lastPathname).component}</Route>
-          <Route path="/ubah-kelahiran">
-            {checkPathname(lastPathname).component}
-          </Route>
-          <Route path="/add-riwayat">
+          <Route path={checkPathname(lastPathname).path}>
             {checkPathname(lastPathname).component}
           </Route>
         </Modal>

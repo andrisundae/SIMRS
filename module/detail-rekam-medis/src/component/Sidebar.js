@@ -321,7 +321,7 @@ export default function SidebarMenu({ type }) {
         </Dropdown>
         <Menu.Item
           as={Link}
-          to="/detail-rekam-medis/umum"
+          to="/detail-rekam-medis/umum/resep"
           className={'resep' === currentMenu ? 'bg-blue-200' : ''}
         >
           <Icon name="sticky note outline" className="float-left ml-0 mr-1" />{' '}
@@ -329,7 +329,7 @@ export default function SidebarMenu({ type }) {
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/detail-rekam-medis/umum"
+          to="/detail-rekam-medis/umum/cppt"
           className={'cppt' === currentMenu ? 'bg-blue-200' : ''}
         >
           <Icon name="list" className="float-left ml-0 mr-1" /> CPPT
@@ -389,6 +389,19 @@ export default function SidebarMenu({ type }) {
             />
           </Dropdown.Menu>
         </Dropdown>
+        <Menu.Item
+          as={Link}
+          to="/detail-rekam-medis/umum/pemeriksaan-penunjang"
+          className={
+            'pemeriksaan-penunjang' === currentMenu ? 'bg-blue-200' : ''
+          }
+        >
+          <Icon
+            name="file alternate outline"
+            className="float-left ml-0 mr-1"
+          />{' '}
+          Pemeriksaan Penunjang
+        </Menu.Item>
       </Menu>
     </div>
   );

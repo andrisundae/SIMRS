@@ -24,7 +24,7 @@ export default function Index() {
 
   function renderCellKelahiranData() {
     return (
-      <Table>
+      <Table celled compact size="small">
         <Table.Body>
           <Table.Row>
             <Table.Cell colSpan={2}>

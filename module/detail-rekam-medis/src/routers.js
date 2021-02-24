@@ -141,4 +141,19 @@ export default [
     path: '/kerja-sama-medis/delegasi-tugas/permintaan',
     component: lazy(() => import('@module/delegasi-tugas/src/permintaan')),
   },
+  {
+    key: '_pemeriksaan_penunjang',
+    path: '/pemeriksaan-penunjang',
+    component: lazy(() => import('@module/pemeriksaan-penunjang')),
+  },
+  {
+    key: '_cppt',
+    path: '/cppt',
+    component: lazy(() => import('@module/cppt')),
+  },
+  {
+    key: '_resep',
+    path: '/resep',
+    component: lazy(() => import('@module/resep')),
+  },
 ];
