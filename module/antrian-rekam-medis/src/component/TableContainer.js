@@ -21,9 +21,9 @@ export default function TableContainer({
     height === 'auto' ? height : parseInt(height, 10)
   );
   const [divMaxHeight, setDivMaxHeight] = useState(
-    maxHeight === 'auto'
-      ? maxHeight
-      : maxHeight.constructor === String
+    maxHeight === 'auto' ||
+      maxHeight === 'screen-height' ||
+      -1 < maxHeight.indexOf('%')
       ? maxHeight
       : parseInt(maxHeight, 10)
   );

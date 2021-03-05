@@ -192,7 +192,7 @@ export default function Add() {
         open={isModalOpen}
         onClose={() => handleModal()}
       >
-        <Modal.Header>Pilih {modalType}</Modal.Header>
+        <Modal.Header className="text-xl">Pilih {modalType}</Modal.Header>
         <Modal.Content>{renderModalContent()}</Modal.Content>
         <Modal.Actions>
           <Button onClick={() => handleModal()}>

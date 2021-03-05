@@ -10,33 +10,33 @@ import { Modal } from 'semantic-ui-react';
 import LoaderWithNoDimmer from '@simrs/rekam-medis/src/component/LoaderWithNoDimmer';
 import _ from 'lodash';
 
-const Index = lazy(() => import('../component/pemenuhan/Index'));
-const IsiHasil = lazy(() => import('../component/pemenuhan/IsiHasil'));
-const HasilKonsul = lazy(() => import('../component/pemenuhan/HasilKonsul'));
+const Index = lazy(() => import('./page/Index'));
+const Add = lazy(() => import('./page/Add'));
+const Detail = lazy(() => import('./page/Detail'));
 
-export default function Permintaan() {
+export default function Main() {
   const history = useHistory();
   const location = useLocation();
   const lastPathname = _.last(_.split(location.pathname, '/'));
 
   function checkPathname(type) {
     switch (type) {
-      case 'isi-hasil':
+      case 'add':
         return {
           status:
-            '/konsul-dokter/pemenuhan/isi-hasil' === location.pathname &&
-            'isi-hasil' === lastPathname,
-          path: '/konsul-dokter/pemenuhan/isi-hasil',
-          component: <IsiHasil />,
+            '/pemeriksaan-penunjang/add' === location.pathname &&
+            'add' === lastPathname,
+          path: '/pemeriksaan-penunjang/add',
+          component: <Add />,
         };
 
-      case 'hasil-konsul':
+      case 'detail':
         return {
           status:
-            '/konsul-dokter/pemenuhan/hasil-konsul' === location.pathname &&
-            'hasil-konsul' === lastPathname,
-          path: '/konsul-dokter/pemenuhan/hasil-konsul',
-          component: <HasilKonsul />,
+            '/pemeriksaan-penunjang/detail' === location.pathname &&
+            'detail' === lastPathname,
+          path: '/pemeriksaan-penunjang/detail',
+          component: <Detail />,
         };
 
       default:
@@ -52,7 +52,7 @@ export default function Permintaan() {
     <Suspense fallback={<LoaderWithNoDimmer />}>
       {/* <Switch> */}
       <Route path="/">
-        <Index />
+        <Index withAdd={true} />
       </Route>
 
       <Modal
