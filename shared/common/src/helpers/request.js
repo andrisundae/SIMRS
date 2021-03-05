@@ -39,9 +39,7 @@ const get = async (path, data) => {
   const defaultSearchParams = new URLSearchParams();
   if (data) {
     Object.keys(data).forEach(function (key) {
-      if (data[key]) {
-        defaultSearchParams.set(key, data[key]);
-      }
+      defaultSearchParams.set(key, data[key]);
     }, this);
   }
 
