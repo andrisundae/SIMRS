@@ -1,14 +1,14 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Form, Grid, Input, Segment } from 'semantic-ui-react';
 import { DatePicker, useModuleTrans, CurrencyInput } from '@simrs/components';
-// import CariDetail from '../components/CariDetail';
 
 import {
   initMaster,
   postDetail,
+  postMaster,
   focusElementMaster,
   statusFormMaster,
   disableFormDetail,
@@ -17,8 +17,6 @@ import {
 
 import {
   detailActions,
-  // isDisableForm,
-  // isDisableFormDetail,
   filterActions,
   masterActionTypes,
 } from '@simrs/main/src/modules/transaksi/farmasi';
@@ -32,6 +30,7 @@ const DetailForm = ({ resource, focusElement, t }) => {
   const trans = useModuleTrans();
 
   const post = useSelector((state) => postDetail(state));
+  const postMas = useSelector((state) => postMaster(state));
   const isDisableDetail = useSelector((state) => disableFormDetail(state));
   const isShown = useSelector((state) => showDialogItem(state));
 
@@ -39,8 +38,6 @@ const DetailForm = ({ resource, focusElement, t }) => {
     kode_barang: React.useRef(),
     nama_barang: React.useRef(),
     satuan_terkecil: React.useRef(),
-    jumlah_pesan: React.useRef(),
-    jumlah_terima_sbl: React.useRef(),
     no_batch: React.useRef(),
     expired_date: React.useRef(),
     jumlah_terima: React.useRef(),
@@ -73,6 +70,12 @@ const DetailForm = ({ resource, focusElement, t }) => {
     }
   }, [focusElement]);
 
+  useEffect(() => {
+    dispatch(
+      localAction.countAll(resource, { post, hitungPPN: postMas.hitung_ppn })
+    );
+  }, [post.jumlah_terima, post.harga_satuan, post.diskon, post.diskon_rp]);
+
   const isDisabledINput = () => {
     let disabled = !isDisableDetail;
 
@@ -85,6 +88,7 @@ const DetailForm = ({ resource, focusElement, t }) => {
 
   const onChangeInputHandler = (e) => {
     const { value, name } = e.target;
+
     dispatch(detailActions.onChangeInput(resource, { value, name }));
   };
 
@@ -176,36 +180,6 @@ const DetailForm = ({ resource, focusElement, t }) => {
                 </Grid.Row>
                 <Grid.Row className="form-row">
                   <Grid.Column width="6" className="field">
-                    <label>{trans('label.field.jumlah_pesan')}</label>
-                  </Grid.Column>
-                  <Grid.Column width="10" className="field">
-                    <Input
-                      name="jumlah_pesan"
-                      ref={inputRef.jumlah_pesan}
-                      value={post.jumlah_pesan || ''}
-                      disabled={true}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row className="form-row">
-                  <Grid.Column width="6" className="field">
-                    <label>{trans('label.field.jumlah_terima_sbl')}</label>
-                  </Grid.Column>
-                  <Grid.Column width="10" className="field">
-                    <Input
-                      name="jumlah_terima_sbl"
-                      ref={inputRef.jumlah_terima_sbl}
-                      value={post.jumlah_terima_sbl || '0'}
-                      disabled={true}
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Grid.Column>
-            <Grid.Column>
-              <Grid>
-                <Grid.Row className="form-row">
-                  <Grid.Column width="6" className="field">
                     <label>{trans('label.field.no_batch')}</label>
                   </Grid.Column>
                   <Grid.Column width="10" className="field">
@@ -219,6 +193,10 @@ const DetailForm = ({ resource, focusElement, t }) => {
                     />
                   </Grid.Column>
                 </Grid.Row>
+              </Grid>
+            </Grid.Column>
+            <Grid.Column>
+              <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="6" className="field">
                     <label>{trans('label.field.expired_date')}</label>

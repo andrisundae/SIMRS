@@ -58,6 +58,11 @@ const routers = [
       import('@module/transaksi-penerimaan-pemesanan-supplier')
     ),
   },
+  {
+    key: '_farmasi_transaksi_sub_pembelian',
+    path: '/farmasi/transaksi/sub-pembelian',
+    component: lazy(() => import('@module/transaksi-pembelian-barang')),
+  },
 ];
 
 export default routers;

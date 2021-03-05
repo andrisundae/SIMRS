@@ -61,7 +61,6 @@ class DetailList extends Component {
           }
           break;
         case detailActionTypes.READY:
-          console.log('ready');
           if (prevProps.selectedRow) {
             this._selectRow(prevProps.selectedRow);
           } else {

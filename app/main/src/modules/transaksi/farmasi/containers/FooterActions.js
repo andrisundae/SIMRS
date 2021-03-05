@@ -566,16 +566,18 @@ class FooterActions extends Component {
   }
 
   _onSelesaiTransaksi() {
-    const { post, data_detail, action, resource, t } = this.props;
+    const { post, data_detail, action, resource, t, appActions } = this.props;
     confirmation({
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
       buttons: [t(`common:dialog.action.yes`), t(`common:dialog.action.no`)],
-      onOk: () =>
+      onOk: () => {
         action.onFinish(resource, {
           master: post.id,
           details: data_detail.item_list,
-        }),
+        });
+        appActions.activateMainMenu();
+      },
     });
   }
 

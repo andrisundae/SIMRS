@@ -75,10 +75,6 @@ export const cariDetail = createSelector(
   filterState,
   (filter) => filter.cari_detail
 );
-export const cariPemsanan = createSelector(
-  filterState,
-  (filter) => filter.cari_pemesanan
-);
 export const focusElementFilter = createSelector(
   filterState,
   (filter) => filter.focusElement
@@ -90,14 +86,6 @@ export const showDialogTransaksi = createSelector(
 export const showDialogItem = createSelector(
   filterState,
   (filter) => filter.filter_modal.detail_modal.show
-);
-export const showDialogPemesanan = createSelector(
-  filterState,
-  (filter) => filter.filter_modal.pemesanan_modal.show
-);
-export const optionFilterPemesanan = createSelector(
-  filterState,
-  (filter) => filter.data.initial.option_filter_pemesanan
 );
 export const optionFilterTransaksi = createSelector(
   filterState,
