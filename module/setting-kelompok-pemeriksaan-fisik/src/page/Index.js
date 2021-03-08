@@ -30,6 +30,7 @@ import {
   deleteSettingKelompokPemeriksaanFisik,
 } from '@simrs/rekam-medis/src/fetcher/settingKelompokPemeriksaanFisik';
 import { confirmation } from '@simrs/components/src/dialog/index';
+import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
 
 function searchUnitLayanan(unitLayanans, filter) {
   return unitLayanans.filter((unitLayanan) => {
@@ -52,6 +53,11 @@ export default function Index({ t }) {
 
   const [unconfiguredTableReady, setUnconfiguredTableReady] = useState(false);
   const [configuredTableReady, setConfiguredTableReady] = useState(false);
+
+  const [unconfiguredSelectedIndex, setUnconfiguredSelectedIndex] = useState(
+    -1
+  );
+  const [configuredSelectedIndex, setConfiguredSelectedIndex] = useState(-1);
 
   const {
     idKelompokPemeriksaanFisik,
@@ -135,7 +141,7 @@ export default function Index({ t }) {
   const unconfiguredDatasource = useMemo(() => {
     const settingKelompokPemeriksaanFisiks =
       config.setting_kelompok_pemeriksaan_fisiks;
-    const unitLayananFiltered = unitLayanans.filter(
+    let unitLayananFiltereds = unitLayanans.filter(
       (unitLayanan) =>
         undefined ===
         settingKelompokPemeriksaanFisiks.find(
@@ -145,17 +151,33 @@ export default function Index({ t }) {
         )
     );
 
+    if (undefined !== config.deleted_setting_kelompok_pemeriksaan_fisiks) {
+      unitLayananFiltereds = unitLayananFiltereds.map((unitLayanan) => {
+        if (
+          undefined !==
+          config.deleted_setting_kelompok_pemeriksaan_fisiks.find(
+            (settingKelompokPemeriksaanFisik) =>
+              settingKelompokPemeriksaanFisik.id_unit_layanan ===
+              unitLayanan.id_unit_layanan
+          )
+        ) {
+          return { ...unitLayanan, id: null };
+        }
+        return unitLayanan;
+      });
+    }
+
     if (unconfiguredKeyword) {
       return _.sortBy(
         searchUnitLayanan(
-          unitLayananFiltered,
+          unitLayananFiltereds,
           unconfiguredKeyword.toLowerCase()
         ),
         ['instalasi', 'unit_layanan']
       );
     }
 
-    return _.sortBy(unitLayananFiltered, ['instalasi', 'unit_layanan']);
+    return _.sortBy(unitLayananFiltereds, ['instalasi', 'unit_layanan']);
   }, [
     unitLayanans,
     config.setting_kelompok_pemeriksaan_fisiks,
@@ -165,7 +187,7 @@ export default function Index({ t }) {
   const configuredDatasource = useMemo(() => {
     const settingKelompokPemeriksaanFisiks =
       config.setting_kelompok_pemeriksaan_fisiks;
-    const unitLayananFiltered = settingKelompokPemeriksaanFisiks.map(
+    const unitLayananFiltereds = settingKelompokPemeriksaanFisiks.map(
       (settingKelompokPemeriksaanFisik) => {
         const unitLayanan = unitLayanans.find(
           (unitLayanan) =>
@@ -181,12 +203,15 @@ export default function Index({ t }) {
 
     if (configuredKeyword) {
       return _.sortBy(
-        searchUnitLayanan(unitLayananFiltered, configuredKeyword.toLowerCase()),
+        searchUnitLayanan(
+          unitLayananFiltereds,
+          configuredKeyword.toLowerCase()
+        ),
         ['instalasi', 'unit_layanan']
       );
     }
 
-    return _.sortBy(unitLayananFiltered, ['instalasi', 'unit_layanan']);
+    return _.sortBy(unitLayananFiltereds, ['instalasi', 'unit_layanan']);
   }, [
     unitLayanans,
     config.setting_kelompok_pemeriksaan_fisiks,
@@ -262,18 +287,58 @@ export default function Index({ t }) {
   ]);
 
   useEffect(() => {
-    Mousetrap.bind('alt+1', () => {
-      sc1.current.handleClick();
-    });
-    Mousetrap.bind('alt+2', () => {
-      sc2.current.handleClick();
-    });
-    Mousetrap.bind('alt+3', () => {
-      sc3.current.handleClick();
-    });
-    Mousetrap.bind('alt+4', () => {
-      sc4.current.handleClick();
-    });
+    if (-1 < unconfiguredSelectedIndex && unconfiguredTable.current) {
+      const gridApi = unconfiguredTable.current.gridApi;
+      const selectedNodes = gridApi.getSelectedNodes();
+      if (
+        0 === selectedNodes.length ||
+        (0 < selectedNodes.length &&
+          selectedNodes[0].rowIndex !== unconfiguredSelectedIndex)
+      ) {
+        gridApi.forEachNode((node, index) => {
+          node.setSelected(unconfiguredSelectedIndex === index);
+        });
+      }
+    }
+  }, [unconfiguredSelectedIndex]);
+  useEffect(() => {
+    if (-1 < configuredSelectedIndex && configuredTable.current) {
+      const gridApi = configuredTable.current.gridApi;
+      const selectedNodes = gridApi.getSelectedNodes();
+      if (
+        0 === selectedNodes.length ||
+        (0 < selectedNodes.length &&
+          selectedNodes[0].rowIndex !== configuredSelectedIndex)
+      ) {
+        configuredTable.current.gridApi.forEachNode((node, index) => {
+          node.setSelected(configuredSelectedIndex === index);
+        });
+      }
+    }
+  }, [configuredSelectedIndex]);
+
+  useEffect(() => {
+    if (isDesktop) {
+      const key = process.platform === 'darwin' ? 'ctrl' : 'alt';
+      Mousetrap.bind(`${key}+1`, () => {
+        sc1.current.handleClick();
+      });
+      Mousetrap.bind(`${key}+2`, () => {
+        sc2.current.handleClick();
+      });
+      Mousetrap.bind(`${key}+3`, () => {
+        sc3.current.handleClick();
+      });
+      Mousetrap.bind(`${key}+4`, () => {
+        sc4.current.handleClick();
+      });
+      return () => {
+        Mousetrap.unbind(`${key}+1`);
+        Mousetrap.unbind(`${key}+2`);
+        Mousetrap.unbind(`${key}+3`);
+        Mousetrap.unbind(`${key}+4`);
+      };
+    }
   }, []);
 
   return (
@@ -321,6 +386,7 @@ export default function Index({ t }) {
           <div className="flex">
             <div className="flex-auto">
               <Input
+                input={<input type="text" className="mousetrap" />}
                 fluid
                 icon="search"
                 iconPosition="left"
@@ -328,17 +394,58 @@ export default function Index({ t }) {
                 onChange={(e) => {
                   dispatch(unconfiguredKeywordChange(e.target.value));
                 }}
+                onKeyDown={(e) => {
+                  if (0 < unconfiguredDatasource.length) {
+                    if ('ArrowDown' === e.key) {
+                      e.preventDefault();
+                      if (
+                        unconfiguredSelectedIndex <
+                        unconfiguredDatasource.length - 1
+                      ) {
+                        setUnconfiguredSelectedIndex(
+                          unconfiguredSelectedIndex + 1
+                        );
+                      }
+                    } else if ('ArrowUp' === e.key) {
+                      e.preventDefault();
+                      if (0 < unconfiguredSelectedIndex) {
+                        setUnconfiguredSelectedIndex(
+                          unconfiguredSelectedIndex - 1
+                        );
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div className="w-40"></div>
             <div className="flex-auto">
               <Input
+                input={<input type="text" className="mousetrap" />}
                 fluid
                 icon="search"
                 iconPosition="left"
                 value={configuredKeyword}
                 onChange={(e) => {
                   dispatch(configuredKeywordChange(e.target.value));
+                }}
+                onKeyDown={(e) => {
+                  if (0 < configuredDatasource.length) {
+                    if ('ArrowDown' === e.key) {
+                      e.preventDefault();
+                      if (
+                        configuredSelectedIndex <
+                        configuredDatasource.length - 1
+                      ) {
+                        setConfiguredSelectedIndex(configuredSelectedIndex + 1);
+                      }
+                    } else if ('ArrowUp' === e.key) {
+                      e.preventDefault();
+                      if (0 < configuredSelectedIndex) {
+                        setConfiguredSelectedIndex(configuredSelectedIndex - 1);
+                      }
+                    }
+                  }
                 }}
               />
             </div>
@@ -360,6 +467,18 @@ export default function Index({ t }) {
               rowBuffer={0}
               navigateToSelect={true}
               getRowNodeId={unconfiguredTableGetRowId}
+              getRowStyle={(param) => {
+                if (param.data && null === param.data.id) {
+                  return { opacity: 0.5 };
+                }
+              }}
+              onSelectionChanged={() => {
+                const rowIndex = unconfiguredTable.current.gridApi.getSelectedNodes()[0]
+                  .rowIndex;
+                if (rowIndex !== unconfiguredSelectedIndex) {
+                  setUnconfiguredSelectedIndex(rowIndex);
+                }
+              }}
             />
           </div>
           <div className="w-40 text-center">
@@ -437,7 +556,7 @@ export default function Index({ t }) {
                         false
                       );
 
-                      const idUnitLayanans = unconfigureds.map(
+                      const idUnitLayanans = unconfiguredDatasource.map(
                         (unconfigured) => unconfigured.id_unit_layanan
                       );
                       const response = await insertSettingKelompokPemeriksaanFisik(
@@ -474,11 +593,17 @@ export default function Index({ t }) {
                       onOk: async () => {
                         mutateConfig(
                           produce(config, (draft) => {
+                            draft.deleted_setting_kelompok_pemeriksaan_fisiks = [];
                             configureds.forEach((configured) => {
                               const selectedIndex = draft.setting_kelompok_pemeriksaan_fisiks.findIndex(
                                 (settingKelompokPemeriksaanFisik) =>
                                   settingKelompokPemeriksaanFisik.id ===
                                   configured.id
+                              );
+                              draft.deleted_setting_kelompok_pemeriksaan_fisiks.push(
+                                draft.setting_kelompok_pemeriksaan_fisiks[
+                                  selectedIndex
+                                ]
                               );
                               draft.setting_kelompok_pemeriksaan_fisiks.splice(
                                 selectedIndex,
@@ -519,6 +644,8 @@ export default function Index({ t }) {
                     onOk: async () => {
                       mutateConfig(
                         produce(config, (draft) => {
+                          draft.deleted_setting_kelompok_pemeriksaan_fisiks =
+                            draft.setting_kelompok_pemeriksaan_fisiks;
                           draft.setting_kelompok_pemeriksaan_fisiks = [];
                         }),
                         false
@@ -561,7 +688,14 @@ export default function Index({ t }) {
               getRowNodeId={configuredTableGetRowId}
               getRowStyle={(param) => {
                 if (param.data && null === param.data.id) {
-                  return { background: '#8DF793' };
+                  return { opacity: 0.5 };
+                }
+              }}
+              onSelectionChanged={() => {
+                const rowIndex = configuredTable.current.gridApi.getSelectedNodes()[0]
+                  .rowIndex;
+                if (rowIndex !== configuredSelectedIndex) {
+                  setConfiguredSelectedIndex(rowIndex);
                 }
               }}
             />
