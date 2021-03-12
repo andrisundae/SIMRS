@@ -2,11 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Header, Grid, Form, Input, Segment, Divider, Placeholder } from 'semantic-ui-react';
+import { Header, Grid, Form, Segment, Placeholder } from 'semantic-ui-react';
 
-import {
-  Select
-} from '@simrs/components';
 import CustomInput from '../components/CustomInput';
 import actions from '../actions';
 import selectors from '../selectors';
@@ -21,8 +18,8 @@ const CardPlaceholder = () => (
           <Placeholder.Line />
         </Placeholder.Header>
         <Placeholder.Paragraph>
-          <Placeholder.Line length='medium' />
-          <Placeholder.Line length='short' />
+          <Placeholder.Line length="medium" />
+          <Placeholder.Line length="short" />
         </Placeholder.Paragraph>
       </Placeholder>
     </Segment>
@@ -30,7 +27,8 @@ const CardPlaceholder = () => (
 );
 
 const Loader = () => (
-  <Grid columns={2} stackable>
+  <Grid columns={3} stackable>
+    <CardPlaceholder />
     <CardPlaceholder />
     <CardPlaceholder />
   </Grid>
@@ -59,103 +57,77 @@ class Create extends Component {
       name,
       value: selected.value,
       indexKelompok,
-      indexAturan
+      indexAturan,
     });
-  }
+  };
 
   _renderFormElements(indexKelompok, daftarAturan) {
     if (!daftarAturan) {
       return null;
     }
 
-    return (
-      daftarAturan.map((aturan, key) => {
-        const nextElement = this.getNextElement(indexKelompok, key);
-        let inputProps = {
-          onKeyDown: (e) => this._onFocusElement(e, nextElement),
-          onChange: (e) => this._handleInputChange(e, indexKelompok, key),
-          disabled: this.props.isDisableForm,
-          name: aturan.aturan
-        };
-        switch (aturan.tipe_element) {
-          case elementType.COMBOBOX: {
-            inputProps = {
-              ...inputProps,
-              options: aturan.pilihan_nilai.map(option => {
-                option.label = option.value;
-                return option
-              }),
-              onChange: (selected) => this.handleSelectedChange(selected, aturan.aturan, indexKelompok, key),
-              inputRef: (e) => this[aturan.aturan] = e,
-              value: { label: aturan.nilai, value: aturan.nilai },
-              isDisabled: this.props.isDisableForm,
-              isClearable: false
-            }
+    return daftarAturan.map((aturan, key) => {
+      const nextElement = this.getNextElement(indexKelompok, key);
+      let inputProps = {
+        onKeyDown: (e) => this._onFocusElement(e, nextElement),
+        onChange: (e) => this._handleInputChange(e, indexKelompok, key),
+        disabled: this.props.isDisableForm,
+        name: aturan.aturan,
+      };
+      switch (aturan.tipe_element) {
+        case elementType.COMBOBOX: {
+          inputProps = {
+            ...inputProps,
+            options: aturan.pilihan_nilai.map((option) => {
+              option.label = option.value;
+              return option;
+            }),
+            onChange: (selected) =>
+              this.handleSelectedChange(
+                selected,
+                aturan.aturan,
+                indexKelompok,
+                key
+              ),
+            inputRef: (e) => (this[aturan.aturan] = e),
+            value: { label: aturan.nilai, value: aturan.nilai },
+            isDisabled: this.props.isDisableForm,
+            isClearable: false,
+          };
 
-            break;
-          }
-          case elementType.CHECKBOX: {
-            inputProps = {
-              ...inputProps,
-              inputRef: (e) => this[aturan.aturan] = e,
-              value: aturan.nilai,
-              checked: aturan.nilai === '1',
-              label: 'Ya',
-            }
-            break;
-          }
-
-          default: {
-            inputProps = {
-              ...inputProps,
-              value: aturan.nilai,
-              ref: (e) => this[aturan.aturan] = e,
-              type: aturan.is_angka === 0 ? 'text' : 'number'
-            };
-          }
+          break;
         }
-        return (
-          <Grid.Row className="form-row" key={key}>
-            <Grid.Column width="7" className="field">
-              <label>{aturan.label}</label>
-            </Grid.Column>
-            <Grid.Column width="9" className="field">
-              <CustomInput
-                {...inputProps}
-                elementType={aturan.tipe_element}
-              />
-              {/* {aturan.is_combo_box === 0 &&
-                <Input
-                  name={aturan.aturan}
-                  type={aturan.is_angka === 0 ? 'text' : 'number'}
-                  ref={(e) => this[aturan.aturan] = e}
-                  value={aturan.nilai}
-                  disabled={this.props.isDisableForm}
-                  onKeyDown={(e) => this._onFocusElement(e, nextElement)}
-                  onChange={(e) => this._handleInputChange(e, indexKelompok, key)}
-                />
-              }
+        case elementType.CHECKBOX: {
+          inputProps = {
+            ...inputProps,
+            inputRef: (e) => (this[aturan.aturan] = e),
+            value: aturan.nilai,
+            checked: aturan.nilai === '1',
+            label: 'Ya',
+          };
+          break;
+        }
 
-              {aturan.is_combo_box === 1 &&
-                <Select
-                  name={aturan.aturan}
-                  inputRef={(e) => this[aturan.aturan] = e}
-                  onChange={(selected) => this.handleSelectedChange(selected, aturan.aturan, indexKelompok, key)}
-                  value={{ label: aturan.nilai, value: aturan.nilai}}
-                  isDisabled={this.props.isDisableForm}
-                  isClearable={false}
-                  onKeyDown={(e) => this._onFocusElement(e, nextElement)}
-                  options={aturan.pilihan_nilai.map(option => {
-                    option.label = option.value;
-                    return option
-                  })}
-                />
-              } */}
-            </Grid.Column>
-          </Grid.Row>
-        )
-      })
-    )
+        default: {
+          inputProps = {
+            ...inputProps,
+            value: aturan.nilai,
+            ref: (e) => (this[aturan.aturan] = e),
+            type: aturan.is_angka === 0 ? 'text' : 'number',
+          };
+        }
+      }
+      return (
+        <Grid.Row className="form-row" key={key}>
+          <Grid.Column width="16" className="field">
+            <label>{aturan.label}</label>
+          </Grid.Column>
+          <Grid.Column width="16" className="field">
+            <CustomInput {...inputProps} elementType={aturan.tipe_element} />
+          </Grid.Column>
+        </Grid.Row>
+      );
+    });
   }
 
   _handleInputChange(e, indexKelompok, indexAturan) {
@@ -166,7 +138,12 @@ class Create extends Component {
     } else {
       val = value;
     }
-    this.props.action.onChangeInput(this.props.resource, { name, value: val, indexKelompok, indexAturan });
+    this.props.action.onChangeInput(this.props.resource, {
+      name,
+      value: val,
+      indexKelompok,
+      indexAturan,
+    });
   }
 
   _onFocusElement(e, name) {
@@ -177,56 +154,113 @@ class Create extends Component {
   }
 
   getNextElement = (indexKelompok, indexAturan) => {
-    const {post} = this.props;
+    const { post } = this.props;
     let nextElement = 'save';
     if (post.daftarKelompok[indexKelompok]) {
-      indexAturan+=1;
+      indexAturan += 1;
       if (post.daftarKelompok[indexKelompok].daftarAturan[indexAturan]) {
-        nextElement = post.daftarKelompok[indexKelompok].daftarAturan[indexAturan].aturan;
+        nextElement =
+          post.daftarKelompok[indexKelompok].daftarAturan[indexAturan].aturan;
       } else {
-        indexKelompok+=1;
+        indexKelompok += 1;
         indexAturan = 0;
         if (post.daftarKelompok[indexKelompok]) {
           if (post.daftarKelompok[indexKelompok].daftarAturan[indexAturan]) {
-            nextElement = post.daftarKelompok[indexKelompok].daftarAturan[indexAturan].aturan;
+            nextElement =
+              post.daftarKelompok[indexKelompok].daftarAturan[indexAturan]
+                .aturan;
           }
         }
       }
     }
 
     return nextElement;
-  }
+  };
 
   render() {
     const { post, loadingDetail } = this.props;
+    const column1 = post.daftarKelompok.filter(
+      (daftarKelompok, index) => 0 === index % 3
+    );
+    const column2 = post.daftarKelompok.filter(
+      (daftarKelompok, index) => 1 === index % 3
+    );
+    const column3 = post.daftarKelompok.filter(
+      (daftarKelompok, index) => 2 === index % 3
+    );
 
     return (
-      <Form size="mini">
+      <Form size="mini" style={{ marginBottom: 30 }}>
         {loadingDetail ? (
           <Loader />
         ) : (
-          <Grid columns="2">
+          <Grid columns="3">
             <Grid.Row>
-              {post.daftarKelompok.map((row, index) => {
-                return (
-                  <Grid.Column key={index}>
-                    <Divider fitted hidden />
-                    <Header as='h4' attached='top' style={{ marginTop: 10 }}>
-                      {row.label}
-                    </Header>
-                    <Segment attached>
-                      <Grid className="form-grid">
-                        {this._renderFormElements(index, row.daftarAturan)}
-                      </Grid>
-                    </Segment>
-                  </Grid.Column>
-                )
-              })}
+              <Grid.Column>
+                {column1.map((row, index) => {
+                  return (
+                    <Fragment>
+                      <Header
+                        as="h4"
+                        attached="top"
+                        style={{ marginTop: 0 < index ? 30 : 10 }}
+                      >
+                        {row.label}
+                      </Header>
+                      <Segment attached>
+                        <Grid className="form-grid">
+                          {this._renderFormElements(index, row.daftarAturan)}
+                        </Grid>
+                      </Segment>
+                    </Fragment>
+                  );
+                })}
+              </Grid.Column>
+              <Grid.Column>
+                {column2.map((row, index) => {
+                  return (
+                    <Fragment>
+                      <Header
+                        as="h4"
+                        attached="top"
+                        style={{ marginTop: 0 < index ? 30 : 10 }}
+                      >
+                        {row.label}
+                      </Header>
+                      <Segment attached>
+                        <Grid className="form-grid">
+                          {this._renderFormElements(index, row.daftarAturan)}
+                        </Grid>
+                      </Segment>
+                    </Fragment>
+                  );
+                })}
+              </Grid.Column>
+              <Grid.Column>
+                {column3.map((row, index) => {
+                  return (
+                    <Fragment>
+                      <Header
+                        as="h4"
+                        attached="top"
+                        style={{ marginTop: 0 < index ? 30 : 10 }}
+                      >
+                        {row.label}
+                      </Header>
+                      <Segment attached>
+                        <Grid className="form-grid">
+                          {this._renderFormElements(index, row.daftarAturan)}
+                        </Grid>
+                      </Segment>
+                    </Fragment>
+                  );
+                })}
+              </Grid.Column>
             </Grid.Row>
           </Grid>
         )}
       </Form>
-    )
+    );
   }
 }
 
@@ -240,15 +274,15 @@ const mapStateToProps = function (state) {
     data,
     isDisableForm: selectors.isDisableForm(state.module),
     isLoading: state.loader.count > 0,
-    loadingDetail
-  }
-}
+    loadingDetail,
+  };
+};
 
 const mapDispatchToProps = function (dispatch) {
   return {
     action: bindActionCreators(actions, dispatch),
-  }
-}
+  };
+};
 
 Create.propTypes = {
   action: PropTypes.object,
