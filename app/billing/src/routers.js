@@ -225,6 +225,11 @@ const routers = [
     path: '/billing/transaksi/konsul',
     component: lazy(() => import('@module/konsul')),
   },
+  {
+    key: '_billing_master_pasien',
+    path: '/billing/master/pasien',
+    component: lazy(() => import('@module/detail-pasien')),
+  },
 ];
 
 export default routers;

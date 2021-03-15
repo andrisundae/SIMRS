@@ -38,6 +38,12 @@ export const dateFormatClient = (date, format = 'DD/MM/YYYY HH:mm') => {
   return newDate.isValid() ? newDate.format(format) : date;
 };
 
+export const parseToDate = (date) => {
+  const newDate = dayjs(date);
+
+  return newDate.isValid() ? newDate.toDate() : date;
+};
+
 export const currency = (nominal, format = '(0,0.00)') => {
   nominal = _.replace(nominal.toString(), '.', ',');
   return numeral(nominal).format(format);
@@ -63,7 +69,7 @@ export const textSplitter = (text, splitter = '.', len = 2) => {
   return joinText;
 };
 
-export const displayAge = (tglMulai, tglSelesai) => {
+export const displayAge = (tglMulai, tglSelesai, isJustYear = false) => {
   const start = dayjs(tglMulai);
   const end = dayjs(tglSelesai);
 
@@ -72,6 +78,11 @@ export const displayAge = (tglMulai, tglSelesai) => {
   }
 
   const years = end.diff(start, 'year');
+
+  if (isJustYear) {
+    return years;
+  }
+
   const start1 = start.add(years, 'years');
 
   const months = end.diff(start1, 'months');

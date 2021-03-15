@@ -1,0 +1,57 @@
+.content-grid #form-detail-pasien .row {
+  padding-top: 5px !important;
+}
+
+#form-detail-pasien .field > label {
+  font-size: 12px !important;
+}
+
+#form-detail-pasien .column.field {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+#form-detail-pasien .ui .input input,
+#form-detail-pasien .react-datepicker__input-container input,
+#form-detail-pasien .react-select__control {
+  height: 23px !important;
+  font-size: 10px !important;
+}
+
+#form-detail-pasien .react-select__option-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#form-detail-pasien .react-select__option-caption {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgb(59, 59, 59);
+}
+
+#form-detail-pasien .react-select__menu {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+#form-detail-pasien .react-select__placeholder,
+.react-select__single-value {
+  top: 10px !important;
+  /* vertical-align: middle !important; */
+}
+
+#form-detail-pasien .react-select__indicator-separator {
+  /* margin-top: 4px !important; */
+  margin-bottom: 7px !important;
+  margin-top: 0px !important;
+}
+
+#form-detail-pasien .react-select__dropdown-indicator,
+.react-select__clear-indicator {
+  padding-top: 0px !important;
+}
+
+#form-detail-pasien .ui.action.input button {
+  height: 23px !important;
+  font-size: 10px !important;
+}
