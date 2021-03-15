@@ -185,7 +185,7 @@ const FormKonsul = ({
               </Divider>
               <Grid>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('tgl_mrs'))}</label>
                   </Grid.Column>
                   <Grid.Column width="4" className="field">
@@ -217,10 +217,10 @@ const FormKonsul = ({
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('kelompok'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="12" className="field">
+                  <Grid.Column width="11" className="field">
                     <Select
                       options={dataForm.kelompok}
                       name="id_kelompok"
@@ -236,10 +236,10 @@ const FormKonsul = ({
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('instalasi'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="12" className="field">
+                  <Grid.Column width="11" className="field">
                     <Select
                       options={dataForm.instalasi}
                       name="id_instalasi"
@@ -256,10 +256,10 @@ const FormKonsul = ({
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('unit_layanan'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="12" className="field">
+                  <Grid.Column width="11" className="field">
                     <Select
                       options={dataForm.unitLayanan}
                       name="id_unit_layanan"
@@ -275,18 +275,18 @@ const FormKonsul = ({
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('kelas'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="12" className="field">
+                  <Grid.Column width="11" className="field">
                     <Input name="id_kelas" disabled value={data.nama_kelas} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="4" className="field">
+                  <Grid.Column width="5" className="field">
                     <label>{t(getKey('administrasi_konsul'))}</label>
                   </Grid.Column>
-                  <Grid.Column width="12" className="field">
+                  <Grid.Column width="11" className="field">
                     <Select
                       options={dataForm.administrasiKonsul}
                       name="id_tindakan"

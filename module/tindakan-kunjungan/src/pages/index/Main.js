@@ -39,19 +39,19 @@ const Main = (props) => {
     return `${props.resource}:${key}`;
   };
 
-  const renderDetailUnitLayanan = () => {
-    if (!post.id) {
-      return null;
-    }
+  // const renderDetailUnitLayanan = () => {
+  //   if (!post.id) {
+  //     return null;
+  //   }
 
-    return (
-      <Header as="h5">
-        {`${props.t(getKey('jenis_layanan'))} : ${
-          post.nama_instalasi
-        }, ${props.t(getKey('unit_layanan'))} : ${post.nama_unit_layanan}`}
-      </Header>
-    );
-  };
+  //   return (
+  //     <Header as="h5">
+  //       {`${props.t(getKey('jenis_layanan'))} : ${
+  //         post.nama_instalasi
+  //       }, ${props.t(getKey('unit_layanan'))} : ${post.nama_unit_layanan}`}
+  //     </Header>
+  //   );
+  // };
   const renderDetailStatusPasien = () => {
     if (!post.id) {
       return null;
@@ -59,9 +59,9 @@ const Main = (props) => {
 
     let desc = '';
     if (post.id_penjamin === staticConst.ID_PENJAMIN_UMUM) {
-      desc = `Pasien ${post.nama_status_pasien}, Kelas RS ${post.nama_kelas}`;
+      desc = `${post.nama_status_pasien}, Kelas RS ${post.nama_kelas}`;
     } else {
-      desc = `Pasien ${post.nama_status_pasien} Hak Kelas ${post.nama_hak_kelas} | Kelas RS ${post.nama_kelas}`;
+      desc = `${post.nama_status_pasien} Hak Kelas ${post.nama_hak_kelas} | Kelas RS ${post.nama_kelas}`;
     }
 
     return <Header as="h5">{desc}</Header>;

@@ -32,6 +32,7 @@ class FooterActions extends Component {
     this.delete = createRef();
     this.cancel = createRef();
     this.save = createRef();
+    this.finish = createRef();
   }
 
   componentDidMount() {

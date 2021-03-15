@@ -403,7 +403,7 @@ class InputPasien extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
-              <Grid.Row className="form-row" style={{ paddingRight: 5 }}>
+              <Grid.Row className="form-row">
                 <Grid.Column width="4" className="field">
                   <label>{t(this._getKey('label.field.jalan_dusun'))}</label>
                 </Grid.Column>
@@ -418,8 +418,9 @@ class InputPasien extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
-              <Grid.Row className="form-row" style={{ paddingRight: 5 }}>
-                <Grid.Column width="4" className="field">
+              <Grid.Row className="form-row">
+                <Grid.Column width="4" className="field" />
+                <Grid.Column width="2" className="field">
                   <label>{t(this._getKey('label.field.rt'))}</label>
                 </Grid.Column>
                 <Grid.Column width="4" className="field">
@@ -432,7 +433,7 @@ class InputPasien extends Component {
                     value={post.rt}
                   />
                 </Grid.Column>
-                <Grid.Column width="4" className="field">
+                <Grid.Column width="2" className="field">
                   <label>{t(this._getKey('label.field.rw'))}</label>
                 </Grid.Column>
                 <Grid.Column width="4" className="field">
@@ -459,6 +460,7 @@ class InputPasien extends Component {
                       onClick: () => action.toggleShowCariWilayah(resource),
                       disabled: disabledDetail,
                       color: 'blue',
+                      type: 'button',
                     }}
                     disabled={disabledDetail}
                     value={post.nama_desa}

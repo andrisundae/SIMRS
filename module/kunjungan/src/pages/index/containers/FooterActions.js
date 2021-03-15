@@ -295,13 +295,6 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <PrintButton
-              onClick={this.props.action.onToggleShowNorm}
-              // inputRef={this.cancel}
-              // onKeyDown={this._onFocusElement}
-            />
-          </Menu.Item>
         </Fragment>
       </FooterActionsContainer>
     );

@@ -192,10 +192,10 @@ class Create extends Component {
               <Grid.Column>
                 <Grid>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="3" className="field">
+                    <Grid.Column width="4" className="field">
                       <label>{t(this._getKey('label.field.norm'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="5" className="field">
+                    <Grid.Column width="4" className="field">
                       <Input
                         name="norm"
                         ref={this.norm}
@@ -209,12 +209,12 @@ class Create extends Component {
                         onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
-                    <Grid.Column width="3" className="field">
+                    <Grid.Column width="4" className="field">
                       <label>
                         {t(this._getKey('label.field.kode_kunjungan'))}
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="5" className="field">
+                    <Grid.Column width="4" className="field">
                       <Input
                         name="kode_kunjungan"
                         ref={this.kode_kunjungan}
@@ -223,10 +223,10 @@ class Create extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="3" className="field">
+                    <Grid.Column width="4" className="field">
                       <label>{t(this._getKey('label.field.nama'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="13" className="field">
+                    <Grid.Column width="12" className="field">
                       <Input
                         name="nama"
                         ref={this.nama}
@@ -245,65 +245,54 @@ class Create extends Component {
                       />
                     </Grid.Column>
                   </Grid.Row>
+                  <Grid.Row className="form-row">
+                    <Grid.Column width="4" className="field">
+                      <label>
+                        {t(this._getKey('label.field.jenis_kelamin'))}
+                      </label>
+                    </Grid.Column>
+                    <Grid.Column width="4" className="field">
+                      <Select
+                        name="id_jenis_kelamin"
+                        options={data.options_jenis_kelamin}
+                        isDisabled={disabledDetail}
+                        value={selectedOption.id_jenis_kelamin}
+                        onChange={(selected) =>
+                          this.select2ChangeHanlder(
+                            'id_jenis_kelamin',
+                            selected
+                          )
+                        }
+                        isClearable={false}
+                        inputRef={this.id_jenis_kelamin}
+                        onKeyDown={(e) => this._onFocusElement(e, 'nama_ortu')}
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
                 </Grid>
               </Grid.Column>
               <Grid.Column>
                 <Grid>
-                  <Grid.Row>
-                    <Grid.Column width="10">
-                      <Grid>
-                        <Grid.Row
-                          className="form-row"
-                          style={{ marginTop: 14 }}
-                        >
-                          <Grid.Column width="5" className="field">
-                            <label>
-                              {t(this._getKey('label.field.jenis_kelamin'))}
-                            </label>
-                          </Grid.Column>
-                          <Grid.Column width="11" className="field">
-                            <Select
-                              name="id_jenis_kelamin"
-                              options={data.options_jenis_kelamin}
-                              isDisabled={disabledDetail}
-                              value={selectedOption.id_jenis_kelamin}
-                              onChange={(selected) =>
-                                this.select2ChangeHanlder(
-                                  'id_jenis_kelamin',
-                                  selected
-                                )
-                              }
-                              isClearable={false}
-                              inputRef={this.id_jenis_kelamin}
-                              onKeyDown={(e) =>
-                                this._onFocusElement(e, 'nama_ortu')
-                              }
-                            />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row className="form-row">
-                          <Grid.Column width="5" className="field">
-                            <label>
-                              {t(this._getKey('label.field.nama_orangtua'))}
-                            </label>
-                          </Grid.Column>
-                          <Grid.Column width="11" className="field">
-                            <Input
-                              name="nama_ortu"
-                              ref={this.nama_ortu}
-                              disabled={disabledDetail}
-                              value={post.nama_ortu}
-                              onChange={this.inputChangeHandler}
-                              onKeyDown={(e) =>
-                                this._onFocusElement(e, 'tgl_lahir')
-                              }
-                            />
-                          </Grid.Column>
-                        </Grid.Row>
-                      </Grid>
+                  <Grid.Row className="form-row">
+                    <Grid.Column width="5" className="field">
+                      <label>
+                        {t(this._getKey('label.field.nama_orangtua'))}
+                      </label>
                     </Grid.Column>
-                    {post.id && (
-                      <Grid.Column width="6" style={{ textAlign: 'right' }}>
+                    <Grid.Column width="11" className="field">
+                      <Input
+                        name="nama_ortu"
+                        ref={this.nama_ortu}
+                        disabled={disabledDetail}
+                        value={post.nama_ortu}
+                        onChange={this.inputChangeHandler}
+                        onKeyDown={(e) => this._onFocusElement(e, 'tgl_lahir')}
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                  {post.id && (
+                    <Grid.Row className="form-row">
+                      <Grid.Column textAlign="right" width="16">
                         <h5 style={{ marginTop: 0 }}>
                           <strong>
                             {post.st_pulang
@@ -319,8 +308,8 @@ class Create extends Component {
                           </strong>
                         </h5>
                       </Grid.Column>
-                    )}
-                  </Grid.Row>
+                    </Grid.Row>
+                  )}
                 </Grid>
               </Grid.Column>
             </Grid.Row>

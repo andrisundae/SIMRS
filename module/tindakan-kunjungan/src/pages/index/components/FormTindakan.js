@@ -89,6 +89,31 @@ const FormTindakan = ({
               <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="4" className="field">
+                    <label>{t(getKey('tanggal'))}</label>
+                  </Grid.Column>
+                  <Grid.Column width="5" className="field">
+                    <Input
+                      name="tanggal"
+                      disabled
+                      value={formatter.dateFormatClient(
+                        data.tanggal,
+                        'DD/MM/YYYY'
+                      )}
+                    />
+                  </Grid.Column>
+                  <Grid.Column width="2" className="field">
+                    <label>{t(getKey('jam'))}</label>
+                  </Grid.Column>
+                  <Grid.Column width="3" className="field">
+                    <Input
+                      name="tanggal"
+                      disabled
+                      value={formatter.dateFormatClient(data.tanggal, 'HH:mm')}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row className="form-row">
+                  <Grid.Column width="4" className="field">
                     <label>{t(getKey('kode_panggil'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
@@ -141,6 +166,10 @@ const FormTindakan = ({
                     <Input name="kelas" disabled value={data.nama_kelas} />
                   </Grid.Column>
                 </Grid.Row>
+              </Grid>
+            </Grid.Column>
+            <Grid.Column>
+              <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="10" className="field">
                     {kunjungan.nama_dpjp && (
@@ -149,24 +178,7 @@ const FormTindakan = ({
                       </Header>
                     )}
                   </Grid.Column>
-                  <Grid.Column width="6" className="field">
-                    <Button
-                      size="mini"
-                      color="orange"
-                      // icon
-                      // labelPosition='left'
-                      floated="right"
-                      compact
-                    >
-                      <Icon name="copy outline" />
-                      {t(getKey('sisa_seluruh_tagihan'))}
-                    </Button>
-                  </Grid.Column>
                 </Grid.Row>
-              </Grid>
-            </Grid.Column>
-            <Grid.Column>
-              <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="5" className="field">
                     <label>{t(getKey('pelaksana'))}</label>
@@ -255,30 +267,18 @@ const FormTindakan = ({
                   <Grid.Column width="5" className="field">
                     <CurrencyInput name="biaya" disabled value={data.biaya} />
                   </Grid.Column>
-                </Grid.Row>
-                <Grid.Row className="form-row">
-                  <Grid.Column width="5" className="field">
-                    <label>{t(getKey('tanggal'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="5" className="field">
-                    <Input
-                      name="tanggal"
-                      disabled
-                      value={formatter.dateFormatClient(
-                        data.tanggal,
-                        'DD/MM/YYYY'
-                      )}
-                    />
-                  </Grid.Column>
-                  <Grid.Column width="2" className="field">
-                    <label>{t(getKey('jam'))}</label>
-                  </Grid.Column>
-                  <Grid.Column width="3" className="field">
-                    <Input
-                      name="tanggal"
-                      disabled
-                      value={formatter.dateFormatClient(data.tanggal, 'HH:mm')}
-                    />
+                  <Grid.Column width="6" className="field">
+                    <Button
+                      size="mini"
+                      color="orange"
+                      // icon
+                      // labelPosition='left'
+                      floated="right"
+                      compact
+                    >
+                      <Icon name="copy outline" />
+                      {t(getKey('sisa_seluruh_tagihan'))}
+                    </Button>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
@@ -324,13 +324,13 @@ const FormTindakan = ({
                           {formatter.currency(kunjungan.pengembalian)}
                         </Grid.Column>
                       </Grid.Row>
-                      <Divider style={{ margin: 0 }} />
+                      {/* <Divider style={{ margin: 0 }} /> */}
                       <Grid.Row className="form-row">
                         <Grid.Column width="4" className="field">
                           <label>{t(getKey('total_biaya_pengunjung'))}</label>
                         </Grid.Column>
                         <Grid.Column
-                          style={{ textAlign: 'right' }}
+                          textAlign="right"
                           width="4"
                           className="field"
                         >

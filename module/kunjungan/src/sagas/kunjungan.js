@@ -264,25 +264,7 @@ function* getPasienRequestHandler({ meta, payload }) {
     if (response.status) {
       yield put(actions.getPasien.requestSuccess(meta.resource, response.data));
       const data = response.data;
-      yield put(
-        actions.onSelected(meta.resource, {
-          id: data.id,
-          nama: data.nama,
-          norm: data.norm,
-          alamat: data.alamat,
-          nama_kecamatan: data.kecamatan,
-          nama_kota: data.kota,
-          nama_provinsi: data.provinsi,
-          nama_desa: data.desa,
-          id_desa: data.id_desa,
-          rt: data.rt,
-          rw: data.rw,
-          nama_ortu: data.nama_ortu,
-          id_jenis_kelamin: data.jenis_kelamin_id,
-          nama_jenis_kelamin: data.jenis_kelamin,
-          tgl_lahir: data.tgl_lahir,
-        })
-      );
+      yield put(actions.onSelected(meta.resource, data));
     } else {
       yield put(
         actions.getPasien.requestFailure(meta.resource, response.message)

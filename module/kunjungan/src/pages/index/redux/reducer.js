@@ -326,10 +326,10 @@ export default (state = initialState, action) =>
           nama: data.nama,
           norm: data.norm,
           alamat: data.alamat,
-          nama_kecamatan: data.nama_kecamatan,
-          nama_kota: data.nama_kota,
-          nama_provinsi: data.nama_provinsi,
-          nama_desa: data.nama_desa,
+          nama_kecamatan: data.kecamatan ? data.kecamatan.nama : '',
+          nama_kota: data.kota ? data.kota.nama : '',
+          nama_provinsi: data.provinsi ? data.provinsi.nama : '',
+          nama_desa: data.desa ? data.desa.nama : '',
           id_desa: data.id_desa,
           rt: data.rt,
           rw: data.rw,
@@ -340,8 +340,8 @@ export default (state = initialState, action) =>
         };
 
         draft.selectedOption.id_jenis_kelamin = {
-          value: data.id_jenis_kelamin,
-          label: data.nama_jenis_kelamin,
+          value: data.jenis_kelamin.id,
+          label: data.jenis_kelamin.nama,
         };
 
         return;

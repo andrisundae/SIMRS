@@ -142,7 +142,7 @@ export default (state = initialState, action) =>
           nama_ortu: data.nama_ortu,
           norm: data.norm,
           alamat: data.alamat,
-          jenis_kelamin: data.jenis_kelamin,
+          jenis_kelamin: data.jenis_kelamin.nama,
           tgl_lahir: data.tgl_lahir,
         };
         draft.isRequestingPasien = false;
