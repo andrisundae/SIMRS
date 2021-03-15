@@ -257,17 +257,71 @@ export default function SidebarMenu({ type }) {
               text="Intervensi Gizi"
             />
             <Dropdown.Divider />
-            <Dropdown.Item text="Screening Activity Daily Living" />
-            <Dropdown.Item text="Screening Decubitus Norton Scale" />
-            <Dropdown.Item text="Screening Depresi Geriatri" />
-            <Dropdown.Item text="Screening Status Mental Geriatri" />
-            <Dropdown.Item text="Screening APGAR Score" />
-            <Dropdown.Item text="Screening Downe Score" />
+            <Dropdown.Item
+              className={
+                'screening-activity-daily-living' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-activity-daily-living`}
+              text="Screening Activity Daily Living"
+            />
+            <Dropdown.Item
+              className={
+                'screening-decubitus-norton-scale' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-decubitus-norton-scale`}
+              text="Screening Decubitus Norton Scale"
+            />
+            <Dropdown.Item
+              className={
+                'screening-depresi-geriatri' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-depresi-geriatri`}
+              text="Screening Depresi Geriatri"
+            />
+            <Dropdown.Item
+              className={
+                'screening-status-mental-geriatri' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-status-mental-geriatri`}
+              text="Screening Status Mental Geriatri"
+            />
+            <Dropdown.Item
+              className={
+                'screening-apgar-score' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-apgar-score`}
+              text="Screening APGAR Score"
+            />
+            <Dropdown.Item
+              className={
+                'screening-downe-score' === currentChildMenu
+                  ? 'custom-selected'
+                  : ''
+              }
+              as={Link}
+              to={`${match.path}/pengkajian-khusus/screening-downe-score`}
+              text="Screening Downe Score"
+            />
           </Dropdown.Menu>
         </Dropdown>
         <Menu.Item
           as={Link}
-          to="/detail-rekam-medis/umum"
+          to="/detail-rekam-medis/umum/resep"
           className={'resep' === currentMenu ? 'bg-blue-200' : ''}
         >
           <Icon name="sticky note outline" className="float-left ml-0 mr-1" />{' '}
@@ -275,7 +329,7 @@ export default function SidebarMenu({ type }) {
         </Menu.Item>
         <Menu.Item
           as={Link}
-          to="/detail-rekam-medis/umum"
+          to="/detail-rekam-medis/umum/cppt"
           className={'cppt' === currentMenu ? 'bg-blue-200' : ''}
         >
           <Icon name="list" className="float-left ml-0 mr-1" /> CPPT
@@ -301,12 +355,53 @@ export default function SidebarMenu({ type }) {
           }}
         >
           <Dropdown.Menu className="z-50 p-3">
-            <Dropdown.Item text="Konsul" />
-            <Dropdown.Item text="Rawat Bersama" />
-            <Dropdown.Item text="Alih DPJP" />
-            <Dropdown.Item text="Delegasi Tugas" />
+            <Dropdown.Item
+              className={
+                'konsul-dokter' === currentChildMenu ? 'custom-selected' : ''
+              }
+              as={Link}
+              to={`${match.path}/kerja-sama-medis/konsul-dokter/permintaan`}
+              text="Konsul"
+            />
+            <Dropdown.Item
+              className={
+                'rawat-bersama' === currentChildMenu ? 'custom-selected' : ''
+              }
+              as={Link}
+              to={`${match.path}/kerja-sama-medis/rawat-bersama/permintaan`}
+              text="Rawat Bersama"
+            />
+            <Dropdown.Item
+              className={
+                'alih-dpjp' === currentChildMenu ? 'custom-selected' : ''
+              }
+              as={Link}
+              to={`${match.path}/kerja-sama-medis/alih-dpjp/permintaan`}
+              text="Alih DPJP"
+            />
+            <Dropdown.Item
+              className={
+                'delegasi-tugas' === currentChildMenu ? 'custom-selected' : ''
+              }
+              as={Link}
+              to={`${match.path}/kerja-sama-medis/delegasi-tugas/permintaan`}
+              text="Delegasi Tugas"
+            />
           </Dropdown.Menu>
         </Dropdown>
+        <Menu.Item
+          as={Link}
+          to="/detail-rekam-medis/umum/pemeriksaan-penunjang"
+          className={
+            'pemeriksaan-penunjang' === currentMenu ? 'bg-blue-200' : ''
+          }
+        >
+          <Icon
+            name="file alternate outline"
+            className="float-left ml-0 mr-1"
+          />{' '}
+          Pemeriksaan Penunjang
+        </Menu.Item>
       </Menu>
     </div>
   );

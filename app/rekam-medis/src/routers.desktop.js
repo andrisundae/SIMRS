@@ -19,4 +19,9 @@ export default [
     path: '/master/icd9',
     component: lazy(() => import('@module/icd9')),
   },
+  {
+    key: '_rekam_medis_setting_kelompok_pemeriksaan_fisik',
+    path: '/master/setting-kelompok-pemeriksaan-fisik',
+    component: lazy(() => import('@module/setting-kelompok-pemeriksaan-fisik')),
+  },
 ];

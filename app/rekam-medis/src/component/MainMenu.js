@@ -17,6 +17,7 @@ const VISITE_DPJP = 'visiteDpjp';
 const RAWAT_BERSAMA = 'rawatBersama';
 const DELEGASI_TUGAS = 'delegasiTugas';
 const ALIH_DPJP = 'alihDpjp';
+const KONSUL_DOKTER = 'konsulDokter';
 const KUNJUNGAN_UMUM = 'kunjunganUmum';
 const KUNJUNGAN_PENUNJANG = 'kunjunganPenunjang';
 
@@ -25,6 +26,7 @@ const menus = [
   RAWAT_BERSAMA,
   DELEGASI_TUGAS,
   ALIH_DPJP,
+  KONSUL_DOKTER,
   KUNJUNGAN_UMUM,
   KUNJUNGAN_PENUNJANG,
 ];
@@ -38,6 +40,7 @@ export default function MainMenu() {
     [RAWAT_BERSAMA]: useRef(null),
     [DELEGASI_TUGAS]: useRef(null),
     [ALIH_DPJP]: useRef(null),
+    [KONSUL_DOKTER]: useRef(null),
     [KUNJUNGAN_UMUM]: useRef(null),
     [KUNJUNGAN_PENUNJANG]: useRef(null),
   };
@@ -54,6 +57,7 @@ export default function MainMenu() {
         clickOutside
       );
       Mousetrap(menuElement[ALIH_DPJP].current).bind('mod+c', clickOutside);
+      Mousetrap(menuElement[KONSUL_DOKTER].current).bind('mod+c', clickOutside);
       Mousetrap(menuElement[KUNJUNGAN_UMUM].current).bind(
         'mod+c',
         clickOutside
@@ -67,6 +71,7 @@ export default function MainMenu() {
       Mousetrap.bind('alt+r', menuElement[RAWAT_BERSAMA].current.click);
       Mousetrap.bind('alt+d', menuElement[DELEGASI_TUGAS].current.click);
       Mousetrap.bind('alt+a', menuElement[ALIH_DPJP].current.click);
+      Mousetrap.bind('alt+a', menuElement[KONSUL_DOKTER].current.click);
       Mousetrap.bind('alt+k', menuElement[KUNJUNGAN_UMUM].current.click);
       Mousetrap.bind('alt+p', menuElement[KUNJUNGAN_PENUNJANG].current.click);
     }
@@ -121,17 +126,22 @@ export default function MainMenu() {
 
   function toRawatBersama(e) {
     e.preventDefault();
-    alert('RawatBersama');
+    history.push('/rawat-bersama/pemenuhan');
   }
 
   function toDelegasiTugas(e) {
     e.preventDefault();
-    alert('DelegasiTugas');
+    history.push('/delegasi-tugas/pemenuhan');
   }
 
   function toAlihDpjp(e) {
     e.preventDefault();
-    alert('AlihDpjp');
+    history.push('/alih-dpjp/pemenuhan');
+  }
+
+  function toKonsulDokter(e) {
+    e.preventDefault();
+    history.push('/konsul-dokter/pemenuhan');
   }
 
   function toKunjungan(e) {
@@ -203,6 +213,19 @@ export default function MainMenu() {
                 setSelectedMenu(ALIH_DPJP);
               }}
               onClick={toAlihDpjp}
+            />
+            <ListItem
+              ref={menuElement[KONSUL_DOKTER]}
+              iconName="user md"
+              iconColor="blue"
+              header={t(`module:${KONSUL_DOKTER}`)}
+              shortcut="Alt + A"
+              description={t(`module:${KONSUL_DOKTER}.description`)}
+              active={KONSUL_DOKTER === selectedMenu}
+              onFocus={() => {
+                setSelectedMenu(KONSUL_DOKTER);
+              }}
+              onClick={toKonsulDokter}
             />
           </List>
         </div>

@@ -1060,7 +1060,7 @@ export default function TableData() {
                   className="ml-2"
                 />
               </Table.Cell>
-              <Table.Cell className="w-96 sticky left-48 z-9 border-r-2">
+              <Table.Cell className="w-96 sticky left-44 z-9 border-r-2">
                 <span className="text-yellow-600">13/10/2020 15:20</span>
                 <br />
                 GHUFRON DEDI SETIAWAN, A.Md.Kep.

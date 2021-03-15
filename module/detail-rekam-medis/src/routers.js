@@ -91,4 +91,69 @@ export default [
     path: '/pengkajian-khusus/screening-intervensi-gizi',
     component: lazy(() => import('@module/screening-intervensi-gizi')),
   },
+  {
+    key: '_screening_activity_daily_living',
+    path: '/pengkajian-khusus/screening-activity-daily-living',
+    component: lazy(() => import('@module/screening-activity-daily-living')),
+  },
+  {
+    key: '_screening_decubitus_norton_scale',
+    path: '/pengkajian-khusus/screening-decubitus-norton-scale',
+    component: lazy(() => import('@module/screening-decubitus-norton-scale')),
+  },
+  {
+    key: '_screening_depresi_geriatri',
+    path: '/pengkajian-khusus/screening-depresi-geriatri',
+    component: lazy(() => import('@module/screening-depresi-geriatri')),
+  },
+  {
+    key: '_screening_status_mental_geriatri',
+    path: '/pengkajian-khusus/screening-status-mental-geriatri',
+    component: lazy(() => import('@module/screening-status-mental-geriatri')),
+  },
+  {
+    key: '_screening_apgar_score',
+    path: '/pengkajian-khusus/screening-apgar-score',
+    component: lazy(() => import('@module/screening-apgar-score')),
+  },
+  {
+    key: '_screening_downe_score',
+    path: '/pengkajian-khusus/screening-downe-score',
+    component: lazy(() => import('@module/screening-downe-score')),
+  },
+  {
+    key: '_konsul_dokter',
+    path: '/kerja-sama-medis/konsul-dokter/permintaan',
+    component: lazy(() => import('@module/konsul-dokter/src/permintaan')),
+  },
+  {
+    key: '_rawat_bersama',
+    path: '/kerja-sama-medis/rawat-bersama/permintaan',
+    component: lazy(() => import('@module/rawat-bersama/src/permintaan')),
+  },
+  {
+    key: '_alih_dpjp',
+    path: '/kerja-sama-medis/alih-dpjp/permintaan',
+    component: lazy(() => import('@module/alih-dpjp/src/permintaan')),
+  },
+  {
+    key: '_delegasi_tugas',
+    path: '/kerja-sama-medis/delegasi-tugas/permintaan',
+    component: lazy(() => import('@module/delegasi-tugas/src/permintaan')),
+  },
+  {
+    key: '_pemeriksaan_penunjang',
+    path: '/pemeriksaan-penunjang',
+    component: lazy(() => import('@module/pemeriksaan-penunjang')),
+  },
+  {
+    key: '_cppt',
+    path: '/cppt',
+    component: lazy(() => import('@module/cppt')),
+  },
+  {
+    key: '_resep',
+    path: '/resep',
+    component: lazy(() => import('@module/resep')),
+  },
 ];

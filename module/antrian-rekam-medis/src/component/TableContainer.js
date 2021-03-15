@@ -8,6 +8,8 @@ export default function TableContainer({
   width = 'auto',
   maxWidth = 'auto',
   maxWidthMinus = 0,
+  className,
+  style = {},
 }) {
   /**
    * set maxHeight props to 'auto' or '..px' to set table max height manual
@@ -16,20 +18,20 @@ export default function TableContainer({
    * set width props to '..px' to set table width manual
    */
   const [divHeight, setDivHeight] = useState(
-    height === 'auto' ? window.innerHeight : parseInt(height, 10)
+    height === 'auto' ? height : parseInt(height, 10)
   );
   const [divMaxHeight, setDivMaxHeight] = useState(
-    maxHeight === 'auto'
-      ? window.innerHeight
-      : maxHeight.constructor === String
+    maxHeight === 'auto' ||
+      maxHeight === 'screen-height' ||
+      -1 < maxHeight.indexOf('%')
       ? maxHeight
       : parseInt(maxHeight, 10)
   );
   const [divWidth, setDivWidth] = useState(
-    width === 'auto' ? window.innerWidth : parseInt(width, 10)
+    width === 'auto' ? width : parseInt(width, 10)
   );
   const [divMaxWidth, setDivMaxWidth] = useState(
-    maxWidth === 'auto' ? window.innerWidth : parseInt(maxWidth, 10)
+    maxWidth === 'auto' ? maxWidth : parseInt(maxWidth, 10)
   );
 
   const position = useCallback((node) => {
@@ -55,9 +57,10 @@ export default function TableContainer({
 
   return (
     <div
-      className="border rounded overflow-auto"
+      className={'border rounded overflow-auto ' + className}
       ref={position}
       style={{
+        ...style,
         height: divHeight,
         maxHeight: divMaxHeight,
         width: divWidth,
