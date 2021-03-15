@@ -2,14 +2,14 @@ import useSWR from 'swr';
 import { post } from '@simrs/common/src/helpers/request';
 import fetcher from './fetcher';
 
-export function useSettingKelompokPemeriksaanFisikForConfig({
+export function useSettingKelompokPemeriksaanFisikView({
   idKelompokPemeriksaanFisik,
   idInstalasi,
 }) {
   const { data, error, mutate } = useSWR(
     idKelompokPemeriksaanFisik
       ? [
-          '/rekam-medis/setting-kelompok-pemeriksaan-fisik/view/for-config',
+          '/rekam-medis/setting-kelompok-pemeriksaan-fisik/view',
           idKelompokPemeriksaanFisik,
           idInstalasi,
         ]

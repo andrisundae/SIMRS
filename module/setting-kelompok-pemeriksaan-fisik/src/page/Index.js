@@ -25,7 +25,7 @@ import datatableConst from '@simrs/components/src/datatable/const';
 import { useKelompokPemeriksaanFisiks } from '@simrs/rekam-medis/src/fetcher/kelompokPemeriksaanFisik';
 import { useInstalasis } from '@simrs/rekam-medis/src/fetcher/instalasi';
 import {
-  useSettingKelompokPemeriksaanFisikForConfig,
+  useSettingKelompokPemeriksaanFisikView,
   insertSettingKelompokPemeriksaanFisik,
   deleteSettingKelompokPemeriksaanFisik,
 } from '@simrs/rekam-medis/src/fetcher/settingKelompokPemeriksaanFisik';
@@ -77,7 +77,7 @@ export default function Index({ t, permissions }) {
     data: config,
     isLoading: configIsLoading,
     mutate: mutateConfig,
-  } = useSettingKelompokPemeriksaanFisikForConfig({
+  } = useSettingKelompokPemeriksaanFisikView({
     idKelompokPemeriksaanFisik: idKelompokPemeriksaanFisik,
     idInstalasi: idInstalasi,
   });
