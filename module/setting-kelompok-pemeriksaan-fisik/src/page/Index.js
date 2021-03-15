@@ -31,6 +31,7 @@ import {
 } from '@simrs/rekam-medis/src/fetcher/settingKelompokPemeriksaanFisik';
 import { confirmation } from '@simrs/components/src/dialog/index';
 import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
+import { isGranted } from '@simrs/main/src/modules/auth';
 
 function searchUnitLayanan(unitLayanans, filter) {
   return unitLayanans.filter((unitLayanan) => {
@@ -43,7 +44,7 @@ function searchUnitLayanan(unitLayanans, filter) {
   });
 }
 
-export default function Index({ t }) {
+export default function Index({ t, permissions }) {
   const unconfiguredTable = useRef(null);
   const configuredTable = useRef(null);
   const sc1 = useRef(null);
@@ -483,192 +484,208 @@ export default function Index({ t }) {
           </div>
           <div className="w-40 text-center">
             <Button.Group vertical labeled icon>
-              <Button
-                ref={sc1}
-                primary
-                size="mini"
-                fluid
-                disabled={
-                  configIsLoading || 0 === unconfiguredDatasource.length
-                }
-                onClick={() => {
-                  const unconfigureds = unconfiguredTable.current.gridApi.getSelectedRows();
-                  if (0 === unconfigureds.length) {
-                    toastr.warning(
-                      'Peringatan',
-                      'Data yang akan diatur belum dipilih'
-                    );
-                  } else {
-                    confirmation({
-                      onOk: async () => {
-                        mutateConfig(
-                          produce(config, (draft) => {
-                            unconfigureds.forEach((unconfigured) => {
-                              draft.setting_kelompok_pemeriksaan_fisiks.push({
-                                id: null,
-                                id_unit_layanan: unconfigured.id_unit_layanan,
+              {isGranted(permissions, 'insert') ? (
+                <Fragment>
+                  <Button
+                    ref={sc1}
+                    primary
+                    size="mini"
+                    fluid
+                    disabled={
+                      configIsLoading || 0 === unconfiguredDatasource.length
+                    }
+                    onClick={() => {
+                      const unconfigureds = unconfiguredTable.current.gridApi.getSelectedRows();
+                      if (0 === unconfigureds.length) {
+                        toastr.warning(
+                          'Peringatan',
+                          'Data yang akan diatur belum dipilih'
+                        );
+                      } else {
+                        confirmation({
+                          onOk: async () => {
+                            mutateConfig(
+                              produce(config, (draft) => {
+                                unconfigureds.forEach((unconfigured) => {
+                                  draft.setting_kelompok_pemeriksaan_fisiks.push(
+                                    {
+                                      id: null,
+                                      id_unit_layanan:
+                                        unconfigured.id_unit_layanan,
+                                    }
+                                  );
+                                });
+                              }),
+                              false
+                            );
+
+                            const idUnitLayanans = unconfigureds.map(
+                              (unconfigured) => unconfigured.id_unit_layanan
+                            );
+                            const response = await insertSettingKelompokPemeriksaanFisik(
+                              {
+                                id_unit_layanans: idUnitLayanans,
+                                id_kelompok_pemeriksaan_fisik: idKelompokPemeriksaanFisik,
+                              }
+                            );
+                            toastr.success('Sukses', response.message);
+
+                            mutateConfig();
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    <Icon name="angle right" />
+                    <u>1</u>
+                  </Button>
+                  <Button
+                    ref={sc2}
+                    primary
+                    size="mini"
+                    fluid
+                    disabled={
+                      configIsLoading || 0 === unconfiguredDatasource.length
+                    }
+                    onClick={() => {
+                      confirmation({
+                        onOk: async () => {
+                          mutateConfig(
+                            produce(config, (draft) => {
+                              unconfiguredDatasource.forEach((unconfigured) => {
+                                draft.setting_kelompok_pemeriksaan_fisiks.push({
+                                  id: null,
+                                  id_unit_layanan: unconfigured.id_unit_layanan,
+                                });
                               });
-                            });
-                          }),
-                          false
+                            }),
+                            false
+                          );
+
+                          const idUnitLayanans = unconfiguredDatasource.map(
+                            (unconfigured) => unconfigured.id_unit_layanan
+                          );
+                          const response = await insertSettingKelompokPemeriksaanFisik(
+                            {
+                              id_unit_layanans: idUnitLayanans,
+                              id_kelompok_pemeriksaan_fisik: idKelompokPemeriksaanFisik,
+                            }
+                          );
+                          toastr.success('Sukses', response.message);
+
+                          mutateConfig();
+                        },
+                      });
+                    }}
+                  >
+                    <Icon name="angle double right" />
+                    <u>2</u>
+                  </Button>
+                </Fragment>
+              ) : null}
+
+              {isGranted(permissions, 'delete') ? (
+                <Fragment>
+                  <Button
+                    ref={sc3}
+                    primary
+                    size="mini"
+                    fluid
+                    disabled={
+                      configIsLoading || 0 === configuredDatasource.length
+                    }
+                    onClick={() => {
+                      const configureds = configuredTable.current.gridApi.getSelectedRows();
+                      if (0 === configureds.length) {
+                        toastr.warning(
+                          'Peringatan',
+                          'Data yang akan dihapus belum dipilih'
                         );
+                      } else {
+                        confirmation({
+                          onOk: async () => {
+                            mutateConfig(
+                              produce(config, (draft) => {
+                                draft.deleted_setting_kelompok_pemeriksaan_fisiks = [];
+                                configureds.forEach((configured) => {
+                                  const selectedIndex = draft.setting_kelompok_pemeriksaan_fisiks.findIndex(
+                                    (settingKelompokPemeriksaanFisik) =>
+                                      settingKelompokPemeriksaanFisik.id ===
+                                      configured.id
+                                  );
+                                  draft.deleted_setting_kelompok_pemeriksaan_fisiks.push(
+                                    draft.setting_kelompok_pemeriksaan_fisiks[
+                                      selectedIndex
+                                    ]
+                                  );
+                                  draft.setting_kelompok_pemeriksaan_fisiks.splice(
+                                    selectedIndex,
+                                    1
+                                  );
+                                });
+                              }),
+                              false
+                            );
 
-                        const idUnitLayanans = unconfigureds.map(
-                          (unconfigured) => unconfigured.id_unit_layanan
-                        );
-                        const response = await insertSettingKelompokPemeriksaanFisik(
-                          {
-                            id_unit_layanans: idUnitLayanans,
-                            id_kelompok_pemeriksaan_fisik: idKelompokPemeriksaanFisik,
-                          }
-                        );
-                        toastr.success('Sukses', response.message);
+                            const ids = configureds.map(
+                              (configured) => configured.id
+                            );
+                            const response = await deleteSettingKelompokPemeriksaanFisik(
+                              {
+                                ids,
+                              }
+                            );
+                            toastr.success('Sukses', response.message);
 
-                        mutateConfig();
-                      },
-                    });
-                  }
-                }}
-              >
-                <Icon name="angle right" />
-                <u>1</u>
-              </Button>
-              <Button
-                ref={sc2}
-                primary
-                size="mini"
-                fluid
-                disabled={
-                  configIsLoading || 0 === unconfiguredDatasource.length
-                }
-                onClick={() => {
-                  confirmation({
-                    onOk: async () => {
-                      mutateConfig(
-                        produce(config, (draft) => {
-                          unconfiguredDatasource.forEach((unconfigured) => {
-                            draft.setting_kelompok_pemeriksaan_fisiks.push({
-                              id: null,
-                              id_unit_layanan: unconfigured.id_unit_layanan,
-                            });
-                          });
-                        }),
-                        false
-                      );
+                            mutateConfig();
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    <Icon name="angle left" />
+                    <u>3</u>
+                  </Button>
+                  <Button
+                    ref={sc4}
+                    primary
+                    size="mini"
+                    fluid
+                    disabled={
+                      configIsLoading || 0 === configuredDatasource.length
+                    }
+                    onClick={() => {
+                      confirmation({
+                        onOk: async () => {
+                          mutateConfig(
+                            produce(config, (draft) => {
+                              draft.deleted_setting_kelompok_pemeriksaan_fisiks =
+                                draft.setting_kelompok_pemeriksaan_fisiks;
+                              draft.setting_kelompok_pemeriksaan_fisiks = [];
+                            }),
+                            false
+                          );
 
-                      const idUnitLayanans = unconfiguredDatasource.map(
-                        (unconfigured) => unconfigured.id_unit_layanan
-                      );
-                      const response = await insertSettingKelompokPemeriksaanFisik(
-                        {
-                          id_unit_layanans: idUnitLayanans,
-                          id_kelompok_pemeriksaan_fisik: idKelompokPemeriksaanFisik,
-                        }
-                      );
-                      toastr.success('Sukses', response.message);
+                          const ids = configuredDatasource.map(
+                            (configured) => configured.id
+                          );
+                          const response = await deleteSettingKelompokPemeriksaanFisik(
+                            {
+                              ids,
+                            }
+                          );
+                          toastr.success('Sukses', response.message);
 
-                      mutateConfig();
-                    },
-                  });
-                }}
-              >
-                <Icon name="angle double right" />
-                <u>2</u>
-              </Button>
-              <Button
-                ref={sc3}
-                primary
-                size="mini"
-                fluid
-                disabled={configIsLoading || 0 === configuredDatasource.length}
-                onClick={() => {
-                  const configureds = configuredTable.current.gridApi.getSelectedRows();
-                  if (0 === configureds.length) {
-                    toastr.warning(
-                      'Peringatan',
-                      'Data yang akan dihapus belum dipilih'
-                    );
-                  } else {
-                    confirmation({
-                      onOk: async () => {
-                        mutateConfig(
-                          produce(config, (draft) => {
-                            draft.deleted_setting_kelompok_pemeriksaan_fisiks = [];
-                            configureds.forEach((configured) => {
-                              const selectedIndex = draft.setting_kelompok_pemeriksaan_fisiks.findIndex(
-                                (settingKelompokPemeriksaanFisik) =>
-                                  settingKelompokPemeriksaanFisik.id ===
-                                  configured.id
-                              );
-                              draft.deleted_setting_kelompok_pemeriksaan_fisiks.push(
-                                draft.setting_kelompok_pemeriksaan_fisiks[
-                                  selectedIndex
-                                ]
-                              );
-                              draft.setting_kelompok_pemeriksaan_fisiks.splice(
-                                selectedIndex,
-                                1
-                              );
-                            });
-                          }),
-                          false
-                        );
-
-                        const ids = configureds.map(
-                          (configured) => configured.id
-                        );
-                        const response = await deleteSettingKelompokPemeriksaanFisik(
-                          {
-                            ids,
-                          }
-                        );
-                        toastr.success('Sukses', response.message);
-
-                        mutateConfig();
-                      },
-                    });
-                  }
-                }}
-              >
-                <Icon name="angle left" />
-                <u>3</u>
-              </Button>
-              <Button
-                ref={sc4}
-                primary
-                size="mini"
-                fluid
-                disabled={configIsLoading || 0 === configuredDatasource.length}
-                onClick={() => {
-                  confirmation({
-                    onOk: async () => {
-                      mutateConfig(
-                        produce(config, (draft) => {
-                          draft.deleted_setting_kelompok_pemeriksaan_fisiks =
-                            draft.setting_kelompok_pemeriksaan_fisiks;
-                          draft.setting_kelompok_pemeriksaan_fisiks = [];
-                        }),
-                        false
-                      );
-
-                      const ids = configuredDatasource.map(
-                        (configured) => configured.id
-                      );
-                      const response = await deleteSettingKelompokPemeriksaanFisik(
-                        {
-                          ids,
-                        }
-                      );
-                      toastr.success('Sukses', response.message);
-
-                      mutateConfig();
-                    },
-                  });
-                }}
-              >
-                <Icon name="angle double left" />
-                <u>4</u>
-              </Button>
+                          mutateConfig();
+                        },
+                      });
+                    }}
+                  >
+                    <Icon name="angle double left" />
+                    <u>4</u>
+                  </Button>
+                </Fragment>
+              ) : null}
             </Button.Group>
           </div>
           <div className="flex-auto">
