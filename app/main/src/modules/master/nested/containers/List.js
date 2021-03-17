@@ -116,7 +116,7 @@ class List extends Component {
       reloadType,
     } = this.props;
 
-    if (isReloadGrid) {
+    if (isReloadGrid && !prevProps.isReloadGrid) {
       this._reload(reloadType);
     } else {
       switch (statusForm) {
@@ -192,43 +192,32 @@ class List extends Component {
   }
 
   _reload(reloadType) {
-    if (
-      reloadType === constDatatable.reloadType.purge ||
-      this.gridApi.getDisplayedRowCount() === 0
-    ) {
-      this.gridApi.setInfiniteRowCount(1);
+    if (reloadType === constDatatable.reloadType.purge) {
       this.gridApi.purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
-      this.gridApi.refreshInfiniteCache();
+      if (this.gridApi.getDisplayedRowCount() === 0) {
+        this.gridApi.purgeInfiniteCache();
+      } else {
+        this.gridApi.refreshInfiniteCache();
+      }
     }
   }
 
   _selectRow(id) {
-    this.gridApi.deselectAll();
-    this.gridApi.clearFocusedCell();
-
-    let node = this.gridApi.getRowNode(id);
-    if (node) {
-      this._setFocusedCell(node.rowIndex);
-      node.setSelected(true, true);
+    if (this.dataTable.current) {
+      this.dataTable.current.selectRow(id);
     }
   }
 
   _setFocusedCell(rowIndex) {
-    this.gridApi.ensureIndexVisible(0);
-    let firstCol = this.columnApi.getAllDisplayedColumns()[0];
-    this.gridApi.ensureColumnVisible(firstCol);
-    this.gridApi.setFocusedCell(rowIndex, firstCol);
+    if (this.dataTable.current) {
+      this.dataTable.current.setFocusedCell(rowIndex);
+    }
   }
 
   _setFirstRowSelected() {
-    this._setFocusedCell(0);
-    let cell = this.gridApi.getFocusedCell();
-    if (cell) {
-      let node = this.gridApi.getModel().getRow(cell.rowIndex);
-      if (node) {
-        node.setSelected(true, true);
-      }
+    if (this.dataTable.current) {
+      this.dataTable.current.setFirstRowSelected();
     }
   }
 
