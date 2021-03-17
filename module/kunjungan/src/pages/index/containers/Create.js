@@ -2,7 +2,15 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Grid, Form, Input, Tab, Segment, Divider } from 'semantic-ui-react';
+import {
+  Grid,
+  Form,
+  Input,
+  Tab,
+  Segment,
+  Divider,
+  Header,
+} from 'semantic-ui-react';
 
 import { Select } from '@simrs/components';
 import { formatter, utils } from '@simrs/common';
@@ -28,6 +36,8 @@ class Create extends Component {
     this.nama = createRef();
     this.id_jenis_kelamin = createRef();
     this.nama_ortu = createRef();
+    this.nama_panggilan = createRef();
+    this.nama_suami_istri = createRef();
   }
 
   componentDidUpdate() {
@@ -209,16 +219,17 @@ class Create extends Component {
                         onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="3" className="field">
                       <label>
                         {t(this._getKey('label.field.kode_kunjungan'))}
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <Input
                         name="kode_kunjungan"
                         ref={this.kode_kunjungan}
                         disabled={isDisable('kode_kunjungan', statusForm)}
+                        value={post.kode_kunjungan}
                       />
                     </Grid.Column>
                   </Grid.Row>
@@ -265,7 +276,22 @@ class Create extends Component {
                         }
                         isClearable={false}
                         inputRef={this.id_jenis_kelamin}
+                        onKeyDown={(e) =>
+                          this._onFocusElement(e, 'nama_panggilan')
+                        }
+                      />
+                    </Grid.Column>
+                    <Grid.Column width="3" className="field">
+                      <label>{t(this._getKey('nama_panggilan'))}</label>
+                    </Grid.Column>
+                    <Grid.Column width="5" className="field">
+                      <Input
+                        name="nama_panggilan"
+                        ref={this.nama_panggilan}
+                        disabled={disabledDetail}
+                        value={post.nama_panggilan}
                         onKeyDown={(e) => this._onFocusElement(e, 'nama_ortu')}
+                        onChange={this.inputChangeHandler}
                       />
                     </Grid.Column>
                   </Grid.Row>
@@ -286,14 +312,44 @@ class Create extends Component {
                         disabled={disabledDetail}
                         value={post.nama_ortu}
                         onChange={this.inputChangeHandler}
+                        onKeyDown={(e) =>
+                          this._onFocusElement(e, 'nama_suami_istri')
+                        }
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row className="form-row">
+                    <Grid.Column width="5" className="field">
+                      <label>{t(this._getKey('nama_suami_istri'))}</label>
+                    </Grid.Column>
+                    <Grid.Column width="11" className="field">
+                      <Input
+                        name="nama_suami_istri"
+                        ref={this.nama_suami_istri}
+                        disabled={disabledDetail}
+                        value={post.nama_suami_istri}
+                        onChange={this.inputChangeHandler}
                         onKeyDown={(e) => this._onFocusElement(e, 'tgl_lahir')}
                       />
                     </Grid.Column>
                   </Grid.Row>
                   {post.id && (
                     <Grid.Row className="form-row">
-                      <Grid.Column textAlign="right" width="16">
-                        <h5 style={{ marginTop: 0 }}>
+                      <Grid.Column
+                        className="field"
+                        textAlign="right"
+                        width="16"
+                      >
+                        <Header as="h3" color="green" style={{ marginTop: 3 }}>
+                          {post.st_pulang
+                            ? t(this._getKey('kunjungan_selesai'))
+                            : t(this._getKey('kunjungan_aktif'))}{' '}
+                          -{' '}
+                          {selectedOption.id_penjamin
+                            ? selectedOption.id_penjamin.label
+                            : ''}
+                        </Header>
+                        {/* <h5 style={{ marginTop: 0 }}>
                           <strong>
                             {post.st_pulang
                               ? t(this._getKey('kunjungan_selesai'))
@@ -306,7 +362,7 @@ class Create extends Component {
                               ? selectedOption.id_penjamin.label
                               : ''}
                           </strong>
-                        </h5>
+                        </h5> */}
                       </Grid.Column>
                     </Grid.Row>
                   )}
