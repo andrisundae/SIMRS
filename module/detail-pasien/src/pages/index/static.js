@@ -6,7 +6,7 @@ const statusesElements = {
 };
 
 const staticConst = {
-  TABLE_SEARCH_WILAYAH: 'TABLE_SEARCH_WILAYAH',
+  TABLE_WILAYAH: 'table_wilayah',
   UMUR: 'umur',
   TGL_LAHIR: 'tgl_lahir',
 };

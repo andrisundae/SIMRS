@@ -26,7 +26,7 @@ const DetailPasienContainer = () => {
   const dataForm = useSelector(dataSelector);
   const filterWilayah = useSelector(filterWilayahSelector);
   const datatables = useSelector(datatableSelector);
-  const datatableWilayah = datatables[staticConst.TABLE_SEARCH_WILAYAH];
+  const datatableWilayah = datatables[staticConst.TABLE_WILAYAH];
   const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
 
   const changeDatetimeHandler = (name, value) => {
@@ -62,6 +62,10 @@ const DetailPasienContainer = () => {
     dispatch(actions.toggleShowCariWilayah(resource));
   const selectedWilayahHandler = (data) =>
     dispatch(actions.onSelectedWilayah(resource, data));
+  const submitFilterWilayahHandler = (_, data) =>
+    dispatch(actions.onSubmitFilterWilayah(resource, data));
+  const loadWilayahHandler = (_, data, tableParams) =>
+    dispatch(actions.loadAllWilayah(resource, data, tableParams));
 
   return (
     <>
@@ -86,8 +90,8 @@ const DetailPasienContainer = () => {
           onSelect={selectedWilayahHandler}
           data={filterWilayah}
           resource={resource}
-          onSubmit={actions.onSubmitFilterWilayah}
-          onLoadData={actions.loadAllWilayah}
+          onSubmit={submitFilterWilayahHandler}
+          onLoadData={loadWilayahHandler}
           isReloadGrid={datatableWilayah.isReload}
           reloadType={datatableWilayah.reloadType}
         />

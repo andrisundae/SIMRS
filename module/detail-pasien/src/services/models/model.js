@@ -61,4 +61,8 @@ export default {
     const response = await request.get(`${path}/init`);
     return response;
   },
+  getAllWilayah: async (params) => {
+    let response = await request.post('/billing/master/wilayah/view', params);
+    return response;
+  },
 };

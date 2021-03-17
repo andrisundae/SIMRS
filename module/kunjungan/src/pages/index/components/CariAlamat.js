@@ -8,7 +8,7 @@ import {
   SelectedButton,
 } from '@simrs/components';
 
-class CariPasien extends Component {
+class CariAlamat extends Component {
   constructor(props) {
     super(props);
 
@@ -223,4 +223,4 @@ class CariPasien extends Component {
   }
 }
 
-export default CariPasien;
+export default CariAlamat;

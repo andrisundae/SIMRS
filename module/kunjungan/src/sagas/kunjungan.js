@@ -55,6 +55,8 @@ function* handleSave({ payload, meta }) {
       nama: data.nama,
       id_jenis_kelamin: data.id_jenis_kelamin,
       nama_ortu: data.nama_ortu,
+      nama_panggilan: data.nama_panggilan,
+      nama_suami_istri: data.nama_suami_istri,
       alamat: data.alamat,
       rt: data.rt,
       rw: data.rw,

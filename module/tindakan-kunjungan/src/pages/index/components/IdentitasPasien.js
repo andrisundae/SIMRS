@@ -123,10 +123,7 @@ const IdentitasPasien = ({
                 {data.id && (
                   <Grid.Row className="form-row">
                     <Grid.Column width="16" className="field" textAlign="right">
-                      <Header
-                        as="h3"
-                        style={{ marginTop: 3, color: '#0335CD' }}
-                      >
+                      <Header as="h3" color="green" style={{ marginTop: 3 }}>
                         {data.st_pulang
                           ? t(getKey('kunjungan_selesai'))
                           : t(getKey('kunjungan_aktif'))}{' '}

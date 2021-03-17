@@ -171,9 +171,10 @@ const FormTindakan = ({
             <Grid.Column>
               <Grid>
                 <Grid.Row className="form-row">
-                  <Grid.Column width="10" className="field">
+                  <Grid.Column width="5" className="field" />
+                  <Grid.Column width="11" className="field">
                     {kunjungan.nama_dpjp && (
-                      <Header as="h5" color="red">
+                      <Header as="h5" color="blue">
                         DPJP : {kunjungan.nama_dpjp}
                       </Header>
                     )}
@@ -241,7 +242,11 @@ const FormTindakan = ({
                         labeled
                         button
                         className="icon"
-                        style={{ paddingTop: 6, paddingBottom: 6 }}
+                        style={{
+                          paddingTop: 6,
+                          paddingBottom: 6,
+                          marginRight: 7,
+                        }}
                         direction="left"
                       >
                         <Dropdown.Menu>
@@ -275,6 +280,7 @@ const FormTindakan = ({
                       // labelPosition='left'
                       floated="right"
                       compact
+                      style={{ marginRight: 7 }}
                     >
                       <Icon name="copy outline" />
                       {t(getKey('sisa_seluruh_tagihan'))}

@@ -72,6 +72,8 @@ export default {
     id: '',
     id_kunjungan_unit: '',
     st_pulang: '',
+    nama_panggilan: '',
+    nama_suami_istri: '',
   },
   filterPasien: {
     post: {

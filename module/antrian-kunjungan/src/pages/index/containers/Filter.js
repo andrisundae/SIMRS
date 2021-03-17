@@ -134,12 +134,12 @@ class Filter extends Component {
               <Grid.Column>
                 <Grid className="form-grid">
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>
                         <Trans i18nKey={this._getKey('jenis_layanan')} />
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Select
                         name="instalasi_id"
                         placeholder={t(this._getKey('pilih_jenis_layanan'))}
@@ -156,12 +156,12 @@ class Filter extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>
                         <Trans i18nKey={this._getKey('unit_layanan')} />
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Select
                         name="unit_layanan_id"
                         placeholder={t(this._getKey('pilih_unit_layanan'))}
@@ -178,10 +178,10 @@ class Filter extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>{t(this._getKey('status_pasien'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Select
                         name="penjamin_id"
                         placeholder={t(this._getKey('pilih_status_pasien'))}
@@ -198,10 +198,10 @@ class Filter extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>{t(this._getKey('dokter_dpjp'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Select
                         name="dpjp_id"
                         placeholder={t(this._getKey('pilih_dokter_dpjp'))}
@@ -223,12 +223,12 @@ class Filter extends Component {
               <Grid.Column>
                 <Grid className="form-grid">
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>
                         <Trans i18nKey={this._getKey('pasien')} />
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Input
                         name="nama_pasien"
                         ref={this.nama_pasien}
@@ -239,12 +239,12 @@ class Filter extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="4" className="field">
+                    <Grid.Column width="5" className="field">
                       <label>
                         <Trans i18nKey={this._getKey('norm')} />
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="8" className="field">
+                    <Grid.Column width="11" className="field">
                       <Input
                         name="norm"
                         ref={this.norm}

@@ -199,18 +199,25 @@ export default (state = initialState, action) =>
 
         if (payload.isTindakan) {
           const selectedTindakan = state.post.id_tindakan;
-          const selectedData = {
-            name: payload.name,
-            value:
-              payload.name === 'id_kelas'
-                ? payload.data.id_tindakan
-                : payload.data.value,
-          };
+          let selectedData = null;
+          if (payload.data) {
+            selectedData = {
+              name: payload.name,
+              value:
+                payload.name === 'id_kelas'
+                  ? payload.data.id_tindakan
+                  : payload.data.value,
+            };
+          }
           const findIndex = selectedTindakan.findIndex(
             (row) => row.name === payload.name
           );
           if (findIndex >= 0) {
-            selectedTindakan[findIndex] = selectedData;
+            if (selectedData) {
+              selectedTindakan[findIndex] = selectedData;
+            } else {
+              selectedTindakan.splice(findIndex, 1);
+            }
           } else {
             selectedTindakan.push(selectedData);
           }
@@ -312,6 +319,7 @@ export default (state = initialState, action) =>
         draft.post.jam_kunjungan = toDateNow;
         draft.post.rt = '0';
         draft.post.rw = '0';
+        draft.post.kode_kunjungan = '001.180539351907001';
 
         draft.post.jenis_umur = jenisUmur.value;
         draft.selectedOption.jenis_umur = jenisUmur;
@@ -334,6 +342,8 @@ export default (state = initialState, action) =>
           rt: data.rt,
           rw: data.rw,
           nama_ortu: data.nama_ortu,
+          nama_panggilan: data.nama_panggilan,
+          nama_suami_istri: data.nama_suami_istri,
           id_jenis_kelamin: data.id_jenis_kelamin,
           nama_jenis_kelamin: data.nama_jenis_kelamin,
           tgl_lahir: dayjs(data.tgl_lahir).toDate(),

@@ -1,7 +1,12 @@
 import { put, call, takeLatest, all } from 'redux-saga/effects';
 import _ from 'lodash';
 import { toastr, validator as commonValidator } from '@simrs/common';
-import { loaderActions, datatableActions, messageBox } from '@simrs/components';
+import {
+  loaderActions,
+  datatableActions,
+  messageBox,
+  constDatatable,
+} from '@simrs/components';
 import api, { validationRules } from '../services/models/model';
 
 import { actionTypes, actions, staticConst } from '../pages/index';
@@ -10,7 +15,7 @@ const { getFirstError, getFirstElementError } = commonValidator;
 const validator = commonValidator.default;
 
 function* openForm({ meta }) {
-  yield put(datatableActions.onInitialize(staticConst.TABLE_SEARCH_WILAYAH));
+  yield put(datatableActions.onInitialize(staticConst.TABLE_WILAYAH));
   yield put(actions.populateForm.request(meta.resource));
   yield put(actions.onReady(meta.resource));
 }
@@ -105,6 +110,40 @@ function* readyHandler({ meta }) {
   yield put(actions.onFocusElement(meta.resource, 'norm'));
 }
 
+function* loadAllWilayah({ payload, meta }) {
+  const { successCallback, failCallback } = meta.tableParams;
+
+  try {
+    let response = yield call(api.getAllWilayah, payload.data);
+    if (response.status) {
+      successCallback(response.data, response.recordsTotal);
+    } else {
+      failCallback();
+    }
+  } catch (error) {
+    failCallback();
+  }
+  yield put(datatableActions.onReloaded(staticConst.TABLE_WILAYAH));
+}
+
+function* searchWilayahHandler() {
+  try {
+    yield put(
+      datatableActions.onReload(
+        staticConst.TABLE_WILAYAH,
+        constDatatable.reloadType.purge
+      )
+    );
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* selectedWilayahHandler({ meta }) {
+  yield put(actions.toggleShowCariWilayah(meta.resource));
+  yield put(actions.onFocusElement(meta.resource, 'id_penjamin_pasien'));
+}
+
 export default function* watchActions() {
   yield all([
     takeLatest(actionTypes.OPEN_FORM, openForm),
@@ -115,5 +154,8 @@ export default function* watchActions() {
     // takeLatest(actionTypes.SAVE_SUCCESS, saveSuccessHandler),
     takeLatest(actionTypes.SAVE_FAILURE, saveFailureHandler),
     takeLatest(actionTypes.READY, readyHandler),
+    takeLatest(actionTypes.GET_ALL_WILAYAH_REQUEST, loadAllWilayah),
+    takeLatest(actionTypes.FILTER_SUBMIT_WILAYAH, searchWilayahHandler),
+    takeLatest(actionTypes.FILTER_SELECTED_WILAYAH, selectedWilayahHandler),
   ]);
 }
