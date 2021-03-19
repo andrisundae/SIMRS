@@ -46,6 +46,9 @@ body {
 .ui.table tbody tr:nth-child(even) > td {
   background-color: rgb(249, 250, 251);
 }
+.ui.selectable.table tbody tr:hover > td {
+  background-color: rgba(229, 231, 235, 1);
+}
 
 /* modal */
 .ui.fullscreen.modal,

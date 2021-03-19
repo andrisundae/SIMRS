@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { Segment, Header, Divider, Table } from 'semantic-ui-react';
 import TableContainer from './TableContainer';
 
-export default function DetailPenunjang() {
+export default function DetailPenunjang({ kode, namaTempatLayanan }) {
   const history = useHistory();
 
   const dumpDataPenunjang = [
@@ -19,7 +19,7 @@ export default function DetailPenunjang() {
 
   return (
     <Fragment>
-      <Header className="mt-0">Lab. PK</Header>
+      <Header className="mt-0">{namaTempatLayanan}</Header>
       <Divider />
       {/* <TableContainer> */}
       <Table className="mt-4" celled striped selectable sortable compact>
@@ -58,7 +58,12 @@ export default function DetailPenunjang() {
           {[...Array(3)].map((i, idx) => (
             <Table.Row
               key={idx}
-              onClick={() => history.push('/detail-rekam-medis/penunjang')}
+              onClick={() =>
+                history.push({
+                  pathname: '/detail-rekam-medis/penunjang',
+                  search: `kode=${kode}`,
+                })
+              }
             >
               {[...Array(8)].map((ic, idxc) => (
                 <Table.Cell key={idxc}>
