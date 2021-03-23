@@ -46,32 +46,34 @@ export default function Main() {
   }
 
   return (
-    <Suspense fallback={<LoaderWithNoDimmer />}>
-      {/* <Switch> */}
-      <Route path="/">
-        <Index withAdd={true} />
-      </Route>
-
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        centered={false}
-        size={
-          undefined !== checkPathname(lastPathname).size
-            ? checkPathname(lastPathname).size
-            : 'fullscreen'
-        }
-        open={checkPathname(lastPathname).status}
-        onClose={() => {
-          history.goBack();
-        }}
-      >
-        <Route path={checkPathname(lastPathname).path}>
-          {checkPathname(lastPathname).component}
+    <Router>
+      <Suspense fallback={<LoaderWithNoDimmer />}>
+        {/* <Switch> */}
+        <Route path="/">
+          <Index withAdd={true} />
         </Route>
-      </Modal>
 
-      {/* </Switch> */}
-    </Suspense>
+        <Modal
+          closeIcon
+          closeOnDimmerClick={false}
+          centered={false}
+          size={
+            undefined !== checkPathname(lastPathname).size
+              ? checkPathname(lastPathname).size
+              : 'fullscreen'
+          }
+          open={checkPathname(lastPathname).status}
+          onClose={() => {
+            history.goBack();
+          }}
+        >
+          <Route path={checkPathname(lastPathname).path}>
+            {checkPathname(lastPathname).component}
+          </Route>
+        </Modal>
+
+        {/* </Switch> */}
+      </Suspense>
+    </Router>
   );
 }

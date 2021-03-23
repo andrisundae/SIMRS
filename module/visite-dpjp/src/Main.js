@@ -8,10 +8,11 @@ import {
 } from 'react-router-dom';
 import { Modal } from 'semantic-ui-react';
 import LoaderWithNoDimmer from '@simrs/rekam-medis/src/component/LoaderWithNoDimmer';
+import _ from 'lodash';
 
-const Index = lazy(() => import('../component/pemenuhan/Index'));
+const Index = lazy(() => import('./page/Index'));
 
-export default function Permintaan() {
+export default function Main() {
   const history = useHistory();
   const location = useLocation();
 
@@ -22,24 +23,6 @@ export default function Permintaan() {
         <Route path="/">
           <Index />
         </Route>
-        {/* 
-        <Modal
-          closeIcon
-          closeOnDimmerClick={false}
-          centered={false}
-          size="large"
-          open={
-            "/kerja-sama-medis/konsul-dokter/permintaan/add" === location.pathname
-          }
-          onClose={() => {
-            history.goBack();
-          }}
-        >
-          <Route path="/add">
-            <Add />
-          </Route>
-        </Modal> */}
-
         {/* </Switch> */}
       </Suspense>
     </Router>

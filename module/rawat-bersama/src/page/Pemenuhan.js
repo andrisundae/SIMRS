@@ -16,30 +16,32 @@ export default function Permintaan() {
   const location = useLocation();
 
   return (
-    <Suspense fallback={<LoaderWithNoDimmer />}>
-      {/* <Switch> */}
-      <Route path="/">
-        <Index />
-      </Route>
-      {/* 
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        centered={false}
-        size="large"
-        open={
-          "/kerja-sama-medis/konsul-dokter/permintaan/add" === location.pathname
-        }
-        onClose={() => {
-          history.goBack();
-        }}
-      >
-        <Route path="/add">
-          <Add />
+    <Router>
+      <Suspense fallback={<LoaderWithNoDimmer />}>
+        {/* <Switch> */}
+        <Route path="/">
+          <Index />
         </Route>
-      </Modal> */}
+        {/* 
+        <Modal
+          closeIcon
+          closeOnDimmerClick={false}
+          centered={false}
+          size="large"
+          open={
+            "/kerja-sama-medis/konsul-dokter/permintaan/add" === location.pathname
+          }
+          onClose={() => {
+            history.goBack();
+          }}
+        >
+          <Route path="/add">
+            <Add />
+          </Route>
+        </Modal> */}
 
-      {/* </Switch> */}
-    </Suspense>
+        {/* </Switch> */}
+      </Suspense>
+    </Router>
   );
 }

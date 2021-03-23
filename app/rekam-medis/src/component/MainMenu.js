@@ -121,7 +121,7 @@ export default function MainMenu() {
 
   function toVisiteDpjp(e) {
     e.preventDefault();
-    alert('VisiteDpjp');
+    history.push('/antrian/visite-dpjp');
   }
 
   function toRawatBersama(e) {

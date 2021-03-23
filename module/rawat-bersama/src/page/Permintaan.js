@@ -17,30 +17,33 @@ export default function Permintaan() {
   const location = useLocation();
 
   return (
-    <Suspense fallback={<LoaderWithNoDimmer />}>
-      {/* <Switch> */}
-      <Route path="/">
-        <Index />
-      </Route>
-
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        centered={false}
-        size="large"
-        open={
-          '/kerja-sama-medis/rawat-bersama/permintaan/add' === location.pathname
-        }
-        onClose={() => {
-          history.goBack();
-        }}
-      >
-        <Route path="/kerja-sama-medis/rawat-bersama/permintaan/add">
-          <Add />
+    <Router>
+      <Suspense fallback={<LoaderWithNoDimmer />}>
+        {/* <Switch> */}
+        <Route path="/">
+          <Index />
         </Route>
-      </Modal>
 
-      {/* </Switch> */}
-    </Suspense>
+        <Modal
+          closeIcon
+          closeOnDimmerClick={false}
+          centered={false}
+          size="large"
+          open={
+            '/kerja-sama-medis/rawat-bersama/permintaan/add' ===
+            location.pathname
+          }
+          onClose={() => {
+            history.goBack();
+          }}
+        >
+          <Route path="/kerja-sama-medis/rawat-bersama/permintaan/add">
+            <Add />
+          </Route>
+        </Modal>
+
+        {/* </Switch> */}
+      </Suspense>
+    </Router>
   );
 }
