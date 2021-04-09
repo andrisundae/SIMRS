@@ -1,8 +1,7 @@
 import actionTypes from './redux/actionTypes';
 const statusesElements = {
   [actionTypes.READY]: ['norm'],
-  [actionTypes.SELECTED]: ['edit', 'finish'],
-  [actionTypes.EDIT]: ['form', 'cancel', 'save'],
+  [actionTypes.SELECTED]: ['finish'],
 };
 
 const staticConst = {

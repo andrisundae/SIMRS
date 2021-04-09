@@ -6,6 +6,18 @@ export const postSelector = createSelector(
   (state) => state.default.post,
   (post) => post
 );
+export const selectedSelector = createSelector(
+  (state) => state.default.selected,
+  (selected) => selected
+);
+export const loaderKunjunganDetailSelector = createSelector(
+  (state) => state.default.loaderKunjunganDetail,
+  (loaderKunjunganDetail) => loaderKunjunganDetail
+);
+export const summarySelector = createSelector(
+  (state) => state.default.summary,
+  (summary) => summary
+);
 export const loaderSelector = createSelector(
   (state) => state.loader.count,
   (count) => count > 0
@@ -17,18 +29,6 @@ export const loaderMessageSelector = createSelector(
 export const focusElementSelector = createSelector(
   (state) => state.default.focusElement,
   (focusElement) => focusElement
-);
-export const dataSelector = createSelector(
-  (state) => state.default.data,
-  (data) => data
-);
-export const selectedOptionSelector = createSelector(
-  (state) => state.default.selectedOption,
-  (data) => data
-);
-export const filterWilayahSelector = createSelector(
-  (state) => state.default.filterWilayah,
-  (data) => data
 );
 export const datatableSelector = createSelector(
   (state) => state.datatable.datatables,

@@ -230,6 +230,11 @@ const routers = [
     path: '/billing/master/pasien',
     component: lazy(() => import('@module/detail-pasien')),
   },
+  {
+    key: '_billing_informasi_riwayat_kunjungan',
+    path: '/billing/informasi/riwayat-kunjungan',
+    component: lazy(() => import('@module/informasi-riwayat-kunjungan')),
+  },
 ];
 
 export default routers;

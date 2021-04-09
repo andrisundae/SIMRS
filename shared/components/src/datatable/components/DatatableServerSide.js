@@ -110,6 +110,7 @@ class DataTableServerSide extends Component {
       navigateToSelect,
       disabled,
       messageDisabled,
+      frameworkComponents,
       ...gridOptions
     } = this.props;
 
@@ -145,6 +146,7 @@ class DataTableServerSide extends Component {
         footerPinnedRowRenderer: FooterPinnedRowRenderer,
         checkboxRenderer: CheckboxRenderer,
         dropdownSelectRenderer: DropdownSelectRenderer,
+        ...frameworkComponents,
       },
     };
 

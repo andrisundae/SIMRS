@@ -5,7 +5,7 @@ import { Grid, Segment, Divider } from 'semantic-ui-react';
 import { useModuleTrans } from '@simrs/components';
 import { formatter } from '@simrs/common';
 
-const InfoBiaya = ({ data }) => {
+const Summary = ({ data }) => {
   const t = useModuleTrans();
   const kurang = data.keringanan - data.bayar - data.pengembalian;
   return (
@@ -77,8 +77,8 @@ const InfoBiaya = ({ data }) => {
   );
 };
 
-InfoBiaya.propTypes = {
+Summary.propTypes = {
   data: PropTypes.object,
 };
 
-export default InfoBiaya;
+export default React.memo(Summary);

@@ -2,72 +2,73 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DatatableServerSide, useModuleTrans } from '@simrs/components';
 import { staticConst } from '../static';
+import useDatatable from '../hooks/useDatatable';
 
 const RiwayatKunjunganUnitDetail = ({ dataSource, data, innerRef }) => {
   const t = useModuleTrans();
+  const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
 
   const columns = [
     {
       headerName: t('tanggal'),
-      field: 'nama_komponen',
-      cellRenderer: 'loadingRenderer',
+      field: 'tanggal',
+      cellRenderer: 'dateRenderer',
+      cellStyle: { 'background-color': '#f5f7f7' },
+      cellClass: 'ag-date-cell',
       sortable: true,
     },
     {
       headerName: t('kelompok'),
-      field: 'keterangan',
+      field: 'kelompok',
       sortable: true,
     },
     {
       headerName: t('layanan'),
-      field: 'keterangan',
+      field: 'layanan',
       sortable: true,
     },
     {
       headerName: t('kelas'),
-      field: 'keterangan',
+      field: 'kelas',
       sortable: true,
     },
     {
       headerName: t('pelaksana'),
-      field: 'keterangan',
+      field: 'pelaksana',
       sortable: true,
     },
     {
       headerName: t('jumlah'),
-      field: 'keterangan',
+      field: 'jumlah',
+      cellRenderer: 'currencyRenderer',
       sortable: true,
     },
     {
       headerName: t('harga'),
-      field: 'keterangan',
+      field: 'harga',
+      cellRenderer: 'currencyRenderer',
       sortable: true,
     },
     {
       headerName: t('total_biaya'),
-      field: 'keterangan',
+      field: 'total_biaya',
+      cellRenderer: 'currencyRenderer',
       sortable: true,
     },
     {
       headerName: t('petugas_input'),
-      field: 'keterangan',
+      field: 'petugas_input',
       sortable: true,
     },
   ];
 
-  const getRowNodeId = (row) => row.id;
-
   React.useEffect(() => {
-    if (innerRef.current) {
-      const gridApi = innerRef.current.gridApi;
-      if (gridApi) {
-        gridApi.setDatasource({
-          rowCount: null,
-          getRows: (res) => res.successCallback(dataSource, dataSource.length),
-        });
-      }
+    if (gridApi && data.id) {
+      gridApi.setDatasource(dataSource);
+    } else if (gridApi && !data.id) {
+      gridApi.setDatasource(emptySource);
     }
-  }, [dataSource, innerRef]);
+  }, [data.id, gridApi, dataSource, emptySource]);
 
   return (
     <DatatableServerSide
@@ -81,6 +82,7 @@ const RiwayatKunjunganUnitDetail = ({ dataSource, data, innerRef }) => {
       containerHeight="160px"
       getRowNodeId={getRowNodeId}
       autoSizeColumn={true}
+      onGridReady={onGridReady}
     />
   );
 };
