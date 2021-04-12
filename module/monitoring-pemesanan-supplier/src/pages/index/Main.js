@@ -25,6 +25,7 @@ const Main = (props) => {
           start: params.startRow,
           sort_name: sortModel.colId ? sortModel.colId : '',
           sort_order: sortModel.colId ? sortModel.sort : '',
+          use_tgl: true,
         };
 
         dispatch(

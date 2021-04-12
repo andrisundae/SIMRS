@@ -82,7 +82,7 @@ function* loadPemesanan({ meta, payload }) {
       ...payload.data,
     });
 
-    if (response.info.type === 'success') {
+    if (response.status) {
       yield put(
         localActions.findPemesanan.requestSuccess(
           meta.resource,

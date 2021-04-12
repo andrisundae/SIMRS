@@ -84,13 +84,13 @@ const ListData = ({ trans, resource, dataSource }) => {
       },
       {
         headerName: trans('header.column.no_pemesanan'),
-        field: 'no_transaksi',
+        field: 'nomor_transaksi',
         sortable: true,
         width: 200,
       },
       {
         headerName: trans('header.column.tanggal'),
-        field: 'tanggal_transaksi',
+        field: 'tanggal',
         sortable: true,
         cellStyle: { 'text-align': 'center' },
         cellRenderer: 'dateRenderer',
