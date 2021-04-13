@@ -18,7 +18,7 @@ const HistoryPenerimaan = ({ trans, resource }) => {
     historyPenerimaan: useRef(),
   };
 
-  const itemPenerimaan = useDebounce(data, 1000);
+  const itemPenerimaan = useDebounce(data, 300);
 
   const columnDefs = () => {
     return [
