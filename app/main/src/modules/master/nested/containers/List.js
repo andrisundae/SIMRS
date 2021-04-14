@@ -28,6 +28,7 @@ class List extends Component {
     this._getRowStyle = this._getRowStyle.bind(this);
     this._onRowDoubleClick = this._onRowDoubleClick.bind(this);
     this._onRowEntered = this._onRowEntered.bind(this);
+    this._selectRow = this._selectRow.bind(this);
 
     this.dataTable = createRef();
   }

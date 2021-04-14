@@ -187,7 +187,7 @@ export default (state = initialState, action) =>
               payload.data.alias_jenis_layanan !== staticConst.RAWAT_INAP_ALIAS
             ) {
               const findNonKelas = state.data.options_kelas.find(
-                (row) => row.value === staticConst.ID_NON_KELAS
+                (row) => row.alias === staticConst.NON_KELAS
               );
               draft.post.id_kelas = staticConst.ID_NON_KELAS;
               draft.post.nama_non_kelas = findNonKelas
@@ -522,7 +522,7 @@ export default (state = initialState, action) =>
         //Set selected kelas kamar atau nonkelas
         if (instalasi.jenis_layanan.alias !== staticConst.RAWAT_INAP_ALIAS) {
           const findNonKelas = state.data.options_kelas.find(
-            (row) => row.value === staticConst.ID_NON_KELAS
+            (row) => row.alias === staticConst.NON_KELAS
           );
           // draft.post.id_kelas = staticConst.ID_NON_KELAS;
           draft.post.nama_non_kelas = findNonKelas ? findNonKelas.label : '';

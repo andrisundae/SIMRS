@@ -39,6 +39,7 @@ class DataTableServerSide extends Component {
     this._onCellContextMenu = this._onCellContextMenu.bind(this);
     this._handleResizeWindow = this._handleResizeWindow.bind(this);
     this._onSuppressKeyboardEvent = this._onSuppressKeyboardEvent.bind(this);
+    this.selectRow = this.selectRow.bind(this);
 
     //Set css theme
     // this._setThemeCss();
@@ -70,10 +71,12 @@ class DataTableServerSide extends Component {
   }
 
   setFocusedCell = (rowIndex) => {
-    this.gridApi.ensureIndexVisible(0);
-    const firstCol = this.columnApi.getAllDisplayedColumns()[0];
-    this.gridApi.ensureColumnVisible(firstCol);
-    this.gridApi.setFocusedCell(rowIndex, firstCol);
+    if (this.gridApi) {
+      this.gridApi.ensureIndexVisible(0);
+      const firstCol = this.columnApi.getAllDisplayedColumns()[0];
+      this.gridApi.ensureColumnVisible(firstCol);
+      this.gridApi.setFocusedCell(rowIndex, firstCol);
+    }
   };
 
   setFirstRowSelected = () => {
@@ -88,13 +91,15 @@ class DataTableServerSide extends Component {
   };
 
   selectRow(id) {
-    this.gridApi.deselectAll();
-    this.gridApi.clearFocusedCell();
+    if (this.gridApi && id) {
+      this.gridApi.deselectAll();
+      this.gridApi.clearFocusedCell();
 
-    const node = this.gridApi.getRowNode(id);
-    if (node) {
-      this.setFocusedCell(node.rowIndex);
-      node.setSelected(true, true);
+      const node = this.gridApi.getRowNode(id);
+      if (node) {
+        this.setFocusedCell(node.rowIndex);
+        node.setSelected(true, true);
+      }
     }
   }
 
@@ -554,7 +559,7 @@ DataTableServerSide.defaultProps = {
   cacheBlockSize: 10,
   rowHeight: 25,
   sizeColumnsToFit: true,
-  autoSizeColumn: true,
+  autoSizeColumn: false,
   contextMenuItems: [],
   enableHandleAlphanumeric: false,
   handleAlphanumeric: () => {},

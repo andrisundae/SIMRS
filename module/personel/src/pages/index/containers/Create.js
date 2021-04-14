@@ -397,7 +397,7 @@ class Create extends Component {
           break;
 
         case 'id_spesialisasi_pegawai':
-          value = this.props.optionsJenisPegawai.find(
+          value = this.props.optionsSpesialisasi.find(
             (row) => row.value === selectedValue
           );
           break;
