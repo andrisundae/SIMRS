@@ -17,14 +17,12 @@ export default function Main() {
   const location = useLocation();
 
   return (
-    <Router>
-      <Suspense fallback={<LoaderWithNoDimmer />}>
-        {/* <Switch> */}
-        <Route path="/">
-          <Index />
-        </Route>
-        {/* </Switch> */}
-      </Suspense>
-    </Router>
+    <Suspense fallback={<LoaderWithNoDimmer />}>
+      {/* <Switch> */}
+      <Route path="/">
+        <Index />
+      </Route>
+      {/* </Switch> */}
+    </Suspense>
   );
 }

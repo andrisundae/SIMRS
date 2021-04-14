@@ -245,7 +245,7 @@ export default function SidebarMenu({ type, kode }) {
                             {dt2.children.map((dt3, idx3) => {
                               if (dt3.text === 'Intervensi Gizi') {
                                 return (
-                                  <Fragment>
+                                  <Fragment key={idx3}>
                                     <Dropdown.Item
                                       key={idx3}
                                       className={

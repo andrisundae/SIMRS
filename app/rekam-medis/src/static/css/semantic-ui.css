@@ -47,7 +47,17 @@ body {
   background-color: rgb(249, 250, 251);
 }
 .ui.selectable.table tbody tr:hover > td {
-  background-color: rgba(229, 231, 235, 1);
+  background-color: rgba(229, 231, 235, 1) !important;
+}
+.ui.sortable.table thead th:hover {
+  background: rgba(229, 231, 235, 1) !important;
+}
+.ui.sortable.table thead th.sorted {
+  background: rgba(243, 244, 246, 1) !important;
+  color: rgba(0, 0, 0, 0.95);
+}
+.ui.sortable.table thead th.sorted:after {
+  display: none !important;
 }
 
 /* modal */

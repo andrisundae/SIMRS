@@ -38,30 +38,28 @@ export default function Main() {
   }
 
   return (
-    <Router>
-      <Suspense fallback={<LoaderWithNoDimmer />}>
-        {/* <Switch> */}
-        <Route path="/">
-          <Index />
+    <Suspense fallback={<LoaderWithNoDimmer />}>
+      {/* <Switch> */}
+      <Route path="/">
+        <Index />
+      </Route>
+
+      <Modal
+        closeIcon
+        closeOnDimmerClick={false}
+        centered={false}
+        size="large"
+        open={checkPathname(lastPathname).status}
+        onClose={() => {
+          history.goBack();
+        }}
+      >
+        <Route path={checkPathname(lastPathname).path}>
+          {checkPathname(lastPathname).component}
         </Route>
+      </Modal>
 
-        <Modal
-          closeIcon
-          closeOnDimmerClick={false}
-          centered={false}
-          size="large"
-          open={checkPathname(lastPathname).status}
-          onClose={() => {
-            history.goBack();
-          }}
-        >
-          <Route path={checkPathname(lastPathname).path}>
-            {checkPathname(lastPathname).component}
-          </Route>
-        </Modal>
-
-        {/* </Switch> */}
-      </Suspense>
-    </Router>
+      {/* </Switch> */}
+    </Suspense>
   );
 }
