@@ -30,7 +30,11 @@ import {
 } from '../pages/index/redux/selector';
 
 import { actionTypes, actions as localAction } from '../pages/index';
-import { settingNoTransaksi, tableName } from '../pages/static';
+import {
+  settingNoTransaksi,
+  tableName,
+  settingNoTransaksiNonHutang,
+} from '../pages/static';
 import { dateFormatClient } from '@simrs/common/src/utils/formatter';
 
 const { getFirstError, getFirstElementError } = commonValidator;
@@ -48,7 +52,17 @@ function* populateForm({ meta }) {
   try {
     yield put(loaderActions.show());
     let { initialForm } = masterActions;
-    let response = yield call(api.init);
+    let response = {};
+    if (meta.resource === '_farmasi_transaksi_sub_pembelian') {
+      response = yield call(api.init);
+    }
+
+    if (
+      meta.resource === '_farmasi_transaksi_sub_penerimaan_pemesanansupplier'
+    ) {
+      response = yield call(api.initNon);
+    }
+
     if (response.info.type === 'success') {
       yield put(initialForm.requestSuccess(meta.resource, response.data));
     } else {
@@ -70,8 +84,15 @@ function* populateFormSuccess({ meta, payload }) {
 function* generateNomor({ meta }) {
   try {
     let { generateNoTransaksi } = localAction;
+    let aliasNoTransaksi = settingNoTransaksi;
 
-    let response = yield call(api.getNormorTransaksi, settingNoTransaksi);
+    if (
+      meta.resource === '_farmasi_transaksi_sub_penerimaan_pemesanansupplier'
+    ) {
+      aliasNoTransaksi = settingNoTransaksiNonHutang;
+    }
+
+    let response = yield call(api.getNormorTransaksi, aliasNoTransaksi);
     if (response.info.type === 'success') {
       yield put(
         generateNoTransaksi.requestSuccess(meta.resource, response.data)
@@ -100,7 +121,6 @@ function* loadAllDetail({ meta, payload }) {
         sort_order: payload.data.sort_order,
         id_pembelian: afterSave.data.id,
       };
-
       let response = yield call(api.getListDetail, postData);
 
       if (response.status) {
@@ -258,7 +278,17 @@ function* handleSave({ meta, payload }) {
     let errors = validator(posted, rules, messages);
 
     if (_.isEmpty(errors)) {
-      let response = yield call(api.save, method, posted);
+      let response = {};
+
+      if (
+        meta.resource === '_farmasi_transaksi_sub_penerimaan_pemesanansupplier'
+      ) {
+        response = yield call(api.saveNon, method, posted);
+      }
+
+      if (meta.resource === '_farmasi_transaksi_sub_pembelian') {
+        response = yield call(api.save, method, posted);
+      }
 
       if (response.status) {
         yield put(masterActions.save.requestSuccess(meta.resource, response));
@@ -348,7 +378,18 @@ function* handleSelesai({ meta, payload }) {
       let errors = validator(posted, rules, messages);
 
       if (_.isEmpty(errors)) {
-        let response = yield call(api.finish, posted);
+        let response = {};
+
+        if (
+          meta.resource ===
+          '_farmasi_transaksi_sub_penerimaan_pemesanansupplier'
+        ) {
+          response = yield call(api.finishNon, posted);
+        }
+
+        if (meta.resource === '_farmasi_transaksi_sub_pembelian') {
+          response = yield call(api.finish, posted);
+        }
 
         if (response.status) {
           yield put(
@@ -387,7 +428,16 @@ function* handleDelete({ meta, payload }) {
     let errors = validator(payload.data, rules, messages);
 
     if (_.isEmpty(errors)) {
-      let response = yield call(api.delete, payload.data);
+      let response = {};
+      if (meta.resource === '_farmasi_transaksi_sub_pembelian') {
+        response = yield call(api.delete, payload.data);
+      }
+
+      if (
+        meta.resource === '_farmasi_transaksi_sub_penerimaan_pemesanansupplier'
+      ) {
+        response = yield call(api.deleteNon, payload.data);
+      }
 
       if (response.status) {
         yield put(masterActions.delete.requestSuccess(meta.resource, response));
@@ -400,6 +450,37 @@ function* handleDelete({ meta, payload }) {
     if (!_.isEmpty(errors)) {
       yield toastr.warning(getFirstError(errors));
       yield put(masterActions.delete.requestFailure(meta.resource, errors));
+    }
+
+    yield put(loaderActions.hide());
+  } catch (error) {
+    yield put(loaderActions.hide());
+    yield toastr.error(error.message);
+  }
+}
+
+function* handleDeleteDetail({ meta, payload }) {
+  try {
+    yield put(loaderActions.show());
+
+    const { rules, messages } = validation.hapus(meta.resource);
+
+    let errors = validator(payload.data, rules, messages);
+
+    if (_.isEmpty(errors)) {
+      let response = yield call(api.deleteDetail, payload.data);
+
+      if (response.status) {
+        yield put(detailActions.delete.requestSuccess(meta.resource, response));
+      } else {
+        yield toastr.warning(response.message);
+        errors = response.data;
+      }
+    }
+
+    if (!_.isEmpty(errors)) {
+      yield toastr.warning(getFirstError(errors));
+      yield put(detailActions.delete.requestFailure(meta.resource, errors));
     }
 
     yield put(loaderActions.hide());
@@ -435,6 +516,17 @@ function* onDeleteSuccess({ meta, payload }) {
   yield toastr.success(payload.data.message);
   yield put(masterActions.onReset(meta.resource));
   yield put(detailActions.onReset(meta.resource));
+  yield put(
+    datatableActions.onReload(
+      tableName.DETAIL_LIST,
+      constDatatable.reloadType.purge
+    )
+  );
+}
+
+function* onDeleteDetailSuccess({ meta, payload }) {
+  yield toastr.success(payload.data.message);
+  yield put(detailActions.onReady(meta.resource));
   yield put(
     datatableActions.onReload(
       tableName.DETAIL_LIST,
@@ -485,5 +577,7 @@ export default function* watchActions() {
     takeLatest(detailActionTypes.SET_DATA_DETAIL, onFoucusNoBatch),
     takeLatest(detailActionTypes.SAVE_REQUEST, handleSaveDetail),
     takeLatest(detailActionTypes.SAVE_SUCCESS, onSaveDetailSuccess),
+    takeLatest(detailActionTypes.DELETE_REQUEST, handleDeleteDetail),
+    takeLatest(detailActionTypes.DELETE_SUCCESS, onDeleteDetailSuccess),
   ]);
 }

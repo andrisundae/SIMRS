@@ -6,6 +6,10 @@ export default {
     const response = await request.get(`${path.PEMBELIAN}/init`);
     return response;
   },
+  initNon: async () => {
+    const response = await request.get(`${path.PEMBELIAN_NON_HUTANG}/init`);
+    return response;
+  },
   getNormorTransaksi: async (alias) => {
     const response = await request.get(
       `${path.COMMON_NOMOR_TRANSAKSI}/${alias}`
@@ -15,6 +19,16 @@ export default {
   save: async (method, params) => {
     const response = await request.post(
       `${path.PEMBELIAN}/${method}`,
+      params,
+      {},
+      false
+    );
+
+    return response;
+  },
+  saveNon: async (method, params) => {
+    const response = await request.post(
+      `${path.PEMBELIAN_NON_HUTANG}/${method}`,
       params,
       {},
       false
@@ -32,9 +46,29 @@ export default {
 
     return response;
   },
+  deleteNon: async (params) => {
+    const response = await request.post(
+      `${path.PEMBELIAN_NON_HUTANG}/hapus`,
+      params,
+      {},
+      false
+    );
+
+    return response;
+  },
   finish: async (params) => {
     const response = await request.post(
       `${path.PEMBELIAN}/selesai`,
+      params,
+      {},
+      false
+    );
+
+    return response;
+  },
+  finishNon: async (params) => {
+    const response = await request.post(
+      `${path.PEMBELIAN_NON_HUTANG}/selesai`,
       params,
       {},
       false
@@ -72,9 +106,29 @@ export default {
 
     return response;
   },
+  deleteDetailNon: async (params) => {
+    const response = await request.post(
+      `${path.PEMBELIAN_NON_HUTANG}/hapus`,
+      params,
+      {},
+      false
+    );
+
+    return response;
+  },
   getListDetail: async (params) => {
     const response = await request.post(
       `${path.PEMBELIAN_DETAIL}/view`,
+      params,
+      {},
+      false
+    );
+
+    return response;
+  },
+  getListDetailNon: async (params) => {
+    const response = await request.post(
+      `${path.PEMBELIAN_NON_HUTANG}/view`,
       params,
       {},
       false
