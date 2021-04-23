@@ -200,7 +200,7 @@ class FooterActions extends Component {
 
   _onEdit() {
     this.props.action.onEdit(this.props.resource);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.deactivateMainMenu();
   }
 
   _onDelete() {
@@ -215,12 +215,12 @@ class FooterActions extends Component {
 
   _onSave() {
     this.props.action.onSave(this.props.resource, this.props.post);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.activateMainMenu();
   }
 
   _onCancel() {
     this.props.action.onCancel(this.props.resource);
-    this.props.appContext.toggleMainMenu();
+    this.props.appActions.activateMainMenu();
   }
 
   _onShowLog() {
