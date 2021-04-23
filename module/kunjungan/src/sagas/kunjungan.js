@@ -19,6 +19,7 @@ import {
   getPost,
   isPasienBaru,
   getSelectedOption,
+  menggabungkanKunjunganIbuDanBayiSelector,
 } from '../pages/index';
 import { staticConst } from '../pages/index/static';
 
@@ -266,7 +267,9 @@ function* getPasienRequestHandler({ meta, payload }) {
     if (response.status) {
       yield put(actions.getPasien.requestSuccess(meta.resource, response.data));
       const data = response.data;
-      yield put(actions.onSelected(meta.resource, data));
+      if (data) {
+        yield put(actions.onSelected(meta.resource, data));
+      }
     } else {
       yield put(
         actions.getPasien.requestFailure(meta.resource, response.message)
@@ -281,6 +284,64 @@ function* getPasienRequestHandler({ meta, payload }) {
     yield toastr.error(error.message);
     yield put(loaderActions.hide());
   }
+}
+
+function* getPasienIbunyaRequestHandler({ meta, payload }) {
+  try {
+    let response = yield call(api.getPasienByNorm, payload.data.norm);
+    if (response.status) {
+      yield put(
+        actions.getPasienIbunya.requestSuccess(meta.resource, response.data)
+      );
+      if (response.data) {
+        yield put(
+          actions.getKunjunganIbunya.request(meta.resource, {
+            id: response.data.id,
+          })
+        );
+      }
+    } else {
+      yield put(
+        actions.getPasienIbunya.requestFailure(meta.resource, response.message)
+      );
+      messageBox({
+        title: 'Info',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* getKunjunganIbunyaRequestHandler({ meta, payload }) {
+  try {
+    const response = yield call(api.getKunjunganAsalIbu, payload.data.id);
+    if (response.status) {
+      yield put(
+        actions.getKunjunganIbunya.requestSuccess(meta.resource, response.data)
+      );
+    } else {
+      yield put(
+        actions.getKunjunganIbunya.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+      messageBox({
+        title: 'Info',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* getKunjunganIbunyaSuccessHandler({ meta }) {
+  yield put(
+    actions.onFocusElementGabungBayi(meta.resource, 'id_kunjungan_asal_ibu')
+  );
 }
 
 function* selectedHandler({ meta, payload }) {
@@ -704,7 +765,7 @@ function* settingKelasPenjaminRequestHandler({ meta, payload }) {
 
 function* unitLayananKunjunganHariIniRequestHandler({ meta, payload }) {
   try {
-    let response = yield call(
+    const response = yield call(
       api.getUnitLayananOptions,
       payload.data.instalasi_id
     );
@@ -760,6 +821,7 @@ function* checkAddHandler({ payload, meta }) {
             i18n.t(`common:dialog.action.no`),
           ],
           onOk: payload.data.callBack,
+          onCancel: payload.data.cancelCallBack,
         });
       }
     }
@@ -794,6 +856,114 @@ function* checkSaveHandler({ payload, meta }) {
   }
 }
 
+function* gabungBayiHandler({ payload, meta }) {
+  const { resource } = meta;
+  try {
+    const { rules, messages } = api.gabungBayiValidationRules(resource);
+    let errors = validator(payload.data, rules, messages);
+    let isError = false;
+
+    if (_.isEmpty(errors)) {
+      const response = yield call(api.saveKunjunganIbunya, payload.data);
+      if (response.status) {
+        yield put(
+          actions.saveKunjunganIbuNya.requestSuccess(resource, response)
+        );
+      } else {
+        isError = true;
+        errors = response.data;
+      }
+    } else {
+      isError = true;
+    }
+
+    if (isError) {
+      yield toastr.warning(getFirstError(errors));
+      yield put(actions.saveKunjunganIbuNya.requestFailure(resource, errors));
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* gabungBayiSuccessHandler({ payload }) {
+  yield toastr.success(payload.data.message);
+}
+
+function* gabungBayiFailureHandler({ payload, meta }) {
+  let { resource } = meta;
+  yield put(
+    actions.onFocusElementGabungBayi(
+      resource,
+      getFirstElementError(payload.errors)
+    )
+  );
+}
+
+function* showGabungKunjunganIbuDanBayiHandler({ meta }) {
+  const post = yield select(getPost);
+  const { show } = yield select(menggabungkanKunjunganIbuDanBayiSelector);
+  if (show) {
+    yield put(
+      actions.checkKunjunganIbunya.request(meta.resource, {
+        id: post.id,
+      })
+    );
+  }
+}
+
+function* checkKunjunganIbuDanBayiRequestHandler({ meta, payload }) {
+  try {
+    let response = yield call(api.getKunjunganIbu, payload.data.id);
+    if (response.status) {
+      yield put(
+        actions.checkKunjunganIbunya.requestSuccess(
+          meta.resource,
+          response.data
+        )
+      );
+      if (!response.data) {
+        yield put(actions.onFocusElementGabungBayi(meta.resource, 'norm'));
+      }
+    } else {
+      yield put(
+        actions.checkKunjunganIbunya.requestFailure(
+          meta.resource,
+          response.message
+        )
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* resetGabungBayiHandler({ payload, meta }) {
+  const { resource } = meta;
+  try {
+    const response = yield call(
+      api.resetKunjunganIbunya,
+      payload.data.id_kunjungan
+    );
+    if (response.status) {
+      yield put(
+        actions.deleteKunjunganIbuNya.requestSuccess(resource, response)
+      );
+    } else {
+      yield put(
+        actions.deleteKunjunganIbuNya.requestFailure(resource, response.message)
+      );
+    }
+  } catch (error) {
+    yield toastr.error(error.message);
+  }
+}
+
+function* resetGabungBayiSuccessHandler({ meta, payload }) {
+  yield toastr.success(payload.data.message);
+  yield put(actions.onFocusElementGabungBayi(meta.resource, 'norm'));
+}
+
 export default function* watchAuthActions() {
   yield all([
     takeLatest(actionTypes.CHECK_EDIT, checkEditHandler),
@@ -818,6 +988,14 @@ export default function* watchAuthActions() {
     ),
     takeLatest(actionTypes.NEXT_NORM_REQUEST, nextNormRequest),
     takeLatest(actionTypes.GET_PASIEN_REQUEST, getPasienRequestHandler),
+    takeLatest(
+      actionTypes.GET_PASIEN_IBUNYA_REQUEST,
+      getPasienIbunyaRequestHandler
+    ),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_IBUNYA_REQUEST,
+      getKunjunganIbunyaRequestHandler
+    ),
     takeLatest(
       actionTypes.GET_KUNJUNGAN_TERAKHIR_REQUEST,
       getKunjunganTerakhirRequestHandler
@@ -864,6 +1042,35 @@ export default function* watchAuthActions() {
     takeLatest(
       actionTypes.OPEN_MENU_STATUS_PASIEN,
       openMenuStatusPasienHandler
+    ),
+    takeLatest(actionTypes.SAVE_KUNJUNGAN_IBUNYA_REQUEST, gabungBayiHandler),
+    takeLatest(
+      actionTypes.SAVE_KUNJUNGAN_IBUNYA_SUCCESS,
+      gabungBayiSuccessHandler
+    ),
+    takeLatest(
+      actionTypes.TOGGLE_SHOW_MENGGABUNGKAN_KUNJUNGAN_ANAK_IBU,
+      showGabungKunjunganIbuDanBayiHandler
+    ),
+    takeLatest(
+      actionTypes.CHECK_KUNJUNGAN_IBUNYA_REQUEST,
+      checkKunjunganIbuDanBayiRequestHandler
+    ),
+    takeLatest(
+      actionTypes.DELETE_KUNJUNGAN_IBUNYA_REQUEST,
+      resetGabungBayiHandler
+    ),
+    takeLatest(
+      actionTypes.DELETE_KUNJUNGAN_IBUNYA_SUCCESS,
+      resetGabungBayiSuccessHandler
+    ),
+    takeLatest(
+      actionTypes.SAVE_KUNJUNGAN_IBUNYA_FAILURE,
+      gabungBayiFailureHandler
+    ),
+    takeLatest(
+      actionTypes.GET_KUNJUNGAN_IBUNYA_SUCCESS,
+      getKunjunganIbunyaSuccessHandler
     ),
   ]);
 }

@@ -46,6 +46,46 @@ export default {
         { resource, log: createActivity(resource, activity.HAPUS, 'gagal') }
       ),
   },
+  saveKunjunganIbuNya: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.SAVE_KUNJUNGAN_IBUNYA_REQUEST,
+        { data },
+        { resource, log: createActivity(resource, activity.SIMPAN) }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.SAVE_KUNJUNGAN_IBUNYA_SUCCESS,
+        { data },
+        { resource, log: createActivity(resource, activity.SIMPAN, 'sukses') }
+      ),
+    requestFailure: (resource, errors) =>
+      createAction(
+        actionTypes.SAVE_KUNJUNGAN_IBUNYA_FAILURE,
+        { errors },
+        { resource, log: createActivity(resource, activity.SIMPAN, 'gagal') }
+      ),
+  },
+  deleteKunjunganIbuNya: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.DELETE_KUNJUNGAN_IBUNYA_REQUEST,
+        { data },
+        { resource, log: createActivity(resource, activity.HAPUS) }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.DELETE_KUNJUNGAN_IBUNYA_SUCCESS,
+        { data },
+        { resource, log: createActivity(resource, activity.HAPUS, 'sukses') }
+      ),
+    requestFailure: (resource, errors) =>
+      createAction(
+        actionTypes.DELETE_KUNJUNGAN_IBUNYA_FAILURE,
+        { errors },
+        { resource, log: createActivity(resource, activity.HAPUS, 'gagal') }
+      ),
+  },
   populateForm: {
     request: (resource, data) =>
       createAction(actionTypes.POPULATE_FORM_REQUEST, { data }, { resource }),
@@ -298,6 +338,66 @@ export default {
       {},
       { resource, log: createActivity(resource, activity.KOREKSI) }
     ),
+  getPasienIbunya: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_PASIEN_IBUNYA_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_PASIEN_IBUNYA_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_PASIEN_IBUNYA_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  getKunjunganIbunya: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_IBUNYA_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_IBUNYA_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_IBUNYA_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
+  checkKunjunganIbunya: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.CHECK_KUNJUNGAN_IBUNYA_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.CHECK_KUNJUNGAN_IBUNYA_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.CHECK_KUNJUNGAN_IBUNYA_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   onCancel: (resource) => createAction(actionTypes.CANCEL, {}, { resource }),
   onCheckEdit: (resource, data) =>
     createAction(actionTypes.CHECK_EDIT, { data }, { resource }),
@@ -330,6 +430,8 @@ export default {
       { name, data, isTindakan },
       { resource }
     ),
+  onChangeAsalKunjunganIbu: (resource, data) =>
+    createAction(actionTypes.CHANGE_ASAL_KUNJUNGAN_IBU, { data }, { resource }),
   toggleShowCariPasien: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_CARI_PASIEN, {}, { resource }),
   toggleShowCariWilayah: (resource) =>
@@ -340,6 +442,12 @@ export default {
     createAction(actionTypes.TOGGLE_SHOW_NORM_MODAL, {}, { resource }),
   toggleShowKunjunganHariIni: (resource) =>
     createAction(actionTypes.TOGGLE_SHOW_KUNJUNGAN_HARI_INI, {}, { resource }),
+  toggleShowMenggabungkanKunjunganAnakIbu: (resource) =>
+    createAction(
+      actionTypes.TOGGLE_SHOW_MENGGABUNGKAN_KUNJUNGAN_ANAK_IBU,
+      {},
+      { resource }
+    ),
 
   onChangeFilterPasien: (resource, data) =>
     createAction(actionTypes.FILTER_CHANGE_PASIEN, { data }, { resource }),
@@ -386,4 +494,10 @@ export default {
     createAction(actionTypes.CLOSE_MENU_STATUS_PASIEN, {}, { resource }),
   resetKunjunganDetail: (resource) =>
     createAction(actionTypes.RESET_KUNJUNGAN_DETAIL, {}, { resource }),
+  onFocusElementGabungBayi: (resource, element) =>
+    createAction(
+      actionTypes.ON_FOCUS_ELEMENT_GABUNG_BAYI,
+      { element },
+      { resource }
+    ),
 };

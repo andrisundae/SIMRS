@@ -26,6 +26,7 @@ const statusesElements = {
     'preview',
     'finish',
     'tab_penjamin_pasien',
+    'norm_ibunya',
   ],
   [actionTypes.ADD]: [
     'detail_pasien',

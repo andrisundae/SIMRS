@@ -144,4 +144,19 @@ export default {
     loaderUnitLayanan: false,
   },
   saveSuccess: false,
+  menggabungkanKunjunganIbuDanBayi: {
+    show: false,
+    post: {
+      id: '',
+      nama: '',
+      norm: '',
+    },
+    data: {
+      kunjungan: [],
+    },
+    selectedKunjungan: null,
+    loader: false,
+    isExist: false,
+    focusElement: '',
+  },
 };

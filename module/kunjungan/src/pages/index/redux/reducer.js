@@ -819,6 +819,119 @@ export default (state = initialState, action) =>
         return;
       }
 
+      // Menggabungkan kunjungan anak dan ibunya
+      case actionTypes.TOGGLE_SHOW_MENGGABUNGKAN_KUNJUNGAN_ANAK_IBU: {
+        draft.menggabungkanKunjunganIbuDanBayi = {
+          ...initialState.menggabungkanKunjunganIbuDanBayi,
+          show: !state.menggabungkanKunjunganIbuDanBayi.show,
+        };
+        return;
+      }
+
+      case actionTypes.GET_PASIEN_IBUNYA_SUCCESS: {
+        if (payload.data) {
+          draft.menggabungkanKunjunganIbuDanBayi.post = {
+            id: payload.data.id,
+            nama: payload.data.nama,
+            norm: payload.data.norm,
+          };
+        }
+        draft.menggabungkanKunjunganIbuDanBayi.loader = false;
+        return;
+      }
+
+      case actionTypes.DELETE_KUNJUNGAN_IBUNYA_REQUEST:
+      case actionTypes.CHECK_KUNJUNGAN_IBUNYA_REQUEST:
+      case actionTypes.SAVE_KUNJUNGAN_IBUNYA_REQUEST:
+      case actionTypes.GET_KUNJUNGAN_IBUNYA_REQUEST:
+      case actionTypes.GET_PASIEN_IBUNYA_REQUEST: {
+        draft.menggabungkanKunjunganIbuDanBayi.loader = true;
+        return;
+      }
+
+      case actionTypes.DELETE_KUNJUNGAN_IBUNYA_FAILURE:
+      case actionTypes.CHECK_KUNJUNGAN_IBUNYA_FAILURE:
+      case actionTypes.SAVE_KUNJUNGAN_IBUNYA_FAILURE:
+      case actionTypes.GET_KUNJUNGAN_IBUNYA_FAILURE:
+      case actionTypes.GET_PASIEN_IBUNYA_FAILURE: {
+        draft.menggabungkanKunjunganIbuDanBayi.loader = false;
+        return;
+      }
+
+      case actionTypes.SAVE_KUNJUNGAN_IBUNYA_SUCCESS: {
+        draft.menggabungkanKunjunganIbuDanBayi.loader = false;
+        draft.menggabungkanKunjunganIbuDanBayi.isExist = true;
+        return;
+      }
+
+      case actionTypes.GET_KUNJUNGAN_IBUNYA_SUCCESS: {
+        draft.menggabungkanKunjunganIbuDanBayi = {
+          ...state.menggabungkanKunjunganIbuDanBayi,
+          data: {
+            kunjungan: payload.data.map((row) => {
+              return {
+                label: row.unit_layanan,
+                tgl_kunjungan: row.tgl_kunjungan,
+                value: row.id,
+              };
+            }),
+          },
+          loader: false,
+        };
+        return;
+      }
+
+      case actionTypes.CHANGE_ASAL_KUNJUNGAN_IBU: {
+        draft.menggabungkanKunjunganIbuDanBayi.selectedKunjungan = payload.data;
+        draft.menggabungkanKunjunganIbuDanBayi.focusElement = '';
+        return;
+      }
+
+      case actionTypes.CHECK_KUNJUNGAN_IBUNYA_SUCCESS: {
+        const data = payload.data;
+        if (data) {
+          draft.menggabungkanKunjunganIbuDanBayi = {
+            ...state.menggabungkanKunjunganIbuDanBayi,
+            post: {
+              id: data.id,
+              nama: data.nama,
+              norm: data.norm,
+            },
+            selectedKunjungan: {
+              label: data.unit_layanan,
+              tgl_kunjungan: data.tgl_kunjungan,
+              value: data.id,
+            },
+            loader: false,
+            isExist: true,
+          };
+        } else {
+          draft.menggabungkanKunjunganIbuDanBayi = {
+            ...state.menggabungkanKunjunganIbuDanBayi,
+            loader: false,
+            isExist: false,
+          };
+        }
+
+        return;
+      }
+
+      case actionTypes.ON_FOCUS_ELEMENT_GABUNG_BAYI: {
+        draft.menggabungkanKunjunganIbuDanBayi.focusElement = payload.element;
+        return;
+      }
+
+      case actionTypes.DELETE_KUNJUNGAN_IBUNYA_SUCCESS: {
+        draft.menggabungkanKunjunganIbuDanBayi = {
+          ...state.menggabungkanKunjunganIbuDanBayi,
+          selectedKunjungan: null,
+          post: initialState.post,
+          isExist: false,
+          loader: false,
+        };
+        return;
+      }
+
       default:
         return state;
     }
