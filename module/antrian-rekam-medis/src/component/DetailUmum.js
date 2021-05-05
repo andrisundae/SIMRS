@@ -6,7 +6,6 @@ import _ from 'lodash';
 import TableContainer from './TableContainer';
 import ReactTable from '../util/ReactTable';
 import { checkedIcon, DatePicker } from '../util/helper';
-import { isMobile } from '@simrs/common/src/helpers/deviceDetector';
 import {
   jenisLayananChange,
   tempatLayananChange,

@@ -1,7 +1,13 @@
 import React, { useImperativeHandle } from 'react';
 import className from 'classname';
 import { Table, Icon } from 'semantic-ui-react';
-import { useTable, useSortBy, useFilters, useGlobalFilter } from 'react-table';
+import {
+  useTable,
+  useExpanded,
+  useSortBy,
+  useFilters,
+  useGlobalFilter,
+} from 'react-table';
 
 const ReactTable = React.forwardRef(
   (
@@ -17,6 +23,7 @@ const ReactTable = React.forwardRef(
       renderLoader = null,
       renderNoData = null,
       useSorting = false,
+      useCustomExpanded = false,
       tableClassName = '',
       tableStyle = {},
       onRowClick = null,
@@ -30,6 +37,7 @@ const ReactTable = React.forwardRef(
       cellRowStyle = {},
       defaultSorted = [],
       hideColumns = [],
+      defaultExpanded = [],
     },
     ref
   ) => {
@@ -41,11 +49,13 @@ const ReactTable = React.forwardRef(
         initialState: {
           sortBy: defaultSorted,
           hiddenColumns: hideColumns,
+          expanded: defaultExpanded,
         },
       },
       useFilters,
       useGlobalFilter,
-      useSortBy
+      useSortBy,
+      useExpanded
     );
 
     const {
@@ -165,36 +175,64 @@ const ReactTable = React.forwardRef(
             renderNoData()}
           {rows.map((row, i) => {
             prepareRow(row);
-            return (
-              <Table.Row
-                {...row.getRowProps()}
-                className={cellRowClassName}
-                style={cellRowStyle}
-                onClick={() => (null !== onRowClick ? onRowClick() : {})}
-              >
-                {row.cells.map((cell) => {
-                  let value =
-                    cell.column.id === 'iteration'
-                      ? nomor++
-                      : cell.render('Cell');
-                  return (
-                    <Table.Cell
-                      {...cell.getCellProps()}
-                      className={className(
-                        cell.column.className,
-                        cell.column.cellClasName
-                      )}
-                      style={{
-                        ...cell.column.style,
-                        ...cell.column.cellStyle,
-                      }}
-                    >
-                      {value}
-                    </Table.Cell>
-                  );
-                })}
-              </Table.Row>
-            );
+            if (useCustomExpanded && row.depth === 0) {
+              return (
+                <Table.Row
+                  {...row.getRowProps()}
+                  className={cellRowClassName}
+                  style={cellRowStyle}
+                >
+                  {row.cells.map((cell) => {
+                    if (undefined !== cell.column.colSpan) {
+                      let cellProps = {
+                        ...cell.getCellProps(),
+                        colSpan: cell.column.colSpan,
+                      };
+                      return (
+                        <Table.Cell
+                          {...cellProps}
+                          className={cell.column.customCellClassName}
+                          style={cell.column.customCellStyle}
+                        >
+                          {cell.column.customCell(cell.row.original)}
+                        </Table.Cell>
+                      );
+                    }
+                  })}
+                </Table.Row>
+              );
+            } else {
+              return (
+                <Table.Row
+                  {...row.getRowProps()}
+                  className={cellRowClassName}
+                  style={cellRowStyle}
+                  onClick={() => (null !== onRowClick ? onRowClick() : {})}
+                >
+                  {row.cells.map((cell) => {
+                    let value =
+                      cell.column.id === 'iteration'
+                        ? nomor++
+                        : cell.render('Cell');
+                    return (
+                      <Table.Cell
+                        {...cell.getCellProps()}
+                        className={className(
+                          cell.column.className,
+                          cell.column.cellClasName
+                        )}
+                        style={{
+                          ...cell.column.style,
+                          ...cell.column.cellStyle,
+                        }}
+                      >
+                        {value}
+                      </Table.Cell>
+                    );
+                  })}
+                </Table.Row>
+              );
+            }
           })}
         </Table.Body>
       </Table>

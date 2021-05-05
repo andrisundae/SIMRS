@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
+import dayjs from 'dayjs';
 import {
   Icon,
   Form,
@@ -24,6 +25,7 @@ const PreWrapContent = ({ className = '', content = '', style = {} }) => {
 
 export default function Detail() {
   const history = useHistory();
+  const data = JSON.parse(localStorage.getItem('anamnesis-detail-data'));
 
   return (
     <Fragment>
@@ -31,10 +33,16 @@ export default function Detail() {
         <Icon name="folder open" className="mr-4" /> Detail Anamnesis
         <div className="block mt-2">
           <Label color="teal" ribbon className="-left-10">
-            Mataram • Kelas 3 • 05/12/2020 17:34
+            {data?.nama_tempat_layanan}
+            <span className="mx-1">•</span>
+            Kelas {data?.kelas}
+            <span className="mx-1">•</span>
+            {dayjs(data?.tanggal).format('DD/MM/YYYY HH:mm')}
           </Label>
           <span className="inline text-base">
-            05/12/2020 17:34 • Gigih Setijawan, dr., Sp.P., MARS.
+            {dayjs(data?.tanggal).format('DD/MM/YYYY HH:mm')}
+            <span className="mx-1">•</span>
+            {data?.nama_personel}
           </span>
         </div>
       </Modal.Header>
