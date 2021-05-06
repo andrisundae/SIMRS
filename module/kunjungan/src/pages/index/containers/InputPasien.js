@@ -189,7 +189,6 @@ class InputPasien extends Component {
     if (loaderOptionsByUnitLayanan) {
       return (
         <React.Fragment>
-          {this.renderDividerBiayaTambahan()}
           <Placeholder>
             <Placeholder.Paragraph>
               <Placeholder.Line />
@@ -903,8 +902,9 @@ class InputPasien extends Component {
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-            {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
-              this.renderDividerBiayaTambahan()}
+            {this.renderDividerBiayaTambahan()}
+            {/* {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
+              this.renderDividerBiayaTambahan()} */}
             {this.renderJenisKlasifikasiRegistrasi()}
           </Grid.Column>
         </Grid.Row>

@@ -130,16 +130,18 @@ export default (state = initialState, action) =>
 
       case actionTypes.GET_PASIEN_SUCCESS: {
         const data = payload.data;
-        draft.kunjungan = {
-          ...state.kunjungan,
-          id_pasien: data.id,
-          nama_pasien: data.nama,
-          nama_ortu: data.nama_ortu,
-          norm: data.norm,
-          alamat: data.alamat,
-          jenis_kelamin: data.jenis_kelamin.nama,
-          tgl_lahir: data.tgl_lahir,
-        };
+        if (data) {
+          draft.kunjungan = {
+            ...state.kunjungan,
+            id_pasien: data.id,
+            nama_pasien: data.nama,
+            nama_ortu: data.nama_ortu,
+            norm: data.norm,
+            alamat: data.alamat,
+            jenis_kelamin: data.jenis_kelamin.nama,
+            tgl_lahir: data.tgl_lahir,
+          };
+        }
         return;
       }
 

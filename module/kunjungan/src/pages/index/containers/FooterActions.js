@@ -1,4 +1,4 @@
-import React, { Component, Fragment, createRef } from 'react';
+import React, { PureComponent, Fragment, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -23,7 +23,7 @@ import { getPermissions } from '@simrs/main/src/modules/auth';
 import { isDisable } from '../redux/selectors';
 import actions from '../redux/actions';
 
-class FooterActions extends Component {
+class FooterActions extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -129,6 +129,7 @@ class FooterActions extends Component {
         idUnitLayanan: this.props.post.id_unit_layanan,
         callBack: () =>
           this.props.action.onAddWithSelected(this.props.resource),
+        cancelCallBack: () => this.props.appActions.activateMainMenu(),
       });
     } else {
       this.props.action.onAdd(this.props.resource);
@@ -147,6 +148,7 @@ class FooterActions extends Component {
 
   onFinish = () => {
     this.props.action.onFinish(this.props.resource);
+    this.props.appActions.activateMainMenu();
   };
 
   onEdit = () => {
@@ -197,6 +199,12 @@ class FooterActions extends Component {
   isCanCancel = () => {
     const { statusForm } = this.props;
     const isEnableStatus = !isDisable('cancel', statusForm);
+    return isEnableStatus;
+  };
+
+  isCanGabungBayi = () => {
+    const { statusForm } = this.props;
+    const isEnableStatus = !isDisable('norm_ibunya', statusForm);
     return isEnableStatus;
   };
 
@@ -267,34 +275,54 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          <Menu.Item style={{ marginLeft: '20%', paddingRight: 5 }}>
-            <Button
-              name="kunjungan_hari_ini"
-              size="mini"
-              onClick={this.props.action.onToggleShowKunjunganHariIni}
-            >
-              <Icon name="list" />
-              {t(this._getKey('kunjungan_hari_ini'))}
-            </Button>
-          </Menu.Item>
-          {this.isCanPrint() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <PrintButton
-              // onClick={this._onCancel}
-              // inputRef={this.cancel}
-              // onKeyDown={this._onFocusElement}
-              />
+          <Menu.Menu
+            position="right"
+            style={{ right: 10, position: 'absolute' }}
+          >
+            <Menu.Item style={{ paddingRight: 5 }}>
+              <Button
+                name="kunjungan_hari_ini"
+                size="mini"
+                onClick={this.props.action.onToggleShowKunjunganHariIni}
+              >
+                <Icon name="list" />
+                {t(this._getKey('kunjungan_hari_ini'))}
+              </Button>
             </Menu.Item>
-          )}
-          {this.isCanFinish() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <FinishButton
-                onClick={this.onFinish}
-                inputRef={this.finish}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
+            {this.isCanGabungBayi() && (
+              <Menu.Item style={{ paddingRight: 5 }}>
+                <Button
+                  name="norm_ibunya"
+                  size="mini"
+                  onClick={
+                    this.props.action
+                      .onToggleShowMenggabungkanKunjunganIbuDanBayi
+                  }
+                >
+                  <Icon name="female" />
+                  {t(this._getKey('norm_ibunya'))}
+                </Button>
+              </Menu.Item>
+            )}
+            {this.isCanPrint() && (
+              <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+                <PrintButton
+                // onClick={this._onCancel}
+                // inputRef={this.cancel}
+                // onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            {this.isCanFinish() && (
+              <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+                <FinishButton
+                  onClick={this.onFinish}
+                  inputRef={this.finish}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+          </Menu.Menu>
         </Fragment>
       </FooterActionsContainer>
     );
@@ -335,6 +363,8 @@ const mapDispatchToProps = function (dispatch, props) {
         onFocusElement: actions.onFocusElement,
         onToggleShowKunjunganHariIni: actions.toggleShowKunjunganHariIni,
         onToggleShowNorm: () => actions.toggleShowNormModal(props.resource),
+        onToggleShowMenggabungkanKunjunganIbuDanBayi: () =>
+          actions.toggleShowMenggabungkanKunjunganAnakIbu(props.resource),
       },
       dispatch
     ),

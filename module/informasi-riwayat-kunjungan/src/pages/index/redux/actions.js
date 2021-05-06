@@ -6,26 +6,6 @@ const { createAction } = redux;
 const { createActivity } = logActions;
 
 export default {
-  save: {
-    request: (resource, data) =>
-      createAction(
-        actionTypes.SAVE_REQUEST,
-        { data },
-        { resource, log: createActivity(resource, activity.SIMPAN) }
-      ),
-    requestSuccess: (resource, data) =>
-      createAction(
-        actionTypes.SAVE_SUCCESS,
-        { data },
-        { resource, log: createActivity(resource, activity.SIMPAN, 'sukses') }
-      ),
-    requestFailure: (resource, errors) =>
-      createAction(
-        actionTypes.SAVE_FAILURE,
-        { errors },
-        { resource, log: createActivity(resource, activity.SIMPAN, 'gagal') }
-      ),
-  },
   onReady: (resource) => createAction(actionTypes.READY, {}, { resource }),
   openForm: (resource) =>
     createAction(
@@ -38,14 +18,6 @@ export default {
   onReset: (resource) => createAction(actionTypes.RESET, {}, { resource }),
   onFocusElement: (resource, element) =>
     createAction(actionTypes.ON_FOCUS_ELEMENT, { element }, { resource }),
-  populateForm: {
-    request: (resource, data) =>
-      createAction(actionTypes.POPULATE_FORM_REQUEST, { data }, { resource }),
-    requestSuccess: (resource, data) =>
-      createAction(actionTypes.POPULATE_FORM_SUCCESS, { data }, { resource }),
-    requestFailure: (resource, error) =>
-      createAction(actionTypes.POPULATE_FORM_FAILURE, { error }, { resource }),
-  },
   getPasien: {
     request: (resource, data) =>
       createAction(actionTypes.GET_PASIEN_REQUEST, { data }, { resource }),
@@ -54,38 +26,49 @@ export default {
     requestFailure: (resource, error) =>
       createAction(actionTypes.GET_PASIEN_FAILURE, { error }, { resource }),
   },
-  onEdit: (resource) =>
-    createAction(
-      actionTypes.EDIT,
-      {},
-      { resource, log: createActivity(resource, activity.KOREKSI) }
-    ),
-  onCancel: (resource) => createAction(actionTypes.CANCEL, {}, { resource }),
   onSelected: (resource, data) =>
     createAction(actionTypes.SELECTED, { data }, { resource }),
-  onChangeSelect2: (resource, name, data, isTindakan) =>
+  loadRiwayatKunjungan: (resource, data, tableParams) =>
     createAction(
-      actionTypes.CHANGE_SELECT2,
-      { name, data, isTindakan },
-      { resource }
-    ),
-  loadAllWilayah: (resource, data, tableParams) =>
-    createAction(
-      actionTypes.GET_ALL_WILAYAH_REQUEST,
+      actionTypes.GET_RIWAYAT_KUNJUNGAN_REQUEST,
       { data },
       { tableParams, resource }
     ),
-  toggleShowCariWilayah: (resource) =>
-    createAction(actionTypes.TOGGLE_SHOW_CARI_WILAYAH, {}, { resource }),
-  onChangeFilterWilayah: (resource, data) =>
-    createAction(actionTypes.FILTER_CHANGE_WILAYAH, { data }, { resource }),
-  onSubmitFilterWilayah: (resource, data) =>
+  loadRiwayatKunjunganUnit: (resource, data, tableParams) =>
     createAction(
-      actionTypes.FILTER_SUBMIT_WILAYAH,
+      actionTypes.GET_RIWAYAT_KUNJUNGAN_UNIT_REQUEST,
       { data },
-      { resource, log: createActivity(resource, activity.CARI) }
+      { tableParams, resource }
     ),
+  loadRiwayatKunjunganUnitDetail: (resource, data, tableParams) =>
+    createAction(
+      actionTypes.GET_RIWAYAT_KUNJUNGAN_UNIT_DETAIL_REQUEST,
+      { data },
+      { tableParams, resource }
+    ),
+  kunjunganDetail: {
+    request: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_REQUEST,
+        { data },
+        { resource }
+      ),
+    requestSuccess: (resource, data) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_SUCCESS,
+        { data },
+        { resource }
+      ),
+    requestFailure: (resource, error) =>
+      createAction(
+        actionTypes.GET_KUNJUNGAN_DETAIL_FAILURE,
+        { error },
+        { resource }
+      ),
+  },
   onFinish: (resource) => createAction(actionTypes.FINISH, {}, { resource }),
-  onSelectedWilayah: (resource, data) =>
-    createAction(actionTypes.FILTER_SELECTED_WILAYAH, { data }, { resource }),
+  onSelectedKunjungan: (resource, data) =>
+    createAction(actionTypes.SELECTED_KUNJUNGAN, { data }, { resource }),
+  onSelectedKunjunganUnit: (resource, data) =>
+    createAction(actionTypes.SELECTED_KUNJUNGAN_UNIT, { data }, { resource }),
 };

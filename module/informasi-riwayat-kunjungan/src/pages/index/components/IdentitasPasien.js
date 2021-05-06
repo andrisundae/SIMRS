@@ -3,18 +3,20 @@ import { Grid, Form, Input, Segment, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { useModuleTrans } from '@simrs/components';
+import { formatter } from '@simrs/common';
 
 const IdentitasPasien = ({
   data,
   onEnterNorm,
   focusElement,
   isDisabledNorm,
-  onChangeInput,
 }) => {
   const t = useModuleTrans();
   const inputRef = {
     norm: React.useRef(),
   };
+
+  const [norm, setNorm] = React.useState('');
 
   React.useEffect(() => {
     if (focusElement && inputRef[focusElement]) {
@@ -22,7 +24,9 @@ const IdentitasPasien = ({
         inputRef[focusElement].current.focus();
       }
     }
-  }, [focusElement]);
+  }, [focusElement, inputRef]);
+
+  const changeNormHandler = React.useCallback((e) => setNorm(e.target.value));
 
   return (
     <Form
@@ -30,10 +34,7 @@ const IdentitasPasien = ({
       size="mini"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Segment
-        size="mini"
-        style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
-      >
+      <Segment size="mini" style={{ paddingTop: 20, paddingBottom: 20 }}>
         <Grid columns="2">
           <Grid.Row>
             <Grid.Column>
@@ -48,8 +49,12 @@ const IdentitasPasien = ({
                       name="norm"
                       onKeyDown={onEnterNorm}
                       disabled={isDisabledNorm}
-                      value={data.norm}
-                      onChange={onChangeInput}
+                      value={
+                        isDisabledNorm
+                          ? formatter.textSplitter(data.norm)
+                          : norm
+                      }
+                      onChange={changeNormHandler}
                       onFocus={(e) => {
                         if (e.target.value) {
                           e.target.select();
@@ -63,7 +68,7 @@ const IdentitasPasien = ({
                     <label>{t('nama')}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
-                    <Input name="nama" disabled value={data.nama_pasien} />
+                    <Input name="nama" disabled value={data.nama} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row className="form-row">
@@ -74,7 +79,7 @@ const IdentitasPasien = ({
                     <Input
                       name="jenis_kelamin"
                       disabled
-                      value={data.jenis_kelamin}
+                      value={data.nama_jenis_kelamin}
                     />
                   </Grid.Column>
                   <Grid.Column width="8" className="field">

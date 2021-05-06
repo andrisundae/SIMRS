@@ -71,89 +71,90 @@ export default (state = initialState, action) =>
         return;
 
       case actionTypes.GET_PASIEN_SUCCESS: {
-        const firstJenisUmur = defaultJenisUmur(state.data.jenisUmur);
         const data = payload.data;
-        draft.statusForm = actionTypes.SELECTED;
-        draft.focusElement = 'edit';
-        draft.post = {
-          ...state.post,
-          id: data.id,
-          nama: data.nama,
-          nama_ortu: data.nama_ortu || '',
-          norm: data.norm,
-          alamat: data.alamat || '',
-          id_jenis_kelamin: data.id_jenis_kelamin,
-          tgl_lahir: data.tgl_lahir,
-          nama_panggilan: data.nama_panggilan || '',
-          no_ktp: data.no_ktp || '',
-          nama_suami_istri: data.nama_suami_istri || '',
-          rt: data.rt || '',
-          rw: data.rw || '',
-          nama_kecamatan: data.kecamatan ? data.kecamatan.nama : '',
-          nama_kota: data.kota ? data.kota.nama : '',
-          nama_provinsi: data.provinsi ? data.provinsi.nama : '',
-          nama_desa: data.desa ? data.desa.nama : '',
-          id_desa: data.id_desa || '',
-          id_agama: data.id_agama || '',
-          id_pendidikan: data.id_pendidikan || '',
-          id_pekerjaan: data.id_pekerjaan || '',
-          id_status_nikah: data.id_status_nikah || '',
-          id_kewarganegaraan: data.id_kewarganegaraan || '',
-          id_bahasa_sehari_hari: data.id_bahasa_sehari_hari || '',
-          nilai_kepercayaan: data.nilai_kepercayaan || '',
-          umur: formatter.displayAge(data.tgl_lahir, now, true),
-          jenis_umur: firstJenisUmur.value,
-        };
-
-        draft.selectedOption.jenis_umur = firstJenisUmur;
-
-        draft.selectedOption.id_jenis_kelamin = {
-          value: data.jenis_kelamin.id,
-          label: data.jenis_kelamin.nama,
-        };
-
-        if (data.agama) {
-          draft.selectedOption.id_agama = {
-            value: data.agama.id,
-            label: data.agama.nama,
+        if (data) {
+          const firstJenisUmur = defaultJenisUmur(state.data.jenisUmur);
+          draft.statusForm = actionTypes.SELECTED;
+          draft.focusElement = 'edit';
+          draft.post = {
+            ...state.post,
+            id: data.id,
+            nama: data.nama,
+            nama_ortu: data.nama_ortu || '',
+            norm: data.norm,
+            alamat: data.alamat || '',
+            id_jenis_kelamin: data.id_jenis_kelamin,
+            tgl_lahir: data.tgl_lahir,
+            nama_panggilan: data.nama_panggilan || '',
+            no_ktp: data.no_ktp || '',
+            nama_suami_istri: data.nama_suami_istri || '',
+            rt: data.rt || '',
+            rw: data.rw || '',
+            nama_kecamatan: data.kecamatan ? data.kecamatan.nama : '',
+            nama_kota: data.kota ? data.kota.nama : '',
+            nama_provinsi: data.provinsi ? data.provinsi.nama : '',
+            nama_desa: data.desa ? data.desa.nama : '',
+            id_desa: data.id_desa || '',
+            id_agama: data.id_agama || '',
+            id_pendidikan: data.id_pendidikan || '',
+            id_pekerjaan: data.id_pekerjaan || '',
+            id_status_nikah: data.id_status_nikah || '',
+            id_kewarganegaraan: data.id_kewarganegaraan || '',
+            id_bahasa_sehari_hari: data.id_bahasa_sehari_hari || '',
+            nilai_kepercayaan: data.nilai_kepercayaan || '',
+            umur: formatter.displayAge(data.tgl_lahir, now, true),
+            jenis_umur: firstJenisUmur.value,
           };
-        }
 
-        if (data.pendidikan) {
-          draft.selectedOption.id_pendidikan = {
-            value: data.pendidikan.id,
-            label: data.pendidikan.nama,
+          draft.selectedOption.jenis_umur = firstJenisUmur;
+
+          draft.selectedOption.id_jenis_kelamin = {
+            value: data.jenis_kelamin.id,
+            label: data.jenis_kelamin.nama,
           };
-        }
 
-        if (data.pekerjaan) {
-          draft.selectedOption.id_pekerjaan = {
-            value: data.pekerjaan.id,
-            label: data.pekerjaan.nama,
-          };
-        }
+          if (data.agama) {
+            draft.selectedOption.id_agama = {
+              value: data.agama.id,
+              label: data.agama.nama,
+            };
+          }
 
-        if (data.status_nikah) {
-          draft.selectedOption.id_status_nikah = {
-            value: data.status_nikah.id,
-            label: data.status_nikah.nama,
-          };
-        }
+          if (data.pendidikan) {
+            draft.selectedOption.id_pendidikan = {
+              value: data.pendidikan.id,
+              label: data.pendidikan.nama,
+            };
+          }
 
-        if (data.kewarganegaraan) {
-          draft.selectedOption.id_kewarganegaraan = {
-            value: data.kewarganegaraan.id,
-            label: data.kewarganegaraan.nama,
-          };
-        }
+          if (data.pekerjaan) {
+            draft.selectedOption.id_pekerjaan = {
+              value: data.pekerjaan.id,
+              label: data.pekerjaan.nama,
+            };
+          }
 
-        if (data.bahasa_sehari_hari) {
-          draft.selectedOption.id_bahasa_sehari_hari = {
-            value: data.bahasa_sehari_hari.id,
-            label: data.bahasa_sehari_hari.nama,
-          };
-        }
+          if (data.status_nikah) {
+            draft.selectedOption.id_status_nikah = {
+              value: data.status_nikah.id,
+              label: data.status_nikah.nama,
+            };
+          }
 
+          if (data.kewarganegaraan) {
+            draft.selectedOption.id_kewarganegaraan = {
+              value: data.kewarganegaraan.id,
+              label: data.kewarganegaraan.nama,
+            };
+          }
+
+          if (data.bahasa_sehari_hari) {
+            draft.selectedOption.id_bahasa_sehari_hari = {
+              value: data.bahasa_sehari_hari.id,
+              label: data.bahasa_sehari_hari.nama,
+            };
+          }
+        }
         return;
       }
 

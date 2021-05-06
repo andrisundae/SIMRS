@@ -8,6 +8,7 @@ const path = {
   MASTER_BARANG: '/farmasi/master/barang',
   PEMBELIAN: '/farmasi/transaksi/sub-pembelian',
   PEMBELIAN_DETAIL: '/farmasi/transaksi/sub-pembelian-detail',
+  PEMBELIAN_NON_HUTANG: '/farmasi/transaksi/sub-penerimaan-pemesanansupplier',
 };
 
 const tableName = {
@@ -27,5 +28,12 @@ const formEnable = {
 };
 
 const settingNoTransaksi = 'sub_pembelian';
+const settingNoTransaksiNonHutang = 'penerimaan_pemesanan_supplier';
 
-export { path, tableName, formEnable, settingNoTransaksi };
+export {
+  path,
+  tableName,
+  formEnable,
+  settingNoTransaksi,
+  settingNoTransaksiNonHutang,
+};

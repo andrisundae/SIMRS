@@ -82,92 +82,153 @@ const validationRules = (resource) => {
   };
 };
 
+const gabungBayiValidationRules = (resource) => {
+  return {
+    rules: {
+      id_kunjungan: { required: true },
+      norm: { required: true },
+      nama: { required: true },
+      id_kunjungan_asal_ibu: { required: true },
+    },
+    messages: {
+      id_kunjungan: {
+        required: i18n.t(`${resource}:please_select_kunjungan`),
+      },
+      norm: {
+        required: i18n.t(`${resource}:norm_mother_is_required`),
+      },
+      nama: {
+        required: i18n.t(`${resource}:please_select_mother`),
+      },
+      id_kunjungan_asal_ibu: {
+        required: i18n.t(`${resource}:please_select_asal_kunjungan_mother`),
+      },
+    },
+  };
+};
+
 const path = '/billing/transaksi/kunjungan';
 
 export default {
   save: async (method, params) => {
-    let response = await request.post(`${path}/${method}`, params, {}, false);
+    const response = await request.post(`${path}/${method}`, params, {}, false);
 
     return response;
   },
   delete: async (params) => {
-    let response = await request.post(`${path}/hapus`, params);
+    const response = await request.post(`${path}/hapus`, params);
 
     return response;
   },
   init: async () => {
-    let response = await request.get(`${path}/init`);
+    const response = await request.get(`${path}/init`);
     return response;
   },
   getAsalMasukDetailOptions: async (idAsalMasuk) => {
-    let response = await request.get(
+    const response = await request.get(
       `${path}/asal-masuk-detail-options/${idAsalMasuk}`
     );
     return response;
   },
   getAllPasien: async (params) => {
-    let response = await request.post('/billing/master/pasien/view', params);
+    const response = await request.post('/billing/master/pasien/view', params);
 
     return response;
   },
   getAllWilayah: async (params) => {
-    let response = await request.post('/billing/master/wilayah/view', params);
+    const response = await request.post('/billing/master/wilayah/view', params);
     return response;
   },
   getOptionsByUnitLayanan: async (idUnitLayanan, params) => {
-    let response = await request.get(
+    const response = await request.get(
       `${path}/options-by-unitlayanan/${idUnitLayanan}`,
       params
     );
     return response;
   },
   getNextNorm: async () => {
-    let response = await request.get(
+    const response = await request.get(
       '/system/generate/no-transaksi/master_pasien'
     );
     return response;
   },
   getPasienByNorm: async (norm) => {
-    let response = await request.get(`/billing/master/pasien/${norm}`);
+    const response = await request.get(`/billing/master/pasien/${norm}`);
     return response;
   },
   getKunjunganDetail: async (idKunjunganUnit) => {
-    let response = await request.get(`${path}/detail/${idKunjunganUnit}`);
+    const response = await request.get(`${path}/detail/${idKunjunganUnit}`);
     return response;
   },
   getKunjunganTerakhir: async (idPasien) => {
-    let response = await request.get(`${path}/terakhir/${idPasien}`);
+    const response = await request.get(`${path}/terakhir/${idPasien}`);
     return response;
   },
   getPenjaminPasien: async (idPasien) => {
-    let response = await request.get(`${path}/penjamin-pasien/${idPasien}`);
+    const response = await request.get(`${path}/penjamin-pasien/${idPasien}`);
     return response;
   },
   getDetailRangkaianKunjungan: async (idKunjunganUnit) => {
-    let response = await request.get(
+    const response = await request.get(
       `${path}/detail-rangkaian/${idKunjunganUnit}`
     );
     return response;
   },
   getSettingKelasPenjamin: async (idPenjamin) => {
-    let response = await request.get(
+    const response = await request.get(
       `${path}/setting-kelas-penjamin/${idPenjamin}`
     );
     return response;
   },
   getKunjunganHariIni: async (params) => {
-    let response = await request.get(`${path}/kunjungan-hari-ini`, params);
+    const response = await request.get(`${path}/kunjungan-hari-ini`, params);
     return response;
   },
   kunjunganAktif: async (idPasien) => {
-    let response = await request.get(`${path}/aktif/${idPasien}`);
+    const response = await request.get(`${path}/aktif/${idPasien}`);
     return response;
   },
   kunjunganAktifUnitLayanan: async (idPasien, idUnitLayanan) => {
-    let response = await request.get(
+    const response = await request.get(
       `${path}/aktif/${idPasien}/${idUnitLayanan}`
     );
     return response;
   },
+  getKunjunganAsalIbu: async (idPasien) => {
+    const response = await request.get(
+      `${path}/kunjungan-asal-ibu/${idPasien}`
+    );
+    return response;
+  },
+  getKunjunganIbu: async (idKunjungan) => {
+    const response = await request.get(`${path}/kunjungan-ibu/${idKunjungan}`);
+    return response;
+  },
+  getUnitLayananOptions: async (idInstalasi) => {
+    const response = await request.get(
+      `${path}/options-unit-layanan/${idInstalasi}`
+    );
+    return response;
+  },
+  saveKunjunganIbunya: async (params) => {
+    const response = await request.post(
+      `${path}/gabung-bayi`,
+      params,
+      {},
+      false
+    );
+    return response;
+  },
+  resetKunjunganIbunya: async (idKunjungan) => {
+    const response = await request.post(
+      `${path}/reset-gabung-bayi/${idKunjungan}`
+    );
+    return response;
+  },
+  getKunjungan: async (id) => {
+    const response = await request.get(`${path}/${id}`);
+    return response;
+  },
   validationRules,
+  gabungBayiValidationRules,
 };

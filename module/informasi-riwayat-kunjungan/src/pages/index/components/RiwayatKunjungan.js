@@ -2,57 +2,55 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DatatableServerSide, useModuleTrans } from '@simrs/components';
 import { staticConst } from '../static';
+import useDatatable from '../hooks/useDatatable';
 
-const RiwayatKunjungan = ({ dataSource, data, innerRef }) => {
+const RiwayatKunjungan = ({ innerRef, data, dataSource, onRowSelected }) => {
   const t = useModuleTrans();
+  const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
 
   const columns = [
     {
       headerName: t('tgl_mrs'),
-      field: 'nama_komponen',
-      cellRenderer: 'loadingRenderer',
+      field: 'tgl_mrs',
+      cellRenderer: 'dateRenderer',
+      cellStyle: { 'background-color': '#f5f7f7' },
+      cellClass: 'ag-date-cell',
       sortable: true,
     },
     {
       headerName: t('tgl_krs'),
-      field: 'keterangan',
+      field: 'tgl_krs',
+      cellRenderer: 'dateRenderer',
+      cellClass: 'ag-date-cell',
       sortable: true,
     },
     {
       headerName: t('unit'),
-      field: 'keterangan',
+      field: 'unit',
       sortable: true,
     },
     {
       headerName: t('penjamin'),
-      field: 'keterangan',
+      field: 'penjamin',
       sortable: true,
     },
     {
       headerName: t('pulang'),
-      field: 'keterangan',
-      sortable: true,
+      field: 'st_pulang',
     },
     {
       headerName: t('petugas_pulang'),
-      field: 'keterangan',
-      sortable: true,
+      field: 'petugas_pulang',
     },
   ];
 
-  const getRowNodeId = (row) => row.id;
-
   React.useEffect(() => {
-    if (innerRef.current) {
-      const gridApi = innerRef.current.gridApi;
-      if (gridApi) {
-        gridApi.setDatasource({
-          rowCount: null,
-          getRows: (res) => res.successCallback(dataSource, dataSource.length),
-        });
-      }
+    if (gridApi && data.id) {
+      gridApi.setDatasource(dataSource);
+    } else if (gridApi && !data.id) {
+      gridApi.setDatasource(emptySource);
     }
-  }, [dataSource, innerRef]);
+  }, [data.id, gridApi, dataSource, emptySource]);
 
   return (
     <DatatableServerSide
@@ -66,18 +64,23 @@ const RiwayatKunjungan = ({ dataSource, data, innerRef }) => {
       containerHeight="160px"
       getRowNodeId={getRowNodeId}
       autoSizeColumn={true}
+      onGridReady={onGridReady}
+      onRowSelected={onRowSelected}
+      // navigateToSelect={true}
     />
   );
 };
 
 RiwayatKunjungan.propTypes = {
   data: PropTypes.object,
-  dataSource: PropTypes.array,
   innerRef: PropTypes.object,
+  dataSource: PropTypes.object,
+  onRowSelected: PropTypes.func,
 };
 
-const Component = React.forwardRef((props, ref) => (
-  <RiwayatKunjungan innerRef={ref} {...props} />
-));
+const Component = React.forwardRef((props, ref) => {
+  const innerRef = React.useRef();
+  return <RiwayatKunjungan innerRef={ref || innerRef} {...props} />;
+});
 
 export default React.memo(Component);

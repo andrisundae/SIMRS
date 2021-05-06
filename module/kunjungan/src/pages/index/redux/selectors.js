@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import { includes } from 'lodash';
 
 import actionTypes from './actionTypes';
@@ -100,3 +101,10 @@ export const isDisable = (element, status) => {
 
   return true;
 };
+
+export const menggabungkanKunjunganIbuDanBayiSelector = createSelector(
+  (state) => state.module.kunjungan.menggabungkanKunjunganIbuDanBayi,
+  (data) => data
+);
+
+export const postKunjunganSelector = createSelector(getPost, (data) => data);

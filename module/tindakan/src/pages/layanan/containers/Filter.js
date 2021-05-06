@@ -23,6 +23,7 @@ class Filter extends Component {
     this._handleFilterChange = this._handleFilterChange.bind(this);
     this._handleSelectionChange = this._handleSelectionChange.bind(this);
     this._onClickPrev = this._onClickPrev.bind(this);
+    this._onClickNext = this._onClickNext.bind(this);
   }
 
   render() {

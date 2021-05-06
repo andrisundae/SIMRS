@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { staticConst } from '../static';
@@ -6,14 +6,14 @@ import actions from '../redux/actions';
 
 import ModalKunjunganHariIni from '../components/KunjunganHariIni';
 
-class KunjunganHariIni extends Component {
+class KunjunganHariIni extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       post: {
-        instalasi_id: null,
-        unit_layanan_id: null,
+        instalasi_id: '',
+        unit_layanan_id: '',
         nama_pasien: '',
         norm: '',
       },
@@ -73,10 +73,10 @@ class KunjunganHariIni extends Component {
           sort_name: sortModel.colId ? sortModel.colId : '',
           sort_order: sortModel.colId ? sortModel.sort : '',
           ...post,
-          instalasi_id: post.instalasi_id ? post.instalasi_id.value : null,
+          instalasi_id: post.instalasi_id ? post.instalasi_id.value : '',
           unit_layanan_id: post.unit_layanan_id
             ? post.unit_layanan_id.value
-            : null,
+            : '',
         };
 
         this.props.onLoadData(data, params);

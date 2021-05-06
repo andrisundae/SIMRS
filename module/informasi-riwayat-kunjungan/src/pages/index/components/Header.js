@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header as HeaderComp, Icon } from 'semantice-ui-react';
+import { Header as HeaderComp, Icon } from 'semantic-ui-react';
 
 const Header = ({ title, ...props }) => {
   return (

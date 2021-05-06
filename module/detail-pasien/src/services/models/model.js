@@ -58,7 +58,7 @@ export default {
     return response;
   },
   init: async () => {
-    const response = await request.get(`${path}/init`);
+    const response = await request.get(`${path}/data/init`);
     return response;
   },
   getAllWilayah: async (params) => {
