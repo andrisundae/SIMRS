@@ -6,8 +6,15 @@ import {
   useLocation,
   useHistory,
 } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Modal } from 'semantic-ui-react';
 import LoaderWithNoDimmer from '@simrs/rekam-medis/src/component/LoaderWithNoDimmer';
+import rootReducer from './reducer';
+
+const store = configureStore({
+  reducer: rootReducer,
+});
 
 const Index = lazy(() => import('./page/Index'));
 const Add = lazy(() => import('./page/Add'));
@@ -20,42 +27,43 @@ export default function Main() {
   return (
     <Router basename="/detail-rekam-medis/umum/anamnesis">
       <Suspense fallback={<LoaderWithNoDimmer />}>
-        {/* <Switch> */}
-        <Route path="/">
-          <Index />
-        </Route>
-
-        <Modal
-          closeIcon
-          closeOnDimmerClick={false}
-          centered={false}
-          size="large"
-          open={'/anamnesis/detail' === location.pathname}
-          onClose={() => {
-            history.goBack();
-          }}
-        >
-          <Route path="/detail">
-            <Detail />
+        <Provider store={store}>
+          {/* <Switch> */}
+          <Route path="/">
+            <Index />
           </Route>
-        </Modal>
 
-        <Modal
-          closeIcon
-          closeOnDimmerClick={false}
-          centered={false}
-          size="fullscreen"
-          open={'/anamnesis/add' === location.pathname}
-          onClose={() => {
-            history.goBack();
-          }}
-        >
-          <Route path="/add">
-            <Add />
-          </Route>
-        </Modal>
+          <Modal
+            closeIcon
+            closeOnDimmerClick={false}
+            centered={false}
+            size="large"
+            open={'/anamnesis/detail' === location.pathname}
+            onClose={() => {
+              history.goBack();
+            }}
+          >
+            <Route path="/detail">
+              <Detail />
+            </Route>
+          </Modal>
 
-        {/* </Switch> */}
+          <Modal
+            closeIcon
+            closeOnDimmerClick={false}
+            centered={false}
+            size="fullscreen"
+            open={'/anamnesis/add' === location.pathname}
+            onClose={() => {
+              history.goBack();
+            }}
+          >
+            <Route path="/add">
+              <Add />
+            </Route>
+          </Modal>
+          {/* </Switch> */}
+        </Provider>
       </Suspense>
     </Router>
   );

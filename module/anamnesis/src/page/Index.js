@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import className from 'classname';
 import _ from 'lodash';
 import dayjs from 'dayjs';
@@ -16,8 +17,12 @@ import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsCo
 import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
 import ReactTable from '@module/antrian-rekam-medis/src/util/ReactTable';
 import { useAnamnesis } from '@simrs/rekam-medis/src/fetcher/anamnesis';
+import { detailDataChange } from '../reducer/anamnesis';
 
 export default function Index() {
+  const { detailData } = useSelector((state) => state.anamnesis);
+  const dispatch = useDispatch();
+
   const tableInstance = useRef(null);
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState({});
@@ -144,10 +149,11 @@ export default function Index() {
                         size="mini"
                         to="/detail"
                         onClick={() => {
-                          localStorage.setItem(
-                            'anamnesis-detail-data',
-                            JSON.stringify(rowData)
-                          );
+                          dispatch(detailDataChange(rowData));
+                          // localStorage.setItem(
+                          //   'anamnesis-detail-data',
+                          //   JSON.stringify(rowData)
+                          // );
                         }}
                       />
                       <Button
