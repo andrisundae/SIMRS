@@ -47,4 +47,9 @@ export default [
     path: '/delegasi-tugas/pemenuhan',
     component: lazy(() => import('@module/delegasi-tugas/src/pemenuhan')),
   },
+  {
+    key: '_rekam_medis_visite_dpjp',
+    path: '/antrian/visite-dpjp',
+    component: lazy(() => import('@module/visite-dpjp')),
+  },
 ];

@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { List, Icon, Menu, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames';
 import { isDesktop } from '@simrs/common/src/helpers/deviceDetector';
 
-export default function SidebarMenu({ type }) {
+export default function SidebarMenu({ type, kode }) {
   const pengkajianKhususRef = useRef(null);
   const [submenuIsOpen, setSubmenuIsOpen] = useState(false);
   const location = useLocation();
@@ -18,6 +18,144 @@ export default function SidebarMenu({ type }) {
       ? pathname.split('/')[2]
       : pathname.split('/')[1];
 
+  let query = undefined !== kode ? `kode=${kode}` : '';
+
+  const listMenu = [
+    { text: 'Anamnesis', icon: 'tasks', path: '/anamnesis', useFor: ['umum'] },
+    {
+      text: 'Pemeriksaan Umum',
+      icon: 'chart line',
+      path: '/pemeriksaan-umum',
+      useFor: ['umum'],
+    },
+    {
+      text: 'Pemeriksaan Fisik',
+      icon: 'stethoscope',
+      path: '/pemeriksaan-fisik',
+      useFor: ['umum'],
+    },
+    {
+      text: 'Pengkajian Khusus',
+      icon: 'chart bar',
+      path: '/pengkajian-khusus',
+      useFor: ['umum'],
+      children: [
+        { text: 'Pre-Hospital', path: '/prehospital' },
+        { text: 'TRIAGE', path: '/triage' },
+        {
+          text: 'Screening Resiko Jatuh',
+          path: '/screening-resiko-jatuh',
+          children: [
+            {
+              text: 'Morse Fall Scale',
+              description: 'Dewasa',
+              keyPath: 'dewasa',
+            },
+            { text: 'Humpty Dumpty', description: 'Anak', keyPath: 'anak' },
+            {
+              text: 'Ontario Modified Stratify',
+              description: 'Geriatri',
+              keyPath: 'geriatri',
+            },
+            {
+              text: 'Time Up and Go',
+              description: 'Rawat Jalan',
+              keyPath: 'rawat-jalan',
+            },
+          ],
+        },
+        {
+          text: 'Screening Nyeri',
+          path: '/screening-nyeri',
+          children: [
+            {
+              text: 'Numeric Rating Scale',
+              description: '> 7 tahun',
+              keyPath: 'dewasa',
+            },
+            {
+              text: 'FLACC',
+              description: '7 bulan - 7 tahun',
+              keyPath: 'anak',
+            },
+            { text: 'CRIES', description: '< 7 bulan', keyPath: 'bayi' },
+            { text: 'Geriatri', keyPath: 'geriatri' },
+          ],
+        },
+        {
+          text: 'Screening Gizi',
+          path: '/screening-gizi',
+          children: [
+            { text: 'Dewasa', keyPath: 'dewasa' },
+            { text: 'Anak', keyPath: 'anak' },
+            { text: 'Obstetri', keyPath: 'obstetri' },
+            { text: 'Intervensi Gizi', path: '/screening-intervensi-gizi' },
+          ],
+        },
+        {
+          text: 'Screening Activity Daily Living',
+          path: '/screening-activity-daily-living',
+        },
+        {
+          text: 'Screening Decubitus Norton Scale',
+          path: '/screening-decubitus-norton-scale',
+        },
+        {
+          text: 'Screening Depresi Geriatri',
+          path: '/screening-depresi-geriatri',
+        },
+        {
+          text: 'Screening Status Mental Geriatri',
+          path: '/screening-status-mental-geriatri',
+        },
+        { text: 'Screening APGAR Score', path: '/screening-apgar-score' },
+        { text: 'Screening DOWNE Score', path: '/screening-downe-score' },
+      ],
+    },
+    {
+      text: 'Hasil Penunjang',
+      icon: 'tasks',
+      path: '/hasil-penunjang',
+      useFor: ['penunjang'],
+    },
+    {
+      text: 'Resep',
+      icon: 'sticky note outline',
+      path: '/resep',
+      useFor: ['umum', 'penunjang'],
+    },
+    {
+      text: 'CPPT',
+      icon: 'list',
+      path: '/cppt',
+      useFor: ['umum', 'penunjang'],
+    },
+    {
+      text: 'Kerjasama Medis',
+      icon: 'user md',
+      path: '/kerja-sama-medis',
+      useFor: ['umum'],
+      children: [
+        { text: 'Konsul', path: '/konsul-dokter/permintaan' },
+        { text: 'Rawat Bersama', path: '/rawat-bersama/permintaan' },
+        { text: 'Alih DPJP', path: '/alih-dpjp/permintaan' },
+        { text: 'Delegasi Tugas', path: '/delegasi-tugas/permintaan' },
+      ],
+    },
+    {
+      text: 'Pemeriksaan Penunjang',
+      icon: 'file alternate outline',
+      path: '/pemeriksaan-penunjang',
+      useFor: ['umum'],
+    },
+    {
+      text: 'Dokumen',
+      icon: 'file alternate outline',
+      path: '/dokumen',
+      useFor: ['umum', 'penunjang'],
+    },
+  ];
+
   return (
     <div
       className={classNames('col-start-1 border-r', {
@@ -27,7 +165,7 @@ export default function SidebarMenu({ type }) {
       <Menu vertical secondary className="w-full h-full border-0 mx-0 p-3">
         <Menu.Item
           as={Link}
-          to="/detail-rekam-medis/umum"
+          to={`/detail-rekam-medis/${type}`}
           className="sticky top-0 z-10 bg-gray-100 -mx-3 -mt-3"
         >
           <List>
@@ -43,6 +181,171 @@ export default function SidebarMenu({ type }) {
             <List.Item>Tgl. KRS: 17/12/2020 06:10</List.Item>
           </List>
         </Menu.Item>
+        {listMenu.map((dt1, idx1) => {
+          if (dt1.useFor.indexOf(type) > -1) {
+            if (undefined !== dt1.children) {
+              let stylesPengkajian = {
+                height: `calc(100vh - ${isDesktop ? 85 : 40}px)`,
+                top:
+                  null === pengkajianKhususRef.current
+                    ? 0
+                    : -(
+                        pengkajianKhususRef.current.getBoundingClientRect()
+                          .top - (isDesktop ? 45 : 2)
+                      ),
+              };
+              return (
+                <Dropdown
+                  key={idx1}
+                  item
+                  floating
+                  icon={null}
+                  trigger={
+                    dt1.text === 'Pengkajian Khusus' ? (
+                      <div ref={pengkajianKhususRef} tabIndex="-1">
+                        <Icon name={dt1.icon} /> {dt1.text}
+                        <Icon name="caret right" className="float-right" />
+                      </div>
+                    ) : (
+                      <div tabIndex="-1">
+                        <Icon name={dt1.icon} /> {dt1.text}
+                        <Icon name="caret right" className="float-right" />
+                      </div>
+                    )
+                  }
+                  className={classNames('block', {
+                    'bg-blue-200': dt1.path.substring(1) === currentMenu,
+                  })}
+                  onOpen={(e) => {
+                    // console.log(pengkajianKhususRef.current.getBoundingClientRect());
+                    setSubmenuIsOpen(true);
+                  }}
+                  onClose={() => {
+                    setSubmenuIsOpen(false);
+                  }}
+                >
+                  <Dropdown.Menu
+                    className={classNames('z-50 p-3', {
+                      'overflow-y-auto': dt1.text === 'Pengkajian Khusus',
+                    })}
+                    style={
+                      dt1.text === 'Pengkajian Khusus' ? stylesPengkajian : {}
+                    }
+                  >
+                    {dt1.children.map((dt2, idx2) => {
+                      let items = [];
+                      if (undefined !== dt2.children) {
+                        items.push(
+                          <Fragment key={`${idx2}h`}>
+                            <Dropdown.Divider />
+                            <Dropdown.Header
+                              content={dt2.text}
+                              className="normal-case text-base font-semibold"
+                            />
+                            {dt2.children.map((dt3, idx3) => {
+                              if (dt3.text === 'Intervensi Gizi') {
+                                return (
+                                  <Fragment key={idx3}>
+                                    <Dropdown.Item
+                                      key={idx3}
+                                      className={
+                                        dt3.path.substring(1) ===
+                                        currentChildMenu
+                                          ? 'custom-selected'
+                                          : ''
+                                      }
+                                      as={Link}
+                                      to={{
+                                        pathname: `${match.path}${dt1.path}${dt3.path}`,
+                                        search: query,
+                                      }}
+                                      text={dt3.text}
+                                      description={
+                                        undefined !== dt3.description
+                                          ? dt3.description
+                                          : ''
+                                      }
+                                    />
+                                    <Dropdown.Divider />
+                                  </Fragment>
+                                );
+                              } else {
+                                return (
+                                  <Dropdown.Item
+                                    key={idx3}
+                                    className={
+                                      `${dt2.path}-${dt3.keyPath}`.substring(
+                                        1
+                                      ) === currentChildMenu
+                                        ? 'custom-selected'
+                                        : ''
+                                    }
+                                    as={Link}
+                                    to={{
+                                      pathname: `${match.path}${dt1.path}${dt2.path}-${dt3.keyPath}`,
+                                      search: query,
+                                    }}
+                                    text={dt3.text}
+                                    description={
+                                      undefined !== dt3.description
+                                        ? dt3.description
+                                        : ''
+                                    }
+                                  />
+                                );
+                              }
+                            })}
+                          </Fragment>
+                        );
+                      } else {
+                        items.push(
+                          <Dropdown.Item
+                            key={idx2}
+                            className={
+                              dt2.path.substring(1) === currentChildMenu
+                                ? 'custom-selected'
+                                : ''
+                            }
+                            as={Link}
+                            to={{
+                              pathname: `${match.path}${dt1.path}${dt2.path}`,
+                              search: query,
+                            }}
+                            text={dt2.text}
+                            description={
+                              undefined !== dt2.description
+                                ? dt2.description
+                                : ''
+                            }
+                          />
+                        );
+                      }
+                      return items;
+                    })}
+                  </Dropdown.Menu>
+                </Dropdown>
+              );
+            } else {
+              return (
+                <Menu.Item
+                  key={idx1}
+                  as={Link}
+                  to={{
+                    pathname: `/detail-rekam-medis/${type}${dt1.path}`,
+                    search: query,
+                  }}
+                  className={
+                    dt1.path.substring(1) === currentMenu ? 'bg-blue-200' : ''
+                  }
+                >
+                  <Icon name={dt1.icon} className="float-left ml-0 mr-1" />{' '}
+                  {dt1.text}
+                </Menu.Item>
+              );
+            }
+          }
+        })}
+        {/*
         <Menu.Item
           as={Link}
           to="/detail-rekam-medis/umum/anamnesis"
@@ -402,6 +705,7 @@ export default function SidebarMenu({ type }) {
           />{' '}
           Pemeriksaan Penunjang
         </Menu.Item>
+      */}
       </Menu>
     </div>
   );

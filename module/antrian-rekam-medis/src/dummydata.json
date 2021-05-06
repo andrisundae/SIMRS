@@ -1,0 +1,224 @@
+{
+  "sidebar_data": {
+    "non_penunjang": [
+      {
+        "id": 1,
+        "nama": "Rawat Darurat",
+        "alias": "rawat_darurat",
+        "unit_layanans": [
+          {
+            "id": 1.1,
+            "nama": "IGD"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "nama": "Rawat Jalan",
+        "alias": "rawat_jalan",
+        "unit_layanans": [
+          {
+            "id": 2.1,
+            "nama": "Anak"
+          },
+          {
+            "id": 2.2,
+            "nama": "Gigi"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "nama": "Rawat Inap",
+        "alias": "rawat_inap",
+        "unit_layanans": [
+          {
+            "id": 3.1,
+            "nama": "Anggrek"
+          },
+          {
+            "id": 3.2,
+            "nama": "Melati"
+          }
+        ]
+      }
+    ],
+    "penunjang": [
+      {
+        "id": 1,
+        "nama": "Laboratorium",
+        "alias": "laboratorium",
+        "unit_layanans": [
+          {
+            "id": 1.1,
+            "nama": "Lab. PK"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "nama": "Radiologi",
+        "alias": "radiologi",
+        "unit_layanans": [
+          {
+            "id": 2.1,
+            "nama": "Radiologi"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "nama": "OK",
+        "alias": "ok",
+        "unit_layanans": [
+          {
+            "id": 3.1,
+            "nama": "OK"
+          }
+        ]
+      }
+    ]
+  },
+  "jumlah_pasien_data": [
+    {
+      "unit_id": 1.1,
+      "jumlah_pasien": 10
+    },
+    {
+      "unit_id": 2.1,
+      "jumlah_pasien": 5
+    },
+    {
+      "unit_id": 2.2,
+      "jumlah_pasien": 2
+    },
+    {
+      "unit_id": 3.1,
+      "jumlah_pasien": 10
+    },
+    {
+      "unit_id": 3.2,
+      "jumlah_pasien": 14
+    }
+  ],
+  "antrian_data_non_penunjang": [
+    {
+      "kode_kunjungan": "1833142103008",
+      "kode_kunjungan_tl": "1833142103008001",
+      "norm": "183314",
+      "pasien": "DIDIK NURHADI TN",
+      "kelas": "NON KELAS",
+      "alamat": "KETOK, TUNGGALPAGER",
+      "tanggal": "31-03-2021 00:21",
+      "nama_dokter": "AGY FIRSTIAWAN WAHYOSI, dr.",
+      "kode_dokter": "1909003",
+      "penjamin": "BPJS",
+      "statusinap": 0
+    },
+    {
+      "kode_kunjungan": "3244722103011",
+      "kode_kunjungan_tl": "3244722103011001",
+      "norm": "324472",
+      "pasien": "SUNIK, NY",
+      "kelas": "NON KELAS",
+      "alamat": "KWARENGAN, MENANGGAL",
+      "tanggal": "31-03-2021 01:05",
+      "nama_dokter": "AGY FIRSTIAWAN WAHYOSI, dr.",
+      "kode_dokter": "1909003",
+      "penjamin": "BPJS",
+      "statusinap": 0
+    },
+    {
+      "kode_kunjungan": "3822232103004",
+      "kode_kunjungan_tl": "3822232103004001",
+      "norm": "382223",
+      "pasien": "SAMPURA NY",
+      "kelas": "NON KELAS",
+      "alamat": "SAMBIROTO, WONODADI",
+      "tanggal": "31-03-2021 06:21",
+      "nama_dokter": "MUHAMMAD ZULFA NIZAR ANAS, dr.",
+      "kode_dokter": "1712001",
+      "penjamin": "BPJS",
+      "statusinap": 0
+    }
+  ],
+  "antrian_data_penunjang": [
+    {
+      "kode_kunjungan": "3885632103012",
+      "kode_kunjungan_tl": "3885632103012002",
+      "norm": "388563",
+      "pasien": "RASOLIKIN TN",
+      "tanggal": "31-03-2021 01:15",
+      "asal": "R. MATARAM",
+      "isi_hasil": 1,
+      "tanggal_isi_hasil": "31/03/2021 06:24",
+      "interpretasi": 0,
+      "tanggal_nterpretasi": "",
+      "publikasi": 1,
+      "tanggal_publikasi": "31/03/2021 06:14"
+    },
+    {
+      "kode_kunjungan": "3926452103011",
+      "kode_kunjungan_tl": "3926452103011005",
+      "norm": "392645",
+      "pasien": "SAWIYA.NY",
+      "tanggal": "31-03-2021 06:30",
+      "asal": "R. KAHURIPAN",
+      "isi_hasil": 0,
+      "tanggal_isi_hasil": "",
+      "interpretasi": 0,
+      "tanggal_interpretasi": "",
+      "publikasi": 1,
+      "tanggal_publikasi": "31/03/2021 07:00"
+    },
+    {
+      "kode_kunjungan": "2790232103003",
+      "kode_kunjungan_tl": "2790232103003004",
+      "norm": "279023",
+      "pasien": "SRIATUN. NY",
+      "tanggal": "31-03-2021 06:49",
+      "asal": "R. MAJAPAHIT",
+      "isi_hasil": 1,
+      "tanggal_isi_hasil": "31/03/2021 06:50",
+      "interpretasi": 0,
+      "tanggal_interpretasi": "",
+      "publikasi": 1,
+      "tanggal_publikasi": "31/03/2021 09:36"
+    }
+  ],
+  "status_medis_data": [
+    {
+      "kode_kunjungan": "1833142103008",
+      "kode_kunjungan_tl": "1833142103008001",
+      "medis_anamnesis": 1,
+      "medis_pemeriksaan_fisik": 1,
+      "medis_cppt": 0,
+      "non_medis_anamnesis": 1,
+      "non_medis_pemeriksaan_umum": 0,
+      "non_medis_pemeriksaan_fisik": 1,
+      "non_medis_cppt": 0
+    },
+    {
+      "kode_kunjungan": "3244722103011",
+      "kode_kunjungan_tl": "3244722103011001",
+      "medis_anamnesis": 1,
+      "medis_pemeriksaan_fisik": 1,
+      "medis_cppt": 0,
+      "non_medis_anamnesis": 1,
+      "non_medis_pemeriksaan_umum": 1,
+      "non_medis_pemeriksaan_fisik": 1,
+      "non_medis_cppt": 1
+    },
+    {
+      "kode_kunjungan": "3822232103004",
+      "kode_kunjungan_tl": "3822232103004001",
+      "medis_anamnesis": 2,
+      "medis_pemeriksaan_fisik": 1,
+      "medis_cppt": 1,
+      "non_medis_anamnesis": 1,
+      "non_medis_pemeriksaan_umum": 1,
+      "non_medis_pemeriksaan_fisik": 1,
+      "non_medis_cppt": 1
+    }
+  ]
+}

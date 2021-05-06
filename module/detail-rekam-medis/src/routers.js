@@ -156,4 +156,14 @@ export default [
     path: '/resep',
     component: lazy(() => import('@module/resep')),
   },
+  {
+    key: '_hasil_penunjang',
+    path: '/hasil-penunjang',
+    component: lazy(() => import('@module/hasil-penunjang')),
+  },
+  {
+    key: '_dokumen',
+    path: '/dokumen',
+    component: lazy(() => import('@module/dokumen')),
+  },
 ];

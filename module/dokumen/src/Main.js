@@ -12,7 +12,6 @@ import _ from 'lodash';
 
 const Index = lazy(() => import('./page/Index'));
 const Add = lazy(() => import('./page/Add'));
-const Copy = lazy(() => import('./page/Copy'));
 
 export default function Main() {
   const history = useHistory();
@@ -23,17 +22,10 @@ export default function Main() {
     switch (type) {
       case 'add':
         return {
-          status: '/resep/add' === location.pathname && 'add' === lastPathname,
-          path: '/resep/add',
-          component: <Add />,
-        };
-
-      case 'copy':
-        return {
           status:
-            '/resep/copy' === location.pathname && 'copy' === lastPathname,
-          path: '/resep/copy',
-          component: <Copy />,
+            '/dokumen/add' === location.pathname && 'add' === lastPathname,
+          path: '/dokumen/add',
+          component: <Add />,
         };
 
       default:
@@ -49,18 +41,14 @@ export default function Main() {
     <Suspense fallback={<LoaderWithNoDimmer />}>
       {/* <Switch> */}
       <Route path="/">
-        <Index withAdd={true} />
+        <Index />
       </Route>
 
       <Modal
         closeIcon
         closeOnDimmerClick={false}
         centered={false}
-        size={
-          undefined !== checkPathname(lastPathname).size
-            ? checkPathname(lastPathname).size
-            : 'fullscreen'
-        }
+        size="large"
         open={checkPathname(lastPathname).status}
         onClose={() => {
           history.goBack();
