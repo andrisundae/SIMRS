@@ -5,9 +5,10 @@ const schema = {
     type: 'object',
     properties: {
       computerName: { type: 'string' },
-      macAddress: { type: 'string' },
+      uuid: { type: 'string' },
       localIdentity: { type: 'string' },
       appCode: { type: 'string' },
+      appVersion: { type: 'string' },
       api: { type: 'string' },
       theme: {
         type: 'object',
@@ -25,6 +26,7 @@ const schema = {
       apiToken: { type: 'string' },
       openedApp: { type: 'number', default: 0 },
       isLogin: { type: 'boolean' },
+      id: { type: 'integer' },
       nama: { type: 'string' },
       username: { type: 'string' },
       foto: { type: 'string' },
@@ -50,9 +52,4 @@ const farmasi = new Store({
   name: 'farmasi',
 });
 
-const rekamMedis = new Store({
-  ...defaultOption,
-  name: 'rekamMedis',
-});
-
-export { main, billing, farmasi, rekamMedis };
+export { main, billing, farmasi };

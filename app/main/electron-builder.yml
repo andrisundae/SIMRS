@@ -1,8 +1,8 @@
 appId: linkar.simrs.main
 productName: SIMRS
-copyright: Copyright © 2017 Lintang Kawuryan, PT.
+copyright: Copyright © 2021 Lintang Kawuryan, PT.
 
-files: ['build/**/*', 'node_modules/**/*']
+files: ['build/**/*', 'node_modules/**/*', 'package.json']
 
 directories:
   buildResources: resource

@@ -71,12 +71,18 @@ export default function Index({ t, permissions }) {
   const {
     data: kelompokPemeriksaanFisiks,
     isLoading: kelompokPemeriksaanFisikIsLoading,
+    error: kelompokPemeriksaanFisikError,
   } = useKelompokPemeriksaanFisiks();
-  const { data: instalasis, isLoading: instalasiIsLoading } = useInstalasis();
+  const {
+    data: instalasis,
+    isLoading: instalasiIsLoading,
+    error: instalasiError,
+  } = useInstalasis();
   const {
     data: config,
     isLoading: configIsLoading,
     mutate: mutateConfig,
+    error: configError,
   } = useSettingKelompokPemeriksaanFisikView({
     idKelompokPemeriksaanFisik: idKelompokPemeriksaanFisik,
     idInstalasi: idInstalasi,
@@ -342,6 +348,18 @@ export default function Index({ t, permissions }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (kelompokPemeriksaanFisikError) {
+      toastr.error('Kesalahan', kelompokPemeriksaanFisikError.toString());
+    }
+    if (instalasiError) {
+      toastr.error('Kesalahan', instalasiError.toString());
+    }
+    if (configError) {
+      toastr.error('Kesalahan', configError.toString());
+    }
+  }, [kelompokPemeriksaanFisikError, instalasiError, configError]);
+
   return (
     <Fragment>
       <Segment secondary className="content-header">
@@ -468,9 +486,9 @@ export default function Index({ t, permissions }) {
               rowBuffer={0}
               navigateToSelect={true}
               getRowNodeId={unconfiguredTableGetRowId}
-              getRowStyle={(param) => {
+              getRowClass={(param) => {
                 if (param.data && null === param.data.id) {
-                  return { opacity: 0.5 };
+                  return 'bg-yellow-100 animate-pulse';
                 }
               }}
               onSelectionChanged={() => {
@@ -703,9 +721,9 @@ export default function Index({ t, permissions }) {
               rowBuffer={0}
               navigateToSelect={true}
               getRowNodeId={configuredTableGetRowId}
-              getRowStyle={(param) => {
+              getRowClass={(param) => {
                 if (param.data && null === param.data.id) {
-                  return { opacity: 0.5 };
+                  return 'bg-yellow-100 animate-pulse';
                 }
               }}
               onSelectionChanged={() => {

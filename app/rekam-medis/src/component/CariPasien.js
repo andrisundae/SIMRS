@@ -1,9 +1,18 @@
-import React, { Fragment, useState, useRef, useEffect } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useRef,
+  useEffect,
+  lazy,
+  Suspense,
+} from 'react';
 import { Route, useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Icon, Input, Modal, Transition } from 'semantic-ui-react';
 import produce from 'immer';
-import HasilCariPasien from '../page/HasilCariPasien';
+import LoaderWithNoDimmer from './LoaderWithNoDimmer';
+
+const HasilCariPasien = lazy(() => import('../page/HasilCariPasien'));
 
 export default function CariPasien() {
   const history = useHistory();
@@ -112,9 +121,11 @@ export default function CariPasien() {
           </Transition>
         </Modal.Header>
         <Modal.Content scrolling style={{ minHeight: 300 }}>
-          <Route path={parentPath + '/:pasienId'}>
-            <HasilCariPasien />
-          </Route>
+          <Suspense fallback={<LoaderWithNoDimmer />}>
+            <Route path={parentPath + '/:pasienId'}>
+              <HasilCariPasien />
+            </Route>
+          </Suspense>
         </Modal.Content>
       </Modal>
     </Fragment>

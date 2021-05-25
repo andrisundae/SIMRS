@@ -1,0 +1,13 @@
+{
+  "appId": "com.linkar.rekammedis",
+  "appName": "RekamMedis",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "build",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}
