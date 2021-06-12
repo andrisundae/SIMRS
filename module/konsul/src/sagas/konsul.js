@@ -4,6 +4,7 @@ import {
   toastr,
   models as apiCommon,
   validator as commonValidator,
+  formatter,
 } from '@simrs/common';
 import { loaderActions, datatableActions, messageBox } from '@simrs/components';
 import api, { validationRules } from '../services/models/model';
@@ -255,7 +256,7 @@ function* changeSelect2({ meta, payload }) {
           id_unit_layanan: payload.data.value,
           id_kelas: kunjungan.id_kelas,
           id_instalasi: post.id_instalasi,
-          tgl_kunjungan: kunjungan.tgl_kunjungan,
+          tgl_kunjungan: formatter.dateFormatDB(kunjungan.tgl_kunjungan),
         };
         yield put(actions.getAdministrasiKonsul.request(meta.resource, data));
         break;

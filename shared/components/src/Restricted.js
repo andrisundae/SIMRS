@@ -1,81 +1,44 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { parse } from 'querystring';
+import {isEqual} from 'lodash';
 
-import { request } from '@simrs/common';
 import { PageLoader } from '@simrs/components';
-import { withModuleConsumer } from './provider';
+import { usePermissions } from '@simrs/billing/src/fetcher';
+import { useModuleAction } from './provider';
 
-const getGranted = async (route) => {
-  let response = await request.post('/acl/tabel/fitur/granted', {
-    menu: route,
-  });
-  return response;
-};
-
-class Restriced extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { isCheck: false, isGranted: false, permission: [] };
-  }
-
-  async _checkPermission() {
-    try {
-      // let res = isGranted(this.props.route || this._getCurrentRoute(), this.props.role);
-      // res.then(isGranted => {
-      //     this.setState({ isCheck: true, isGranted: isGranted })
-      // })
-
-      let response = await getGranted(
-        this.props.route || this._getCurrentRoute()
-      );
-      if (response.status) {
-        const isGranted = response.data.find(
-          (permission) => permission === this.props.role
-        );
-        this.setState(
-          { isCheck: true, isGranted, permission: response.data },
-          () => {
-            const moduleActions = this.props.moduleActions(
-              this.props.moduleDispatch
-            );
-            moduleActions.setPermissions(response.data);
-          }
-        );
-      } else {
-        this.setState({ isCheck: true, isGranted: false });
-      }
-    } catch (error) {
-      this.setState({ isCheck: true, isGranted: false });
-    }
-  }
-
-  render() {
-    const { render } = this.props;
-
-    if (!this.state.isCheck) {
-      this._checkPermission();
-
-      return <PageLoader active={true} />;
-    }
-
-    return (() => {
-      if (this.state.isGranted) {
-        return <Fragment>{render(this.state.permission)}</Fragment>;
-      } else {
-        return <Redirect to="/permission-denied" />;
-      }
-    })();
-  }
-
-  _getCurrentRoute() {
-    let params = parse(this.props.location.search.substr(1));
-
+const Restriced = ({role, route, location, render}) => {
+  const {setPermissions} = useModuleAction();
+  const currentRoute = React.useMemo(() => {
+    const params = parse(location.search.substr(1));
     return params.route ? params.route : '_billing_master';
+  }, [location]);
+  const { data: permissions, isLoading } = usePermissions({route: route || currentRoute});
+
+  const isGranted = React.useMemo(() => {
+    return permissions.find(
+      (permission) => permission === role
+    );
+  }, [permissions, role]);
+
+  React.useEffect(() => {
+    if (permissions && isGranted && !isLoading) {
+      setPermissions(permissions);
+    }
+  }, [permissions, isGranted, isLoading, setPermissions]);
+
+  if (isLoading) {
+    return <PageLoader active={true} />;
   }
-}
+
+  if (isGranted) {
+    return render(permissions);
+  }
+
+  return <Redirect to="/permission-denied" />;
+
+};
 
 Restriced.propTypes = {
   route: PropTypes.string,
@@ -88,4 +51,4 @@ Restriced.defaultProps = {
   role: 'view',
 };
 
-export default withModuleConsumer(Restriced);
+export default React.memo(Restriced, isEqual);

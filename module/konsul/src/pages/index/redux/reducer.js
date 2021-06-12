@@ -244,6 +244,17 @@ export default (state = initialState, action) =>
         draft.selectedOption[payload.name] = payload.data;
         draft.post[payload.name] = payload.data.value;
         draft.focusElement = '';
+        if (payload.name === 'id_kelompok' || payload.name === 'id_instalasi') {
+          if (payload.name === 'id_kelompok') {
+            draft.post.id_instalasi = '';
+            draft.selectedOption.id_instalasi = null;
+          }
+          draft.post.id_unit_layanan = '';
+          draft.selectedOption.id_unit_layanan = null;
+          draft.post.id_tindakan = '';
+          draft.selectedOption.id_tindakan = null;
+          draft.post.nama_kelas = '';
+        }
         return;
       }
 
