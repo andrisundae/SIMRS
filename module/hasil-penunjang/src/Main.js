@@ -11,8 +11,8 @@ import LoaderWithNoDimmer from '@simrs/rekam-medis/src/component/LoaderWithNoDim
 import _ from 'lodash';
 
 const Index = lazy(() => import('./page/Index'));
-const Add = lazy(() => import('./page/Add'));
-const Copy = lazy(() => import('./page/Copy'));
+const IsiHasil = lazy(() => import('./page/IsiHasil'));
+const Dokumen = lazy(() => import('./page/Dokumen'));
 
 export default function Main() {
   const history = useHistory();
@@ -21,19 +21,22 @@ export default function Main() {
 
   function checkPathname(type) {
     switch (type) {
-      case 'add':
-        return {
-          status: '/resep/add' === location.pathname && 'add' === lastPathname,
-          path: '/resep/add',
-          component: <Add />,
-        };
-
-      case 'copy':
+      case 'isi-hasil':
         return {
           status:
-            '/resep/copy' === location.pathname && 'copy' === lastPathname,
-          path: '/resep/copy',
-          component: <Copy />,
+            '/hasil-penunjang/isi-hasil' === location.pathname &&
+            'isi-hasil' === lastPathname,
+          path: '/hasil-penunjang/isi-hasil',
+          component: <IsiHasil />,
+        };
+
+      case 'dokumen':
+        return {
+          status:
+            '/hasil-penunjang/dokumen' === location.pathname &&
+            'dokumen' === lastPathname,
+          path: '/hasil-penunjang/dokumen',
+          component: <Dokumen />,
         };
 
       default:
@@ -49,18 +52,14 @@ export default function Main() {
     <Suspense fallback={<LoaderWithNoDimmer />}>
       {/* <Switch> */}
       <Route path="/">
-        <Index withAdd={true} />
+        <Index />
       </Route>
 
       <Modal
         closeIcon
         closeOnDimmerClick={false}
         centered={false}
-        size={
-          undefined !== checkPathname(lastPathname).size
-            ? checkPathname(lastPathname).size
-            : 'fullscreen'
-        }
+        size="large"
         open={checkPathname(lastPathname).status}
         onClose={() => {
           history.goBack();

@@ -14,12 +14,22 @@ export default function Index() {
     <Fragment>
       <FooterActionsContainer>
         <div className="m-1">
-          <Button icon="plus" content="Tambah" color="blue" />
-          <Button icon="copy" content="Salin" color="blue" />
+          <Button
+            icon="plus"
+            content="Tambah"
+            color="blue"
+            onClick={() => history.push('/resep/add')}
+          />
+          <Button
+            icon="copy"
+            content="Salin"
+            color="blue"
+            onClick={() => history.push('/resep/copy')}
+          />
         </div>
       </FooterActionsContainer>
       <Header className="mt-0">
-        <Icon name="list alternate outline" className="text-lg -mt-4" />
+        <Icon name="sticky note outline" className="text-lg -mt-4" />
         <Header.Content>Resep</Header.Content>
       </Header>
       <Divider />

@@ -21,17 +21,25 @@ export default function TableContainer({
     height === 'auto' ? height : parseInt(height, 10)
   );
   const [divMaxHeight, setDivMaxHeight] = useState(
-    maxHeight === 'auto' ||
-      maxHeight === 'screen-height' ||
-      -1 < maxHeight.indexOf('%')
-      ? maxHeight
+    maxHeight.constructor === String
+      ? maxHeight === 'auto' ||
+        maxHeight === 'screen-height' ||
+        -1 < maxHeight.indexOf('%')
+        ? maxHeight
+        : parseInt(maxHeight, 10)
       : parseInt(maxHeight, 10)
   );
   const [divWidth, setDivWidth] = useState(
     width === 'auto' ? width : parseInt(width, 10)
   );
   const [divMaxWidth, setDivMaxWidth] = useState(
-    maxWidth === 'auto' ? maxWidth : parseInt(maxWidth, 10)
+    maxWidth.constructor === String
+      ? maxWidth === 'auto' ||
+        maxWidth === 'screen-width' ||
+        -1 < maxWidth.indexOf('%')
+        ? maxWidth
+        : parseInt(maxWidth, 10)
+      : parseInt(maxWidth, 10)
   );
 
   const position = useCallback((node) => {

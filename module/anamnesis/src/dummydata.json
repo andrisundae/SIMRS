@@ -1,0 +1,211 @@
+{
+  "data": [
+    {
+      "id": "211396432104002001003",
+      "kode_personel": "0000203",
+      "kode_ppa": "fisioterapis",
+      "kode_kunjungan_tl": "211396432104002001",
+      "keluhan_utama": "nyeri dari pinggang kiri ke bawah 4 bulan",
+      "riwayat_penyakit_sekarang": "pasien mengeluh tdk bs jalan 4 bulan ini , kaki kiri, mual +, muntah -, demam -, bapil-, \nkaki kiri sulit digerakkan\n\n\nrpd MH +, ht-, dm - ,",
+      "riwayat_penyakit_dahulu": "MH RFC",
+      "riwayat_alergi": {
+        "obat": [],
+        "makanan": null,
+        "lainnya": null
+      },
+      "riwayat_alergi_reaksi": null,
+      "riwayat_penyakit_keluarga": null,
+      "riwayat_lain": {
+        "merokok": {
+          "jumlah": null,
+          "lama": null
+        },
+        "alkohol": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "obat_penenang": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "pekerjaan": "",
+        "tumbuh_kembang": null,
+        "persalinan": null
+      },
+      "sumber_informasi": [
+        {
+          "value": "Auto-anamnesis",
+          "data": "",
+          "detail": ""
+        }
+      ],
+      "riwayat_obat": null,
+      "status_psikologi": [
+        {
+          "value": "Tenang",
+          "data": "Tenang"
+        }
+      ],
+      "alat_bantu": [
+        {
+          "value": "Kursi Roda",
+          "data": "Kursi Roda"
+        }
+      ],
+      "kelainan_fisik": [
+        {
+          "value": "Tidak Ada",
+          "data": "Tidak Ada"
+        }
+      ],
+      "tanggal": "2021-04-12 11:36:59.320",
+      "is_lock": false,
+      "version": 2,
+      "nama_personel": "CHRISTINA WAHYU WIJAYANTI, S.ST",
+      "nama_tempat_layanan": "MELATI",
+      "tanggal_hapus": null,
+      "kelas": "3",
+      "hapus": false
+    },
+    {
+      "id": "211396432104002001002",
+      "kode_personel": "1810008",
+      "kode_ppa": "medis",
+      "kode_kunjungan_tl": "211396432104002001",
+      "keluhan_utama": "nyeri dari pinggang kiri ke bawah 4 bulan",
+      "riwayat_penyakit_sekarang": "pasien mengeluh tdk bs jalan 4 bulan ini , kaki kiri, mual +, muntah -, demam -, bapil-, \nkaki kiri sulit digerakkan\n\n\nrpd MH +, ht-, dm - ,",
+      "riwayat_penyakit_dahulu": "MH RFC",
+      "riwayat_alergi": {
+        "obat": [],
+        "makanan": null,
+        "lainnya": null
+      },
+      "riwayat_alergi_reaksi": null,
+      "riwayat_penyakit_keluarga": null,
+      "riwayat_lain": {
+        "merokok": {
+          "jumlah": null,
+          "lama": null
+        },
+        "alkohol": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "obat_penenang": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "pekerjaan": "",
+        "tumbuh_kembang": null,
+        "persalinan": null
+      },
+      "sumber_informasi": [
+        {
+          "value": "Auto-anamnesis",
+          "data": "",
+          "detail": ""
+        }
+      ],
+      "riwayat_obat": null,
+      "status_psikologi": [
+        {
+          "value": "Tenang",
+          "data": "Tenang"
+        }
+      ],
+      "alat_bantu": [
+        {
+          "value": "Kursi Roda",
+          "data": "Kursi Roda"
+        }
+      ],
+      "kelainan_fisik": [
+        {
+          "value": "Tidak Ada",
+          "data": "Tidak Ada"
+        }
+      ],
+      "tanggal": "2021-04-08 14:04:22.033",
+      "is_lock": false,
+      "version": 2,
+      "nama_personel": "IVONY NILASARI, dr., SpKK",
+      "nama_tempat_layanan": "MELATI",
+      "tanggal_hapus": null,
+      "kelas": "2",
+      "hapus": false
+    },
+    {
+      "id": "211396432104002001001",
+      "kode_personel": "0000040",
+      "kode_ppa": "paramedis",
+      "kode_kunjungan_tl": "211396432104002001",
+      "keluhan_utama": "tdk bs jalan ",
+      "riwayat_penyakit_sekarang": "pasien mengeluh tdk bs jalan 4 bulan ini , kaki kiri, mual +, muntah -, demam -, bapil-, \n\nrpd MH +, ht-, dm - ,",
+      "riwayat_penyakit_dahulu": null,
+      "riwayat_alergi": {
+        "obat": [],
+        "makanan": null,
+        "lainnya": null
+      },
+      "riwayat_alergi_reaksi": null,
+      "riwayat_penyakit_keluarga": null,
+      "riwayat_lain": {
+        "merokok": {
+          "jumlah": null,
+          "lama": null
+        },
+        "alkohol": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "obat_penenang": {
+          "jenis": null,
+          "jumlah": null,
+          "lama": null
+        },
+        "pekerjaan": "",
+        "tumbuh_kembang": null,
+        "persalinan": null
+      },
+      "sumber_informasi": [
+        {
+          "value": "Auto-anamnesis",
+          "data": "",
+          "detail": ""
+        }
+      ],
+      "riwayat_obat": null,
+      "status_psikologi": [
+        {
+          "value": "Tenang",
+          "data": "Tenang"
+        }
+      ],
+      "alat_bantu": [
+        {
+          "value": "Kursi Roda",
+          "data": "Kursi Roda"
+        }
+      ],
+      "kelainan_fisik": [
+        {
+          "value": "Tidak Ada",
+          "data": "Tidak Ada"
+        }
+      ],
+      "tanggal": "2021-04-07 19:41:53.567",
+      "is_lock": false,
+      "version": 2,
+      "nama_personel": "TRI KUSRINI, A.Md.Kep.",
+      "nama_tempat_layanan": "ANGGREK",
+      "tanggal_hapus": null,
+      "kelas": "3",
+      "hapus": false
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import {
   Icon,
   Form,
@@ -9,6 +11,7 @@ import {
   Label,
   Table,
 } from 'semantic-ui-react';
+import _ from 'lodash';
 
 const PreWrapContent = ({ className = '', content = '', style = {} }) => {
   return (
@@ -23,7 +26,12 @@ const PreWrapContent = ({ className = '', content = '', style = {} }) => {
 };
 
 export default function Detail() {
+  const { detailData } = useSelector((state) => state.anamnesis);
+
   const history = useHistory();
+  const data = detailData; //JSON.parse(localStorage.getItem('anamnesis-detail-data'));
+
+  console.log(data);
 
   return (
     <Fragment>
@@ -31,10 +39,16 @@ export default function Detail() {
         <Icon name="folder open" className="mr-4" /> Detail Anamnesis
         <div className="block mt-2">
           <Label color="teal" ribbon className="-left-10">
-            Mataram • Kelas 3 • 05/12/2020 17:34
+            {data?.nama_tempat_layanan}
+            <span className="mx-1">•</span>
+            Kelas {data?.kelas}
+            <span className="mx-1">•</span>
+            {dayjs(data?.tanggal).format('DD/MM/YYYY HH:mm')}
           </Label>
           <span className="inline text-base">
-            05/12/2020 17:34 • Gigih Setijawan, dr., Sp.P., MARS.
+            {dayjs(data?.tanggal).format('DD/MM/YYYY HH:mm')}
+            <span className="mx-1">•</span>
+            {data?.nama_personel}
           </span>
         </div>
       </Modal.Header>
@@ -46,33 +60,27 @@ export default function Detail() {
           </Form.Field>
           <Form.Field>
             <label>Keluhan Utama</label>
-            <div className="whitespace-pre">Batuk</div>
+            <div className="whitespace-pre">{data?.keluhan_utama}</div>
           </Form.Field>
           <Form.Field>
             <label>Riwayat Penyakit Sekarang</label>
-            <PreWrapContent
-              content={`Lorem ipsum dolor sit amet, 
-              
-              consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.`}
-            />
+            <PreWrapContent content={data?.riwayat_penyakit_sekarang} />
           </Form.Field>
           <Form.Field>
             <label>Status Psikologi</label>
-            Sedih, Tegang, Menderita penyakit yang membahayakan dirinya sendiri,
-            lainnya
+            {_.map(data?.status_psikologi, 'value').join(', ')}
           </Form.Field>
           <Form.Field>
             <label>Kelainan Fisik</label>
-            Bisu, Buta, lainnya
+            {_.map(data?.kelainan_fisik, 'value').join(', ')}
           </Form.Field>
           <Form.Field>
             <label>Alat Bantu</label>
-            Kursi Roda, Kruk, lainnya
+            {_.map(data?.alat_bantu, 'value').join(', ')}
           </Form.Field>
           <Form.Field>
             <label>Riwayat Penyakit Yang Pernah Diderita</label>
-            <PreWrapContent content={`DM (+) HT (-)`} />
+            <PreWrapContent content={data?.riwayat_penyakit_dahulu} />
           </Form.Field>
           <Form.Field>
             <label>
@@ -86,19 +94,21 @@ export default function Detail() {
                     <Table.Cell className="font-bold" width="4">
                       Obat
                     </Table.Cell>
-                    <Table.Cell>AMOXICILLIN, ALBUMIN</Table.Cell>
+                    <Table.Cell>
+                      {_.join(data?.riwayat_alergi?.obat, ', ')}
+                    </Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell className="font-bold">Makanan</Table.Cell>
-                    <Table.Cell>-</Table.Cell>
+                    <Table.Cell>{data?.riwayat_alergi?.makanan}</Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell className="font-bold">Lain-lain</Table.Cell>
-                    <Table.Cell>-</Table.Cell>
+                    <Table.Cell>{data?.riwayat_alergi?.lainnya}</Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell className="font-bold">Reaksi Alergi</Table.Cell>
-                    <Table.Cell>-</Table.Cell>
+                    <Table.Cell>{data?.riwayat_alergi_reaksi}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
               </Table>
@@ -106,11 +116,11 @@ export default function Detail() {
           </Form.Field>
           <Form.Field>
             <label>Obat yang dibawa pasien dari luar RS</label>
-            <PreWrapContent content={`obat lain`} />
+            <PreWrapContent content={data?.riwayat_obat} />
           </Form.Field>
           <Form.Field>
             <label>Riwayat Penyakit Keluarga</label>
-            <PreWrapContent content={`-`} />
+            <PreWrapContent content={data?.riwayat_penyakit_keluarga} />
           </Form.Field>
           <Form.Field>
             <label>Riwayat Sosial</label>
