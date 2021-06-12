@@ -559,7 +559,7 @@ DataTableServerSide.defaultProps = {
   cacheBlockSize: 10,
   rowHeight: 25,
   sizeColumnsToFit: true,
-  autoSizeColumn: false,
+  autoSizeColumn: true,
   contextMenuItems: [],
   enableHandleAlphanumeric: false,
   handleAlphanumeric: () => {},
