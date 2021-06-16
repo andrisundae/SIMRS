@@ -33,7 +33,15 @@ export default function App() {
           })}
         </Switch>
       </Suspense>
-      <Footer actionsPosition="right" className="h-12" />
+      <Footer
+        actionsPosition="right"
+        className="h-12"
+        watermark={
+          <div className="inline font-bold text-base">
+            v4.2.0 • RS Kusta Sumberglagah
+          </div>
+        }
+      />
     </Router>
   );
 }

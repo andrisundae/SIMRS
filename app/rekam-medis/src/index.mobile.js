@@ -4,7 +4,7 @@ import './style';
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App.mobile';
-import { Device } from '@capacitor/device';
+// import { Device } from '@capacitor/device';
 // import { Plugins } from '@capacitor/core';
 
 // const { App: CapApp } = Plugins;
@@ -17,9 +17,9 @@ if ('' === window.location.search) {
   if (!process.env.NODE_ENV || 'development' === process.env.NODE_ENV) {
     window.location = location + '?uuid=123&name=dev';
   } else {
-    Device.getInfo().then((info) => {
-      window.location = location + '?uuid=' + info.uuid + '&name=' + info.name;
-    });
+    // Device.getInfo().then((info) => {
+    //   window.location = location + '?uuid=' + info.uuid + '&name=' + info.name;
+    // });
   }
 }
 

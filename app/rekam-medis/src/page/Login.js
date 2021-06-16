@@ -49,7 +49,7 @@ export default function Login() {
                   username,
                   password,
                 });
-                // history.push('/main');
+                history.push('/main');
               }}
             >
               <Form.Field>

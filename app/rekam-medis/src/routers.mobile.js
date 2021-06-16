@@ -18,6 +18,11 @@ export default [
     component: lazy(() => import('@module/antrian-rekam-medis/src/penunjang')),
   },
   {
+    key: '_rekam_medis_antrian_pasien_pulang',
+    path: '/antrian/pasien-pulang',
+    component: lazy(() => import('@module/antrian-pasien-pulang')),
+  },
+  {
     key: '_rekam_medis_detail_umum',
     path: '/detail-rekam-medis/umum',
     component: lazy(() => import('@module/detail-rekam-medis/src/umum')),
@@ -51,5 +56,10 @@ export default [
     key: '_rekam_medis_visite_dpjp',
     path: '/antrian/visite-dpjp',
     component: lazy(() => import('@module/visite-dpjp')),
+  },
+  {
+    key: '_rekam_medis_template',
+    path: '/template',
+    component: lazy(() => import('@module/template')),
   },
 ];

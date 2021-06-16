@@ -74,5 +74,5 @@ export default async (url, param = {}) => {
     }
   }
   const json = await response.json();
-  return json.data;
+  return json?.data ? json.data : [];
 };
