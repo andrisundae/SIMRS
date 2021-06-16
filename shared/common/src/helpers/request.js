@@ -6,10 +6,11 @@ const { BrowserWindow, dialog } = remote;
 // const BASE_URI = process.env.REACT_APP_API_DOMAIN;
 const simrsHeaders = (isWithToken = true) => {
   let headers = {
-    'device-id': main.get('config.macAddress'),
+    'device-id': main.get('config.uuid'),
     'device-name': main.get('config.computerName'),
     'local-identity': main.get('config.localIdentity'),
     'app-code': main.get('config.appCode'),
+    'app-version': main.get('config.appVersion'),
   };
 
   if (isWithToken) {

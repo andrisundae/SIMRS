@@ -9,14 +9,32 @@ import { withTranslation } from 'react-i18next';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
-
+import { format } from 'url';
 import { store, menu, templates } from '@simrs/common';
 import authActions from '../../auth/authActions';
 
 const { BrowserWindow, app, ipcMain } = remote;
-
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+
+const resolveApp = (relativePath) => {
+  if (isDev) {
+    return path.resolve(appDirectory, relativePath);
+  }
+
+  return path.resolve(
+    app.getAppPath(),
+    'build',
+    relativePath.replace('../', '')
+  );
+};
+
+function appUrl(relativePath) {
+  return format({
+    pathname: path.resolve(app.getAppPath(), relativePath),
+    protocol: 'file',
+    slashes: true,
+  });
+}
 
 class Main extends Component {
   constructor(props) {
@@ -25,6 +43,7 @@ class Main extends Component {
     this._logout = this._logout.bind(this);
     this._renderContextsMenu = this._renderContextsMenu.bind(this);
     this.handleSessionExpired = this.handleSessionExpired.bind(this);
+    this.rekamMedisWebContent = undefined;
   }
 
   componentDidMount() {
@@ -174,6 +193,9 @@ class Main extends Component {
   }
 
   _createWindow(app, id) {
+    const webPreference =
+      '_rekam_medis' === app ? { partition: 'persist:rekam_medis' } : {};
+
     let windowApp = new BrowserWindow({
       width: 1000,
       height: 800,
@@ -184,6 +206,7 @@ class Main extends Component {
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true,
+        ...webPreference,
       },
     });
     windowApp.on('show', () => {
@@ -208,14 +231,14 @@ class Main extends Component {
       case '_billing':
         url = isDev
           ? `http://localhost:${envApp.billing ? envApp.billing.PORT : '9001'}`
-          : remote.app.getAppPath() + '/build/billing/index.html';
+          : appUrl('build/billing/index.html');
         titleApp = envApp.billing ? envApp.billing.REACT_APP_NAME : 'Billing';
         color = '#26C281';
         break;
       case '_farmasi':
         url = isDev
           ? `http://localhost:${envApp.farmasi ? envApp.farmasi.PORT : '9003'}`
-          : remote.app.getAppPath() + '/build/farmasi/index.html';
+          : appUrl('build/farmasi/index.html');
         titleApp = envApp.farmasi ? envApp.farmasi.REACT_APP_NAME : 'Farmasi';
         color = '#f3c200';
         break;
@@ -224,21 +247,21 @@ class Main extends Component {
           ? `http://localhost:${
               envApp.rekamMedis ? envApp.rekamMedis.PORT : '9004'
             }`
-          : remote.app.getAppPath() + '/build/rekam-medis/index.html';
+          : appUrl('build/rekam-medis/index.html');
         titleApp = envApp.rekamMedis ? envApp.rekamMedis.REACT_APP_NAME : 'RM';
         color = '#e7505a';
         break;
       case '_system':
         url = isDev
           ? `http://localhost:${envApp.sistem ? envApp.sistem.PORT : '9002'}`
-          : remote.app.getAppPath() + '/build/system/index.html';
+          : appUrl('build/system/index.html');
         titleApp = envApp.sistem ? envApp.sistem.REACT_APP_NAME : 'Sistem';
         color = '#3598dc';
         break;
       default:
         url = isDev
           ? 'http://localhost:9001'
-          : remote.app.getAppPath() + '/build/billing/index.html';
+          : appUrl('build/billing/index.html');
         titleApp = 'Billing';
         color = '#5c97bd';
         break;
@@ -251,6 +274,36 @@ class Main extends Component {
     });
 
     windowApp.on('ready-to-show', () => {
+      if ('_rekam_medis' === app && undefined === this.rekamMedisWebContent) {
+        windowApp.webContents.executeJavaScript(
+          `localStorage.setItem("config.apiUrl", "${store.main.get(
+            'config.api'
+          )}");
+          localStorage.setItem("app.code", "${store.main.get(
+            'config.appCode'
+          )}");
+          localStorage.setItem("app.version", "${store.main.get(
+            'config.appVersion'
+          )}");
+          localStorage.setItem("device.id", "${store.main.get('config.uuid')}");
+          localStorage.setItem("device.name", "${store.main.get(
+            'config.computerName'
+          )}");
+          localStorage.setItem("device.localIdentity", "${store.main.get(
+            'config.localIdentity'
+          )}");
+          localStorage.setItem("user.id", "${store.main.get('user.id')}");
+          localStorage.setItem("user.username", "${store.main.get(
+            'user.username'
+          )}");
+          localStorage.setItem("user.name", "${store.main.get('user.nama')}");
+          localStorage.setItem("user.token", "${store.main.get(
+            'user.apiToken'
+          )}");`
+        );
+        this.rekamMedisWebContent = windowApp.webContents;
+      }
+
       splash.destroy();
       windowApp.show();
       windowApp.focus();

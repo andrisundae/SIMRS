@@ -2,24 +2,24 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { parse } from 'querystring';
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 
 import { PageLoader } from '@simrs/components';
 import { usePermissions } from '@simrs/billing/src/fetcher';
 import { useModuleAction } from './provider';
 
-const Restriced = ({role, route, location, render}) => {
-  const {setPermissions} = useModuleAction();
+const Restriced = ({ role, route, location, render }) => {
+  const { setPermissions } = useModuleAction();
   const currentRoute = React.useMemo(() => {
     const params = parse(location.search.substr(1));
     return params.route ? params.route : '_billing_master';
   }, [location]);
-  const { data: permissions, isLoading } = usePermissions({route: route || currentRoute});
+  const { data: permissions, isLoading } = usePermissions({
+    route: route || currentRoute,
+  });
 
   const isGranted = React.useMemo(() => {
-    return permissions.find(
-      (permission) => permission === role
-    );
+    return permissions.find((permission) => permission === role);
   }, [permissions, role]);
 
   React.useEffect(() => {
@@ -37,7 +37,6 @@ const Restriced = ({role, route, location, render}) => {
   }
 
   return <Redirect to="/permission-denied" />;
-
 };
 
 Restriced.propTypes = {

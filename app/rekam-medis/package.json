@@ -6,7 +6,8 @@
     "linking": "yarn link react react-dom",
     "start": "cross-env BROWSER=none craco start",
     "start:browser": "craco start",
-    "build": "craco build"
+    "build": "cross-env BROWSER=none craco build",
+    "build:browser": "craco build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -24,7 +25,11 @@
     ]
   },
   "dependencies": {
-    "react-table": "^7.6.3",
+    "@capacitor/android": "2.4.7",
+    "@capacitor/cli": "^2.4.7",
+    "@capacitor/core": "^2.4.7",
+    "@capacitor/device": "^0.6.2",
+    "react-table": "~7.7.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
-import {QueryClient, QueryClientProvider} from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import {
   Layout,

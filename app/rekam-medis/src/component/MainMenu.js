@@ -20,6 +20,9 @@ const ALIH_DPJP = 'alihDpjp';
 const KONSUL_DOKTER = 'konsulDokter';
 const KUNJUNGAN_UMUM = 'kunjunganUmum';
 const KUNJUNGAN_PENUNJANG = 'kunjunganPenunjang';
+const KUNJUNGAN_PASIEN_PULANG = 'kunjunganPasienPulang';
+const FORMAT_DOKUMEN = 'formatDokumen';
+const KLPCM = 'klpcm';
 
 const menus = [
   VISITE_DPJP,
@@ -29,6 +32,9 @@ const menus = [
   KONSUL_DOKTER,
   KUNJUNGAN_UMUM,
   KUNJUNGAN_PENUNJANG,
+  KUNJUNGAN_PASIEN_PULANG,
+  FORMAT_DOKUMEN,
+  KLPCM,
 ];
 
 export default function MainMenu() {
@@ -43,6 +49,9 @@ export default function MainMenu() {
     [KONSUL_DOKTER]: useRef(null),
     [KUNJUNGAN_UMUM]: useRef(null),
     [KUNJUNGAN_PENUNJANG]: useRef(null),
+    [KUNJUNGAN_PASIEN_PULANG]: useRef(null),
+    [FORMAT_DOKUMEN]: useRef(null),
+    [KLPCM]: useRef(null),
   };
 
   useEffect(() => {
@@ -71,8 +80,8 @@ export default function MainMenu() {
       Mousetrap.bind('alt+r', menuElement[RAWAT_BERSAMA].current.click);
       Mousetrap.bind('alt+d', menuElement[DELEGASI_TUGAS].current.click);
       Mousetrap.bind('alt+a', menuElement[ALIH_DPJP].current.click);
-      Mousetrap.bind('alt+a', menuElement[KONSUL_DOKTER].current.click);
-      Mousetrap.bind('alt+k', menuElement[KUNJUNGAN_UMUM].current.click);
+      Mousetrap.bind('alt+k', menuElement[KONSUL_DOKTER].current.click);
+      Mousetrap.bind('alt+u', menuElement[KUNJUNGAN_UMUM].current.click);
       Mousetrap.bind('alt+p', menuElement[KUNJUNGAN_PENUNJANG].current.click);
     }
     // eslint-disable-next-line
@@ -119,45 +128,17 @@ export default function MainMenu() {
     setSelectedMenu('');
   }
 
-  function toVisiteDpjp(e) {
+  function toConteMenu(e, loc = '') {
     e.preventDefault();
-    history.push('/antrian/visite-dpjp');
-  }
-
-  function toRawatBersama(e) {
-    e.preventDefault();
-    history.push('/rawat-bersama/pemenuhan');
-  }
-
-  function toDelegasiTugas(e) {
-    e.preventDefault();
-    history.push('/delegasi-tugas/pemenuhan');
-  }
-
-  function toAlihDpjp(e) {
-    e.preventDefault();
-    history.push('/alih-dpjp/pemenuhan');
-  }
-
-  function toKonsulDokter(e) {
-    e.preventDefault();
-    history.push('/konsul-dokter/pemenuhan');
-  }
-
-  function toKunjungan(e) {
-    e.preventDefault();
-    history.push('/antrian/umum');
-  }
-
-  function toPemeriksaanPenunjang(e) {
-    e.preventDefault();
-    history.push('/antrian/penunjang');
+    if (loc) {
+      history.push(loc);
+    }
   }
 
   return (
     <div className="lg:flex py-20">
       <div className="flex-1"></div>
-      <div className="flex-auto grid grid-cols-2 gap-12 pl-10 pr-10">
+      <div className="flex-auto grid grid-cols-3 gap-12 pl-10 pr-10">
         <div>
           <Header as="h3">{t('portal:antrianMedis')}</Header>
           <List selection>
@@ -173,7 +154,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(VISITE_DPJP);
               }}
-              onClick={toVisiteDpjp}
+              onClick={(e) => toConteMenu(e, '/antrian/visite-dpjp')}
             />
             <ListItem
               ref={menuElement[RAWAT_BERSAMA]}
@@ -186,7 +167,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(RAWAT_BERSAMA);
               }}
-              onClick={toRawatBersama}
+              onClick={(e) => toConteMenu(e, '/rawat-bersama/pemenuhan')}
             />
             <ListItem
               ref={menuElement[DELEGASI_TUGAS]}
@@ -199,7 +180,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(DELEGASI_TUGAS);
               }}
-              onClick={toDelegasiTugas}
+              onClick={(e) => toConteMenu(e, '/delegasi-tugas/pemenuhan')}
             />
             <ListItem
               ref={menuElement[ALIH_DPJP]}
@@ -212,7 +193,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(ALIH_DPJP);
               }}
-              onClick={toAlihDpjp}
+              onClick={(e) => toConteMenu(e, '/alih-dpjp/pemenuhan')}
             />
             <ListItem
               ref={menuElement[KONSUL_DOKTER]}
@@ -225,7 +206,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(KONSUL_DOKTER);
               }}
-              onClick={toKonsulDokter}
+              onClick={(e) => toConteMenu(e, '/konsul-dokter/pemenuhan')}
             />
           </List>
         </div>
@@ -243,7 +224,7 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(KUNJUNGAN_UMUM);
               }}
-              onClick={toKunjungan}
+              onClick={(e) => toConteMenu(e, '/antrian/umum')}
             />
             <ListItem
               ref={menuElement[KUNJUNGAN_PENUNJANG]}
@@ -256,7 +237,51 @@ export default function MainMenu() {
               onFocus={() => {
                 setSelectedMenu(KUNJUNGAN_PENUNJANG);
               }}
-              onClick={toPemeriksaanPenunjang}
+              onClick={(e) => toConteMenu(e, '/antrian/penunjang')}
+            />
+            <ListItem
+              ref={menuElement[KUNJUNGAN_PASIEN_PULANG]}
+              iconName="ordered list"
+              iconColor="yellow"
+              header={t(`module:${KUNJUNGAN_PASIEN_PULANG}`)}
+              shortcut="Alt + P"
+              description={t(`module:${KUNJUNGAN_PASIEN_PULANG}.description`)}
+              active={KUNJUNGAN_PASIEN_PULANG === selectedMenu}
+              onFocus={() => {
+                setSelectedMenu(KUNJUNGAN_PASIEN_PULANG);
+              }}
+              onClick={(e) => toConteMenu(e, '/antrian/pasien-pulang')}
+            />
+          </List>
+        </div>
+        <div>
+          <Header as="h3">{t('portal:Lainnya')}</Header>
+          <List selection>
+            <ListItem
+              ref={menuElement[FORMAT_DOKUMEN]}
+              iconName="ordered list"
+              iconColor="teal"
+              header={t(`module:${FORMAT_DOKUMEN}`)}
+              shortcut="Alt + K"
+              description={t(`module:${FORMAT_DOKUMEN}.description`)}
+              active={FORMAT_DOKUMEN === selectedMenu}
+              onFocus={() => {
+                setSelectedMenu(FORMAT_DOKUMEN);
+              }}
+              onClick={(e) => toConteMenu(e, '/template')}
+            />
+            <ListItem
+              ref={menuElement[KLPCM]}
+              iconName="ordered list"
+              iconColor="yellow"
+              header={t(`module:${KLPCM}`)}
+              shortcut="Alt + P"
+              description={t(`module:${KLPCM}.description`)}
+              active={KLPCM === selectedMenu}
+              onFocus={() => {
+                setSelectedMenu(KLPCM);
+              }}
+              onClick={(e) => toConteMenu(e, '')}
             />
           </List>
         </div>

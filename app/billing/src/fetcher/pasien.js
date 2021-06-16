@@ -17,7 +17,7 @@ import fetcher from '@simrs/common/src/helpers/fetcher';
 //   };
 // }
 
-export function usePasienByNorm(norm, options={}) {
+export function usePasienByNorm(norm, options = {}) {
   return useQuery(
     ['/billing/master/pasien', norm],
     () => {
@@ -34,6 +34,6 @@ export function usePasienByNorm(norm, options={}) {
       ...options,
       // onError: (error) =>
       //   message.error(error.message || 'Failed to load data from server!'),
-    },
+    }
   );
 }

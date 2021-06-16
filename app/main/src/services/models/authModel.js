@@ -16,6 +16,7 @@ const getGranted = async (route) => {
 
 function setLocalIdentity(data) {
   main.set('user.apiToken', data.token);
+  main.set('user.id', data.id);
   main.set('user.username', data.username);
   main.set('user.nama', data.nama);
   main.set('user.isLogin', true);
@@ -23,6 +24,7 @@ function setLocalIdentity(data) {
 
 function clearLocalIdentity() {
   main.set('user.apiToken', '');
+  main.set('user.id', 0);
   main.set('user.username', '');
   main.set('user.nama', '');
   main.set('user.isLogin', false);

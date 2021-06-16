@@ -36,7 +36,7 @@
     "dotenv": "~8.2.0",
     "electron-devtools-installer": "~3.0.0",
     "electron-is-dev": "~1.2.0",
-    "electron-store": "~5.2.0",
+    "electron-store": "~8.0.0",
     "i18next": "~19.4.5",
     "i18next-electron-language-detector": "~0.0.10",
     "i18next-fetch-backend": "~3.0.0",
@@ -66,6 +66,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "swr": "^0.4.2",
+    "systeminformation": "^5.6.8",
     "xel": "~0.0.220",
     "xhr": "~2.5.0"
   },
@@ -76,8 +77,8 @@
     "@babel/runtime-corejs3": "~7.10.2",
     "@craco/craco": "~5.6.4",
     "babel-core": "7.0.0-bridge.0",
-    "electron": "~9.0.3",
-    "electron-builder": "~22.7.0",
+    "electron": "~11.4.3",
+    "electron-builder": "~22.10.5",
     "wait-on": "~5.0.1"
   }
 }

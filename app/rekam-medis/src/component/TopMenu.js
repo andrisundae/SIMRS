@@ -7,7 +7,7 @@ import CariPasien from './CariPasien';
 
 export default function TopMenu({
   title,
-  leftMenus = [], // [{ icon, text, to }, { divider }]
+  leftMenus = [], // [{ icon, text, to, onClick }, { divider }]
 }) {
   const [userActionIsOpen, setUserActionIsOpen] = useState(false);
 
@@ -29,7 +29,10 @@ export default function TopMenu({
         <div className="flex-1">
           <div className="flex justify-start items-center h-full">
             {leftMenus.map(
-              ({ text, icon, to = '/', divider = false }, index) => {
+              (
+                { text, icon, to = '/', onClick = null, divider = false },
+                index
+              ) => {
                 if (divider) {
                   return (
                     <div
@@ -47,6 +50,9 @@ export default function TopMenu({
                     to={to}
                     className="p-2 my-2 first:ml-2 rounded-md hover:bg-gray-200 focus:bg-gray-200 hover:text-gray-900"
                     key={index}
+                    onClick={() =>
+                      onClick?.constructor === Function ? onClick() : {}
+                    }
                   >
                     {undefined !== icon ? <Icon name={icon} /> : null}
                     {text}

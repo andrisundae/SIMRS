@@ -1,37 +1,28 @@
 require('dotenv').config();
-const os = require('os');
+const si = require('systeminformation');
 const path = require('path');
 const { format } = require('url');
 const { app, BrowserWindow, session } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
-const store = new Store({ encryptionKey: process.env.REACT_APP_SECRET });
+const store = new Store({ encryptionKey: '09308608908408809208606806623' });
 const sha256 = require('js-sha256').sha256;
-const salt = '';
+const packageJson = require('../package.json');
 
 app.disableHardwareAcceleration();
 
-store.set('config.computerName', os.hostname());
-store.set('config.appCode', 'web-client');
+store.set('config.appVersion', packageJson.version);
 
-Object.values(os.networkInterfaces()).find((networkTypes) => {
-  return (
-    undefined !==
-    Object.values(networkTypes).find((network) => {
-      const hasMacAddress =
-        '00:00:00:00:00' !== network.mac && 'IPv4' === network.family;
-
-      if (hasMacAddress) {
-        store.set('config.macAddress', network.mac.toUpperCase());
-        const token = generateToken(network.mac.toUpperCase(), os.hostname());
-        if (token) {
-          store.set('config.localIdentity', token);
-        }
-      }
-
-      return hasMacAddress;
-    })
-  );
+si.users().then((data) => {
+  const computerName = data[0].user;
+  store.set('config.computerName', computerName);
+  si.system().then((data) => {
+    store.set('config.uuid', data.uuid);
+    store.set('config.localIdentity', sha256(data.uuid + computerName));
+  });
+});
+si.osInfo().then((data) => {
+  store.set('config.appCode', 'simrs-' + data.platform);
 });
 
 var mainWindow;
@@ -97,10 +88,6 @@ function formatPath(file) {
     protocol: 'file',
     slashes: true,
   });
-}
-
-function generateToken(macAddress, computerName) {
-  return sha256(macAddress + computerName + salt);
 }
 
 const gotTheLock = app.requestSingleInstanceLock();

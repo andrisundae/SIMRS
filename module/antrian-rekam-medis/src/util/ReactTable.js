@@ -8,12 +8,17 @@ import {
   useFilters,
   useGlobalFilter,
 } from 'react-table';
+import _ from 'lodash';
 
 const ReactTable = React.forwardRef(
   (
     {
       columns,
       data,
+      filterData = [],
+      filterDataKey = 'key',
+      filterState = false,
+      noResultFilter = false,
       celled = false,
       striped = false,
       selectable = false,
@@ -44,7 +49,7 @@ const ReactTable = React.forwardRef(
     const instance = useTable(
       {
         columns,
-        data,
+        data: noResultFilter && filterState ? filterData : data,
         disableSortRemove: true,
         initialState: {
           sortBy: defaultSorted,
@@ -183,6 +188,17 @@ const ReactTable = React.forwardRef(
                   style={cellRowStyle}
                 >
                   {row.cells.map((cell) => {
+                    const originalDataRow = cell.row.original;
+                    if (filterData?.length > 0) {
+                      const checkIndex = filterData
+                        .map((e) => {
+                          return e[filterDataKey];
+                        })
+                        .indexOf(originalDataRow[filterDataKey]);
+                      if (checkIndex === -1) {
+                        return null;
+                      }
+                    }
                     if (undefined !== cell.column.colSpan) {
                       let cellProps = {
                         ...cell.getCellProps(),
@@ -210,6 +226,17 @@ const ReactTable = React.forwardRef(
                   onClick={() => (null !== onRowClick ? onRowClick() : {})}
                 >
                   {row.cells.map((cell) => {
+                    const originalDataRow = cell.row.original;
+                    if (filterData?.length > 0) {
+                      const checkIndex = filterData
+                        .map((e) => {
+                          return e[filterDataKey];
+                        })
+                        .indexOf(originalDataRow[filterDataKey]);
+                      if (checkIndex === -1) {
+                        return null;
+                      }
+                    }
                     let value =
                       cell.column.id === 'iteration'
                         ? nomor++
@@ -240,4 +267,39 @@ const ReactTable = React.forwardRef(
   }
 );
 
-export default ReactTable;
+const RTCustomFilter = (filterValue = '', data = [], key = 'key') => {
+  let tempData = [],
+    value = _.lowerCase(filterValue).trim();
+
+  if ('' === value) {
+    tempData = data;
+  } else {
+    data.map((v, i) => {
+      if (key.constructor === Array) {
+        let tempIndex = [];
+        key.map((vk) => {
+          if (-1 !== _.lowerCase(v[vk]).indexOf(value)) {
+            tempIndex.push(1);
+          }
+        });
+        if (_.indexOf(tempIndex, 1) > -1) {
+          tempData.push({
+            ...v,
+            indexFilter: i,
+          });
+        }
+      } else {
+        if (-1 !== _.lowerCase(v[key]).indexOf(value)) {
+          tempData.push({
+            ...v,
+            indexFilter: i,
+          });
+        }
+      }
+    });
+  }
+
+  return tempData;
+};
+
+export { ReactTable as default, RTCustomFilter };

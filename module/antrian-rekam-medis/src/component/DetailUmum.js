@@ -164,7 +164,7 @@ export default function DetailUmum() {
               {'rawat_inap' === jenisLayanan && (
                 <Message.Item>
                   Tanda {checkedIcon(1)} (hitam) menunjukkan data diambil dari
-                  ruangan saat ini, sedangkan tanda {checkedIcon(1, 'red')}{' '}
+                  ruangan saat ini, sedangkan tanda {checkedIcon(2, 'red')}{' '}
                   (merah) menunjukkan data diambil dari ruangan sebelumnya.
                 </Message.Item>
               )}
@@ -180,17 +180,8 @@ export default function DetailUmum() {
                 <label className="float-left mt-2.5">
                   Status berdasarkan:{' '}
                 </label>
-                <Input type="date" className="float-left" />
-                {/* <div className="inline-block">
-                    <DatePicker 
-                      withPortal={isMobile}
-                      name="tanggal_filter"
-                      dateFormat="dd/MM/yyyy"
-                      onChange={(date) =>
-                        console.log(date)
-                      }
-                    />
-                  </div> */}
+                {/* <Input type="date" className="float-left" /> */}
+                <DatePicker dateFormat="dd/MM/yyyy" />
               </Form.Field>
               <Form.Field>
                 <Button

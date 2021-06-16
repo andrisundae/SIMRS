@@ -7,14 +7,32 @@ import { getMonth, getYear } from 'date-fns';
 import _ from 'lodash';
 import { Icon, Button } from 'semantic-ui-react';
 
-export function checkedIcon(value, color = '') {
-  if (color == '') {
+export function checkedIcon(value, options = '') {
+  let name = 'check',
     color = 'black';
+
+  if (options.constructor === Object) {
+    name = options?.name;
+    color = options?.color;
+  } else {
+    if (options?.color) {
+      color = options.color;
+    }
   }
   if (value === 1) return <Icon name="check" color={color} />;
   else if (value === 2) return <Icon name="check" color="red" />;
-  else return null;
+  else {
+    if (options.constructor === Object && options?.customZero) {
+      return (
+        <Icon name={options.customZero.name} color={options.customZero.color} />
+      );
+    } else {
+      return null;
+    }
+  }
 }
+
+export const loaderIcon = <Icon loading name="spinner" />;
 
 export const DatePicker = (props) => {
   const [startDate, setStartDate] = useState(new Date());

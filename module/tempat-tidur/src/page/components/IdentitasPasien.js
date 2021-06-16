@@ -1,14 +1,27 @@
-import React, {useRef, useCallback, useState, useEffect} from 'react';
-import { useForm, useController, useFormContext, FormProvider } from "react-hook-form";
-import { Grid, Form, Input as SmInput, Segment, Divider, Header, Transition } from 'semantic-ui-react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
+import {
+  useForm,
+  useController,
+  useFormContext,
+  FormProvider,
+} from 'react-hook-form';
+import {
+  Grid,
+  Form,
+  Input as SmInput,
+  Segment,
+  Divider,
+  Header,
+  Transition,
+} from 'semantic-ui-react';
 import { useModuleTrans } from '@simrs/components';
 import { usePasienByNorm } from '@simrs/billing/src/fetcher';
 
-const Input = React.forwardRef(({ name, rules = {}, ...props}, ref) => {
-  const {control} = useFormContext();
+const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
+  const { control } = useFormContext();
   const {
     field: { ref: innerRef, ...inputProps },
-    fieldState: {invalid, error}
+    fieldState: { invalid, error },
   } = useController({
     name,
     control,
@@ -19,14 +32,16 @@ const Input = React.forwardRef(({ name, rules = {}, ...props}, ref) => {
       <SmInput {...props} {...inputProps} ref={ref} />
       <Transition.Group animation="fade down" duration={300}>
         {invalid && (
-          <div style={{ color: '#9f3a38', fontSize: '.85714286rem' }}>{error?.message}</div>
+          <div style={{ color: '#9f3a38', fontSize: '.85714286rem' }}>
+            {error?.message}
+          </div>
         )}
       </Transition.Group>
     </Form.Field>
   );
 });
 
-function IdentitasPasien({data={}}) {
+function IdentitasPasien({ data = {} }) {
   const t = useModuleTrans();
   const [norm, setNorm] = useState('');
   const methods = useForm();
@@ -116,7 +131,7 @@ function IdentitasPasien({data={}}) {
                       <label>{t('nama')}</label>
                     </Grid.Column>
                     <Grid.Column width="12" className="field">
-                      <Input name="nama" disabled  />
+                      <Input name="nama" disabled />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
@@ -145,7 +160,7 @@ function IdentitasPasien({data={}}) {
                       <label>{t('nama_ortu')}</label>
                     </Grid.Column>
                     <Grid.Column width="10" className="field">
-                      <Input name="nama_ortu" disabled value={data.nama_ortu}  />
+                      <Input name="nama_ortu" disabled value={data.nama_ortu} />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
@@ -153,7 +168,7 @@ function IdentitasPasien({data={}}) {
                       <label>{t('alamat')}</label>
                     </Grid.Column>
                     <Grid.Column width="10" className="field">
-                      <Input name="alamat" disabled value={data.alamat}  />
+                      <Input name="alamat" disabled value={data.alamat} />
                     </Grid.Column>
                   </Grid.Row>
                   {/* {data.id && (
@@ -176,7 +191,7 @@ function IdentitasPasien({data={}}) {
         {/* <Button>Test</Button> */}
       </Form>
     </FormProvider>
-  )
+  );
 }
 
-export default IdentitasPasien
+export default IdentitasPasien;

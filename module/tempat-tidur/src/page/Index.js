@@ -16,10 +16,9 @@ function Index() {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        
       </Content>
     </>
-  )
+  );
 }
 
-export default Index
+export default Index;

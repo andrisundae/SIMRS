@@ -13,7 +13,7 @@ import _ from 'lodash';
 const Index = lazy(() => import('./page/Index'));
 const Add = lazy(() => import('./page/Add'));
 
-export default function Main() {
+export default function Main(props) {
   const history = useHistory();
   const location = useLocation();
   const lastPathname = _.last(_.split(location.pathname, '/'));
@@ -23,8 +23,10 @@ export default function Main() {
       case 'add':
         return {
           status:
-            '/dokumen/add' === location.pathname && 'add' === lastPathname,
-          path: '/dokumen/add',
+            ('/dokumen/add' === location.pathname && 'add' === lastPathname) ||
+            ('/antrian/pasien-pulang/dokumen-klaim/add' === location.pathname &&
+              'add' === lastPathname),
+          path: location.pathname,
           component: <Add />,
         };
 
@@ -41,7 +43,7 @@ export default function Main() {
     <Suspense fallback={<LoaderWithNoDimmer />}>
       {/* <Switch> */}
       <Route path="/">
-        <Index />
+        <Index {...props} />
       </Route>
 
       <Modal

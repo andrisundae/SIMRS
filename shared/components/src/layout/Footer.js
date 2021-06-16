@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from 'semantic-ui-react';
 
-function Footer({ actionsPosition = 'left', ...props }) {
+function Footer({ actionsPosition = 'left', watermark = null, ...props }) {
   const actionsOnLeftPosition = 'left' === actionsPosition;
 
   return (
@@ -17,11 +17,11 @@ function Footer({ actionsPosition = 'left', ...props }) {
       {actionsOnLeftPosition ? (
         <Menu.Menu position="left" id="footer-actions" />
       ) : null}
-      {/* <Menu.Menu position={actionsOnLeftPosition ? 'right' : 'left'}>
-        <Menu.Item header>
-          2019 &copy; SIMRS-BILLING &nbsp;|&nbsp;LINKAR TEAM
-        </Menu.Item>
-      </Menu.Menu> */}
+      {watermark && (
+        <Menu.Menu position={actionsOnLeftPosition ? 'right' : 'left'}>
+          <Menu.Item>{watermark}</Menu.Item>
+        </Menu.Menu>
+      )}
       {actionsOnLeftPosition ? null : (
         <Menu.Menu position="right" id="footer-actions" />
       )}

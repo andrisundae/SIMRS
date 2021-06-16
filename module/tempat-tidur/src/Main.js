@@ -17,12 +17,7 @@ export default function Main({ location, settings }) {
         <Switch location={location}>
           <Route
             path="/"
-            render={(props) => (
-              <Index
-                {...props}
-                settings={settings}
-              />
-            )}
+            render={(props) => <Index {...props} settings={settings} />}
           />
         </Switch>
         <Toastr />

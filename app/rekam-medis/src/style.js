@@ -8,3 +8,4 @@ import '@simrs/main/src/static/css/menubar.css';
 import '@simrs/main/src/static/css/grid.css';
 import './static/css/tailwind.css';
 import './static/css/semantic-ui.css';
+import './static/css/toastr.css';
