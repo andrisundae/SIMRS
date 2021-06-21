@@ -14,8 +14,9 @@ import {
   Header,
   Transition,
 } from 'semantic-ui-react';
-import { useModuleTrans } from '@simrs/components';
+import { useModuleTrans, messageBox } from '@simrs/components';
 import { usePasienByNorm } from '@simrs/billing/src/fetcher';
+import CariKunjungan from './CariKunjungan';
 
 const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   const { control } = useFormContext();
@@ -44,13 +45,26 @@ const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
 function IdentitasPasien({ data = {} }) {
   const t = useModuleTrans();
   const [norm, setNorm] = useState('');
+  const [showKunjunganAktifRawatInap, setKunjunganAktifRawatInap] = useState(
+    false
+  );
   const methods = useForm();
   const inputRef = {
     norm: React.useRef(),
   };
   const formRef = useRef();
-  // const watchNorm = methods.watch('norm', '');
-  const { data: pasien, isLoading } = usePasienByNorm(norm);
+  const { data: pasien, isLoading } = usePasienByNorm(norm, {
+    onSuccess: (data) => {
+      if (!data) {
+        messageBox({
+          title: 'Info',
+          message: 'Pasien tidak ditemukan.',
+        });
+      } else {
+        setKunjunganAktifRawatInap(true);
+      }
+    },
+  });
   const onSubmit = (values) => {
     setNorm(values.norm);
     // console.log(inputRef.norm.current);
@@ -190,6 +204,11 @@ function IdentitasPasien({ data = {} }) {
         </Segment>
         {/* <Button>Test</Button> */}
       </Form>
+      <CariKunjungan
+        show={showKunjunganAktifRawatInap}
+        idPasien={pasien?.id}
+        onHide={() => setKunjunganAktifRawatInap(false)}
+      />
     </FormProvider>
   );
 }

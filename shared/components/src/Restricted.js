@@ -19,6 +19,9 @@ const Restriced = ({ role, route, location, render }) => {
   });
 
   const isGranted = React.useMemo(() => {
+    if (!permissions) {
+      return false;
+    }
     return permissions.find((permission) => permission === role);
   }, [permissions, role]);
 
