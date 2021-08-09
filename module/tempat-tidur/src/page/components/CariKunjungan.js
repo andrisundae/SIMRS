@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Modal, Icon, Segment } from 'semantic-ui-react';
 import {
@@ -17,23 +17,26 @@ const CariKunjungan = ({ innerRef, onRowSelected, show, onHide, idPasien }) => {
   const {
     data: kunjunganAktifRawatInap,
     isLoading,
-  } = useKunjunganAktifRawatInap(idPasien, {
-    onSuccess: (data) => {
-      if (gridApi && idPasien) {
-        if (data) {
-          const dataSource = {
-            rowCount: null,
-            getRows: (params) => {
-              params.successCallback(data, data.length);
-            },
-          };
-          gridApi.setDatasource(dataSource);
-        } else {
-          gridApi.setDatasource(emptySource);
-        }
-      }
-    },
-  });
+    status,
+  } = useKunjunganAktifRawatInap(idPasien);
+
+  // , {
+  //   onSuccess: (data) => {
+  //     if (gridApi && idPasien) {
+  //       if (data) {
+  //         const dataSource = {
+  //           rowCount: null,
+  //           getRows: (params) => {
+  //             params.successCallback(data, data.length);
+  //           },
+  //         };
+  //         gridApi.setDatasource(dataSource);
+  //       } else {
+  //         gridApi.setDatasource(emptySource);
+  //       }
+  //     }
+  //   },
+  // }
 
   const columns = [
     {
@@ -68,13 +71,24 @@ const CariKunjungan = ({ innerRef, onRowSelected, show, onHide, idPasien }) => {
     },
   ];
 
-  // React.useEffect(() => {
-  //   if (gridApi && data.id) {
-  //     gridApi.setDatasource(dataSource);
-  //   } else if (gridApi && !data.id) {
-  //     gridApi.setDatasource(emptySource);
-  //   }
-  // }, [data.id, gridApi, dataSource, emptySource]);
+  const dataSource = useMemo(() => {
+    if (!kunjunganAktifRawatInap || status === 'error' || status === 'loading') {
+      return emptySource;
+    }
+
+    return {
+      rowCount: null,
+      getRows: (params) => {
+        params.successCallback(kunjunganAktifRawatInap, kunjunganAktifRawatInap.length);
+      },
+    };
+  }, [emptySource, kunjunganAktifRawatInap, status]);
+
+  React.useEffect(() => {
+    if (gridApi && idPasien && kunjunganAktifRawatInap && status === 'success') {
+      gridApi.setDatasource(dataSource);
+    }
+  }, [gridApi, dataSource, idPasien, kunjunganAktifRawatInap]);
 
   return (
     <Modal
@@ -94,6 +108,7 @@ const CariKunjungan = ({ innerRef, onRowSelected, show, onHide, idPasien }) => {
             <Grid.Column>
               <Segment loading={isLoading}>
                 <DatatableServerSide
+                  dataSource={emptySource}
                   ref={innerRef}
                   columns={columns}
                   name={staticConst.TABLE_KUNJUNGAN_AKTIF_RAWAT_INAP}

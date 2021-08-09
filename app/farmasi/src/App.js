@@ -6,6 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import {
   Layout,
@@ -21,6 +22,14 @@ import apiSettingAplikasi from '@simrs/main/src/services/models/aturanAplikasiMo
 
 import Dashboard from './Dashboard';
 import rootRouters from './routers';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function Page() {
   const [settings, setSettings] = useState([]);
@@ -47,61 +56,63 @@ function Page() {
 
   return (
     <Router>
-      <AppProvider>
-        <Layout
-          logo={'FARMASI'}
-          contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
-          routers={rootRouters}
-          username={store.main.get('user.username')}
-        >
-          {loading ? (
-            <PageLoader active={true} />
-          ) : (
-            <Suspense fallback={<PageLoader active={true} />}>
-              <ModuleProvider>
-                <Switch>
-                  <PrivateRoute
-                    path="/farmasi/dashboard"
-                    render={_renderDashboard}
-                  />
-                  {rootRouters.map((router, index) => {
-                    let Component = withTranslation(router.key)(
-                      router.component
-                    );
+      <QueryClientProvider client={queryClient}>
+        <AppProvider>
+          <Layout
+            logo={'FARMASI'}
+            contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
+            routers={rootRouters}
+            username={store.main.get('user.username')}
+          >
+            {loading ? (
+              <PageLoader active={true} />
+            ) : (
+              <Suspense fallback={<PageLoader active={true} />}>
+                <ModuleProvider>
+                  <Switch>
+                    <PrivateRoute
+                      path="/farmasi/dashboard"
+                      render={_renderDashboard}
+                    />
+                    {rootRouters.map((router, index) => {
+                      let Component = withTranslation(router.key)(
+                        router.component
+                      );
 
-                    return (
-                      <PrivateRoute
-                        key={index}
-                        path={router.path}
-                        render={(props) => (
-                          // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
-                          <Restricted
-                            route={router.key}
-                            {...props}
-                            render={(permissions) => (
-                              <Component
-                                settings={settings}
-                                permissions={permissions}
-                                resource={router.key}
-                                {...props}
-                              />
-                            )}
-                          />
-                        )}
-                      />
-                    );
-                  })}
-                  <Route
-                    path="/permission-denied"
-                    render={(props) => <PermissionDenied {...props} />}
-                  />
-                  <Redirect to={'/farmasi/dashboard'} />
-                </Switch>
-              </ModuleProvider>
-            </Suspense>
-          )}
-        </Layout>
-      </AppProvider>
+                      return (
+                        <PrivateRoute
+                          key={index}
+                          path={router.path}
+                          render={(props) => (
+                            // <Restricted route={router.key} {...props}><Component useSuspense={true} resource={router.key} {...props} /></Restricted>
+                            <Restricted
+                              route={router.key}
+                              {...props}
+                              render={(permissions) => (
+                                <Component
+                                  settings={settings}
+                                  permissions={permissions}
+                                  resource={router.key}
+                                  {...props}
+                                />
+                              )}
+                            />
+                          )}
+                        />
+                      );
+                    })}
+                    <Route
+                      path="/permission-denied"
+                      render={(props) => <PermissionDenied {...props} />}
+                    />
+                    <Redirect to={'/farmasi/dashboard'} />
+                  </Switch>
+                </ModuleProvider>
+              </Suspense>
+            )}
+          </Layout>
+        </AppProvider>
+      </QueryClientProvider>
     </Router>
   );
 

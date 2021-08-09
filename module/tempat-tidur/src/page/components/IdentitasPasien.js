@@ -1,58 +1,43 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, {
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
+import { useDispatch } from 'react-redux';
 import {
   useForm,
-  useController,
-  useFormContext,
   FormProvider,
 } from 'react-hook-form';
+import _ from 'lodash';
 import {
   Grid,
   Form,
-  Input as SmInput,
   Segment,
   Divider,
   Header,
-  Transition,
 } from 'semantic-ui-react';
 import { useModuleTrans, messageBox } from '@simrs/components';
-import { usePasienByNorm } from '@simrs/billing/src/fetcher';
-import CariKunjungan from './CariKunjungan';
+import {
+  usePasienByNorm,
+  useKunjunganAktifRawatInap,
+} from '@simrs/billing/src/fetcher';
+import { utils } from '@simrs/common';
+import { Input } from '@simrs/components';
+import { selectKunjungan } from '../../reducer';
+import { staticConst } from '../../static';
 
-const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
-  const { control } = useFormContext();
-  const {
-    field: { ref: innerRef, ...inputProps },
-    fieldState: { invalid, error },
-  } = useController({
-    name,
-    control,
-    rules,
-  });
-  return (
-    <Form.Field error={invalid}>
-      <SmInput {...props} {...inputProps} ref={ref} />
-      <Transition.Group animation="fade down" duration={300}>
-        {invalid && (
-          <div style={{ color: '#9f3a38', fontSize: '.85714286rem' }}>
-            {error?.message}
-          </div>
-        )}
-      </Transition.Group>
-    </Form.Field>
-  );
-});
-
-function IdentitasPasien({ data = {} }) {
+function IdentitasPasien() {
   const t = useModuleTrans();
+  const dispatch = useDispatch();
   const [norm, setNorm] = useState('');
-  const [showKunjunganAktifRawatInap, setKunjunganAktifRawatInap] = useState(
-    false
-  );
   const methods = useForm();
   const inputRef = {
     norm: React.useRef(),
   };
   const formRef = useRef();
+  // Hook untuk mencari pasien
   const { data: pasien, isLoading } = usePasienByNorm(norm, {
     onSuccess: (data) => {
       if (!data) {
@@ -60,16 +45,59 @@ function IdentitasPasien({ data = {} }) {
           title: 'Info',
           message: 'Pasien tidak ditemukan.',
         });
-      } else {
-        setKunjunganAktifRawatInap(true);
       }
     },
   });
-  const onSubmit = (values) => {
+  // Hook untuk mencari kunjungan aktif rawat inap pasien
+  const {
+    isLoadingKunjungan,
+    data: kunjunganAktifRawatInap,
+    status,
+  } = useKunjunganAktifRawatInap(pasien?.id, {
+    onSuccess: (data) => {
+      if (!data) {
+        messageBox({
+          title: 'Info',
+          message: 'Kunjungan rawat inap pasien tidak ditemukan.',
+        });
+      } else {
+        if (Array.isArray(data) && data.length === 1) {
+          dispatch(selectKunjungan({ ...data[0], ...pasien }));
+        } else {
+          messageBox({
+            title: 'Info',
+            message: 'Kunjungan rawat inap pasien tidak valid.',
+          });
+        }
+      }
+    },
+  });
+  // Format data jika kunjungan aktif cuman satu
+  const formattedKunjunganAktifRawatInap = useMemo(() => {
+    if (
+      status === 'loading' ||
+      status === 'error' ||
+      !kunjunganAktifRawatInap
+    ) {
+      return {};
+    }
+    if (
+      Array.isArray(kunjunganAktifRawatInap) &&
+      kunjunganAktifRawatInap.length === 1
+    ) {
+      const selected = kunjunganAktifRawatInap[0];
+      // Hitung umur jika sudah pulang diambil dari tgl pulang
+      const tglSelesai = selected.st_pulang
+        ? selected.tgl_pulang
+        : selected.tgl_sekarang;
+      selected.umur = utils.displayAge(pasien?.tgl_lahir, tglSelesai);
+      return selected;
+    }
+    return {};
+  }, [status, kunjunganAktifRawatInap, pasien]);
+  const onSubmit = useCallback((values) => {
     setNorm(values.norm);
-    // console.log(inputRef.norm.current);
-    // methods.setValue('kode_kunjungan_unit', values.norm);
-  };
+  }, []);
   const enterNormHanlder = useCallback((e) => {
     if (e.which === 13) {
       e.preventDefault();
@@ -89,6 +117,24 @@ function IdentitasPasien({ data = {} }) {
     }
   }, [pasien, methods.reset]);
 
+  const renderDetailStatusPasien = useMemo(() => {
+    if (!formattedKunjunganAktifRawatInap.id) {
+      return null;
+    }
+
+    let desc = '';
+    if (
+      formattedKunjunganAktifRawatInap.id_penjamin ===
+      staticConst.ID_PENJAMIN_UMUM
+    ) {
+      desc = `Pasien ${formattedKunjunganAktifRawatInap.nama_status_pasien}, Kelas RS ${formattedKunjunganAktifRawatInap.nama_kelas}`;
+    } else {
+      desc = `Pasien ${formattedKunjunganAktifRawatInap.nama_status_pasien} Hak Kelas ${formattedKunjunganAktifRawatInap.nama_hak_kelas} | Kelas RS ${formattedKunjunganAktifRawatInap.nama_kelas}`;
+    }
+
+    return <Header as="h5">{desc}</Header>;
+  }, [formattedKunjunganAktifRawatInap]);
+
   return (
     <FormProvider {...methods}>
       <Form
@@ -99,12 +145,11 @@ function IdentitasPasien({ data = {} }) {
       >
         <Segment
           size="mini"
-          style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
         >
-          <Divider horizontal style={{ marginTop: 0, marginBottom: 35 }}>
+          <Divider horizontal className="my-0">
             {t('identitas_pasien')}
           </Divider>
-          <Grid columns="2">
+          <Grid columns="2" className="mb-1 mt-2">
             <Grid.Row>
               <Grid.Column>
                 <Grid>
@@ -132,12 +177,7 @@ function IdentitasPasien({ data = {} }) {
                       <label>{t('no_billing')}</label>
                     </Grid.Column>
                     <Grid.Column width="5" className="field">
-                      <Input
-                        name="kode_kunjungan_unit"
-                        // ref={this.kode_kunjungan}
-                        disabled
-                        value={data.kode_kunjungan_unit}
-                      />
+                      <Input name="kode_kunjungan_unit" disabled />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
@@ -153,15 +193,11 @@ function IdentitasPasien({ data = {} }) {
                       <label>{t('jenis_kelamin')}</label>
                     </Grid.Column>
                     <Grid.Column width="4" className="field">
-                      <Input
-                        name="jenis_kelamin"
-                        disabled
-                        value={data.jenis_kelamin}
-                      />
+                      <Input name="jenis_kelamin" disabled />
                     </Grid.Column>
                     <Grid.Column width="8" className="field">
                       <Header as="h4" color="grey" style={{ marginTop: 3 }}>
-                        {data.umur}
+                        {formattedKunjunganAktifRawatInap?.umur}
                       </Header>
                     </Grid.Column>
                   </Grid.Row>
@@ -174,7 +210,7 @@ function IdentitasPasien({ data = {} }) {
                       <label>{t('nama_ortu')}</label>
                     </Grid.Column>
                     <Grid.Column width="10" className="field">
-                      <Input name="nama_ortu" disabled value={data.nama_ortu} />
+                      <Input name="nama_ortu" disabled />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
@@ -182,33 +218,33 @@ function IdentitasPasien({ data = {} }) {
                       <label>{t('alamat')}</label>
                     </Grid.Column>
                     <Grid.Column width="10" className="field">
-                      <Input name="alamat" disabled value={data.alamat} />
+                      <Input name="alamat" disabled />
                     </Grid.Column>
                   </Grid.Row>
-                  {/* {data.id && (
+                  {!_.isEmpty(formattedKunjunganAktifRawatInap) && (
                     <Grid.Row className="form-row">
-                      <Grid.Column width="16" className="field" textAlign="right">
+                      <Grid.Column
+                        width="16"
+                        className="field"
+                        textAlign="right"
+                      >
                         <Header as="h3" color="green" style={{ marginTop: 3 }}>
-                          {data.st_pulang
-                            ? t(getKey('kunjungan_selesai'))
-                            : t(getKey('kunjungan_aktif'))}{' '}
-                          - {data.nama_status_pasien}
+                          {formattedKunjunganAktifRawatInap.st_pulang
+                            ? t('kunjungan_selesai')
+                            : t('kunjungan_aktif')}{' '}
+                          -{' '}
+                          {formattedKunjunganAktifRawatInap.nama_status_pasien}
                         </Header>
                       </Grid.Column>
                     </Grid.Row>
-                  )} */}
+                  )}
                 </Grid>
               </Grid.Column>
             </Grid.Row>
           </Grid>
         </Segment>
-        {/* <Button>Test</Button> */}
       </Form>
-      <CariKunjungan
-        show={showKunjunganAktifRawatInap}
-        idPasien={pasien?.id}
-        onHide={() => setKunjunganAktifRawatInap(false)}
-      />
+      <div className="pb-2">{renderDetailStatusPasien}</div>
     </FormProvider>
   );
 }
