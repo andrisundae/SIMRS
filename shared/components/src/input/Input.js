@@ -21,7 +21,12 @@ const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   });
   return (
     <Form.Field error={invalid}>
-      <SmInput {...props} {...inputProps} ref={ref} />
+      <SmInput
+        {...inputProps}
+        ref={ref}
+        value={inputProps.value || ''}
+        {...props}
+      />
       {invalid && (
         <Transition.Group animation="fade down" duration={300}>
           <div style={{ color: '#9f3a38', fontSize: '.85714286rem' }}>
