@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import { Trans } from 'react-i18next';
+import _ from 'lodash';
 
 class SaveButton extends PureComponent {
   render() {
@@ -52,7 +53,7 @@ class AddButton extends PureComponent {
 
 class EditButton extends PureComponent {
   render() {
-    let { inputRef, ...attributes } = this.props;
+    let { inputRef, title, ...attributes } = this.props;
     return (
       <Button
         ref={inputRef}
@@ -62,7 +63,11 @@ class EditButton extends PureComponent {
         {...attributes}
       >
         <Icon name="edit" />
+        {!_.isEmpty(title) ? (
+          <span>{title}</span>
+        ) : (
         <Trans i18nKey="common:action.edit" />
+        )}
       </Button>
     );
   }
