@@ -13,6 +13,11 @@ function getPackageSources(relativePath) {
 }
 
 module.exports = {
+  style: {
+    postcss: {
+      plugins: [require('tailwindcss'), require('autoprefixer')],
+    },
+  },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       const { isFound, match } = getLoader(
