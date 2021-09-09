@@ -5,23 +5,20 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, FormProvider } from 'react-hook-form';
 import _ from 'lodash';
 import { Grid, Form, Segment, Divider, Header } from 'semantic-ui-react';
 import { useModuleTrans, messageBox } from '@simrs/components';
-import {
-  usePasienByNorm,
-  useKunjunganAktifRawatInap,
-} from '@simrs/billing/src/fetcher';
 import { utils } from '@simrs/common';
 import { Input } from '@simrs/components';
-import { selectKunjungan } from '../../reducer';
-import { staticConst } from '../../static';
+import { TagihanPasien } from '@simrs/billing/src/Components';
+import { selectedKunjunganSelector } from '../../redux/reducer/selector';
 
 function FormTempatTidur() {
   const t = useModuleTrans();
   const dispatch = useDispatch();
+  const selectedKunjungan = useSelector(selectedKunjunganSelector);
   const methods = useForm();
   const inputRef = {
     norm: React.useRef(),
@@ -35,7 +32,7 @@ function FormTempatTidur() {
     <FormProvider {...methods}>
       <Form size="mini" onSubmit={methods.handleSubmit(onSubmit)} ref={formRef}>
         <Segment size="mini">
-          <Grid columns="2" className="my-1">
+          <Grid columns="2" className="mt-1">
             <Grid.Row>
               <Grid.Column>
                 <Grid>
@@ -112,6 +109,16 @@ function FormTempatTidur() {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row className="pt-2">
+              <Grid.Column width={16}>
+                <TagihanPasien
+                  keringanan={selectedKunjungan.keringanan || 0}
+                  bayar={selectedKunjungan.bayar || 0}
+                  pengembalian={selectedKunjungan.pengembalian || 0}
+                  biaya={selectedKunjungan.biaya || 0}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

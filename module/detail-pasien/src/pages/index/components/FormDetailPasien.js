@@ -216,9 +216,9 @@ const FormDetailPasien = ({
       </Segment>
       <Segment
         size="mini"
-        style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
+        // style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
       >
-        <Grid columns="2">
+        <Grid columns="2" className="my-1">
           <Grid.Row>
             <Grid.Column>
               <Divider hidden style={{ marginTop: 10, marginBottom: 10 }} />

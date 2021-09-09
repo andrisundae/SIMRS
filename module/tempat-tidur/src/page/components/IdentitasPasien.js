@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   useForm,
   FormProvider,
@@ -25,13 +25,16 @@ import {
 } from '@simrs/billing/src/fetcher';
 import { utils } from '@simrs/common';
 import { Input } from '@simrs/components';
-import { selectKunjungan } from '../../reducer';
+import { selectKunjungan, ready } from '../../redux/reducer';
+import { disabledElement, moduleSelector } from '../../redux/reducer/selector';
 import { staticConst } from '../../static';
 
 function IdentitasPasien() {
   const t = useModuleTrans();
   const dispatch = useDispatch();
   const [norm, setNorm] = useState('');
+  const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
+  const {focusElement, statusForm, selectedKunjungan} = useSelector(moduleSelector);
   const methods = useForm();
   const inputRef = {
     norm: React.useRef(),
@@ -55,19 +58,28 @@ function IdentitasPasien() {
     status,
   } = useKunjunganAktifRawatInap(pasien?.id, {
     onSuccess: (data) => {
-      if (!data) {
-        messageBox({
-          title: 'Info',
-          message: 'Kunjungan rawat inap pasien tidak ditemukan.',
-        });
-      } else {
-        if (Array.isArray(data) && data.length === 1) {
-          dispatch(selectKunjungan({ ...data[0], ...pasien }));
-        } else {
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
           messageBox({
             title: 'Info',
-            message: 'Kunjungan rawat inap pasien tidak valid.',
+            message: 'Kunjungan rawat inap pasien tidak ditemukan.',
           });
+        } else {
+          if (data.length === 1) {
+            methods.reset({
+              norm: pasien.norm,
+              nama: pasien.nama,
+              jenis_kelamin: pasien.jenis_kelamin?.nama,
+              nama_ortu: pasien.nama_ortu,
+              alamat: pasien.alamat,
+            });
+            dispatch(selectKunjungan({ ...data[0], ...pasien }));
+          } else if (data.length > 1) {
+            messageBox({
+              title: 'Info',
+              message: 'Kunjungan rawat inap pasien tidak valid.',
+            });
+          }
         }
       }
     },
@@ -105,35 +117,42 @@ function IdentitasPasien() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   if (pasien) {
+  //     methods.reset({
+  //       norm: pasien.norm,
+  //       nama: pasien.nama,
+  //       jenis_kelamin: pasien.jenis_kelamin?.nama,
+  //       nama_ortu: pasien.nama_ortu,
+  //       alamat: pasien.alamat,
+  //     });
+  //   }
+  // }, [pasien, methods.reset]);
+
   useEffect(() => {
-    if (pasien) {
+    if (!selectedKunjungan.id && statusForm === ready.type) {
       methods.reset({
-        norm: pasien.norm,
-        nama: pasien.nama,
-        jenis_kelamin: pasien.jenis_kelamin?.nama,
-        nama_ortu: pasien.nama_ortu,
-        alamat: pasien.alamat,
+        norm: '',
+        nama: '',
+        jenis_kelamin: '',
+        nama_ortu: '',
+        alamat: '',
       });
+      setNorm('');
     }
-  }, [pasien, methods.reset]);
+  }, [selectedKunjungan, methods.reset, statusForm, ready]);
 
-  const renderDetailStatusPasien = useMemo(() => {
-    if (!formattedKunjunganAktifRawatInap.id) {
-      return null;
+  const focusNormHandler = useCallback((e) => {
+    if (e.target.value) {
+      e.target.select();
     }
+  }, []);
 
-    let desc = '';
-    if (
-      formattedKunjunganAktifRawatInap.id_penjamin ===
-      staticConst.ID_PENJAMIN_UMUM
-    ) {
-      desc = `Pasien ${formattedKunjunganAktifRawatInap.nama_status_pasien}, Kelas RS ${formattedKunjunganAktifRawatInap.nama_kelas}`;
-    } else {
-      desc = `Pasien ${formattedKunjunganAktifRawatInap.nama_status_pasien} Hak Kelas ${formattedKunjunganAktifRawatInap.nama_hak_kelas} | Kelas RS ${formattedKunjunganAktifRawatInap.nama_kelas}`;
+  React.useEffect(() => {
+    if (focusElement === 'norm' && !methods.getValues('norm')) {
+      inputRef.norm.current.focus();
     }
-
-    return <Header as="h5">{desc}</Header>;
-  }, [formattedKunjunganAktifRawatInap]);
+  }, [focusElement, methods.getValues, inputRef.norm]);
 
   return (
     <FormProvider {...methods}>
@@ -163,21 +182,17 @@ function IdentitasPasien() {
                         name="norm"
                         rules={{ required: 'Harus diisi' }}
                         onKeyDown={enterNormHanlder}
-                        // disabled={isDisabledNorm}
-                        // value={data.norm}
+                        disabled={isDisabledNorm}
+                        // value={norm}
                         // onChange={onChangeInput}
-                        // onFocus={(e) => {
-                        //   if (e.target.value) {
-                        //     e.target.select();
-                        //   }
-                        // }}
+                        onFocus={focusNormHandler}
                       />
                     </Grid.Column>
                     <Grid.Column width="3" className="field">
                       <label>{t('no_billing')}</label>
                     </Grid.Column>
                     <Grid.Column width="5" className="field">
-                      <Input name="kode_kunjungan_unit" disabled />
+                      <Input name="kode_kunjungan_unit" disabled value={selectedKunjungan.name || ''} />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
@@ -244,7 +259,6 @@ function IdentitasPasien() {
           </Grid>
         </Segment>
       </Form>
-      <div className="pb-2">{renderDetailStatusPasien}</div>
     </FormProvider>
   );
 }

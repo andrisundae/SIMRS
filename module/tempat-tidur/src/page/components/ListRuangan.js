@@ -1,26 +1,24 @@
-import React, { useMemo, memo } from 'react';
+import React, { useCallback, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Modal, Icon, Segment } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import {
   DatatableServerSide,
   useModuleTrans,
   useDatatable,
-  SelectedButton,
-  CancelButton,
 } from '@simrs/components';
 import { useHistoryTempatTidur } from '@simrs/billing/src/fetcher';
 import { staticConst } from '../../static';
-import { selectedKunjunganSelector } from '../../reducer/selector';
+import { moduleSelector } from '../../redux/reducer/selector';
+import { ready } from '../../redux/reducer';
 
 const ListRuangan = ({ innerRef }) => {
   const t = useModuleTrans();
-  const { id_kunjungan_unit: idKunjunganUnit } = useSelector(
-    selectedKunjunganSelector
-  );
-  console.log(idKunjunganUnit);
+  // const { id_kunjungan_unit: idKunjunganUnit } = useSelector(
+  //   selectedKunjunganSelector
+  // );
+  const {statusForm, selectedKunjungan: {id_kunjungan_unit: idKunjunganUnit}} = useSelector(moduleSelector);
   const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
-  const { data, isLoading, status } = useHistoryTempatTidur(idKunjunganUnit);
+  const { data: historyTempatTidur, isLoading, status } = useHistoryTempatTidur(idKunjunganUnit);
 
   const columns = [
     {
@@ -55,24 +53,43 @@ const ListRuangan = ({ innerRef }) => {
     },
   ];
 
-  const dataSource = useMemo(() => {
-    if (!data || status === 'error' || status === 'loading') {
+  const dataSource = useCallback((historyTempatTidur) => {
+    if (!historyTempatTidur || status === 'error' || status === 'loading') {
       return emptySource;
     }
 
     return {
       rowCount: null,
       getRows: (params) => {
-        params.successCallback(data, data.length);
+        params.successCallback(historyTempatTidur, historyTempatTidur.length);
       },
     };
-  }, [emptySource, data, status]);
+  }, [emptySource, historyTempatTidur, status]);
 
-  React.useEffect(() => {
+  // Set datasource dari api
+  useEffect(() => {
     if (gridApi && idKunjunganUnit && status === 'success') {
-      gridApi.setDatasource(dataSource);
+      gridApi.setDatasource(dataSource(historyTempatTidur));
     }
   }, [gridApi, dataSource, status, idKunjunganUnit]);
+
+  // Reset datasource karena selesai
+  useEffect(() => {
+    if (!idKunjunganUnit && statusForm === ready.type && gridApi) {
+      gridApi.setDatasource(dataSource());
+    }
+  }, [statusForm, ready, idKunjunganUnit]);
+
+  // Reset datasource karena selesai
+  useEffect(() => {
+    if (gridApi) {
+      if (isLoading) {
+        gridApi.showLoadingOverlay();
+      } else {
+        gridApi.hideOverlay();
+      }
+    }
+  }, [isLoading]);
 
   return (
     <DatatableServerSide

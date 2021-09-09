@@ -7,12 +7,12 @@ import {
   Button,
   Icon,
   Header,
-  Divider,
   Dropdown,
 } from 'semantic-ui-react';
 import { Select, CurrencyInput } from '@simrs/components';
-import { formatter } from '@simrs/common';
 import PropTypes from 'prop-types';
+import { formatter } from '@simrs/common';
+import { TagihanPasien } from '@simrs/billing/src/Components';
 
 const FormTindakan = ({
   t,
@@ -290,73 +290,14 @@ const FormTindakan = ({
               </Grid>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width="16">
-              <Grid verticalAlign="middle" centered>
-                <Grid.Column>
-                  <Segment color="grey">
-                    <Grid>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="field">
-                          <label>{t(getKey('keringanan'))}</label>
-                        </Grid.Column>
-                        <Grid.Column
-                          style={{ textAlign: 'right' }}
-                          width="4"
-                          className="field"
-                        >
-                          {formatter.currency(kunjungan.keringanan)}
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="field">
-                          <label>{t(getKey('sudah_dibayar'))}</label>
-                        </Grid.Column>
-                        <Grid.Column
-                          style={{ textAlign: 'right' }}
-                          width="4"
-                          className="field"
-                        >
-                          {formatter.currency(kunjungan.bayar)}
-                        </Grid.Column>
-                        <Grid.Column width="4" className="field">
-                          <label>{t(getKey('pengembalian'))}</label>
-                        </Grid.Column>
-                        <Grid.Column
-                          style={{ textAlign: 'right' }}
-                          width="4"
-                          className="field"
-                        >
-                          {formatter.currency(kunjungan.pengembalian)}
-                        </Grid.Column>
-                      </Grid.Row>
-                      {/* <Divider style={{ margin: 0 }} /> */}
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="field">
-                          <label>{t(getKey('total_biaya_pengunjung'))}</label>
-                        </Grid.Column>
-                        <Grid.Column
-                          textAlign="right"
-                          width="4"
-                          className="field"
-                        >
-                          {formatter.currency(kunjungan.biaya)}
-                        </Grid.Column>
-                        <Grid.Column width="4" className="field">
-                          <label>{t(getKey('kurang'))}</label>
-                        </Grid.Column>
-                        <Grid.Column
-                          style={{ textAlign: 'right' }}
-                          width="4"
-                          className="field"
-                        >
-                          {formatter.currency(kurang)}
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
-                  </Segment>
-                </Grid.Column>
-              </Grid>
+          <Grid.Row className="my-3">
+            <Grid.Column width={16}>
+              <TagihanPasien
+                keringanan={kunjungan.keringanan}
+                bayar={kunjungan.bayar}
+                pengembalian={kunjungan.pengembalian}
+                biaya={kunjungan.biaya}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>

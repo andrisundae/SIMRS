@@ -319,8 +319,7 @@ class InputPasien extends Component {
       <Grid columns="2" divided>
         <Grid.Row>
           <Grid.Column>
-            <Divider hidden style={{ marginTop: 20, marginBottom: 20 }} />
-            <Grid>
+            <Grid className="my-2">
               <Grid.Row className="form-row">
                 <Grid.Column
                   width="4"

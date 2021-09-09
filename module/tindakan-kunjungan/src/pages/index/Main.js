@@ -104,7 +104,8 @@ const Main = (props) => {
         </Header>
       </Segment>
       <Segment
-        style={{ backgroundColor: '#ECECEC', paddingTop: 6, paddingBottom: 0 }}
+        // style={{ backgroundColor: '#ECECEC', paddingTop: 6, paddingBottom: 0 }}
+        className="bg-gray-200 pt-3 pb-0"
       >
         <Grid className="content-grid">
           <Grid.Row>

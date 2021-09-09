@@ -3,7 +3,7 @@ import { Segment } from 'semantic-ui-react';
 
 function Content({ children, ...props }) {
   return (
-    <Segment style={{ backgroundColor: '#ECECEC' }} {...props}>
+    <Segment className="bg-gray-200 min-h-screen" {...props}>
       {children}
     </Segment>
   );
