@@ -38,8 +38,8 @@ function moduleReducer(state, action) {
   }
 }
 
-export function ModuleProvider({ children }) {
-  const [state, dispatch] = React.useReducer(moduleReducer, moduleState);
+export function ModuleProvider({ children, value }) {
+  const [state, dispatch] = React.useReducer(moduleReducer, {moduleState, ...value});
   return (
     <ModuleStateContext.Provider value={state}>
       <ModuleDispatchContext.Provider value={dispatch}>
