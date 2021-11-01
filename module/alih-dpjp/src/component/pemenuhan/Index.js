@@ -4,7 +4,7 @@ import TopMenu from '@simrs/rekam-medis/src/component/TopMenu';
 import MainContent from '@simrs/rekam-medis/src/component/MainContent';
 import { Table, Button, Modal, Grid } from 'semantic-ui-react';
 import _ from 'lodash';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 
 export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState(false);

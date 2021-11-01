@@ -12,10 +12,10 @@ import {
   Button,
 } from 'semantic-ui-react';
 import _ from 'lodash';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 import ReactTable, {
   RTCustomFilter,
-} from '@module/antrian-rekam-medis/src/util/ReactTable';
+} from '@simrs/rekam-medis/src/custom-component/ReactTable';
 import { useTemplateDokumen } from '@simrs/rekam-medis/src/fetcher/templateDokumen';
 import {
   loaderIcon,
@@ -24,14 +24,14 @@ import {
 import dayjs from 'dayjs';
 import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
 
-import { filterDokumenChange, filteredDataChange } from '../reducer/content';
+import { filterDokumenChange, filteredDataChange } from '../reducer/list';
 
 export default function List() {
   const location = useLocation();
   const history = useHistory();
   const tableInstance = useRef(null);
 
-  const { filterDokumen, filteredData } = useSelector((state) => state.content);
+  const { filterDokumen, filteredData } = useSelector((state) => state.list);
   const [filterState, setFilterState] = useState(false);
   const dispatch = useDispatch();
 
@@ -188,7 +188,7 @@ export default function List() {
             {
               Header: 'Tanggal Hapus',
               className: 'text-center w-48',
-              cellClasName: 'text-red-500',
+              cellClassName: 'text-red-500',
               Cell: ({ row }) => {
                 return (
                   row.original.stBatal === 1 &&

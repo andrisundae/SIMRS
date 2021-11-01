@@ -7,7 +7,7 @@ const defaultOption = {
     'device-name': localStorage.getItem('device.name'),
     'local-identity': localStorage.getItem('device.localIdentity'),
     'app-code': localStorage.getItem('app.code'),
-    'app-version': localStorage.getItem('app.version'),
+    // 'app-version': localStorage.getItem('app.version'),
   },
 };
 

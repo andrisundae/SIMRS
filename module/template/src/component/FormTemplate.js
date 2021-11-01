@@ -1,31 +1,44 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import {
-  Form,
-  Select,
-  Input,
-  Button,
-  Checkbox,
-  Modal,
-  Icon,
-} from 'semantic-ui-react';
-import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
+import { useSelector, useDispatch } from 'react-redux';
+import { Form, Select, Input, Button, Checkbox } from 'semantic-ui-react';
 import _ from 'lodash';
+import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
+import ItemList from './ItemList';
+import ModalItem from './ModalItem';
+import ModalShowHasil from './ModalShowHasil';
+import {
+  kategoriChange,
+  namaTemplateChange,
+  jenisLayananChange,
+  aksesDokumenChange,
+  ttdPasienChange,
+  headingOtomatisChange,
+  klaimChange,
+  pelayananChange,
+  dokumenKhususChange,
+  withTTDChange,
+  aktifChange,
+  modalItemChange,
+  modalShowHasilChange,
+} from '../reducer/form';
 
 export default function FormTemplate() {
   const location = useLocation();
   const dispatch = useDispatch();
   const lastPathname = _.last(_.split(location.pathname, '/'));
 
-  const [ttdPasien, setTtdPasien] = useState(+false);
-  const [headingOtomatis, setHeadingOtomatis] = useState(+false);
-  const [klaim, setKlaim] = useState(+false);
-  const [pelayanan, setPelayanan] = useState(+true);
-  const [dokumenKhusus, setDokumenKhusus] = useState(+false);
-  const [withTTD, setWithTTD] = useState(+true);
-  const [aktif, setAktif] = useState(+true);
-  const [modalComponent, setModalComponent] = useState(false);
+  const {
+    ttdPasien,
+    headingOtomatis,
+    klaim,
+    pelayanan,
+    dokumenKhusus,
+    withTTD,
+    aktif,
+    modalItem,
+    modalShowHasil,
+  } = useSelector((state) => state.form);
 
   function generateCheckbox(obj) {
     let style = obj?.style ? obj.style : {},
@@ -58,13 +71,14 @@ export default function FormTemplate() {
                 color="blue"
                 size="small"
                 content="Tambah"
-                onClick={() => setModalComponent(!modalComponent)}
+                onClick={() => dispatch(modalItemChange(!modalItem))}
               />
               <Button
                 icon="file alternate outline"
                 color="blue"
                 size="small"
                 content="Lihat Hasil"
+                onClick={() => dispatch(modalShowHasilChange(!modalShowHasil))}
               />
             </>
           )}
@@ -100,11 +114,14 @@ export default function FormTemplate() {
                 text: 'Dokumen Administrasi',
               },
             ]}
+            onChange={(e, { value }) => dispatch(kategoriChange(value))}
           />
         </Form.Field>
         <Form.Field required>
           <label>Nama</label>
-          <Input />
+          <Input
+            onChange={(e) => dispatch(namaTemplateChange(e.target.value))}
+          />
         </Form.Field>
         <Form.Field>
           <label>Jenis Layanan</label>
@@ -120,8 +137,9 @@ export default function FormTemplate() {
               { key: 6, value: 'Rawat Jalan', text: 'Rawat Jalan' },
               { key: 7, value: 'Penunjang Lain', text: 'Penunjang Lain' },
             ]}
+            onChange={(e, { value }) => dispatch(jenisLayananChange(value))}
           />
-          <div className="text-gray-500">
+          <div className="mt-2 text-gray-500">
             Pilih Jenis Layanan jika dokumen dikhususkan untuk Jenis Layanan
             tertentu
           </div>
@@ -135,127 +153,71 @@ export default function FormTemplate() {
               { key: 1, value: 'tablet', text: 'Tablet (Untuk Dokter)' },
               { key: 2, value: 'desktop', text: 'Desktop (Untuk Perawat)' },
             ]}
+            onChange={(e, { value }) => dispatch(aksesDokumenChange(value))}
           />
-          <div className="text-gray-500">
+          <div className="mt-2 text-gray-500">
             Pilih Akses Dokumen antara Tablet dan Desktop, atau keduanya (tanpa
             memilih)
           </div>
         </Form.Field>
         <Form.Field>
-          {generateCheckbox({
-            label: 'TTD Pasien',
-            className: 'mb-3',
-            value: ttdPasien,
-            onChange: () => setTtdPasien(+!ttdPasien),
-          })}
-          {generateCheckbox({
-            label: 'Heading Otomatis',
-            className: 'mb-3',
-            value: headingOtomatis,
-            onChange: () => setHeadingOtomatis(+!headingOtomatis),
-          })}
-          {generateCheckbox({
-            label: 'Untuk Klaim',
-            className: 'mb-3',
-            value: klaim,
-            onChange: () => setKlaim(+!klaim),
-          })}
-          {generateCheckbox({
-            label: 'Untuk Pelayanan',
-            className: 'mb-3',
-            value: pelayanan,
-            onChange: () => setPelayanan(+!pelayanan),
-          })}
-          {generateCheckbox({
-            label: 'Dokumen Khusus',
-            className: 'mb-3',
-            value: dokumenKhusus,
-            onChange: () => setDokumenKhusus(+!dokumenKhusus),
-          })}
-          {generateCheckbox({
-            label: 'Dengan TTD',
-            className: 'mb-3',
-            value: withTTD,
-            onChange: () => setWithTTD(+!withTTD),
-          })}
-          {generateCheckbox({
-            label: 'Aktif',
-            className: 'mb-3',
-            value: aktif,
-            onChange: () => setAktif(+!aktif),
-          })}
+          <Form.Group widths="equal">
+            <Form.Field>
+              {generateCheckbox({
+                label: 'TTD Pasien',
+                className: 'mb-3',
+                value: ttdPasien,
+                onChange: () => dispatch(ttdPasienChange(+!ttdPasien)),
+              })}
+              {generateCheckbox({
+                label: 'Heading Otomatis',
+                className: 'mb-3',
+                value: headingOtomatis,
+                onChange: () =>
+                  dispatch(headingOtomatisChange(+!headingOtomatis)),
+              })}
+              {generateCheckbox({
+                label: 'Untuk Klaim',
+                className: 'mb-3',
+                value: klaim,
+                onChange: () => dispatch(klaimChange(+!klaim)),
+              })}
+            </Form.Field>
+            <Form.Field>
+              {generateCheckbox({
+                label: 'Untuk Pelayanan',
+                className: 'mb-3',
+                value: pelayanan,
+                onChange: () => dispatch(pelayananChange(+!pelayanan)),
+              })}
+              {generateCheckbox({
+                label: 'Dokumen Khusus',
+                className: 'mb-3',
+                value: dokumenKhusus,
+                onChange: () => dispatch(dokumenKhususChange(+!dokumenKhusus)),
+              })}
+            </Form.Field>
+            <Form.Field>
+              {generateCheckbox({
+                label: 'Dengan TTD',
+                className: 'mb-3',
+                value: withTTD,
+                onChange: () => dispatch(withTTDChange(+!withTTD)),
+              })}
+              {generateCheckbox({
+                label: 'Aktif',
+                className: 'mb-3',
+                value: aktif,
+                onChange: () => dispatch(aktifChange(+!aktif)),
+              })}
+            </Form.Field>
+          </Form.Group>
         </Form.Field>
       </Form>
 
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        centered={false}
-        size="large"
-        open={modalComponent}
-        onClose={() => setModalComponent(!modalComponent)}
-      >
-        <Modal.Header className="text-xl">
-          <Icon.Group className="mr-2">
-            <Icon name="tasks" />
-            <Icon corner="bottom right" name="plus" />
-          </Icon.Group>
-          Tambah Item
-        </Modal.Header>
-        <Modal.Content>
-          <Form>
-            <Form.Field>
-              <label>Induk</label>
-            </Form.Field>
-            <Form.Field>
-              <label>Urutan</label>
-            </Form.Field>
-            <Form.Field>
-              <label>Label</label>
-              <Input />
-            </Form.Field>
-            <Form.Field>
-              <label>Sebagai Referensi</label>
-              <Select
-                defaultValue="-"
-                options={[{ key: 0, value: '-', text: 'Pilih' }]}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Style</label>
-              <div>
-                <Select
-                  defaultValue="14"
-                  options={[
-                    { key: 0, value: '14', text: 'Ukuran Font' },
-                    { key: 1, value: '15', text: '15' },
-                    { key: 2, value: '16', text: '16' },
-                  ]}
-                />
-              </div>
-            </Form.Field>
-            <Form.Field>
-              <label>Tipe</label>
-              <Select
-                defaultValue="label"
-                options={[
-                  { key: 0, value: 'label', text: 'Label' },
-                  { key: 1, value: 'text', text: 'Text' },
-                  { key: 2, value: 'dropdown', text: 'Dropdown' },
-                ]}
-              />
-            </Form.Field>
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button icon="save" color="green" content="Simpan" />
-          <Button
-            icon="close"
-            content="Tutup"
-            onClick={() => setModalComponent(!modalComponent)}
-          />
-        </Modal.Actions>
-      </Modal>
+      <ItemList />
+      <ModalItem />
+      <ModalShowHasil />
     </>
   );
 }

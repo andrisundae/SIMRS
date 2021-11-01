@@ -4,13 +4,13 @@ import TopMenu from '@simrs/rekam-medis/src/component/TopMenu';
 import MainContent from '@simrs/rekam-medis/src/component/MainContent';
 import List from '../component/List';
 
-import { resetToInitialState } from '../reducer/content';
+import { resetState } from '../reducer/list';
 
 export default function Index() {
   const dispatch = useDispatch();
 
-  function resetState() {
-    dispatch(resetToInitialState());
+  function resetToInitialState() {
+    dispatch(resetState());
   }
 
   return (
@@ -22,12 +22,12 @@ export default function Index() {
             text: 'Menu Utama',
             icon: 'chevron left',
             to: '/main',
-            onClick: resetState,
+            onClick: resetToInitialState,
           },
         ]}
       />
       <MainContent>
-        <div className="m-5">
+        <div className="p-5 h-full overflow-y-auto">
           <List />
         </div>
       </MainContent>

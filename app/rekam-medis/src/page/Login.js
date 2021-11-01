@@ -55,7 +55,6 @@ export default function Login() {
               <Form.Field>
                 <Input icon iconPosition="left" fluid>
                   <input
-                    autoFocus
                     type="text"
                     autoFocus
                     placeholder="ID"

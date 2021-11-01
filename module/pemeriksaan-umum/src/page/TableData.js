@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Icon, Label } from 'semantic-ui-react';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 
 export default function TableData() {
   return (

@@ -16,7 +16,7 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import _ from 'lodash';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 
 export default function Copy() {
   const history = useHistory();
