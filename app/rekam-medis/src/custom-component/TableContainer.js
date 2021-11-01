@@ -42,26 +42,29 @@ export default function TableContainer({
       : parseInt(maxWidth, 10)
   );
 
-  const position = useCallback((node) => {
-    if (node !== null && maxHeight === 'screen-height') {
-      setDivMaxHeight(
-        'calc(100vh - ' +
-          (node.getBoundingClientRect().top + parseInt(maxHeightMinus, 10)) +
-          'px)'
-      );
-      setDivHeight('unset');
-    } else if (maxHeight !== 'auto' && height === 'auto') {
-      setDivHeight('unset');
-    }
-    if (node !== null && maxWidth === 'auto') {
-      setDivMaxWidth(
-        'calc(100vw - ' +
-          (node.getBoundingClientRect().left + parseInt(maxWidthMinus, 10)) +
-          'px)'
-      );
-      setDivWidth('unset');
-    }
-  }, []);
+  const position = useCallback(
+    (node) => {
+      if (node !== null && maxHeight === 'screen-height') {
+        setDivMaxHeight(
+          'calc(100vh - ' +
+            (node.getBoundingClientRect().top + parseInt(maxHeightMinus, 10)) +
+            'px)'
+        );
+        setDivHeight('unset');
+      } else if (maxHeight !== 'auto' && height === 'auto') {
+        setDivHeight('unset');
+      }
+      if (node !== null && maxWidth === 'auto') {
+        setDivMaxWidth(
+          'calc(100vw - ' +
+            (node.getBoundingClientRect().left + parseInt(maxWidthMinus, 10)) +
+            'px)'
+        );
+        setDivWidth('unset');
+      }
+    },
+    [height, maxHeight, maxHeightMinus, maxWidth, maxWidthMinus]
+  );
 
   return (
     <div

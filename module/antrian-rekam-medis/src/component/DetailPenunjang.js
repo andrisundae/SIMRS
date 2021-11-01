@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Segment, Header, Divider, Table, Icon } from 'semantic-ui-react';
 import className from 'classname';
 import _ from 'lodash';
-import ReactTable from '../util/ReactTable';
-import TableContainer from './TableContainer';
+import ReactTable from '@simrs/rekam-medis/src/custom-component/ReactTable';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 import {
   jenisLayananChange,
   tempatLayananChange,

@@ -10,14 +10,21 @@ import {
 } from 'react-table';
 import _ from 'lodash';
 
+const defaultPropGetter = () => ({});
+
 const ReactTable = React.forwardRef(
   (
     {
       columns,
       data,
+      getHeaderProps = defaultPropGetter,
+      getColumnProps = defaultPropGetter,
+      getRowProps = defaultPropGetter,
+      getCellProps = defaultPropGetter,
       filterData = [],
       filterDataKey = 'key',
       filterState = false,
+      reverseFilter = false,
       noResultFilter = false,
       celled = false,
       striped = false,
@@ -111,22 +118,34 @@ const ReactTable = React.forwardRef(
                     return null;
                   }
 
-                  let headerCellProps = column.getHeaderProps(
+                  let headerCellProps = column.getHeaderProps([
+                    {
+                      className: column.className,
+                      style: column.style,
+                    },
+                    getColumnProps(column),
+                    getHeaderProps(column),
                     column.sort === false || !useSorting
                       ? ''
-                      : column.getSortByToggleProps()
-                  );
+                      : column.getSortByToggleProps(),
+                  ]);
 
                   if (column.rowSpan) {
                     const nextRowColumn = getLastColumn(
                       column.columns,
                       column.rowSpan
                     );
-                    const nextHeaderProps = nextRowColumn.getHeaderProps(
+                    const nextHeaderProps = nextRowColumn.getHeaderProps([
+                      {
+                        className: column.className,
+                        style: column.style,
+                      },
+                      getColumnProps(column),
+                      getHeaderProps(column),
                       column.sort === false || !useSorting
                         ? ''
-                        : nextRowColumn.getSortByToggleProps()
-                    );
+                        : nextRowColumn.getSortByToggleProps(),
+                    ]);
                     headerCellProps = {
                       ...headerCellProps,
                       ...nextHeaderProps,
@@ -180,12 +199,17 @@ const ReactTable = React.forwardRef(
             renderNoData()}
           {rows.map((row, i) => {
             prepareRow(row);
+
             if (useCustomExpanded && row.depth === 0) {
               return (
                 <Table.Row
-                  {...row.getRowProps()}
-                  className={cellRowClassName}
-                  style={cellRowStyle}
+                  {...row.getRowProps([
+                    {
+                      className: cellRowClassName,
+                      style: cellRowStyle,
+                    },
+                    getRowProps(row),
+                  ])}
                 >
                   {row.cells.map((cell) => {
                     const originalDataRow = cell.row.original;
@@ -195,35 +219,55 @@ const ReactTable = React.forwardRef(
                           return e[filterDataKey];
                         })
                         .indexOf(originalDataRow[filterDataKey]);
-                      if (checkIndex === -1) {
-                        return null;
+                      if (reverseFilter) {
+                        if (checkIndex > -1) {
+                          return null;
+                        }
+                      } else {
+                        if (checkIndex === -1) {
+                          return null;
+                        }
                       }
                     }
                     if (undefined !== cell.column.colSpan) {
-                      let cellProps = {
-                        ...cell.getCellProps(),
-                        colSpan: cell.column.colSpan,
-                      };
                       return (
                         <Table.Cell
-                          {...cellProps}
-                          className={cell.column.customCellClassName}
-                          style={cell.column.customCellStyle}
+                          {...cell.getCellProps([
+                            {
+                              className: className(
+                                cell.column.className,
+                                cell.column.customCellClassName
+                              ),
+                              style: {
+                                ...cell.column.style,
+                                ...cell.column.customCellStyle,
+                              },
+                              colSpan: cell.column.colSpan,
+                            },
+                            getColumnProps(cell.column),
+                            getCellProps(cell),
+                          ])}
                         >
                           {cell.column.customCell(cell.row.original)}
                         </Table.Cell>
                       );
                     }
+
+                    return null;
                   })}
                 </Table.Row>
               );
             } else {
               return (
                 <Table.Row
-                  {...row.getRowProps()}
-                  className={cellRowClassName}
-                  style={cellRowStyle}
-                  onClick={() => (null !== onRowClick ? onRowClick() : {})}
+                  {...row.getRowProps([
+                    {
+                      className: cellRowClassName,
+                      style: cellRowStyle,
+                    },
+                    getRowProps(row),
+                  ])}
+                  onClick={() => (null !== onRowClick ? onRowClick(row) : {})}
                 >
                   {row.cells.map((cell) => {
                     const originalDataRow = cell.row.original;
@@ -233,8 +277,14 @@ const ReactTable = React.forwardRef(
                           return e[filterDataKey];
                         })
                         .indexOf(originalDataRow[filterDataKey]);
-                      if (checkIndex === -1) {
-                        return null;
+                      if (reverseFilter) {
+                        if (checkIndex > -1) {
+                          return null;
+                        }
+                      } else {
+                        if (checkIndex === -1) {
+                          return null;
+                        }
                       }
                     }
                     let value =
@@ -243,15 +293,20 @@ const ReactTable = React.forwardRef(
                         : cell.render('Cell');
                     return (
                       <Table.Cell
-                        {...cell.getCellProps()}
-                        className={className(
-                          cell.column.className,
-                          cell.column.cellClasName
-                        )}
-                        style={{
-                          ...cell.column.style,
-                          ...cell.column.cellStyle,
-                        }}
+                        {...cell.getCellProps([
+                          {
+                            className: className(
+                              cell.column.className,
+                              cell.column.cellClassName
+                            ),
+                            style: {
+                              ...cell.column.style,
+                              ...cell.column.cellStyle,
+                            },
+                          },
+                          getColumnProps(cell.column),
+                          getCellProps(cell),
+                        ])}
                       >
                         {value}
                       </Table.Cell>
@@ -281,6 +336,7 @@ const RTCustomFilter = (filterValue = '', data = [], key = 'key') => {
           if (-1 !== _.lowerCase(v[vk]).indexOf(value)) {
             tempIndex.push(1);
           }
+          return null;
         });
         if (_.indexOf(tempIndex, 1) > -1) {
           tempData.push({
@@ -296,6 +352,7 @@ const RTCustomFilter = (filterValue = '', data = [], key = 'key') => {
           });
         }
       }
+      return null;
     });
   }
 

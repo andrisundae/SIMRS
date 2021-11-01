@@ -23,7 +23,7 @@ export default function Template() {
         ]}
       />
       <MainContent>
-        <div className="m-5">
+        <div className="p-5 h-full overflow-y-auto">
           <FormTemplate />
         </div>
       </MainContent>

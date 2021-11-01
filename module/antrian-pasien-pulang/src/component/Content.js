@@ -11,10 +11,10 @@ import {
   Dropdown,
   Button,
 } from 'semantic-ui-react';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 import ReactTable, {
   RTCustomFilter,
-} from '@module/antrian-rekam-medis/src/util/ReactTable';
+} from '@simrs/rekam-medis/src/custom-component/ReactTable';
 import { loaderIcon } from '@module/antrian-rekam-medis/src//util/helper';
 import { useAntrianPasienPulang } from '@simrs/rekam-medis/src/fetcher/antrianPasienPulang';
 
