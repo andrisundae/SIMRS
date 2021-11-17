@@ -1,9 +1,9 @@
 import React from 'react';
 import { Segment } from 'semantic-ui-react';
 
-function Content({ children, ...props }) {
+function Content({ children, className, ...props }) {
   return (
-    <Segment className="bg-gray-200 min-h-screen" {...props}>
+    <Segment className={`bg-gray-200 px-3 py-1 ${className}`} {...props}>
       {children}
     </Segment>
   );

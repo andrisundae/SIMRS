@@ -188,7 +188,7 @@ class InputPasien extends Component {
 
     if (loaderOptionsByUnitLayanan) {
       return (
-        <React.Fragment>
+        <div className="mt-5">
           <Placeholder>
             <Placeholder.Paragraph>
               <Placeholder.Line />
@@ -196,7 +196,7 @@ class InputPasien extends Component {
               <Placeholder.Line />
             </Placeholder.Paragraph>
           </Placeholder>
-        </React.Fragment>
+        </div>
       );
     }
 
@@ -319,7 +319,7 @@ class InputPasien extends Component {
       <Grid columns="2" divided>
         <Grid.Row>
           <Grid.Column>
-            <Grid className="my-2">
+            <Grid className="mt-0">
               <Grid.Row className="form-row">
                 <Grid.Column
                   width="4"
@@ -576,7 +576,7 @@ class InputPasien extends Component {
             </Grid>
           </Grid.Column>
           <Grid.Column>
-            <Divider horizontal style={{ marginTop: 8, marginBottom: 20 }}>
+            <Divider horizontal className="mt-0 mb-5">
               {t(this._getKey('label.field.kunjungan_pasien'))}
             </Divider>
             <Grid>
@@ -901,9 +901,9 @@ class InputPasien extends Component {
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-            {this.renderDividerBiayaTambahan()}
-            {/* {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
-              this.renderDividerBiayaTambahan()} */}
+            {/* {this.renderDividerBiayaTambahan()} */}
+            {!_.isEmpty(data.jenis_klasifikasi_registrasi) &&
+              this.renderDividerBiayaTambahan()}
             {this.renderJenisKlasifikasiRegistrasi()}
           </Grid.Column>
         </Grid.Row>

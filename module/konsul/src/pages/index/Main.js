@@ -5,6 +5,10 @@ import { Segment, Header, Grid, Icon } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
 import { utils } from '@simrs/common';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import IdentitasPasien from './containers/IdentitasPasien';
 import FormKonsul from './containers/Konsul';
@@ -60,26 +64,11 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <Segment secondary className="content-header">
-        <Header as="h4">
-          <Icon name="accessible" />
-          {props.t(getKey('title'))}
-        </Header>
-      </Segment>
-      <Segment style={{ backgroundColor: '#ECECEC' }}>
-        <Grid className="content-grid">
-          <Grid.Row>
-            <Grid.Column>
-              <IdentitasPasien {...props} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={{ top: -15 }}>
-            <Grid.Column>
-              <FormKonsul {...props} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
+      <PageHeader title={props.t(getKey('title'))} icon="accessible" />
+      <Content>
+        <IdentitasPasien {...props} />
+        <FormKonsul {...props} />
+      </Content>
       <PageLoader active={isLoading} message={loaderMessage} />
       {showCariKunjungan && (
         <CariKunjungan

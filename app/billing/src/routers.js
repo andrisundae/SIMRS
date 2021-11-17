@@ -240,6 +240,16 @@ const routers = [
     path: '/billing/transaksi/tempat-tidur',
     component: lazy(() => import('@module/tempat-tidur')),
   },
+  {
+    key: '_billing_antrian_penunjang',
+    path: '/billing/antrian/penunjang',
+    component: lazy(() => import('@module/antrian-penunjang')),
+  },
+  {
+    key: '_billing_transaksi_penunjang',
+    path: '/billing/transaksi/penunjang',
+    component: lazy(() => import('@module/penunjang')),
+  },
 ];
 
 export default routers;

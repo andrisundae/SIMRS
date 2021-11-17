@@ -216,6 +216,7 @@ const FormDetailPasien = ({
       </Segment>
       <Segment
         size="mini"
+        className="mt-0"
         // style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
       >
         <Grid columns="2" className="my-1">

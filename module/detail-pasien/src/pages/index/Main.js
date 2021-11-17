@@ -1,15 +1,19 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { Segment, Header, Grid, Icon } from 'semantic-ui-react';
+// import { Segment, Header, Grid, Icon } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import FormDetailPasien from './containers/DetailPasien';
 import FooterActions from './containers/FooterActions';
 import { loaderSelector, loaderMessageSelector } from '../index/redux/selector';
 import { actions } from '../index';
-import './assets/css/styles.css';
+// import './assets/css/styles.css';
 
 const Main = (props) => {
   const dispatch = useDispatch();
@@ -26,21 +30,10 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <Segment secondary className="content-header">
-        <Header as="h4">
-          <Icon name="user" />
-          {props.t(getKey('title'))}
-        </Header>
-      </Segment>
-      <Segment style={{ backgroundColor: '#ECECEC' }}>
-        <Grid className="content-grid">
-          <Grid.Row>
-            <Grid.Column>
-              <FormDetailPasien {...props} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
+      <PageHeader title={props.t(getKey('title'))} icon="user" />
+      <Content>
+        <FormDetailPasien {...props} />
+      </Content>
       <PageLoader active={isLoading} message={loaderMessage} />
       <FooterActions {...props} />
     </Fragment>

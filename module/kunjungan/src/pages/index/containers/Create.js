@@ -192,9 +192,10 @@ class Create extends Component {
       >
         <Segment
           size="mini"
-          style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
+          className="pt-3 mb-1 mt-0"
+          // style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
         >
-          <Divider horizontal style={{ marginTop: 0, marginBottom: 35 }}>
+          <Divider horizontal className="mt-0 mb-6">
             {t(this._getKey('label.field.identitas_pasien'))}
           </Divider>
           <Grid columns="2">
@@ -300,12 +301,12 @@ class Create extends Component {
               <Grid.Column>
                 <Grid>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="5" className="field">
+                    <Grid.Column width="6" className="field">
                       <label>
                         {t(this._getKey('label.field.nama_orangtua'))}
                       </label>
                     </Grid.Column>
-                    <Grid.Column width="11" className="field">
+                    <Grid.Column width="10" className="field">
                       <Input
                         name="nama_ortu"
                         ref={this.nama_ortu}
@@ -319,10 +320,10 @@ class Create extends Component {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="form-row">
-                    <Grid.Column width="5" className="field">
+                    <Grid.Column width="6" className="field">
                       <label>{t(this._getKey('nama_suami_istri'))}</label>
                     </Grid.Column>
-                    <Grid.Column width="11" className="field">
+                    <Grid.Column width="10" className="field">
                       <Input
                         name="nama_suami_istri"
                         ref={this.nama_suami_istri}

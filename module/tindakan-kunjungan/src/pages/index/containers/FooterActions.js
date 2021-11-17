@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import MouseTrap from 'mousetrap';
+import { Menu, Dropdown, Button, Icon } from 'semantic-ui-react';
+import { PermintaanPenunjang } from '@module/penunjang/src/index';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
-import { Menu } from 'semantic-ui-react';
 
 import {
   FooterActionsContainer,
@@ -33,6 +34,10 @@ class FooterActions extends Component {
     this.delete = createRef();
     this.cancel = createRef();
     this.save = createRef();
+
+    this.state = {
+      showPermintaanPenunjang: false,
+    };
   }
 
   componentDidMount() {
@@ -269,7 +274,7 @@ class FooterActions extends Component {
       <FooterActionsContainer>
         <Fragment>
           {this.isCanAdd() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+            <Menu.Item style={{ paddingLeft: 11, paddingRight: 5 }}>
               <AddButton
                 onClick={this.onAdd}
                 inputRef={this.add}
@@ -313,15 +318,44 @@ class FooterActions extends Component {
               />
             </Menu.Item>
           )}
-          {this.isCanFinish() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <FinishButton
-                onClick={this.onFinish}
-                inputRef={this.finish}
-                onKeyDown={this._onFocusElement}
-              />
+          <Menu.Menu position="right" className="absolute right-0">
+            {this.isCanFinish() && (
+              <Menu.Item style={{ paddingLeft: 5 }}>
+                <FinishButton
+                  onClick={this.onFinish}
+                  inputRef={this.finish}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            <Menu.Item style={{ paddingLeft: 5 }}>
+              <Dropdown
+                icon={
+                  <Button size="mini" color="green">
+                    <Icon name="bars" />
+                    Link
+                  </Button>
+                }
+                direction="left"
+                pointing="top left"
+                className="mr-3"
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    icon="phone volume"
+                    text="Permintaan Penunjang"
+                    onClick={() =>
+                      this.setState({ showPermintaanPenunjang: true })
+                    }
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
             </Menu.Item>
-          )}
+          </Menu.Menu>
+          <PermintaanPenunjang
+            show={this.state.showPermintaanPenunjang}
+            onHide={() => this.setState({ showPermintaanPenunjang: false })}
+          />
         </Fragment>
       </FooterActionsContainer>
     );

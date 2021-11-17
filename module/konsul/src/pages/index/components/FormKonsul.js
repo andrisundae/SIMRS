@@ -6,6 +6,7 @@ import { Select, DatePicker, useModuleState } from '@simrs/components';
 import { formatter } from '@simrs/common';
 import { OptionInstalasi } from '@module/kunjungan';
 // import { useModuleState } from '@simrs/components/src/provider';
+import { TagihanPasien } from '@simrs/billing/src/Components';
 
 import AdministrasiKonsulValue from './AdministrasiKonsulValue';
 import AdministrasiKonsulOption from './AdministrasiKonsulOption';
@@ -65,12 +66,13 @@ const FormKonsul = ({
     <Form id="form-konsul" size="mini" onSubmit={(e) => e.preventDefault()}>
       <Segment
         size="mini"
-        style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
+        className="pt-6"
+        // style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
       >
         <Grid columns="2" divided>
           <Grid.Row>
             <Grid.Column>
-              <Divider hidden style={{ marginTop: 24, marginBottom: 20 }} />
+              {/* <Divider hidden className="my-5" /> */}
               <Grid>
                 <Grid.Row className="form-row">
                   <Grid.Column width="4" className="field">
@@ -125,7 +127,7 @@ const FormKonsul = ({
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
-              <Divider horizontal style={{ marginTop: 20, marginBottom: 20 }}>
+              <Divider horizontal className="my-6">
                 {t(getKey('kunjungan_asal_konsul'))}
               </Divider>
               <Grid>
@@ -180,7 +182,7 @@ const FormKonsul = ({
               </Grid>
             </Grid.Column>
             <Grid.Column>
-              <Divider horizontal style={{ marginTop: 12, marginBottom: 20 }}>
+              <Divider horizontal className="-mt-3 mb-6">
                 {t(getKey('tujuan_konsul'))}
               </Divider>
               <Grid>
@@ -309,7 +311,17 @@ const FormKonsul = ({
               </Grid>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row style={{ marginTop: 15 }}>
+          <Grid.Row className="my-3">
+            <Grid.Column width={16}>
+              <TagihanPasien
+                keringanan={kunjungan.keringanan}
+                bayar={kunjungan.bayar}
+                pengembalian={kunjungan.pengembalian}
+                biaya={kunjungan.biaya}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          {/* <Grid.Row style={{ marginTop: 15 }}>
             <Grid.Column width="16">
               <Grid verticalAlign="middle" centered>
                 <Grid.Column>
@@ -377,7 +389,7 @@ const FormKonsul = ({
                 </Grid.Column>
               </Grid>
             </Grid.Column>
-          </Grid.Row>
+          </Grid.Row> */}
         </Grid>
       </Segment>
     </Form>

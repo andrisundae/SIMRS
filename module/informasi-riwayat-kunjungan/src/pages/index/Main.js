@@ -44,12 +44,11 @@ const Main = (props) => {
               <RiwayatKunjungan />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row style={{ marginTop: -11 }}>
-            <Grid.Column>
+          <Grid.Row>
+            <Grid.Column width="16">
               <Summary />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row style={{ height: 30 }} />
         </Grid>
       </Segment>
       <PageLoader active={isLoading} message={loaderMessage} />

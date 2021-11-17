@@ -230,7 +230,7 @@ class List extends Component {
         maxConcurrentDatasourceRequests={1}
         infiniteInitialRowCount={1}
         cacheBlockSize={this.state.cacheBlockSize}
-        containerHeight="160px"
+        containerHeight="200px"
         getRowNodeId={this.getRowNodeId}
         disabled={disabled}
         suppressRowClickSelection={disabled}

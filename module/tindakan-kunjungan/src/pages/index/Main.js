@@ -1,10 +1,13 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { Segment, Header, Grid, Icon } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
 import { utils } from '@simrs/common';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import IdentitasPasien from './containers/IdentitasPasien';
 import FormTindakan from './containers/Tindakan';
@@ -39,19 +42,19 @@ const Main = (props) => {
     return `${props.resource}:${key}`;
   };
 
-  // const renderDetailUnitLayanan = () => {
-  //   if (!post.id) {
-  //     return null;
-  //   }
+  const renderDetailUnitLayanan = () => {
+    if (!post.id) {
+      return null;
+    }
 
-  //   return (
-  //     <Header as="h5">
-  //       {`${props.t(getKey('jenis_layanan'))} : ${
-  //         post.nama_instalasi
-  //       }, ${props.t(getKey('unit_layanan'))} : ${post.nama_unit_layanan}`}
-  //     </Header>
-  //   );
-  // };
+    return (
+      <div className="">
+        {`${props.t(getKey('jenis_layanan'))} : ${
+          post.nama_instalasi
+        }, ${props.t(getKey('unit_layanan'))} : ${post.nama_unit_layanan}`}
+      </div>
+    );
+  };
   const renderDetailStatusPasien = () => {
     if (!post.id) {
       return null;
@@ -64,7 +67,7 @@ const Main = (props) => {
       desc = `${post.nama_status_pasien} Hak Kelas ${post.nama_hak_kelas} | Kelas RS ${post.nama_kelas}`;
     }
 
-    return <Header as="h5">{desc}</Header>;
+    return <div className="">{desc}</div>;
   };
   const hideKunjunganHandler = () =>
     dispatch(actions.cancelSelectedKunjungan(props.resource));
@@ -93,46 +96,20 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <Segment
-        secondary
-        className="content-header"
-        style={{ paddingTop: 8, paddingBottom: 0 }}
-      >
-        <Header as="h4">
-          <Icon name="syringe" />
-          {props.t(getKey('title'))}
-        </Header>
-      </Segment>
-      <Segment
-        // style={{ backgroundColor: '#ECECEC', paddingTop: 6, paddingBottom: 0 }}
-        className="bg-gray-200 pt-3 pb-0"
-      >
-        <Grid className="content-grid">
-          <Grid.Row>
-            <Grid.Column>
-              <IdentitasPasien {...props} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={{ top: -20 }}>
-            <Grid.Column width={16} textAlign="right">
-              {renderDetailStatusPasien()}
-            </Grid.Column>
-            {/* <Grid.Column width={8} floated="right" textAlign="right">
-              {renderDetailUnitLayanan()}
-            </Grid.Column> */}
-          </Grid.Row>
-          <Grid.Row style={{ top: -34 }}>
-            <Grid.Column>
-              <List {...props} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={{ top: -48 }}>
-            <Grid.Column>
-              <FormTindakan {...props} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
+      <PageHeader title={props.t(getKey('title'))} icon="syringe" />
+      <Content>
+        <IdentitasPasien {...props} />
+        {post.id > 0 && (
+          <div className="flex items-center justify-between text-base mt-0 font-semibold">
+            {renderDetailUnitLayanan()}
+            {renderDetailStatusPasien()}
+          </div>
+        )}
+        <div className="mb-1">
+          <List {...props} />
+        </div>
+        <FormTindakan {...props} />
+      </Content>
       <PageLoader active={isLoading} message={loaderMessage} />
       {showCariKunjungan && (
         <CariKunjungan

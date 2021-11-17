@@ -31,9 +31,9 @@ const IdentitasPasien = ({
     <Form id="form-konsul" size="mini" onSubmit={(e) => e.preventDefault()}>
       <Segment
         size="mini"
-        style={{ paddingTop: 8, marginBottom: 8, paddingBottom: 20 }}
+        className="pt-0 pb-6 mb-1"
       >
-        <Divider horizontal style={{ marginTop: 0, marginBottom: 35 }}>
+        <Divider horizontal className="mt-3 mb-6">
           {t(getKey('identitas_pasien'))}
         </Divider>
         <Grid columns="2">

@@ -72,7 +72,7 @@ class Details extends Component {
                                         maxConcurrentDatasourceRequests={1}
                                         infiniteInitialRowCount={1}
                                         cacheBlockSize={this.state.cacheBlockSize}
-                                        containerHeight={containerHeight}
+                                        containerHeight="350px"
                                         onRowSelected={this._onRowSelected}
                                         suppressRowClickSelection={statusFormDetail === actionTypes.ADD_DETAIL}
                                         suppressCellSelection={statusFormDetail === actionTypes.ADD_DETAIL}

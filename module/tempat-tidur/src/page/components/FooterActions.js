@@ -13,6 +13,7 @@ import { disabledActionsSelector } from '../../redux/reducer/selector';
 import { finish as onFinish } from '../../redux/reducer';
 
 function FooterActions() {
+  // const [openPrint, setOpenPrint] = useState(false);
   const dispatch = useDispatch();
   const disableActions = useSelector(disabledActionsSelector);
   const isCanEdit = useMemo(() => {
@@ -33,7 +34,10 @@ function FooterActions() {
   const isCanEditDpjp = useMemo(() => {
     return !disableActions.edit_dpjp;
   }, [disableActions.edit_dpjp]);
-  const finishHandler = useCallback(() => dispatch(onFinish()), [dispatch, onFinish]);
+  const finishHandler = useCallback(() => dispatch(onFinish()), [
+    dispatch,
+    onFinish,
+  ]);
   return (
     <FooterActionsContainer>
       <>
@@ -77,13 +81,20 @@ function FooterActions() {
           <Menu.Item className="pr-0">
             <EditButton
               title="Edit DPJP"
-            // onClick={this.onEdit}
-            // inputRef={this.edit}
-            // onKeyDown={this._onFocusElement}
+              // onClick={this.onEdit}
+              // inputRef={this.edit}
+              // onKeyDown={this._onFocusElement}
             />
           </Menu.Item>
         )}
         <Menu.Menu position="right" className="absolute right-5">
+          <Menu.Item className="pr-0">
+            {/* <PrintButton
+              onClick={() => setOpenPrint(true)}
+              // inputRef={this.finish}
+              // onKeyDown={this._onFocusElement}
+            /> */}
+          </Menu.Item>
           {isCanFinish && (
             <Menu.Item className="pr-0">
               <FinishButton

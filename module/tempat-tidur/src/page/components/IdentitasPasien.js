@@ -27,7 +27,6 @@ import { utils } from '@simrs/common';
 import { Input } from '@simrs/components';
 import { selectKunjungan, ready } from '../../redux/reducer';
 import { disabledElement, moduleSelector } from '../../redux/reducer/selector';
-import { staticConst } from '../../static';
 
 function IdentitasPasien() {
   const t = useModuleTrans();
@@ -164,8 +163,9 @@ function IdentitasPasien() {
       >
         <Segment
           size="mini"
+          className="pt-0 pb-3 mb-1"
         >
-          <Divider horizontal className="my-0">
+          <Divider horizontal className="mt-3 mb-3">
             {t('identitas_pasien')}
           </Divider>
           <Grid columns="2" className="mb-1 mt-2">

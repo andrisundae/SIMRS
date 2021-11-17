@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  useController,
-  useFormContext,
-} from 'react-hook-form';
-import {
-  Form,
-  Input as SmInput,
-  Transition,
-} from 'semantic-ui-react';
+import { useController, useFormContext } from 'react-hook-form';
+import { Form, Input as SmInput } from 'semantic-ui-react';
+import FormErrorMessage from '../FormErrorMessage';
 
 const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   const { control } = useFormContext();
@@ -24,16 +18,10 @@ const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
       <SmInput
         {...inputProps}
         ref={ref}
-        value={inputProps.value || ''}
+        value={inputProps.value}
         {...props}
       />
-      {invalid && (
-        <Transition.Group animation="fade down" duration={300}>
-          <div style={{ color: '#9f3a38', fontSize: '.85714286rem' }}>
-            {error?.message}
-          </div>
-        </Transition.Group>
-      )}
+      {invalid && <FormErrorMessage message={error?.message} />}
     </Form.Field>
   );
 });

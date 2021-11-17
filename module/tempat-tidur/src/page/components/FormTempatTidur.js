@@ -20,8 +20,9 @@ function FormTempatTidur() {
   const dispatch = useDispatch();
   const selectedKunjungan = useSelector(selectedKunjunganSelector);
   const methods = useForm();
+  const normRef = React.useRef();
   const inputRef = {
-    norm: React.useRef(),
+    norm: normRef,
   };
   const formRef = useRef();
   const onSubmit = useCallback((values) => {
@@ -31,7 +32,7 @@ function FormTempatTidur() {
   return (
     <FormProvider {...methods}>
       <Form size="mini" onSubmit={methods.handleSubmit(onSubmit)} ref={formRef}>
-        <Segment size="mini">
+        <Segment size="mini" className="mt-1">
           <Grid columns="2" className="mt-1">
             <Grid.Row>
               <Grid.Column>

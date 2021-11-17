@@ -93,6 +93,7 @@ class FilterableSettingList extends Component {
           placeholder={`Minimal ${minCharSearch} karakter`}
           t={t}
           resource={resource}
+          className="mb-3"
         />
         <DatatableServerSide
           ref={this.dataTable}

@@ -54,7 +54,7 @@ class FilterableSumberList extends Component {
     } = this.props;
 
     return (
-      <Fragment>
+      <div className="mb-3">
         <SearchBar
           value={filterGrid.search}
           onChange={this._searchBarChange}
@@ -66,6 +66,7 @@ class FilterableSumberList extends Component {
           placeholder={`Minimal ${minCharSearch} karakter`}
           t={t}
           resource={resource}
+          className="mb-3"
         />
         <DatatableServerSide
           ref={this.dataTable}
@@ -86,7 +87,7 @@ class FilterableSumberList extends Component {
           onRowDoubleClicked={this._onRowDoubleClick}
           defaultColDef={{ sortable: true }}
         />
-      </Fragment>
+      </div>
     );
   }
 

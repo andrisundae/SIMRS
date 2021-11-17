@@ -15,6 +15,7 @@ import NumericInputRenderer from './NumericInputRenderer';
 import FooterPinnedRowRenderer from './FooterPinnedRowRenderer';
 import CheckboxRenderer from './CheckboxRenderer';
 import DropdownSelectRenderer from './DropdownSelectRenderer';
+import NoRowsOverlay from './NoRowsOverlay';
 import imgLoading from '../../static/media/img/loading-spinner-grey.gif';
 
 import alias from '../const';
@@ -133,8 +134,9 @@ class DataTableServerSide extends Component {
         currencyRenderer: this._renderCurrency,
       },
       onModelUpdated: this._onModelUpdated,
-      overlayNoRowsTemplate: this._renderNoRowsTemplate(),
+      // overlayNoRowsTemplate: this._renderNoRowsTemplate(),
       overlayLoadingTemplate: this._renderLoadingTemplate(),
+      noRowsOverlayComponent: 'customNoRowsOverlay'
     };
 
     if (navigateToSelect === true) {
@@ -151,6 +153,7 @@ class DataTableServerSide extends Component {
         footerPinnedRowRenderer: FooterPinnedRowRenderer,
         checkboxRenderer: CheckboxRenderer,
         dropdownSelectRenderer: DropdownSelectRenderer,
+        customNoRowsOverlay: NoRowsOverlay,
         ...frameworkComponents,
       },
     };

@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 import { bindActionCreators } from 'redux';
 import MouseTrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import { Menu, Button, Icon } from 'semantic-ui-react';
-
 import {
   FooterActionsContainer,
   SaveButton,
@@ -22,6 +22,27 @@ import { getPermissions } from '@simrs/main/src/modules/auth';
 
 import { isDisable } from '../redux/selectors';
 import actions from '../redux/actions';
+
+class ComponentToPrint extends React.PureComponent {
+  render() {
+    return (
+      <table>
+        <thead>
+          <th>column 1</th>
+          <th>column 2</th>
+          <th>column 3</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+}
 
 class FooterActions extends PureComponent {
   constructor(props) {
@@ -224,6 +245,76 @@ class FooterActions extends PureComponent {
     return `${this.props.resource}:${key}`;
   }
 
+  onPrint = () => {
+    var options = {
+      silent: true,
+      printBackground: true,
+      color: false,
+      margin: {
+        marginType: 'printableArea',
+      },
+      landscape: false,
+      pagesPerSheet: 1,
+      collate: false,
+      copies: 1,
+      header: 'Header of the Page',
+      footer: 'Footer of the Page',
+    };
+    const win = new remote.BrowserWindow({
+      show: false,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+    win.loadURL('https://www.google.com/');
+
+    win.webContents.on('did-finish-load', () => {
+      win.webContents.print(options, (success, failureReason) => {
+        if (!success) console.log(failureReason);
+        console.log('Print Initiated');
+      });
+    });
+  };
+
+  handlePrint = (htmlContentToPrint) => {
+    return new Promise((resolve, reject) => {
+      var options = {
+        silent: false,
+        printBackground: true,
+        color: false,
+        margin: {
+          marginType: 'printableArea',
+        },
+        landscape: false,
+        pagesPerSheet: 1,
+        collate: false,
+        copies: 1,
+        header: 'Header of the Page',
+        footer: 'Footer of the Page',
+      };
+      const win = new remote.BrowserWindow({
+        show: false,
+        webPreferences: {
+          nodeIntegration: true,
+          webviewTag: true,
+        },
+      });
+      // const file =
+      //   'data:text/html;charset=UTF-8,' +
+      //   encodeURIComponent(htmlContentToPrint);
+      // win.loadURL(htmlContentToPrint);
+
+      win.webContents.on('did-finish-load', () => {
+        win.webContents.print(options, (success, failureReason) => {
+          if (!success) console.log(failureReason);
+          console.log('Print Initiated');
+        });
+      });
+      console.log(htmlContentToPrint);
+      return resolve(true);
+    });
+  };
+
   render() {
     const { t } = this.props;
 
@@ -307,9 +398,9 @@ class FooterActions extends PureComponent {
             {this.isCanPrint() && (
               <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
                 <PrintButton
-                // onClick={this._onCancel}
-                // inputRef={this.cancel}
-                // onKeyDown={this._onFocusElement}
+                  onClick={this.onPrint}
+                  // inputRef={this.cancel}
+                  // onKeyDown={this._onFocusElement}
                 />
               </Menu.Item>
             )}
@@ -323,6 +414,7 @@ class FooterActions extends PureComponent {
               </Menu.Item>
             )}
           </Menu.Menu>
+          <ComponentToPrint ref={el => (this.print = el)} />
         </Fragment>
       </FooterActionsContainer>
     );

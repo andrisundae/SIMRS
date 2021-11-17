@@ -16,6 +16,8 @@ export * from './datatable';
 export * from './Button';
 export * from './provider';
 
+export {default as FormErrorMessage} from './FormErrorMessage';
+
 export {
   TextBox,
   PermissionDenied,

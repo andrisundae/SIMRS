@@ -73,8 +73,8 @@ const FormTindakan = ({
 
   const disabledBiayaPertindakan = disabled || !data.st_tarif_manual;
 
-  const kurang =
-    kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
+  // const kurang =
+  //   kunjungan.keringanan - kunjungan.bayar - kunjungan.pengembalian;
 
   return (
     <Form
