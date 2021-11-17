@@ -14,8 +14,8 @@ import {
   Modal,
 } from 'semantic-ui-react';
 import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
-import ReactTable from '@module/antrian-rekam-medis/src/util/ReactTable';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
+import ReactTable from '@simrs/rekam-medis/src/custom-component/ReactTable';
 import { useAnamnesis } from '@simrs/rekam-medis/src/fetcher/anamnesis';
 import { detailDataChange } from '../reducer/anamnesis';
 

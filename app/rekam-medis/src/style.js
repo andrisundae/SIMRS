@@ -6,6 +6,7 @@ import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@simrs/main/src/static/css/menubar.css';
 import '@simrs/main/src/static/css/grid.css';
+import 'rc-tree/assets/index.css';
 import './static/css/tailwind.css';
 import './static/css/semantic-ui.css';
 import './static/css/toastr.css';

@@ -3,12 +3,14 @@ import { useHistory } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import className from 'classname';
 import _ from 'lodash';
-import TableContainer from './TableContainer';
-import ReactTable from '../util/ReactTable';
-import { checkedIcon, DatePicker } from '../util/helper';
+import DatePicker from '@simrs/components/src/input/DatePicker';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
+import ReactTable from '@simrs/rekam-medis/src/custom-component/ReactTable';
+import { checkedIcon } from '../util/helper';
 import {
   jenisLayananChange,
   tempatLayananChange,
+  tanggalChange,
   shiftChange,
   isPasienSayaChange,
   idDokterChange,
@@ -37,17 +39,18 @@ export default function DetailUmum() {
   const history = useHistory();
   const tableInstance = useRef(null);
 
-  const [combineData, setCombineData] = useState([]);
-
   const {
     jenisLayanan,
     tempatLayanan,
+    tanggal,
     shift,
     isPasienSaya,
     idDokter,
     sort,
   } = useSelector((state) => state.content);
   const dispatch = useDispatch();
+
+  const [combineData, setCombineData] = useState([]);
 
   const {
     data: sidebarAntrianKunjunganData,
@@ -181,7 +184,15 @@ export default function DetailUmum() {
                   Status berdasarkan:{' '}
                 </label>
                 {/* <Input type="date" className="float-left" /> */}
-                <DatePicker dateFormat="dd/MM/yyyy" />
+                <div className="inline-block p-0 border-0">
+                  <DatePicker
+                    dateFormat="dd/MM/yyyy"
+                    selected={new Date(tanggal)}
+                    onChange={(date) =>
+                      dispatch(tanggalChange(date.toString()))
+                    }
+                  />
+                </div>
               </Form.Field>
               <Form.Field>
                 <Button

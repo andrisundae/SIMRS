@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import DatePicker from '@simrs/components/src/input/DatePicker';
 import className from 'classname';
 import {
   Form,
@@ -22,20 +23,16 @@ import {
 } from '../reducer/pasienpulang';
 
 export default function SidebarPasienPulang() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [norm, setNorm] = useState('');
-
   const { filter, data, fragment } = useSelector((state) => state.pasienpulang);
   const dispatch = useDispatch();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [norm, setNorm] = useState('');
+  const [tanggal, setTanggal] = useState(
+    filter?.tanggal ? new Date(filter.tanggal) : new Date()
+  );
+
   useEffect(() => {
-    if (Object.keys(filter).length === 0) {
-      dispatch(
-        filterChange({
-          tanggal: dayjs(new Date()).format('YYYY-MM-DD'),
-        })
-      );
-    }
     if (Object.keys(fragment).length === 0) {
       dispatch(
         fragmentChange({
@@ -48,7 +45,11 @@ export default function SidebarPasienPulang() {
   }, [filter]);
 
   function doSearch() {
-    console.log('search');
+    dispatch(
+      filterChange({
+        tanggal: tanggal.toString(),
+      })
+    );
   }
 
   return (
@@ -72,7 +73,17 @@ export default function SidebarPasienPulang() {
               </label>
             </Form.Field>
             <Form.Field>
-              <Input
+              {/* <div className="inline-block p-0 border-0"> */}
+              <Input action>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={tanggal}
+                  onChange={(date) => setTanggal(date)}
+                />
+                <Button icon="search" color="blue" onClick={() => doSearch()} />
+              </Input>
+              {/* </div> */}
+              {/* <Input
                 type="date"
                 action={{ icon: 'search', color: 'blue', onClick: doSearch }}
                 value={filter?.tanggal}
@@ -83,7 +94,7 @@ export default function SidebarPasienPulang() {
                     })
                   );
                 }}
-              />
+              /> */}
             </Form.Field>
             <Form.Field>
               <Button

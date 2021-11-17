@@ -1,26 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const contentSlice = createSlice({
-  name: 'pasienpulang',
-  initialState: {
-    filterDokumen: '',
-    filteredData: [],
-  },
+const initialState = {
+  filterDokumen: '',
+  filteredData: [],
+};
+
+const listSlice = createSlice({
+  name: 'list',
+  initialState,
   reducers: {
+    resetState: () => initialState,
     filterDokumenChange: (state, { payload }) => {
       state.filterDokumen = payload;
     },
     filteredDataChange: (state, { payload }) => {
       state.filteredData = payload;
     },
-    resetToInitialState: () => {},
   },
 });
 
-export default contentSlice.reducer;
+export default listSlice.reducer;
 
 export const {
+  resetState,
   filterDokumenChange,
   filteredDataChange,
-  resetToInitialState,
-} = contentSlice.actions;
+} = listSlice.actions;

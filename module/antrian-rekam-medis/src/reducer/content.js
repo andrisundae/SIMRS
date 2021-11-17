@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import dayjs from 'dayjs';
 
 const contentSlice = createSlice({
   name: 'content',
   initialState: {
     jenisLayanan: '',
     tempatLayanan: {},
+    tanggal: new Date().toString(),
     shift: 'pagi',
     isPasienSaya: false,
     idDokter: '',
@@ -19,6 +21,9 @@ const contentSlice = createSlice({
     },
     tempatLayananChange: (state, { payload }) => {
       state.tempatLayanan = payload;
+    },
+    tanggalChange: (state, { payload }) => {
+      state.tanggal = payload;
     },
     shiftChange: (state, { payload }) => {
       state.shift = payload;
@@ -39,6 +44,7 @@ export default contentSlice.reducer;
 export const {
   jenisLayananChange,
   tempatLayananChange,
+  tanggalChange,
   shiftChange,
   isPasienSayaChange,
   idDokterChange,

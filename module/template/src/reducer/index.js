@@ -1,12 +1,18 @@
 import { combineReducers } from 'redux';
-import contentReducer from './content';
+import listReducer from './list';
+import formReducer from './form';
+import itemReducer from './item';
 
 const combines = combineReducers({
-  content: contentReducer,
+  list: listReducer,
+  form: formReducer,
+  item: itemReducer,
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === 'pasienpulang/resetToInitialState') {
+  const actionReset = [];
+
+  if (actionReset.indexOf(action.type) > -1) {
     state = undefined;
   }
   return combines(state, action);

@@ -12,7 +12,7 @@ import {
 } from 'semantic-ui-react';
 import _ from 'lodash';
 import FooterActionsContainer from '@simrs/components/src/layout/FooterActionsContainer';
-import TableContainer from '@module/antrian-rekam-medis/src/component/TableContainer';
+import TableContainer from '@simrs/rekam-medis/src/custom-component/TableContainer';
 
 import DokumenMRSContainer from './DokumenMRSContainer';
 import DokumenKerjasamaMedisContainer from './DokumenKerjasamaMedisContainer';
