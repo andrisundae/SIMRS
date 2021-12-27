@@ -32,6 +32,17 @@ class CancelButton extends PureComponent {
     );
   }
 }
+class CancelTransaksi extends PureComponent {
+  render() {
+    let { inputRef, ...attributes } = this.props;
+    return (
+      <Button ref={inputRef} name="cancelTransaksi" size="mini" {...attributes}>
+        <Icon name="undo" />
+        <Trans i18nKey="common:action.batal_transaksi" />
+      </Button>
+    );
+  }
+}
 
 class AddButton extends PureComponent {
   render() {
@@ -46,6 +57,40 @@ class AddButton extends PureComponent {
       >
         <Icon name="plus" />
         <Trans i18nKey="common:action.add" />
+      </Button>
+    );
+  }
+}
+class AddTransaksi extends PureComponent {
+  render() {
+    let { inputRef, ...attributes } = this.props;
+    return (
+      <Button
+        ref={inputRef}
+        name="addTransaksi"
+        color="blue"
+        size="mini"
+        {...attributes}
+      >
+        <Icon name="plus" />
+        <Trans i18nKey="common:action.add_transaksi" />
+      </Button>
+    );
+  }
+}
+class AddItem extends PureComponent {
+  render() {
+    let { inputRef, ...attributes } = this.props;
+    return (
+      <Button
+        ref={inputRef}
+        name="addItem"
+        color="blue"
+        size="mini"
+        {...attributes}
+      >
+        <Icon name="plus" />
+        <Trans i18nKey="common:action.add_item" />
       </Button>
     );
   }
@@ -66,7 +111,7 @@ class EditButton extends PureComponent {
         {!_.isEmpty(title) ? (
           <span>{title}</span>
         ) : (
-        <Trans i18nKey="common:action.edit" />
+          <Trans i18nKey="common:action.edit" />
         )}
       </Button>
     );
@@ -86,6 +131,23 @@ class DeleteButton extends PureComponent {
       >
         <Icon name="trash" />
         <Trans i18nKey="common:action.delete" />
+      </Button>
+    );
+  }
+}
+class DeleteTransaksi extends PureComponent {
+  render() {
+    let { inputRef, ...attributes } = this.props;
+    return (
+      <Button
+        ref={inputRef}
+        name="deleteTransaksi"
+        color="red"
+        size="mini"
+        {...attributes}
+      >
+        <Icon name="trash" />
+        <Trans i18nKey="common:action.hapus_transaksi" />
       </Button>
     );
   }
@@ -288,9 +350,13 @@ export {
   Button,
   SaveButton,
   CancelButton,
+  CancelTransaksi,
   AddButton,
+  AddTransaksi,
+  AddItem,
   EditButton,
   DeleteButton,
+  DeleteTransaksi,
   SearchButton,
   NextButton,
   PrevButton,

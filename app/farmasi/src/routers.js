@@ -73,6 +73,11 @@ const routers = [
     path: '/farmasi/informasi/monitoring-pemesanan',
     component: lazy(() => import('@module/monitoring-pemesanan-supplier')),
   },
+  {
+    key: '_farmasi_transaksi_informasi_pemakaian',
+    path: '/farmasi/transaksi/informasi-pemakaian',
+    component: lazy(() => import('@module/informasi-pemakaian')),
+  },
 ];
 
 export default routers;
