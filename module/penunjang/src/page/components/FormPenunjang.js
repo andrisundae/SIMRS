@@ -20,7 +20,6 @@ import {
 } from 'semantic-ui-react';
 import {
   useModuleTrans,
-  messageBox,
   ReactSelect,
   DatePickerHF,
   TimePickerHF,
@@ -28,6 +27,7 @@ import {
 import { utils } from '@simrs/common';
 import { Input } from '@simrs/components';
 import { TagihanPasien } from '@simrs/billing/src/Components';
+// import { useMutationKunjungan } from '@simrs/billing/src/fetcher/kunjungan';
 import { selectedKunjunganSelector } from '../../redux/reducer/selector';
 
 function FormPenunjang() {
@@ -38,9 +38,13 @@ function FormPenunjang() {
   const inputRef = {
     norm: React.useRef(),
   };
+  // const mutation = useMutationKunjungan()
   const formRef = useRef();
   const onSubmit = useCallback((values) => {
-    console.log(values);
+    // mutation.mutate(values, {onSuccess: (data) => {
+    //   console.log(data);
+    // }})
+    // console.log(values);
   }, []);
 
   return (
