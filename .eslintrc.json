@@ -12,7 +12,7 @@
     },
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks"],
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
     "no-const-assign": "warn",
@@ -23,6 +23,8 @@
     "constructor-super": "warn",
     "valid-typeof": "warn",
     "react/display-name": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
