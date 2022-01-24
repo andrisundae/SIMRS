@@ -1,97 +1,16 @@
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { TextArea, Modal, Icon, Form, Grid, Segment } from 'semantic-ui-react';
-import Tree from 'rc-tree';
-import {
-  useModuleTrans,
-  CancelButton,
-  SaveButton,
-  Input,
-  ReactSelect,
-  TreeView,
-} from '@simrs/components';
-// import { useKunjunganAktifRawatInap } from '@simrs/billing/src/fetcher';
-import { staticConst } from '../../static';
+import { Modal, Icon, Grid, Segment, Input } from 'semantic-ui-react';
+import _ from 'lodash';
 
-function getTreeData() {
-  // big-data: generateData(1000, 3, 2)
-  return [
-    {
-      key: '0',
-      title: 'node 0',
-      children: [
-        { key: '0-0', title: 'node 0-0' },
-        { key: '0-1', title: 'node 0-1' },
-        {
-          key: '0-2',
-          title: 'node 0-2',
-          children: [
-            { key: '0-2-0', title: 'node 0-2-0' },
-            { key: '0-2-1', title: 'node 0-2-1' },
-            { key: '0-2-2', title: 'node 0-2-2' },
-          ],
-        },
-        { key: '0-3', title: 'node 0-3' },
-        { key: '0-4', title: 'node 0-4' },
-        { key: '0-5', title: 'node 0-5' },
-        { key: '0-6', title: 'node 0-6' },
-        { key: '0-7', title: 'node 0-7' },
-        { key: '0-8', title: 'node 0-8' },
-        {
-          key: '0-9',
-          title: 'node 0-9',
-          children: [
-            { key: '0-9-0', title: 'node 0-9-0' },
-            {
-              key: '0-9-1',
-              title: 'node 0-9-1',
-              children: [
-                { key: '0-9-1-0', title: 'node 0-9-1-0' },
-                { key: '0-9-1-1', title: 'node 0-9-1-1' },
-                { key: '0-9-1-2', title: 'node 0-9-1-2' },
-                { key: '0-9-1-3', title: 'node 0-9-1-3' },
-                { key: '0-9-1-4', title: 'node 0-9-1-4' },
-              ],
-            },
-            {
-              key: '0-9-2',
-              title: 'node 0-9-2',
-              children: [
-                { key: '0-9-2-0', title: 'node 0-9-2-0' },
-                { key: '0-9-2-1', title: 'node 0-9-2-1' },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: '1',
-      title: 'node 1',
-      // children: new Array(1000)
-      //   .fill(null)
-      //   .map((_, index) => ({ title: `auto ${index}`, key: `auto-${index}` })),
-      children: [
-        {
-          key: '1-0',
-          title: 'node 1-0',
-          children: [
-            { key: '1-0-0', title: 'node 1-0-0' },
-            {
-              key: '1-0-1',
-              title: 'node 1-0-1',
-              children: [
-                { key: '1-0-1-0', title: 'node 1-0-1-0' },
-                { key: '1-0-1-1', title: 'node 1-0-1-1' },
-              ],
-            },
-            { key: '1-0-2', title: 'node 1-0-2' },
-          ],
-        },
-      ],
-    },
-  ];
-}
+import { useModuleTrans, CancelButton, SaveButton } from '@simrs/components';
+import { formatter } from '@simrs/common';
+import { useDebounceValue } from '@simrs/components/src/hook';
+import { usePermintaanLayanan } from '@simrs/billing/src/fetcher/penunjang';
+// import { useKunjunganAktifRawatInap } from '@simrs/billing/src/fetcher';
+// import { staticConst } from '../../static';
+import Table from './Table';
+import IndeterminateCheckbox from './IndeterminateCheckbox';
 
 const TreePermintaanLayananPenunjang = ({
   innerRef,
@@ -102,6 +21,227 @@ const TreePermintaanLayananPenunjang = ({
 }) => {
   // const methods = useForm();
   const t = useModuleTrans();
+  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [search, setSearch] = useState('');
+
+  const { data: dataPermintaan } = usePermintaanLayanan();
+
+  const formattedData = useMemo(() => {
+    if (!dataPermintaan) {
+      return [];
+    }
+    const data = dataPermintaan.map((row) => {
+      const newRow = {
+        id: row.id_kelompok,
+        nama: row.nama_kelompok,
+        expanded: true,
+        subRows: [],
+        isSelected: selectedRowIds.includes(row.id_kelompok)
+      };
+      if (!_.isEmpty(row.layanan)) {
+        const subRows = row.layanan.map((item) => {
+          return {
+            id: item.id,
+            nama: item.nama_layanan,
+            versi_tarif: item.nama_versi_tarif,
+            kelas: item.nama_kelas,
+            tgl_aktif_tarif: item.tgl_aktif_tarif,
+            tarif: parseFloat(item.tarif),
+            kode_panggil: item.kode_panggil,
+            isSelected: selectedRowIds.includes(item.id)
+          };
+        });
+        newRow.subRows = subRows;
+      }
+      return newRow;
+    });
+    return data;
+  }, [dataPermintaan, selectedRowIds]);
+
+  const debouncedSearch = useDebounceValue(search, 500);
+
+  const handleInputChange = useCallback((e) => {
+    const { value } = e.currentTarget;
+    setSearch(value);
+  }, []);
+
+  const filteredData = useMemo(() => {
+    if (!debouncedSearch) {
+      return formattedData;
+    }
+
+    const res = formattedData.reduce((acc, a) => {
+      const ch =
+        a.subRows &&
+        a.subRows.filter((b) => b.nama.toLowerCase().includes(debouncedSearch));
+      if (ch && ch.length) {
+        acc.push({ ...a, subRows: ch });
+      } else if (a.nama.includes(debouncedSearch)) {
+        acc.push({ ...a });
+      }
+      return acc;
+    }, []);
+    return res;
+  }, [debouncedSearch, formattedData]);
+
+  const selectedChangeHandler = useCallback(
+    (checked, row) => {
+      const isExist = selectedRowIds.includes(row.original?.id);
+      if (checked) {
+        if (!isExist) {
+          setSelectedRowIds((prevState) => [...prevState, row.original?.id]);
+        }
+      } else {
+        if (isExist) {
+          setSelectedRowIds((prevState) => {
+            return prevState.filter((id) => id !== row.original?.id);
+          });
+        }
+      }
+    },
+    [selectedRowIds]
+  );
+
+  const columns = React.useMemo(
+    () => [
+      // {
+      //   // Build our expander column
+      //   id: 'expander', // Make sure it has an ID
+      //   // Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+      //   //   <span {...getToggleAllRowsExpandedProps()}>
+      //   //     {isAllRowsExpanded ? (
+      //   //       <Icon name="minus square outline" />
+      //   //     ) : (
+      //   //       <Icon name="plus square outline" />
+      //   //     )}
+      //   //   </span>
+      //   // ),
+      //   Cell: ({ row }) =>
+      //     // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+      //     // to build the toggle for expanding a row
+      //     row.canExpand ? (
+      //       <span
+      //         {...row.getToggleRowExpandedProps({
+      //           style: {
+      //             // We can even use the row.depth property
+      //             // and paddingLeft to indicate the depth
+      //             // of the row
+      //             paddingLeft: `${row.depth * 2}rem`,
+      //           },
+      //         })}
+      //       >
+      //         {row.isExpanded ? (
+      //           <Icon size="large" name="minus square outline" />
+      //         ) : (
+      //           <Icon size="large" name="plus square outline" />
+      //         )}
+      //       </span>
+      //     ) : null,
+      //   textAlign: 'center',
+      //   width: 30,
+      //   collapsing: true,
+      // },
+      {
+        Header: 'Tindakan',
+        accessor: 'nama',
+        Cell: ({ row }) => {
+          const paddingLeft = !row.canExpand ? 3.6 : 1.5;
+          return (
+            <div
+              className={`flex items-center h-10 relative`}
+              style={{ paddingLeft: `${row.depth * paddingLeft}rem` }}
+            >
+              {row.canExpand ? (
+                <span {...row.getToggleRowExpandedProps({})}>
+                  {row.isExpanded ? (
+                    <Icon
+                      className="mr-0 text-gray-200"
+                      size="large"
+                      name="minus square outline"
+                    />
+                  ) : (
+                    <Icon
+                      className="mr-0 text-gray-200"
+                      size="large"
+                      name="plus square outline"
+                    />
+                  )}
+                </span>
+              ) : (
+                <div>{''}</div>
+              )}
+              {row.canExpand && <div className="border-b w-5" />}
+              {row.canExpand ? null : (
+                <>
+                  <div className="border-l h-10" />
+                  <div className="border-b w-3" />
+                </>
+              )}
+              <div className="flex items-center space-x-2">
+                <div className="flex flex-col relative">
+                  <IndeterminateCheckbox
+                    {...row.getToggleRowSelectedProps()}
+                    data={row}
+                    onAfterChanged={selectedChangeHandler}
+                  />
+                  {row.canExpand && (
+                    <div
+                      className="border-l h-3 absolute"
+                      style={{ left: 8, top: 17 }}
+                    />
+                  )}
+                </div>
+                <span className={`${row.canExpand ? 'text-lg font-bold' : ''}`}>
+                  {row.values?.nama}
+                </span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        Header: 'Kelas',
+        accessor: 'kelas',
+        Cell: ({ row }) => {
+          if (row.canExpand) {
+            return null;
+          }
+          return <span>{row.values.kelas}</span>;
+        },
+        textAlign: 'center',
+      },
+      {
+        Header: 'Tarif',
+        accessor: 'tarif',
+        Cell: ({ row }) => {
+          if (row.canExpand) {
+            return null;
+          }
+          return <span>{formatter.currency(row.values.tarif)}</span>;
+        },
+        textAlign: 'right',
+      },
+      {
+        Header: 'Tanggal Aktif',
+        accessor: 'tgl_aktif_tarif',
+        Cell: ({ row }) => {
+          if (row.canExpand) {
+            return null;
+          }
+          return (
+            <span>
+              {formatter.dateFormatClient(
+                row.values.tgl_aktif_tarif,
+                'DD/MM/YYYY'
+              )}
+            </span>
+          );
+        },
+        textAlign: 'center',
+      },
+    ],
+    [selectedChangeHandler]
+  );
 
   return (
     <Modal
@@ -110,19 +250,19 @@ const TreePermintaanLayananPenunjang = ({
       onClose={onHide}
       closeOnEscape={false}
       closeOnDimmerClick={false}
-      size="large"
+      size={700}
       // style={{ width: 500 }}
     >
       <Modal.Header className="p-3">
         <Icon name="plus" />
         {t('permintaan_layanan_penunjang')}
       </Modal.Header>
-      <Modal.Content className="bg-gray-100 px-5 pb-8 shadow-lg">
-        <div className="">
+      <Modal.Content scrolling className="bg-gray-100 px-5 pb-8 shadow-lg">
+        {/* <div className="">
           
-        </div>
-        <Segment>
-          <Tree
+        </div> */}
+        <Segment className="w-full">
+          {/* <Tree
             // ref={treeRef}
             // defaultExpandAll={false}
             defaultExpandAll
@@ -132,6 +272,16 @@ const TreePermintaanLayananPenunjang = ({
             itemHeight={20}
             style={{ border: '1px solid #000' }}
             treeData={getTreeData()}
+          /> */}
+          <Grid.Row className="mb-5">
+            <Grid.Column>
+              <Input fluid value={search} onChange={handleInputChange} />
+            </Grid.Column>
+          </Grid.Row>
+          <Table
+            columns={columns}
+            data={filteredData}
+            onSelectedRow={selectedChangeHandler}
           />
         </Segment>
         {/* <TreeView

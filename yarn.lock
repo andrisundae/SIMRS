@@ -6601,6 +6601,11 @@ crypto-browserify@^3.0.0, crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto-extra@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto-extra/-/crypto-extra-1.0.1.tgz#91d9e3d8d35f9a16d548c073c31b147f34eab11e"
+  integrity sha512-EDJ07p6UDdyX+7GL6Bb6FqCuCHY34GuII9esE/xXZtW7tlB+A7MYT9O/c1M/ov2aGTdwvw0b3z5OcO50zYBG5Q==
+
 crypto-random-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
@@ -11992,6 +11997,14 @@ match-sorter@^6.0.2:
     "@babel/runtime" "^7.12.5"
     remove-accents "0.4.2"
 
+match-sorter@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-6.3.1.tgz#98cc37fda756093424ddf3cbc62bfe9c75b92bda"
+  integrity sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    remove-accents "0.4.2"
+
 matcher@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/matcher/-/matcher-3.0.0.tgz#bd9060f4c5b70aa8041ccc6f80368760994f30ca"
@@ -12499,6 +12512,13 @@ mute-stream@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+
+namor@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/namor/-/namor-2.0.3.tgz#a42c5e76f6170f9e2fc4ddfc6d403a881f59350d"
+  integrity sha512-BDDfplXUwxcEK1QAwL0k82VyqYyAa3xdQv24ijfLc+5Zqdm3IyfAIBTCRWhKPbbLncmdvG/vCr9JhrVH9FGpNQ==
+  dependencies:
+    crypto-extra "1.0.1"
 
 nan@^2.12.1:
   version "2.14.2"
@@ -15448,7 +15468,7 @@ react-syntax-highlighter@^11.0.2:
     prismjs "^1.8.4"
     refractor "^2.4.1"
 
-react-table@~7.7.0:
+react-table@^7.7.0, react-table@~7.7.0:
   version "7.7.0"
   resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.7.0.tgz#e2ce14d7fe3a559f7444e9ecfe8231ea8373f912"
   integrity sha512-jBlj70iBwOTvvImsU9t01LjFjy4sXEtclBovl3mTiqjz23Reu0DKnRza4zlLtOPACx6j2/7MrQIthIK1Wi+LIA==

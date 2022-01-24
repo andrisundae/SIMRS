@@ -1,0 +1,10 @@
+.rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper span.rc-tree-title {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}

@@ -338,7 +338,7 @@ class FooterActions extends Component {
                 }
                 direction="left"
                 pointing="top left"
-                className="mr-3"
+                className="mr-3 text-lg"
               >
                 <Dropdown.Menu>
                   <Dropdown.Item
@@ -347,6 +347,16 @@ class FooterActions extends Component {
                     onClick={() =>
                       this.setState({ showPermintaanPenunjang: true })
                     }
+                  />
+                  <Dropdown.Item
+                    icon="user outline"
+                    text="Identitas Pasien"
+                    onClick={() => {}}
+                  />
+                  <Dropdown.Item
+                    icon="accessible"
+                    text="Konsul"
+                    onClick={() => {}}
                   />
                 </Dropdown.Menu>
               </Dropdown>

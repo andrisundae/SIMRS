@@ -13,7 +13,7 @@ import {
 } from '@simrs/components';
 // import { useKunjunganAktifRawatInap } from '@simrs/billing/src/fetcher';
 import { staticConst } from '../../static';
-import FormPermintaanPenunjang from './FormPermintaanPenunjang';
+import CreatePermintaanPenunjang from '../CreatePermintaanPenunjang';
 
 const PermintaanPenunjang = ({
   innerRef,
@@ -168,7 +168,7 @@ const PermintaanPenunjang = ({
           <CancelButton onClick={onHide} />
         </div>
       </Modal.Actions>
-      <FormPermintaanPenunjang show={showForm} onHide={() => setShowForm(false)} />
+      <CreatePermintaanPenunjang show={showForm} onHide={() => setShowForm(false)} />
     </Modal>
   );
 };

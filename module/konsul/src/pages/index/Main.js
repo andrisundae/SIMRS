@@ -32,7 +32,7 @@ const Main = (props) => {
 
   React.useEffect(() => {
     dispatch(actions.openForm(props.resource));
-  }, []);
+  }, [dispatch, props.resource]);
 
   const getKey = (key) => {
     return `${props.resource}:${key}`;
