@@ -4,7 +4,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   statusForm: '',
-  master: {},
+  master: {
+    nomor_transaksi: 'PK220100001',
+    id_unit: null,
+    tanggal: '2021-10-12',
+  },
   detail: {},
   filter: {
     dataDefault: {},
@@ -44,10 +48,15 @@ const moduleSlice = createSlice({
       state.focusElement = payload.next;
     },
     simpan: (state, { payload, type }) => {
-      state.statusForm = type;
-      state.focusElement = 'tambahItem';
+      if (state.statusForm === addTransaksi.type) {
+        console.log(state.statusForm);
+      }
     },
     batal: (state) => readyReducer(state),
+
+    onChangeInput: (state, { payload: { formType, data }, type }) => {
+      state[formType][data.target] = data.value;
+    },
   },
 });
 
@@ -59,6 +68,7 @@ export const {
   simpan,
   batal,
   ready,
+  onChangeInput,
 } = moduleSlice.actions;
 
 export default combineReducers({

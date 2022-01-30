@@ -3,6 +3,8 @@ import fetcher from '@simrs/common/src/helpers/fetcher';
 
 export function useInformasiIndex(params = {}, options = {}) {
   const queryKey = `/farmasi/transaksi/informasi-pemakaian`;
+  // const queryKey = '/billing/antrian/penunjang/init';
+
   return useQuery(
     queryKey,
     async () => {

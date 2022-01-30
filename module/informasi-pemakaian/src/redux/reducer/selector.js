@@ -4,9 +4,9 @@ import _ from 'lodash';
 import { ready, addTransaksi } from './index';
 import { staticConst } from '../../static';
 
-const statusesElements = {
+const statusElement = {
   [ready.type]: ['tambahTransaksi'],
-  [addTransaksi.type]: ['save', 'cancel'],
+  [addTransaksi.type]: ['save', 'cancel', 'selectUnit'],
   // [select.type]: [
   //   'edit_dpjp',
   //   'delete',
@@ -22,8 +22,8 @@ const statusesElements = {
 export const disabledElement = createSelector(
   [(state) => state.module.statusForm, (state, element) => element],
   (statusForm, element) => {
-    if (statusesElements[statusForm]) {
-      if (_.includes(statusesElements[statusForm], element)) {
+    if (statusElement[statusForm]) {
+      if (_.includes(statusElement[statusForm], element)) {
         return false;
       }
       return true;
@@ -38,7 +38,6 @@ export const disabledActionsSelector = createSelector(
   (state) => {
     return {
       tambahTransaksi: disabledElement(state, 'tambahTransaksi'),
-      // finish: disabledElement(state, 'finish'),
       // edit_dpjp: disabledElement(state, 'edit_dpjp'),
       // edit: disabledElement(state, 'edit'),
       save: disabledElement(state, 'save'),
@@ -47,9 +46,23 @@ export const disabledActionsSelector = createSelector(
   }
 );
 
+export const disabledInputSelctor = createSelector(
+  (state) => state,
+  (state) => {
+    return {
+      selectUnit: disabledElement(state, 'selectUnit'),
+    };
+  }
+);
+
 export const moduleSelector = createSelector(
   (state) => state.module,
   (module) => module
+);
+
+export const masterSelector = createSelector(
+  (state) => state.module,
+  (module) => module.master
 );
 
 export const focusElementSelector = createSelector(

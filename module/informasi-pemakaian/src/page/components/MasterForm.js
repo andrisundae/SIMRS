@@ -15,11 +15,13 @@ import { useModuleTrans, messageBox } from '@simrs/components';
 import { useInformasiUnitFarmasi } from '@simrs/farmasi/src/fetcher/UnitFarmasi';
 
 import {
+  disabledInputSelctor,
   focusElementSelector,
+  masterSelector,
   moduleFilter,
 } from '../../redux/reducer/selector';
 
-import { openModal, closeModal } from '../../redux/reducer';
+import { openModal, closeModal, onChangeInput } from '../../redux/reducer';
 import CariTransaksi from './CariTransaksi';
 
 function MasterForm() {
@@ -28,28 +30,28 @@ function MasterForm() {
 
   const focusElement = useSelector(focusElementSelector);
   const filter = useSelector(moduleFilter);
+  const master = useSelector(masterSelector);
   const { data } = useInformasiUnitFarmasi();
 
-  const unitFarmasi = useMemo(() => {
-    console.log('memo', data);
-    const inits = {
-      instalasi: [],
-      kelompok: [],
-      penjamin: [],
-      unit_layanan: [],
-    };
+  const disableInput = useSelector(disabledInputSelctor);
+
+  const allowSelectUnit = useMemo(() => {
+    return !disableInput.selectUnit;
+  }, [disableInput.selectUnit]);
+
+  const unitFarmasiOpt = useMemo(() => {
+    const inits = [];
     if (!data) {
       return inits;
     }
     return data;
   }, [data]);
 
-  console.log(unitFarmasi);
-
   const showMasterModal = useMemo(() => {
     return filter.modalMaster.show;
   }, [filter.modalMaster.show]);
 
+  const formref = useRef();
   const inputRef = {
     noTransaksi: useRef(),
     tglransaksi: useRef(),
@@ -74,9 +76,28 @@ function MasterForm() {
     openModal,
   ]);
 
+  const onSelectInput = useCallback(
+    (val) =>
+      dispatch(
+        onChangeInput({
+          formType: 'master',
+          data: { value: val.value, target: 'id_unit' },
+        })
+      ),
+    [dispatch, onChangeInput]
+  );
+
+  const onSubmit = useCallback((values) => {
+    console.log(values);
+    // mutation.mutate(values, {onSuccess: (data) => {
+    //   console.log(data);
+    // }})
+    // console.log(values);
+  }, []);
+
   return (
     <FormProvider {...methods}>
-      <Form size="mini">
+      <Form size="mini" onSubmit={methods.handleSubmit(onSubmit)} ref={formref}>
         <Segment size="mini">
           <Grid columns="3" className="mb-1 mt-2">
             <Grid.Row>
@@ -90,9 +111,9 @@ function MasterForm() {
                       <Input
                         ref={inputRef.noTransaksi}
                         name="no_transaksi"
-                        value={''}
+                        value={master.nomor_transaksi}
                         disabled={false}
-                        readOnly={true}
+                        // readOnly={true}
                         action={{
                           icon: 'search',
                           onClick: () => onSearch('modalMaster'),
@@ -100,11 +121,11 @@ function MasterForm() {
                           type: 'button',
                           disabled: false,
                         }}
-                        onKeyDown={(e) => {
-                          if ('Enter' === e.key) {
-                            onSearch('pemesanan_modal');
-                          }
-                        }}
+                        // onKeyDown={(e) => {
+                        //   if ('Enter' === e.key) {
+                        //     onSearch('pemesanan_modal');
+                        //   }
+                        // }}
                       />
                     </Grid.Column>
                   </Grid.Row>
@@ -115,7 +136,9 @@ function MasterForm() {
                     <Grid.Column width="10" className="field">
                       <DatePickerHF
                         name="tanggal"
+                        value={master.tanggal}
                         rules={{ required: 'Harus diisi' }}
+                        disabled
                       />
                     </Grid.Column>
                   </Grid.Row>
@@ -132,7 +155,9 @@ function MasterForm() {
                         ref={inputRef.selectUnit}
                         name="unit-penerima"
                         placeholder={t('Unit Penerima')}
-                        options={[]}
+                        options={unitFarmasiOpt}
+                        isDisabled={!allowSelectUnit}
+                        onAfterChange={onSelectInput}
                       />
                     </Grid.Column>
                   </Grid.Row>
