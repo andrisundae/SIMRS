@@ -4,7 +4,7 @@ import { createLogger } from 'redux-logger';
 import { createSimrsLogger } from '@simrs/main/src/modules/log';
 
 /*Reducers*/
-import rootReducer from './reducer';
+import rootReducer from './reducers';
 
 export default function configureModuleStore(preloadedState) {
   const logSimrsMiddleware = createSimrsLogger();

@@ -31,6 +31,9 @@ module.exports = {
       },
       colors: {
         secondary: '#ecc94b'
+      },
+      height: {
+        '300px': '300px'
       }
     },
   },

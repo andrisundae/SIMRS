@@ -245,11 +245,11 @@ const routers = [
     path: '/billing/antrian/penunjang',
     component: lazy(() => import('@module/antrian-penunjang')),
   },
-  {
-    key: '_billing_transaksi_penunjang',
-    path: '/billing/transaksi/penunjang',
-    component: lazy(() => import('@module/penunjang')),
-  },
+  // {
+  //   key: '_billing_transaksi_penunjang',
+  //   path: '/billing/transaksi/penunjang',
+  //   component: lazy(() => import('@module/penunjang')),
+  // },
 ];
 
 export default routers;

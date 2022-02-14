@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from 'react-query';
-import fetcher, {post} from '@simrs/common/src/helpers/fetcher';
+import fetcher, { post } from '@simrs/common/src/helpers/fetcher';
 
 export function useKunjunganAktifRawatInap(idPasien, options = {}) {
   const queryKey = `/billing/transaksi/kunjungan/aktif-rawat-inap/${idPasien}`;
@@ -26,7 +26,7 @@ export function useKunjunganAktifRawatInap(idPasien, options = {}) {
 
 export function useMutationKunjungan() {
   const queryKey = `/billing/transaksi/kunjungan/aktif-rawat-inap`;
-  return useMutation((payload) => async () => {
+  return useMutation(async (payload) => {
     let response;
     try {
       const { data } = await post(queryKey, payload);

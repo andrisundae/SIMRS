@@ -1,24 +1,25 @@
 import React from 'react';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Toastr } from '@simrs/components';
 import configureModuleStore from './redux/store';
-import Index from './page/Index';
+import Permintaan from './page/permintaan';
+import CreatePermintaan from './page/permintaan/Create';
 
 const store = configureModuleStore();
 
-export default function Main({ location, settings }) {
+export default function Main({ settings, match }) {
   return (
-    <Router>
-      <Provider store={store}>
-        <Switch location={location}>
-          <Route
-            path="/"
-            render={(props) => <Index {...props} settings={settings} />}
-          />
-        </Switch>
-        <Toastr />
-      </Provider>
-    </Router>
+    <Provider store={store}>
+      <Route
+        path={`${match.url}/permintaan/:idKunjunganUnit`}
+        render={(props) => <Permintaan {...props} settings={settings} show />}
+      />
+      <Route
+        path={`${match.url}/permintaan/:idKunjunganUnit/create`}
+        render={(props) => <CreatePermintaan {...props} settings={settings} show />}
+      />
+      <Toastr />
+    </Provider>
   );
 }

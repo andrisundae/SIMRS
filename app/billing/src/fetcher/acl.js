@@ -1,14 +1,18 @@
 import { useQuery } from 'react-query';
-import fetcher from '@simrs/common/src/helpers/fetcher';
+import axios from '@simrs/common/src/helpers/axios';
 
 export function usePermissions({ route }, options = {}) {
+  const queryKey = '/acl/tabel/fitur/granted';
   return useQuery(
-    ['/acl/tabel/fitur/granted', route],
+    [queryKey, route],
     async () => {
       let response;
       try {
-        const { data } = await fetcher('/acl/tabel/fitur/granted', {
-          menu: route,
+        const params = { menu: route };
+        const {
+          data: { data },
+        } = await axios.get(queryKey, {
+          params,
         });
         response = data;
       } catch (error) {

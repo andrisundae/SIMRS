@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useEffect } from 'react';
+import React, { useCallback, memo, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import {
@@ -6,7 +6,7 @@ import {
   useModuleTrans,
   useDatatable,
 } from '@simrs/components';
-// import { useHistoryTempatTidur } from '@simrs/billing/src/fetcher';
+import { useListAntrianPenunjang } from '@simrs/billing/src/fetcher';
 import { staticConst } from '../../static';
 // import { moduleSelector } from '../../redux/reducer/selector';
 // import { ready } from '../../redux/reducer';
@@ -18,7 +18,7 @@ const List = ({ innerRef }) => {
   // );
   // const {statusForm, selectedKunjungan: {id_kunjungan_unit: idKunjunganUnit}} = useSelector(moduleSelector);
   const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
-  // const { data: historyTempatTidur, isLoading, status } = useHistoryTempatTidur(idKunjunganUnit);
+  const { data, isLoading, status } = useListAntrianPenunjang();
 
   const columns = [
     {
@@ -79,47 +79,38 @@ const List = ({ innerRef }) => {
     },
   ];
 
-  // const dataSource = useCallback((historyTempatTidur) => {
-  //   if (!historyTempatTidur || status === 'error' || status === 'loading') {
-  //     return emptySource;
-  //   }
+  const dataSource = useMemo(() => {
+    if (!data || status === 'error' || status === 'loading') {
+      return emptySource;
+    }
 
-  //   return {
-  //     rowCount: null,
-  //     getRows: (params) => {
-  //       params.successCallback(historyTempatTidur, historyTempatTidur.length);
-  //     },
-  //   };
-  // }, [emptySource, historyTempatTidur, status]);
+    return {
+      rowCount: null,
+      getRows: (params) => {
+        params.successCallback(data, data.length);
+      },
+    };
+  }, [emptySource, data, status]);
 
   // // Set datasource dari api
-  // useEffect(() => {
-  //   if (gridApi && idKunjunganUnit && status === 'success') {
-  //     gridApi.setDatasource(dataSource(historyTempatTidur));
-  //   }
-  // }, [gridApi, dataSource, status, idKunjunganUnit]);
+  useEffect(() => {
+    if (gridApi && data && status === 'success') {
+      gridApi.setDatasource(dataSource);
+    }
+  }, [gridApi, dataSource, status, data]);
 
-  // // Reset datasource karena selesai
-  // useEffect(() => {
-  //   if (!idKunjunganUnit && statusForm === ready.type && gridApi) {
-  //     gridApi.setDatasource(dataSource());
-  //   }
-  // }, [statusForm, ready, idKunjunganUnit]);
-
-  // // Reset datasource karena selesai
-  // useEffect(() => {
-  //   if (gridApi) {
-  //     if (isLoading) {
-  //       gridApi.showLoadingOverlay();
-  //     } else {
-  //       gridApi.hideOverlay();
-  //     }
-  //   }
-  // }, [isLoading]);
+  useEffect(() => {
+    if (gridApi) {
+      if (isLoading) {
+        gridApi.showLoadingOverlay();
+      } else {
+        gridApi.hideOverlay();
+      }
+    }
+  }, [gridApi, isLoading]);
 
   return (
     <DatatableServerSide
-      dataSource={emptySource}
       ref={innerRef}
       columns={columns}
       name={staticConst.TABLE_ANTRIAN_PENUNJANG}
@@ -131,8 +122,6 @@ const List = ({ innerRef }) => {
       containerHeight="330px"
       getRowNodeId={getRowNodeId}
       sizeColumnsToFit={true}
-      // onRowDoubleClicked={this.onRowDoubleClickHandler}
-      // onRowEntered={this.onRowEnteredHandler}
       onGridReady={onGridReady}
     />
   );

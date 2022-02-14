@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 import { getPermissions } from '../../auth';
 
 import FooterActions from './containers/FooterActions';

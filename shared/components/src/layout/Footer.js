@@ -15,7 +15,7 @@ function Footer({ actionsPosition = 'left', watermark = null, ...props }) {
       {...props}
     >
       {actionsOnLeftPosition ? (
-        <Menu.Menu position="left" id="footer-actions" />
+        <Menu.Menu className='w-full' position="left" id="footer-actions" />
       ) : null}
       {watermark && (
         <Menu.Menu position={actionsOnLeftPosition ? 'right' : 'left'}>

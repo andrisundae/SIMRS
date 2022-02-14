@@ -39,7 +39,10 @@ function moduleReducer(state, action) {
 }
 
 export function ModuleProvider({ children, value }) {
-  const [state, dispatch] = React.useReducer(moduleReducer, {moduleState, ...value});
+  const [state, dispatch] = React.useReducer(moduleReducer, {
+    moduleState,
+    ...value,
+  });
   return (
     <ModuleStateContext.Provider value={state}>
       <ModuleDispatchContext.Provider value={dispatch}>
@@ -73,7 +76,8 @@ export function useModuleAction() {
 export function useModuleTrans() {
   const state = useAppState();
   const { t } = useTranslation();
-  return (key) => t(`${state.resource}:${key}`);
+  return (key, withResource = true) =>
+    withResource ? t(`${state.resource}:${key}`) : t(key);
 }
 
 export function ModuleConsumer({ children }) {

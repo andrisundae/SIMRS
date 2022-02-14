@@ -1,14 +1,37 @@
 import { useQuery, useMutation } from 'react-query';
-import fetcher, {post} from '@simrs/common/src/helpers/fetcher';
+import axios from '@simrs/common/src/helpers/axios';
 
-export function usePenunjang(params = {}, options = {}) {
+export const getInitPermintaanPenunjang = (params) => {
+  return axios.get('/billing/transaksi/penunjang/init', { params });
+};
+export const getPenunjang = (params) => {
+  return axios.get('/billing/transaksi/penunjang/view', { params });
+};
+export const getPermintaanLayanan = (params) => {
+  return axios.get('/billing/transaksi/penunjang/permintaan-layanan', {
+    params,
+  });
+};
+export const getDokterTujuan = (idUnitLayanan) => {
+  return axios.get(
+    `/billing/transaksi/penunjang/dokter-tujuan/${idUnitLayanan}`
+  );
+};
+
+export const editPermintaanPenunjang = (params) => {
+  return axios.post('/billing/transaksi/penunjang/koreksi', params);
+};
+
+export function useListPenunjang(params = {}, options = {}) {
   const queryKey = '/billing/transaksi/penunjang/view';
   return useQuery(
     [queryKey, params],
     async () => {
       let response;
       try {
-        const { data } = await fetcher(queryKey);
+        const {
+          data: { data },
+        } = await getPenunjang(params);
         response = data;
       } catch (error) {
         throw new Error('Failed to load data from server!');
@@ -16,6 +39,7 @@ export function usePenunjang(params = {}, options = {}) {
       return response;
     },
     {
+      keepPreviousData: true,
       ...options,
     }
   );
@@ -28,7 +52,9 @@ export function usePermintaanLayanan(params = {}, options = {}) {
     async () => {
       let response;
       try {
-        const { data } = await fetcher(queryKey);
+        const {
+          data: { data },
+        } = await getPermintaanLayanan(params);
         response = data;
       } catch (error) {
         throw new Error('Failed to load data from server!');
@@ -36,19 +62,70 @@ export function usePermintaanLayanan(params = {}, options = {}) {
       return response;
     },
     {
+      enabled: !!params?.id_unit_layanan,
       ...options,
     }
   );
 }
 
-export function useInitPermintaanPenunjang(options = {}) {
+export function useDokterTujuan(idUnitLayanan, options = {}) {
+  const queryKey = '/billing/transaksi/penunjang/dokter-tujuan';
+  return useQuery(
+    [queryKey, idUnitLayanan],
+    async () => {
+      let response;
+      try {
+        const {
+          data: { data },
+        } = await getDokterTujuan(idUnitLayanan);
+        response = data;
+      } catch (error) {
+        throw new Error('Failed to load data from server!');
+      }
+      return response;
+    },
+    {
+      enabled: !!idUnitLayanan,
+      ...options,
+    }
+  );
+}
+
+export function useInitPermintaanPenunjang(idKunjunganUnit, options = {}) {
   const queryKey = '/billing/transaksi/penunjang/init';
+  return useQuery(
+    [queryKey, idKunjunganUnit],
+    async () => {
+      let response;
+      try {
+        const {
+          data: { data },
+        } = await getInitPermintaanPenunjang({
+          id_kunjungan_unit: idKunjunganUnit,
+        });
+        response = data;
+      } catch (error) {
+        throw new Error('Failed to load data from server!');
+      }
+      return response;
+    },
+    {
+      enabled: !!idKunjunganUnit,
+      ...options,
+    }
+  );
+}
+
+export function usePenunjangDetail(idKunjunganUnit, options = {}) {
+  const queryKey = `/billing/transaksi/penunjang/detail/${idKunjunganUnit}`;
   return useQuery(
     queryKey,
     async () => {
       let response;
       try {
-        const { data } = await fetcher(queryKey);
+        const {
+          data: { data },
+        } = await axios.get(queryKey);
         response = data;
       } catch (error) {
         throw new Error('Failed to load data from server!');
@@ -56,35 +133,20 @@ export function useInitPermintaanPenunjang(options = {}) {
       return response;
     },
     {
+      enabled: !!idKunjunganUnit,
       ...options,
     }
   );
 }
 
-export function useCreatePenunjang() {
-  const queryKey = `/billing/transaksi/penunjang/tambah`;
-  return useMutation((payload) => async () => {
-    let response;
-    try {
-      const { data } = await post(queryKey, payload);
-      response = data;
-    } catch (error) {
-      throw new Error('Failed to load data from server!');
-    }
-    return response;
-  });
+export function useCreatePermintaanPenunjang() {
+  return useMutation((payload) => axios.post('/billing/transaksi/penunjang/tambah', payload));
 }
 
-export function useEditPenunjang() {
-  const queryKey = `/billing/transaksi/penunjang/koreksi`;
-  return useMutation((payload) => async () => {
-    let response;
-    try {
-      const { data } = await post(queryKey, payload);
-      response = data;
-    } catch (error) {
-      throw new Error('Failed to load data from server!');
-    }
-    return response;
-  });
+export function useDeletePermintaanPenunjang() {
+  return useMutation((payload) => axios.delete(`/billing/transaksi/penunjang/hapus/${payload.id}`));
+}
+
+export function useEditPermintaanPenunjang() {
+  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/koreksi/${payload.id}`, payload));
 }

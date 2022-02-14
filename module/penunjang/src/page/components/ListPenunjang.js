@@ -6,7 +6,7 @@ import {
   useModuleTrans,
   useDatatable,
 } from '@simrs/components';
-// import { useHistoryTempatTidur } from '@simrs/billing/src/fetcher';
+import { useListPenunjang } from '@simrs/billing/src/fetcher/penunjang';
 import { staticConst } from '../../static';
 import { moduleSelector } from '../../redux/reducer/selector';
 import { ready } from '../../redux/reducer';
@@ -18,7 +18,7 @@ const ListPenunjang = ({ innerRef }) => {
   // );
   // const {statusForm, selectedKunjungan: {id_kunjungan_unit: idKunjunganUnit}} = useSelector(moduleSelector);
   const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
-  // const { data: historyTempatTidur, isLoading, status } = useHistoryTempatTidur(idKunjunganUnit);
+  const { data, isLoading, status } = useListPenunjang({id: 68});
 
   const columns = [
     {

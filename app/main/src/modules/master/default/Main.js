@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import { moduleActions } from './actions';
 import FooterActions from './containers/FooterActions';
@@ -35,29 +39,31 @@ class Main extends Component {
 
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name={this.props.icon} />
-            {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row style={{ marginTop: 5 }}>
-              <Grid.Column>
-                <Segment padded>{this.props.filter}</Segment>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>{this.props.list}</Grid.Column>
-            </Grid.Row>
-            <Grid.Row style={{ marginBottom: 5 }}>
-              <Grid.Column>
-                <Segment padded>{this.props.create}</Segment>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <PageHeader
+          title={
+            this.props.caption || this.props.t(`${this.props.resource}:title`)
+          }
+          icon={this.props.icon}
+        />
+        <Content className="pt-3">
+          <Segment>
+            <Grid className="content-grid">
+              <Grid.Row style={{ marginTop: 5 }}>
+                <Grid.Column>
+                  <Segment padded>{this.props.filter}</Segment>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>{this.props.list}</Grid.Column>
+              </Grid.Row>
+              <Grid.Row style={{ marginBottom: 5 }}>
+                <Grid.Column>
+                  <Segment padded>{this.props.create}</Segment>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Content>
         {footer}
         <PageLoader
           active={this.props.isLoading}

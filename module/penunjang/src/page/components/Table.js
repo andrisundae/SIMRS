@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useTable, useExpanded, useRowSelect } from 'react-table';
+import { NoRowsOverlay } from '@simrs/components';
 
 function TreeTable({ columns: userColumns, data, onSelectedRow }) {
   const tbodyRef = useRef(null);
@@ -75,7 +76,7 @@ function TreeTable({ columns: userColumns, data, onSelectedRow }) {
       case 32:
         // row.toggleRowSelected();
         if (typeof onSelectedRow === 'function') {
-          onSelectedRow(!row.original.isSelected, row)
+          onSelectedRow(!row.original.isSelected, row);
         }
         break;
       default:
@@ -108,36 +109,46 @@ function TreeTable({ columns: userColumns, data, onSelectedRow }) {
           ref={tbodyRef}
           className="bg-white divide-y divide-gray-200 w-full"
         >
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                key={i}
-                positive={row.isSelected}
-                id={row.id}
-                tabIndex={0}
-                onKeyDown={(e) => handleKeyDown(e, row)}
-                className={`focus:bg-gray-300 w-1/4 ${
-                  row.original.isSelected ? 'bg-green-100' : ''
-                }`}
-              >
-                {row.cells.map((cell, key) => {
-                  return (
-                    <td
-                      // textAlign={cell.column?.textAlign || 'left'}
-                      {...cell.getCellProps()}
-                      key={key}
-                      className="py-0 px-3 whitespace-nowrap"
-                      align={cell.column?.textAlign || 'left'}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {rows.length <= 0 ? (
+            <tr>
+              <td className="h-300px" colSpan={userColumns.length}>
+                <div className="flex items-center justify-center">
+                  <NoRowsOverlay />
+                </div>
+              </td>
+            </tr>
+          ) : (
+            rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={i}
+                  positive={row.isSelected}
+                  id={row.id}
+                  tabIndex={0}
+                  onKeyDown={(e) => handleKeyDown(e, row)}
+                  className={`focus:bg-gray-300 w-1/4 ${
+                    row.original.isSelected ? 'bg-green-100' : ''
+                  }`}
+                >
+                  {row.cells.map((cell, key) => {
+                    return (
+                      <td
+                        // textAlign={cell.column?.textAlign || 'left'}
+                        {...cell.getCellProps()}
+                        key={key}
+                        className="py-0 px-3 whitespace-nowrap"
+                        align={cell.column?.textAlign || 'left'}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>

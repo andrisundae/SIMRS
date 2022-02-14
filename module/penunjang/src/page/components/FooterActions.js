@@ -30,15 +30,12 @@ function FooterActions() {
     return !disableActions.cancel;
   }, [disableActions.cancel]);
   const isCanAdd = useMemo(() => {
-    return false;
-  }, []);
+    return !disableActions.add;
+  }, [disableActions.add]);
   const isCanEditDpjp = useMemo(() => {
     return !disableActions.edit_dpjp;
   }, [disableActions.edit_dpjp]);
-  const finishHandler = useCallback(() => dispatch(onFinish()), [
-    dispatch,
-    onFinish,
-  ]);
+  const finishHandler = useCallback(() => dispatch(onFinish()), [dispatch]);
   return (
     <FooterActionsContainer>
       <>
@@ -51,7 +48,7 @@ function FooterActions() {
             />
           </Menu.Item>
         )}
-        {/* {isCanAdd && (
+        {isCanAdd && (
           <Menu.Item className="pr-0">
             <AddButton
             // onClick={this.onFinish}
@@ -59,14 +56,7 @@ function FooterActions() {
             // onKeyDown={this._onFocusElement}
             />
           </Menu.Item>
-        )} */}
-        <Menu.Item className="pr-0">
-          <AddButton
-          // onClick={this.onFinish}
-          // inputRef={this.finish}
-          // onKeyDown={this._onFocusElement}
-          />
-        </Menu.Item>
+        )}
         {isCanSave && (
           <Menu.Item className="pr-0">
             <SaveButton

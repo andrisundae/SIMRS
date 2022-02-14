@@ -1,30 +1,84 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Icon, Grid, Segment, Input } from 'semantic-ui-react';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
 
 import { useModuleTrans, CancelButton, SaveButton } from '@simrs/components';
-import { formatter } from '@simrs/common';
+import { formatter, toastr } from '@simrs/common';
 import { useDebounceValue } from '@simrs/components/src/hook';
-import { usePermintaanLayanan } from '@simrs/billing/src/fetcher/penunjang';
-// import { useKunjunganAktifRawatInap } from '@simrs/billing/src/fetcher';
-// import { staticConst } from '../../static';
+import {
+  usePermintaanLayanan,
+  useCreatePermintaanPenunjang,
+} from '@simrs/billing/src/fetcher/penunjang';
 import Table from './Table';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
+import { postPermintaanSelector } from '../../redux/selectors';
 
-const TreePermintaanLayananPenunjang = ({
-  innerRef,
-  onRowSelected,
-  show,
-  onHide,
-  idPasien,
-}) => {
-  // const methods = useForm();
+const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
+  const searchRef = useRef();
+  const queryClient = useQueryClient();
   const t = useModuleTrans();
+  const history = useHistory();
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [search, setSearch] = useState('');
+  const postPermintaan = useSelector(postPermintaanSelector);
 
-  const { data: dataPermintaan } = usePermintaanLayanan();
+  const { data: dataPermintaan, isLoading } = usePermintaanLayanan({
+    id_unit_layanan: postPermintaan?.id_unit_layanan,
+    id_kelas: postPermintaan?.id_kelas,
+    id_instalasi: postPermintaan?.id_instalasi,
+  });
+
+  const permintaanMutation = useCreatePermintaanPenunjang();
+
+  const submitPermintaanHandler = useCallback(() => {
+    if (!selectedRowIds.length) {
+      toastr.warning('Belum ada tindakan yang dipilih');
+    } else {
+      const detail = [];
+      selectedRowIds.forEach((id) => {
+        detail.push({
+          id_tindakan: id,
+          tgl: postPermintaan?.tanggal,
+          tgl_lahir: postPermintaan?.tgl_lahir,
+          id_unit_layanan: postPermintaan?.id_unit_layanan,
+          id_kelas: postPermintaan?.id_kelas,
+          jumlah: 1,
+          id_pelaksana: 0,
+        });
+      });
+      const params = { ...postPermintaan, detail };
+      permintaanMutation.mutate(params, {
+        onSuccess: () => {
+          // console.log(response.data?.data?.data);
+          toastr.success('Permintaan berhasil dilakukan.');
+          queryClient.invalidateQueries([
+            '/billing/transaksi/penunjang/view',
+            { id: postPermintaan?.id_kunjungan_unit },
+          ]);
+          // history.go(
+          //   `/billing/transaksi/penunjang/permintaan/${postPermintaan?.id_kunjungan_unit}`,
+          //   { reload: true }
+          // );
+          history.goBack();
+        },
+        onError: (error) => {
+          toastr.warning(
+            error && error.message ? error.message : 'Terjadi masalah server'
+          );
+        },
+      });
+    }
+  }, [
+    history,
+    permintaanMutation,
+    postPermintaan,
+    queryClient,
+    selectedRowIds,
+  ]);
 
   const formattedData = useMemo(() => {
     if (!dataPermintaan) {
@@ -36,7 +90,7 @@ const TreePermintaanLayananPenunjang = ({
         nama: row.nama_kelompok,
         expanded: true,
         subRows: [],
-        isSelected: selectedRowIds.includes(row.id_kelompok)
+        isSelected: selectedRowIds.includes(row.id_kelompok),
       };
       if (!_.isEmpty(row.layanan)) {
         const subRows = row.layanan.map((item) => {
@@ -48,7 +102,7 @@ const TreePermintaanLayananPenunjang = ({
             tgl_aktif_tarif: item.tgl_aktif_tarif,
             tarif: parseFloat(item.tarif),
             kode_panggil: item.kode_panggil,
-            isSelected: selectedRowIds.includes(item.id)
+            isSelected: selectedRowIds.includes(item.id),
           };
         });
         newRow.subRows = subRows;
@@ -104,43 +158,6 @@ const TreePermintaanLayananPenunjang = ({
 
   const columns = React.useMemo(
     () => [
-      // {
-      //   // Build our expander column
-      //   id: 'expander', // Make sure it has an ID
-      //   // Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
-      //   //   <span {...getToggleAllRowsExpandedProps()}>
-      //   //     {isAllRowsExpanded ? (
-      //   //       <Icon name="minus square outline" />
-      //   //     ) : (
-      //   //       <Icon name="plus square outline" />
-      //   //     )}
-      //   //   </span>
-      //   // ),
-      //   Cell: ({ row }) =>
-      //     // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-      //     // to build the toggle for expanding a row
-      //     row.canExpand ? (
-      //       <span
-      //         {...row.getToggleRowExpandedProps({
-      //           style: {
-      //             // We can even use the row.depth property
-      //             // and paddingLeft to indicate the depth
-      //             // of the row
-      //             paddingLeft: `${row.depth * 2}rem`,
-      //           },
-      //         })}
-      //       >
-      //         {row.isExpanded ? (
-      //           <Icon size="large" name="minus square outline" />
-      //         ) : (
-      //           <Icon size="large" name="plus square outline" />
-      //         )}
-      //       </span>
-      //     ) : null,
-      //   textAlign: 'center',
-      //   width: 30,
-      //   collapsing: true,
-      // },
       {
         Header: 'Tindakan',
         accessor: 'nama',
@@ -250,32 +267,22 @@ const TreePermintaanLayananPenunjang = ({
       onClose={onHide}
       closeOnEscape={false}
       closeOnDimmerClick={false}
-      size={700}
-      // style={{ width: 500 }}
+      size="large"
     >
       <Modal.Header className="p-3">
         <Icon name="plus" />
         {t('permintaan_layanan_penunjang')}
       </Modal.Header>
-      <Modal.Content scrolling className="bg-gray-100 px-5 pb-8 shadow-lg">
-        {/* <div className="">
-          
-        </div> */}
-        <Segment className="w-full">
-          {/* <Tree
-            // ref={treeRef}
-            // defaultExpandAll={false}
-            defaultExpandAll
-            // defaultExpandedKeys={defaultExpandedKeys}
-            // motion={motion}
-            height={600}
-            itemHeight={20}
-            style={{ border: '1px solid #000' }}
-            treeData={getTreeData()}
-          /> */}
+      <Modal.Content scrolling className="bg-gray-100 px-5 pb-8">
+        <Segment loading={isLoading} className="w-full">
           <Grid.Row className="mb-5">
             <Grid.Column>
-              <Input fluid value={search} onChange={handleInputChange} />
+              <Input
+                ref={searchRef}
+                fluid
+                value={search}
+                onChange={handleInputChange}
+              />
             </Grid.Column>
           </Grid.Row>
           <Table
@@ -284,23 +291,13 @@ const TreePermintaanLayananPenunjang = ({
             onSelectedRow={selectedChangeHandler}
           />
         </Segment>
-        {/* <TreeView
-          // ref={this.tree}
-          className="myCls"
-          showLine
-          navigation
-          selectable
-          // onExpand={this._onExpand}
-          // onSelect={this._onSelect}
-          treeData={getTreeData()}
-          // selectedKeys={selectedKeys}
-          // expandedKeys={expandedKeys}
-          // disabled={!isDisableForm}
-        /> */}
       </Modal.Content>
       <Modal.Actions className="flex w-full items-center justify-between">
         <div className="flex space-x-2">
-          <SaveButton />
+          <SaveButton
+            loading={permintaanMutation.isLoading}
+            onClick={submitPermintaanHandler}
+          />
           <CancelButton onClick={onHide} />
         </div>
       </Modal.Actions>
@@ -309,7 +306,7 @@ const TreePermintaanLayananPenunjang = ({
 };
 
 TreePermintaanLayananPenunjang.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   innerRef: PropTypes.object,
   dataSource: PropTypes.object,
   onRowSelected: PropTypes.func,

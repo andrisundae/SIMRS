@@ -1,12 +1,12 @@
-import React, { Component, Fragment, createRef } from 'react';
+import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import MouseTrap from 'mousetrap';
-import { Menu, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { PermintaanPenunjang } from '@module/penunjang/src/index';
-import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
+import { Menu } from 'semantic-ui-react';
+import { LinkTransaction } from '@simrs/billing/src/Components';
 
 import {
   FooterActionsContainer,
@@ -272,53 +272,55 @@ class FooterActions extends Component {
   render() {
     return (
       <FooterActionsContainer>
-        <Fragment>
-          {this.isCanAdd() && (
-            <Menu.Item style={{ paddingLeft: 11, paddingRight: 5 }}>
-              <AddButton
-                onClick={this.onAdd}
-                inputRef={this.add}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this.isCanEdit() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <EditButton
-                onClick={this.onEdit}
-                inputRef={this.edit}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this.isCanDelete() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <DeleteButton
-                onClick={this.onDelete}
-                inputRef={this.delete}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this.isCanSave() && (
-            <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
-              <SaveButton
-                onClick={this.onSave}
-                inputRef={this.save}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          {this.isCanCancel() && (
-            <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
-              <CancelButton
-                onClick={this.onCancel}
-                inputRef={this.cancel}
-                onKeyDown={this._onFocusElement}
-              />
-            </Menu.Item>
-          )}
-          <Menu.Menu position="right" className="absolute right-0">
+        <div className="w-full flex items-center flex-row justify-between">
+          <div className="flex items-center">
+            {this.isCanAdd() && (
+              <Menu.Item style={{ paddingLeft: 11, paddingRight: 5 }}>
+                <AddButton
+                  onClick={this.onAdd}
+                  inputRef={this.add}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            {this.isCanEdit() && (
+              <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+                <EditButton
+                  onClick={this.onEdit}
+                  inputRef={this.edit}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            {this.isCanDelete() && (
+              <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+                <DeleteButton
+                  onClick={this.onDelete}
+                  inputRef={this.delete}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            {this.isCanSave() && (
+              <Menu.Item style={{ paddingLeft: 16, paddingRight: 5 }}>
+                <SaveButton
+                  onClick={this.onSave}
+                  inputRef={this.save}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+            {this.isCanCancel() && (
+              <Menu.Item style={{ paddingLeft: 5, paddingRight: 5 }}>
+                <CancelButton
+                  onClick={this.onCancel}
+                  inputRef={this.cancel}
+                  onKeyDown={this._onFocusElement}
+                />
+              </Menu.Item>
+            )}
+          </div>
+          <div className="flex items-center">
             {this.isCanFinish() && (
               <Menu.Item style={{ paddingLeft: 5 }}>
                 <FinishButton
@@ -328,45 +330,19 @@ class FooterActions extends Component {
                 />
               </Menu.Item>
             )}
-            <Menu.Item style={{ paddingLeft: 5 }}>
-              <Dropdown
-                icon={
-                  <Button size="mini" color="green">
-                    <Icon name="bars" />
-                    Link
-                  </Button>
-                }
-                direction="left"
-                pointing="top left"
-                className="mr-3 text-lg"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    icon="phone volume"
-                    text="Permintaan Penunjang"
-                    onClick={() =>
-                      this.setState({ showPermintaanPenunjang: true })
-                    }
-                  />
-                  <Dropdown.Item
-                    icon="user outline"
-                    text="Identitas Pasien"
-                    onClick={() => {}}
-                  />
-                  <Dropdown.Item
-                    icon="accessible"
-                    text="Konsul"
-                    onClick={() => {}}
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Item>
-          </Menu.Menu>
-          <PermintaanPenunjang
-            show={this.state.showPermintaanPenunjang}
-            onHide={() => this.setState({ showPermintaanPenunjang: false })}
-          />
-        </Fragment>
+            {this.props.post.id_kunjungan_unit > 0 && (
+              <Menu.Item className="px-0">
+                <LinkTransaction
+                  idKunjunganUnit={this.props.post.id_kunjungan_unit}
+                />
+              </Menu.Item>
+            )}
+          </div>
+        </div>
+        {/* <PermintaanPenunjang
+          show={this.state.showPermintaanPenunjang}
+          onHide={() => this.setState({ showPermintaanPenunjang: false })}
+        /> */}
       </FooterActionsContainer>
     );
   }
@@ -385,7 +361,6 @@ const mapStateToProps = function (state, props) {
     post: module.post,
     data: module.postItem,
     focusElement: module.focusElement,
-    saveSuccess: module.saveSuccess,
     saveSuccess: module.saveSuccess,
     disabledActions: {
       add: disabledElement(state, 'add'),

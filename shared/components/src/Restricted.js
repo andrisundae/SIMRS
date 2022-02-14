@@ -5,7 +5,7 @@ import { parse } from 'querystring';
 import { isEqual } from 'lodash';
 
 import { PageLoader } from '@simrs/components';
-import { usePermissions } from '@simrs/billing/src/fetcher';
+import { usePermissions, useSetting } from '@simrs/billing/src/fetcher';
 import { useModuleAction } from './provider';
 
 const Restriced = ({ role, route, location, render }) => {
@@ -14,6 +14,7 @@ const Restriced = ({ role, route, location, render }) => {
     const params = parse(location.search.substr(1));
     return params.route ? params.route : '_billing_master';
   }, [location]);
+  const { data: settings } = useSetting();
   const { data: permissions, isLoading } = usePermissions({
     route: route || currentRoute,
   });
@@ -36,7 +37,7 @@ const Restriced = ({ role, route, location, render }) => {
   }
 
   if (isGranted) {
-    return render(permissions);
+    return render({permissions, settings});
   }
 
   return <Redirect to="/permission-denied" />;

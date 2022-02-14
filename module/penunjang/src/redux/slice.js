@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -8,6 +6,7 @@ const initialState = {
   selectedKunjungan: {},
   selected: {},
   focusElement: '',
+  postPermintaan: {}
 };
 
 const readyReducer = () => {
@@ -31,7 +30,7 @@ const moduleSlice = createSlice({
       state.focusElement = 'add';
     },
     select: (state, { payload, type }) => {
-      state.selectedKunjungan = payload;
+      state.selected = payload;
       state.statusForm = type;
       // state.focusElement = 'add';
     },
@@ -42,6 +41,13 @@ const moduleSlice = createSlice({
     edit: (state, { type }) => {
       state.statusForm = type;
       state.focusElement = 'id_ruang';
+    },
+    savePermintaan: (state, { type, payload }) => {
+      state.statusForm = type;
+      state.postPermintaan = payload;
+    },
+    resetPostPermintaan: (state) => {
+      state.postPermintaan = {};
     },
   },
 });
@@ -54,9 +60,8 @@ export const {
   ready,
   select,
   finish,
+  savePermintaan,
+  resetPostPermintaan,
 } = moduleSlice.actions;
 
-export default combineReducers({
-  module: moduleSlice.reducer,
-  toastr: toastrReducer,
-});
+export default moduleSlice;
