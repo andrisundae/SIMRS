@@ -1,29 +1,44 @@
-import React, { useCallback, memo, useEffect } from 'react';
+import React, { useCallback, memo, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import _ from 'lodash';
+import { useDispatch } from 'react-redux';
 import {
   DatatableServerSide,
   useModuleTrans,
-  useDatatable,
+  constDatatable,
 } from '@simrs/components';
-import { useListPenunjang } from '@simrs/billing/src/fetcher/penunjang';
+import { select as onSelect } from '../pemenuhan/redux/slice';
 import { staticConst } from '../../static';
-import { moduleSelector } from '../../redux/reducer/selector';
-import { ready } from '../../redux/reducer';
 
-const ListPenunjang = ({ innerRef }) => {
+const ListPenunjang = ({
+  innerRef,
+  unitLayanan,
+  statusPenunjang = '',
+  data = [],
+  loading,
+}) => {
+  const dispatch = useDispatch();
   const t = useModuleTrans();
-  // const { id_kunjungan_unit: idKunjunganUnit } = useSelector(
-  //   selectedKunjunganSelector
-  // );
-  // const {statusForm, selectedKunjungan: {id_kunjungan_unit: idKunjunganUnit}} = useSelector(moduleSelector);
-  const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
-  const { data, isLoading, status } = useListPenunjang({id: 68});
+  
+  const formattedData = useMemo(() => {
+    if (_.isEmpty(data)) {
+      return [];
+    }
+    return data.map((row) => {
+      return {
+        ...row,
+        unit_layanan: unitLayanan,
+        jumlah: statusPenunjang === staticConst.PERMINTAAN ? 0 : row.jumlah,
+      };
+    });
+  }, [data, statusPenunjang, unitLayanan]);
+
+  const getRowNodeId = useCallback((row) => row.id, []);
 
   const columns = [
     {
       headerName: t('tanggal'),
-      field: 'tanggal',
+      field: 'tgl',
       sortable: true,
       cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
       cellRenderer: 'dateRenderer',
@@ -36,10 +51,6 @@ const ListPenunjang = ({ innerRef }) => {
     {
       headerName: t('nama_layanan'),
       field: 'nama_layanan',
-    },
-    {
-      headerName: t('kelas'),
-      field: 'kelas',
     },
     {
       headerName: t('kelas'),
@@ -71,70 +82,62 @@ const ListPenunjang = ({ innerRef }) => {
     },
   ];
 
-  // const dataSource = useCallback((historyTempatTidur) => {
-  //   if (!historyTempatTidur || status === 'error' || status === 'loading') {
-  //     return emptySource;
-  //   }
+  useEffect(() => {
+    if (innerRef.current) {
+      if (loading) {
+        innerRef.current?.gridApi?.showLoadingOverlay();
+      } else {
+        innerRef.current?.gridApi?.hideOverlay();
+      }
+    }
+  }, [loading, innerRef]);
 
-  //   return {
-  //     rowCount: null,
-  //     getRows: (params) => {
-  //       params.successCallback(historyTempatTidur, historyTempatTidur.length);
-  //     },
-  //   };
-  // }, [emptySource, historyTempatTidur, status]);
+  useEffect(() => {
+    if (innerRef.current) {
+      if (!loading && _.isEmpty(data)) {
+        innerRef.current?.gridApi?.showNoRowsOverlay();
+      } else {
+        if (!loading) {
+          innerRef.current?.gridApi?.hideOverlay();
+        }
+      }
+    }
+  }, [data, loading, innerRef]);
 
-  // Set datasource dari api
-  // useEffect(() => {
-  //   if (gridApi && idKunjunganUnit && status === 'success') {
-  //     gridApi.setDatasource(dataSource(historyTempatTidur));
-  //   }
-  // }, [gridApi, dataSource, status, idKunjunganUnit]);
-
-  // Reset datasource karena selesai
-  // useEffect(() => {
-  //   if (!idKunjunganUnit && statusForm === ready.type && gridApi) {
-  //     gridApi.setDatasource(dataSource());
-  //   }
-  // }, [statusForm, ready, idKunjunganUnit]);
-
-  // Reset datasource karena selesai
-  // useEffect(() => {
-  //   if (gridApi) {
-  //     if (isLoading) {
-  //       gridApi.showLoadingOverlay();
-  //     } else {
-  //       gridApi.hideOverlay();
-  //     }
-  //   }
-  // }, [isLoading]);
+  const rowSelectedHandler = useCallback(
+    (params) => {
+      if (params.node.isSelected()) {
+        dispatch(onSelect(params.data));
+      }
+    },
+    [dispatch]
+  );
 
   return (
     <DatatableServerSide
-      dataSource={emptySource}
       ref={innerRef}
       columns={columns}
       name={staticConst.TABLE_PENUNJANG}
       navigateToSelect={true}
-      rowBuffer={0}
-      maxConcurrentDatasourceRequests={1}
-      infiniteInitialRowCount={1}
       cacheBlockSize={100}
       containerHeight="200px"
       getRowNodeId={getRowNodeId}
       sizeColumnsToFit={true}
-      // onRowDoubleClicked={this.onRowDoubleClickHandler}
-      // onRowEntered={this.onRowEnteredHandler}
-      onGridReady={onGridReady}
+      rowModelType={constDatatable.rowModelType.clientSide}
+      rowData={formattedData}
+      onRowSelected={rowSelectedHandler}
     />
   );
 };
 
 ListPenunjang.propTypes = {
-  data: PropTypes.object,
   innerRef: PropTypes.object,
-  dataSource: PropTypes.object,
-  onRowSelected: PropTypes.func,
+  idKunjunganUnit: PropTypes.string,
+  loading: PropTypes.bool,
+  unitLayanan: PropTypes.string,
+  kelas: PropTypes.string,
+  statusPenunjang: PropTypes.string,
+  data: PropTypes.array,
 };
 
 const Component = React.forwardRef((props, ref) => {

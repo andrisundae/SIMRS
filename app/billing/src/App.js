@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import {
   Layout,
-  PrivateRoute,
+  // PrivateRoute,
   Restricted,
   PermissionDenied,
   PageLoader,
@@ -18,7 +18,7 @@ import {
   ModuleProvider,
 } from '@simrs/components';
 import { store, menu } from '@simrs/common';
-import Penunjang from '@module/penunjang';
+import {PemenuhanPenunjang} from '@module/penunjang';
 
 import Dashboard from './Dashboard';
 import rootRouters from './routers';
@@ -45,10 +45,9 @@ function Page() {
             <Suspense fallback={<PageLoader active={true} />}>
               <ModuleProvider>
                 <Switch>
-                  <PrivateRoute
-                    path="/billing/dashboard"
-                    render={_renderDashboard}
-                  />
+                  <Route path="/billing/dashboard">
+                    <Dashboard />
+                  </Route>
                   {rootRouters.map((router, index) => {
                     const Component = withTranslation(router.key)(
                       router.component
@@ -79,13 +78,12 @@ function Page() {
                       render={(props) => <PermintaanPenunjang show {...props} />}
                     /> */}
                   <Route
-                    path="/billing/transaksi/penunjang"
-                    component={Penunjang}
+                    path="/billing/transaksi/penunjang/pemenuhan/:idKunjunganUnit"
+                    component={PemenuhanPenunjang}
                   />
-                  <Route
-                    path="/permission-denied"
-                    render={(props) => <PermissionDenied {...props} />}
-                  />
+                  <Route path="/permission-denied">
+                    <PermissionDenied />
+                  </Route>
                   <Redirect to={'/billing/dashboard'} />
                 </Switch>
               </ModuleProvider>
@@ -95,10 +93,6 @@ function Page() {
       </QueryClientProvider>
     </Router>
   );
-
-  function _renderDashboard(props) {
-    return <Dashboard {...props} />;
-  }
 }
 
 export default function App() {

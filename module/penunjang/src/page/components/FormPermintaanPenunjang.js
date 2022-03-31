@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import { Form, Grid, Input } from 'semantic-ui-react';
 import { useForm, FormProvider } from 'react-hook-form';
 import {
@@ -12,6 +13,8 @@ import {
 } from '@simrs/components';
 import DokterTujuanSelect from './DokterTujuanSelect';
 
+const now = dayjs();
+
 const FormPermintaanPenunjang = ({
   innerRef,
   data,
@@ -20,18 +23,51 @@ const FormPermintaanPenunjang = ({
   dokterPeminta,
   onSubmit,
   diagnosa,
+  isAdd,
 }) => {
-  const now = dayjs();
+  const findDiagnosa = useMemo(() => {
+    return data && Array.isArray(diagnosa)
+      ? diagnosa.find((row) => row.value === data?.id_diagnosa)
+      : undefined;
+  }, [data, diagnosa]);
+
   const defaultValues = useMemo(() => {
     return {
       tanggal: now.toDate(),
       jam: now.toDate(),
+      id_dokter_peminta_penunjang: data
+        ? {
+            label: data.nama_dokter_peminta_penunjang,
+            value: data.id_dokter_peminta_penunjang,
+          }
+        : undefined,
+      id_dokter_tujuan_penunjang: data
+        ? {
+            label: data.nama_dokter_tujuan_penunjang,
+            value: data.id_dokter_tujuan_penunjang,
+          }
+        : undefined,
+      id_diagnosa: data ? findDiagnosa : undefined,
+      id_unit_layanan: data
+        ? {
+            label: data.nama_unit_layanan,
+            value: data.unit_layanan_id,
+            id_instalasi: data.instalasi_id,
+          }
+        : undefined,
+      st_cito: data ? data.st_cito : 0,
     };
-  }, [now]);
-  const methods = useForm({
+  }, [data, findDiagnosa]);
+  const { reset, ...methods } = useForm({
     defaultValues,
   });
   const t = useModuleTrans();
+
+  useEffect(() => {
+    if (data?.id && !_.isEmpty(findDiagnosa)) {
+      reset(defaultValues);
+    }
+  }, [data, findDiagnosa, reset, defaultValues]);
 
   return (
     <FormProvider {...methods}>
@@ -69,6 +105,7 @@ const FormPermintaanPenunjang = ({
                 placeholder={t('unit_layanan')}
                 options={unitLayanan || []}
                 rules={{ required: 'Silahkan pilih unit layanan' }}
+                isDisabled={!isAdd}
               />
             </Grid.Column>
           </Grid.Row>
@@ -103,6 +140,7 @@ const FormPermintaanPenunjang = ({
                 placeholder={t('pilih_dx')}
                 options={diagnosa || []}
                 rules={{ required: 'Silahkan pilih diagnosa' }}
+                onAfterChange={(selected) => console.log(selected)}
               />
             </Grid.Column>
           </Grid.Row>

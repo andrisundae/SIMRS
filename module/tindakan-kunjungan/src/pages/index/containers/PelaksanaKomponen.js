@@ -59,7 +59,7 @@ const PelaksanaKomponen = ({ show, onHide }) => {
         })
       );
     }
-  }, [showModal, detail.id]);
+  }, [showModal, detail.id, dispatch, resource]);
 
   const changeSpesialisasiHandler = (value, row) => {
     dispatch(

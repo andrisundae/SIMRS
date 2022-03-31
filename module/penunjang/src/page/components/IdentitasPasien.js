@@ -10,149 +10,55 @@ import { useForm, FormProvider } from 'react-hook-form';
 import _ from 'lodash';
 import { Grid, Form, Segment, Divider, Header } from 'semantic-ui-react';
 import { useModuleTrans, messageBox } from '@simrs/components';
-import {
-  usePasienByNorm,
-  useKunjunganAktifRawatInap,
-} from '@simrs/billing/src/fetcher';
 import { utils } from '@simrs/common';
 import { Input } from '@simrs/components';
-import { selectKunjungan, ready } from '../../redux/reducer';
-import { disabledElement, moduleSelector } from '../../redux/reducer/selector';
+// import { selectKunjungan, ready } from '../pemenuhan/redux/';
+// import { disabledElement, moduleSelector } from '../../red';
 
-function IdentitasPasien() {
+function IdentitasPasien({ data, isPulang, penjaminPasien }) {
   const t = useModuleTrans();
   const dispatch = useDispatch();
   const [norm, setNorm] = useState('');
-  const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
-  const { focusElement, statusForm, selectedKunjungan } = useSelector(
-    moduleSelector
-  );
-  const methods = useForm();
+  // const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
+  const isDisabledNorm = true;
+  // const { focusElement, statusForm, selectedKunjungan } = useSelector(
+  //   moduleSelector
+  // );
+  const focusElement = '';
+  const statusForm = '';
+  const selectedKunjungan = {};
+  const formattedKunjunganAktifRawatInap = {};
+  const defaultValues = useMemo(() => {
+    return {
+      norm: data?.norm,
+      nama: data?.nama,
+      jenis_kelamin: data?.jenis_kelamin,
+      nomor_ktp: data?.nomor_ktp,
+      nama_ortu: data?.nama_ortu,
+      alamat: data?.alamat,
+    };
+  }, [data]);
+  const { reset, ...methods } = useForm({
+    defaultValues,
+  });
   const inputRef = {
     norm: React.useRef(),
   };
   const formRef = useRef();
-  // Hook untuk mencari pasien
-  const { data: pasien, isLoading } = usePasienByNorm(norm, {
-    onSuccess: (data) => {
-      if (!data) {
-        messageBox({
-          title: 'Info',
-          message: 'Pasien tidak ditemukan.',
-        });
-      }
-    },
-  });
-  // Hook untuk mencari kunjungan aktif rawat inap pasien
-  const {
-    isLoadingKunjungan,
-    data: kunjunganAktifRawatInap,
-    status,
-  } = useKunjunganAktifRawatInap(pasien?.id, {
-    onSuccess: (data) => {
-      if (Array.isArray(data)) {
-        if (data.length === 0) {
-          messageBox({
-            title: 'Info',
-            message: 'Kunjungan rawat inap pasien tidak ditemukan.',
-          });
-        } else {
-          if (data.length === 1) {
-            methods.reset({
-              norm: pasien.norm,
-              nama: pasien.nama,
-              jenis_kelamin: pasien.jenis_kelamin?.nama,
-              nama_ortu: pasien.nama_ortu,
-              alamat: pasien.alamat,
-            });
-            dispatch(selectKunjungan({ ...data[0], ...pasien }));
-          } else if (data.length > 1) {
-            messageBox({
-              title: 'Info',
-              message: 'Kunjungan rawat inap pasien tidak valid.',
-            });
-          }
-        }
-      }
-    },
-  });
-  // Format data jika kunjungan aktif cuman satu
-  const formattedKunjunganAktifRawatInap = useMemo(() => {
-    if (
-      status === 'loading' ||
-      status === 'error' ||
-      !kunjunganAktifRawatInap
-    ) {
-      return {};
-    }
-    if (
-      Array.isArray(kunjunganAktifRawatInap) &&
-      kunjunganAktifRawatInap.length === 1
-    ) {
-      const selected = kunjunganAktifRawatInap[0];
-      // Hitung umur jika sudah pulang diambil dari tgl pulang
-      const tglSelesai = selected.st_pulang
-        ? selected.tgl_pulang
-        : selected.tgl_sekarang;
-      selected.umur = utils.displayAge(pasien?.tgl_lahir, tglSelesai);
-      return selected;
-    }
-    return {};
-  }, [status, kunjunganAktifRawatInap, pasien]);
-  const onSubmit = useCallback((values) => {
-    setNorm(values.norm);
-  }, []);
-  const enterNormHanlder = useCallback((e) => {
-    if (e.which === 13) {
-      e.preventDefault();
-      formRef.current.handleSubmit();
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   if (pasien) {
-  //     methods.reset({
-  //       norm: pasien.norm,
-  //       nama: pasien.nama,
-  //       jenis_kelamin: pasien.jenis_kelamin?.nama,
-  //       nama_ortu: pasien.nama_ortu,
-  //       alamat: pasien.alamat,
-  //     });
-  //   }
-  // }, [pasien, methods.reset]);
 
   useEffect(() => {
-    if (!selectedKunjungan.id && statusForm === ready.type) {
-      methods.reset({
-        norm: '',
-        nama: '',
-        jenis_kelamin: '',
-        nama_ortu: '',
-        alamat: '',
-      });
-      setNorm('');
+    if (!_.isEmpty(data)) {
+      reset(defaultValues);
     }
-  }, [selectedKunjungan, methods.reset, statusForm, ready]);
-
-  const focusNormHandler = useCallback((e) => {
-    if (e.target.value) {
-      e.target.select();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (focusElement === 'norm' && !methods.getValues('norm')) {
-      inputRef.norm.current.focus();
-    }
-  }, [focusElement, methods.getValues, inputRef.norm]);
+  }, [data, reset, defaultValues]);
 
   return (
     <FormProvider {...methods}>
       <Form
         size="mini"
-        onSubmit={methods.handleSubmit(onSubmit)}
+        // onSubmit={methods.handleSubmit(onSubmit)}
         ref={formRef}
-        loading={isLoading}
+        // loading={isLoading}
       >
         <Segment size="mini" className="pt-0 pb-3 mb-0">
           <Divider horizontal className="mt-3 mb-3">
@@ -171,11 +77,11 @@ function IdentitasPasien() {
                         ref={inputRef.norm}
                         name="norm"
                         rules={{ required: 'Harus diisi' }}
-                        onKeyDown={enterNormHanlder}
+                        // onKeyDown={enterNormHanlder}
                         disabled={isDisabledNorm}
                         // value={norm}
                         // onChange={onChangeInput}
-                        onFocus={focusNormHandler}
+                        // onFocus={focusNormHandler}
                       />
                     </Grid.Column>
                     <Grid.Column width="3" className="field">
@@ -205,9 +111,11 @@ function IdentitasPasien() {
                       <Input name="jenis_kelamin" disabled />
                     </Grid.Column>
                     <Grid.Column width="8" className="field">
-                      <Header as="h4" color="grey" style={{ marginTop: 3 }}>
-                        {formattedKunjunganAktifRawatInap?.umur}
-                      </Header>
+                      {!_.isEmpty(data?.umur) && (
+                        <Header as="h4" color="grey" style={{ marginTop: 3 }}>
+                          {`${data?.umur?.years} Tahun ${data?.umur?.months} bulan ${data?.umur?.days} hari`}
+                        </Header>
+                      )}
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -238,23 +146,18 @@ function IdentitasPasien() {
                       <Input name="alamat" disabled />
                     </Grid.Column>
                   </Grid.Row>
-                  {!_.isEmpty(formattedKunjunganAktifRawatInap) && (
-                    <Grid.Row className="form-row">
-                      <Grid.Column
-                        width="16"
-                        className="field"
-                        textAlign="right"
-                      >
+                  <Grid.Row className="form-row">
+                    <Grid.Column width="16" className="field" textAlign="right">
+                      {!_.isEmpty(penjaminPasien) && (
                         <Header as="h3" color="green" style={{ marginTop: 3 }}>
-                          {formattedKunjunganAktifRawatInap.st_pulang
+                          {isPulang
                             ? t('kunjungan_selesai')
                             : t('kunjungan_aktif')}{' '}
-                          -{' '}
-                          {formattedKunjunganAktifRawatInap.nama_status_pasien}
+                          - {penjaminPasien}
                         </Header>
-                      </Grid.Column>
-                    </Grid.Row>
-                  )}
+                      )}
+                    </Grid.Column>
+                  </Grid.Row>
                 </Grid>
               </Grid.Column>
             </Grid.Row>

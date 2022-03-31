@@ -22,6 +22,10 @@ const confirmation = (options) =>
         if (options.onCancel) {
           options.onCancel();
         }
+      } else if (data.response === 2) {
+        if (options.onBack) {
+          options.onBack();
+        }
       }
     });
 

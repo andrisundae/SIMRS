@@ -25,4 +25,18 @@ export const sortData = (sortModel, data) => {
   return resultOfSort;
 };
 
+export const cleanBlankValue = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] === null || obj[key] === undefined || obj[key] === '') {
+      delete obj[key]
+    }
+  })
+
+  return obj
+}
+
+// Untuk comparasi di memoize component
+export const compare = (prevProps, nextProps) =>
+  JSON.stringify(prevProps) === JSON.stringify(nextProps);
+
 export * from './formatter';

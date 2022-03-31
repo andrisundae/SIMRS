@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Icon, Button, Segment } from 'semantic-ui-react';
-import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQueryClient } from 'react-query';
@@ -32,10 +31,11 @@ import { staticConst } from '../../static';
 import {
   selectedSelector,
   disabledActionsSelector,
-} from '../../redux/selectors';
-import { select as onSelect, openForm as onOpenForm } from '../../redux/slice';
+} from './redux/selectors';
+import { select as onSelect, openForm as onOpenForm } from './redux/slice';
+import Create from './Create';
 
-const PermintaanPenunjang = ({ show, match }) => {
+const PermintaanPenunjang = ({ show }) => {
   const history = useHistory();
   const tableRef = useRef();
   const queryClient = useQueryClient();
@@ -48,15 +48,15 @@ const PermintaanPenunjang = ({ show, match }) => {
     id: routeParams?.idKunjunganUnit,
     st_status_penunjang: '',
   });
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const t = useModuleTrans();
   const { getRowNodeId } = useDatatable();
   const [configuredTableReady, setConfiguredTableReady] = useState(false);
 
   const clickBackHandler = useCallback(() => history.goBack(), [history]);
-  const clickAddHandler = useCallback(
-    () => history.push(`${match?.url}/create`),
-    [history, match.url]
-  );
+  const clickAddHandler = useCallback(() => setShowAddModal(true), []);
+  const clickEditHandler = useCallback(() => setShowEditModal(true), []);
 
   useEffect(() => {
     dispatch(onOpenForm(resource));
@@ -89,6 +89,8 @@ const PermintaanPenunjang = ({ show, match }) => {
     {
       headerName: t('total_permintaan'),
       field: 'biaya',
+      cellRenderer: 'currencyRenderer',
+      cellClass: 'ag-number-cell',
     },
     {
       headerName: t('status'),
@@ -204,6 +206,9 @@ const PermintaanPenunjang = ({ show, match }) => {
     });
   }, [deleteMutation, params, queryClient, selected.id, t]);
 
+  const hideAddModalHandler = useCallback(() => setShowAddModal(false), []);
+  const hideEditModalHandler = useCallback(() => setShowEditModal(false), []);
+
   return (
     <Modal
       dimmer="inverted"
@@ -211,7 +216,7 @@ const PermintaanPenunjang = ({ show, match }) => {
       onClose={clickBackHandler}
       closeOnEscape={false}
       closeOnDimmerClick={false}
-      size="fullscreen"
+      size="large"
     >
       <Modal.Header className="p-3">
         <Icon name="phone volume" />
@@ -282,7 +287,7 @@ const PermintaanPenunjang = ({ show, match }) => {
       <Modal.Actions className="flex w-full items-center justify-between">
         <div className="flex space-x-2">
           {checkAction.isCanAdd && <AddButton onClick={clickAddHandler} />}
-          {checkAction.isCanEdit && <EditButton />}
+          {checkAction.isCanEdit && <EditButton onClick={clickEditHandler} />}
           {checkAction.isCanDelete && <DeleteButton onClick={deleteHandler} />}
         </div>
         <div className="flex space-x-2">
@@ -290,6 +295,16 @@ const PermintaanPenunjang = ({ show, match }) => {
           <CancelButton onClick={clickBackHandler} />
         </div>
       </Modal.Actions>
+      {showAddModal && (
+        <Create isAdd onClose={hideAddModalHandler} show={showAddModal} />
+      )}
+      {showEditModal && (
+        <Create
+          onClose={hideEditModalHandler}
+          show={showEditModal}
+          data={selected}
+        />
+      )}
     </Modal>
   );
 };

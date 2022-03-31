@@ -130,6 +130,7 @@ export default (state = initialState, action) =>
 
       case actionTypes.GET_PASIEN_FAILURE: {
         draft.isRequestingPasien = false;
+        draft.post.norm = '';
         return;
       }
 

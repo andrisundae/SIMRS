@@ -1,15 +1,18 @@
 import React, { useCallback } from 'react';
 import { Dropdown, Button, Icon } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 const LinkTransaction = ({ idKunjunganUnit }) => {
   const history = useHistory();
+  const location = useLocation();
+  const match = useRouteMatch();
   const clickPermintaanPenunjangHandler = useCallback(
     () =>
-      history.push(
-        `/billing/transaksi/penunjang/permintaan/${idKunjunganUnit}`
-      ),
-    [history, idKunjunganUnit]
+      history.push({
+        pathname: `${match.url}penunjang/permintaan/${idKunjunganUnit}`,
+        state: { background: location },
+      }),
+    [history, idKunjunganUnit, location, match.url]
   );
   return (
     <Dropdown

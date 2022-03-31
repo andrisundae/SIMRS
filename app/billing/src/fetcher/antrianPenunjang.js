@@ -12,7 +12,7 @@ export function useInitAntrianPenunjang(options = {}) {
     async () => {
       let response;
       try {
-        const { data } = await axios.get(queryKey);
+        const { data: {data} } = await axios.get(queryKey);
         response = data;
       } catch (error) {
         throw new Error('Failed to load data from server!');
@@ -42,7 +42,7 @@ export function useListAntrianPenunjang(params = {}, options = {}) {
       return response;
     },
     {
-      keepPreviousData: true,
+      // keepPreviousData: true,
       ...options,
     }
   );

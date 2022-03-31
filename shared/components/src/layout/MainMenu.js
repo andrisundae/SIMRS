@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {memo} from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useAppAction } from '@simrs/components';
 
-function MainMenu({ disabled, contexts, routers, history }) {
+function MainMenu({ disabled, contexts, routers }) {
+  const history = useHistory();
   const disabledProp = disabled ? { disabled: true } : {};
   const appAction = useAppAction();
 
@@ -99,4 +100,4 @@ MainMenu.propTypes = {
   location: PropTypes.object,
 };
 
-export default withRouter(MainMenu);
+export default memo(MainMenu);

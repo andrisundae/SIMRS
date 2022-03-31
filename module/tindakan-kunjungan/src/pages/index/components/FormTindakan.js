@@ -50,7 +50,7 @@ const FormTindakan = ({
         inputRef[focusElement].current.focus();
       }
     }
-  }, [focusElement]);
+  }, [focusElement, inputRef]);
 
   const getKey = (key) => {
     return `${resource}:${key}`;

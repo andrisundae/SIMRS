@@ -136,7 +136,7 @@ class DataTableServerSide extends Component {
       onModelUpdated: this._onModelUpdated,
       // overlayNoRowsTemplate: this._renderNoRowsTemplate(),
       overlayLoadingTemplate: this._renderLoadingTemplate(),
-      noRowsOverlayComponent: 'customNoRowsOverlay'
+      noRowsOverlayComponent: 'customNoRowsOverlay',
     };
 
     if (navigateToSelect === true) {
@@ -241,60 +241,55 @@ class DataTableServerSide extends Component {
   _onModelUpdated(params) {
     let gridApi = params.api;
 
-    if (gridApi.getInfiniteRowCount() <= 0) {
-      gridApi.showNoRowsOverlay();
-    } else {
-      gridApi.hideOverlay();
-      if (this.props.navigateToSelect === true) {
-        let cell = gridApi.getFocusedCell();
-        if (cell) {
-          let selectedNodes = gridApi.getSelectedNodes();
-          let firstNode = selectedNodes.length > 0 ? selectedNodes[0] : {};
-          let startIndex = firstNode ? firstNode.rowIndex : 0;
-          let endIndex = cell.rowIndex;
-          let selectedIndex = [];
+    if (this.props.navigateToSelect === true) {
+      let cell = gridApi.getFocusedCell();
+      if (cell) {
+        let selectedNodes = gridApi.getSelectedNodes();
+        let firstNode = selectedNodes.length > 0 ? selectedNodes[0] : {};
+        let startIndex = firstNode ? firstNode.rowIndex : 0;
+        let endIndex = cell.rowIndex;
+        let selectedIndex = [];
 
-          if (startIndex < endIndex) {
-            for (let i = startIndex; i <= endIndex; i++) {
-              selectedIndex[i] = i;
-            }
-          } else {
-            for (let i = startIndex; i >= endIndex; i--) {
-              selectedIndex[i] = i;
-            }
+        if (startIndex < endIndex) {
+          for (let i = startIndex; i <= endIndex; i++) {
+            selectedIndex[i] = i;
           }
+        } else {
+          for (let i = startIndex; i >= endIndex; i--) {
+            selectedIndex[i] = i;
+          }
+        }
 
-          if (this.state.navigation.shift) {
-            // this.gridApi.forEachNode((node) => {
-            //     if (node.selectable) {
-            //         if (selectedIndex[node.rowIndex]) {
-            //             if (!node.isSelected()) {
-            //                 node.setSelected(true);
-            //             }
-            //         }
-            //     }
-            // });
-            if (selectedIndex.length > 0) {
-              selectedIndex.forEach((row) => {
-                let node = this._findNodeByRowIndex(row);
-                if (node.selectable) {
-                  if (selectedIndex[node.rowIndex]) {
-                    if (!node.isSelected()) {
-                      if (node.data) {
-                        node.setSelected(true);
-                      }
+        if (this.state.navigation.shift) {
+          // this.gridApi.forEachNode((node) => {
+          //     if (node.selectable) {
+          //         if (selectedIndex[node.rowIndex]) {
+          //             if (!node.isSelected()) {
+          //                 node.setSelected(true);
+          //             }
+          //         }
+          //     }
+          // });
+          if (selectedIndex.length > 0) {
+            selectedIndex.forEach((row) => {
+              let node = this._findNodeByRowIndex(row);
+              if (node.selectable) {
+                if (selectedIndex[node.rowIndex]) {
+                  if (!node.isSelected()) {
+                    if (node.data) {
+                      node.setSelected(true);
                     }
                   }
                 }
-              });
-            }
-          } else {
-            let node = this._findNodeByRowIndex(endIndex);
-            if (node) {
-              if (node.selectable) {
-                if (node.data) {
-                  node.setSelected(true, true);
-                }
+              }
+            });
+          }
+        } else {
+          let node = this._findNodeByRowIndex(endIndex);
+          if (node) {
+            if (node.selectable) {
+              if (node.data) {
+                node.setSelected(true, true);
               }
             }
           }

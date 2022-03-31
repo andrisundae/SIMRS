@@ -9,7 +9,7 @@ const DokterTujuanSelect = ({ control, innerRef, ...props }) => {
   const selected = useWatch({
     control,
     name: 'id_unit_layanan', // without supply name will watch the entire form, or ['firstName', 'lastName'] to watch both
-    defaultValue: '', // default value before the render
+    // defaultValue: '',
   });
 
   const { data, isLoading } = useDokterTujuan(selected?.value);

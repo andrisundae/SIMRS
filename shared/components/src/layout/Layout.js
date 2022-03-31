@@ -25,6 +25,7 @@ function Layout(props) {
         contexts={contexts}
         routers={routers}
         username={username}
+        onClick={() => console.log('sdfdsf')}
       />
       <Content>{children}</Content>
       <Footer logo={logo} actionsPosition={actionsPosition} {...footerProps} />

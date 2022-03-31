@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 
 import { createSimrsLogger } from '@simrs/main/src/modules/log';
 
@@ -12,7 +12,7 @@ import rootSaga from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 const logSimrsMiddleware = createSimrsLogger();
-var loggerMiddleware = () => (next) => (action) => next(action);
+// var loggerMiddleware = () => (next) => (action) => next(action);
 
 export default () => {
   let composeEnhancers = compose;
@@ -20,11 +20,12 @@ export default () => {
     // if (typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === 'function') {
     //     composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     // }
-    loggerMiddleware = createLogger();
+    // loggerMiddleware = createLogger();
   }
 
   const enhancer = composeEnhancers(
-    applyMiddleware(sagaMiddleware, logSimrsMiddleware, loggerMiddleware)
+    // applyMiddleware(sagaMiddleware, logSimrsMiddleware, loggerMiddleware)
+    applyMiddleware(sagaMiddleware, logSimrsMiddleware)
   );
   const store = createStore(rootReducer, enhancer);
 

@@ -25,6 +25,7 @@ const dataTable = {
   },
   rowModelType: {
     infinite: 'infinite',
+    clientSide: 'clientSide',
   },
   reloadType: {
     refresh: 'refresh',

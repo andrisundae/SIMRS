@@ -231,6 +231,7 @@ class FooterActions extends Component {
   };
 
   onFinish = () => {
+    // this.props.history.replace(`/billing/transaksi/tindakan?route=${this.props.resource}`);
     this.props.action.onFinish(this.props.resource);
   };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { Grid, Modal, Icon, Divider } from 'semantic-ui-react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -93,18 +93,18 @@ const PelaksanaTambahan = ({ show, onHide }) => {
     };
   };
 
-  const addHandler = () => {
+  const addHandler = useCallback(() => {
     dispatch(actions.onAdd(resource));
-  };
-  const editHandler = () => {
+  });
+  const editHandler = useCallback(() => {
     dispatch(
       actions.onEdit(resource, {
         ...post,
         id_unit_layanan: postTindakan.id_unit_layanan,
       })
     );
-  };
-  const deleteHandler = () => {
+  });
+  const deleteHandler = useCallback(() => {
     confirmation({
       title: t(`common:dialog.confirmation.title`),
       message: t(`common:dialog.confirmation.delete`),
@@ -114,8 +114,8 @@ const PelaksanaTambahan = ({ show, onHide }) => {
           actions.deletePelaksanaTambahan.request(resource, { id: post.id })
         ),
     });
-  };
-  const saveHandler = () => {
+  });
+  const saveHandler = useCallback(() => {
     const payload = {
       id_kunjungan_unit_detail: tindakanDetail.id,
       id_pelaksana: post.id_pelaksana,
@@ -126,10 +126,10 @@ const PelaksanaTambahan = ({ show, onHide }) => {
       payload.id = post.id;
     }
     dispatch(actions.save.request(resource, payload));
-  };
-  const cancelHandler = () => {
+  });
+  const cancelHandler = useCallback(() => {
     dispatch(actions.onCancel(resource));
-  };
+  });
 
   const isCanAdd = React.useMemo(() => {
     return !disabledAdd;
@@ -147,9 +147,9 @@ const PelaksanaTambahan = ({ show, onHide }) => {
     return !disabledCancel;
   }, [disabledCancel]);
 
-  const gridApi = () => {
+  const gridApi = useCallback(() => {
     return tableRef.current.gridApi;
-  };
+  }, []);
 
   const selectRow = (id) => {
     if (tableRef.current) {
@@ -157,25 +157,25 @@ const PelaksanaTambahan = ({ show, onHide }) => {
     }
   };
 
-  const reload = (reloadType) => {
+  const reload = useCallback((reloadType) => {
     if (reloadType === constDatatable.reloadType.purge) {
       gridApi().purgeInfiniteCache();
     } else if (reloadType === constDatatable.reloadType.refresh) {
       gridApi().refreshInfiniteCache();
     }
-  };
+  }, [gridApi]);
 
   React.useEffect(() => {
     if (show) {
       dispatch(actions.openForm(resource));
     }
-  }, [show]);
+  }, [dispatch, resource, show]);
 
   React.useEffect(() => {
     if (datatable.isReload) {
       reload(datatable.reloadType);
     }
-  }, [datatable]);
+  }, [datatable, reload]);
 
   React.useEffect(() => {
     const tableApi = gridApi();
@@ -198,7 +198,7 @@ const PelaksanaTambahan = ({ show, onHide }) => {
       default:
         return;
     }
-  }, [statusForm, gridApi]);
+  }, [statusForm, gridApi, disabledTable, selectedRow]);
 
   const changeSelectHanlder = (name, selected) =>
     dispatch(
@@ -273,7 +273,7 @@ const PelaksanaTambahan = ({ show, onHide }) => {
       MouseTrap.unbind('f2');
       MouseTrap.unbind('alt+r');
     };
-  }, [show, isCanAdd, isCanEdit, isCanDelete, isCanSave, isCanCancel]);
+  }, [show, isCanAdd, isCanEdit, isCanDelete, isCanSave, isCanCancel, addHandler, editHandler, deleteHandler, saveHandler, cancelHandler, reload]);
 
   return (
     <Modal

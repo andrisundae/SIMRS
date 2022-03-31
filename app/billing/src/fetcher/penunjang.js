@@ -117,7 +117,30 @@ export function useInitPermintaanPenunjang(idKunjunganUnit, options = {}) {
 }
 
 export function usePenunjangDetail(idKunjunganUnit, options = {}) {
-  const queryKey = `/billing/transaksi/penunjang/detail/${idKunjunganUnit}`;
+  const queryKey = `/billing/transaksi/penunjang/${idKunjunganUnit}`;
+  return useQuery(
+    queryKey,
+    async () => {
+      let response;
+      try {
+        const {
+          data: { data },
+        } = await axios.get(queryKey);
+        response = data;
+      } catch (error) {
+        throw new Error('Failed to load data from server!');
+      }
+      return response;
+    },
+    {
+      enabled: !!idKunjunganUnit,
+      ...options,
+    }
+  );
+}
+
+export function usePenunjangTindakan(idKunjunganUnit, options = {}) {
+  const queryKey = `/billing/transaksi/penunjang/${idKunjunganUnit}/tindakan`;
   return useQuery(
     queryKey,
     async () => {
@@ -144,9 +167,21 @@ export function useCreatePermintaanPenunjang() {
 }
 
 export function useDeletePermintaanPenunjang() {
-  return useMutation((payload) => axios.delete(`/billing/transaksi/penunjang/hapus/${payload.id}`));
+  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/hapus/${payload.id}`));
 }
 
 export function useEditPermintaanPenunjang() {
   return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/koreksi/${payload.id}`, payload));
+}
+
+export function useEditStatusPenunjang() {
+  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/status`, payload));
+}
+
+export function useResetPemenuhanPenunjang() {
+  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/resetPemenuhan`));
+}
+
+export function usePenuhiSemuaPermintaanPenunjang() {
+  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/penuhiSemuaPermintaan`));
 }

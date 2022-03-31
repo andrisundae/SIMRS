@@ -103,7 +103,7 @@ function* populateForm({ meta }) {
 
 function* getPasienRequestHandler({ meta, payload }) {
   try {
-    yield put(loaderActions.show());
+    // yield put(loaderActions.show());
     const response = yield call(api.getPasienByNorm, payload.data.norm);
     if (response.status) {
       const data = response.data;
@@ -120,16 +120,16 @@ function* getPasienRequestHandler({ meta, payload }) {
         message: response.message,
       });
     }
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
   }
 }
 
 function* getKunjunganRequestHandler({ meta, payload }) {
   try {
-    yield put(loaderActions.show());
+    // yield put(loaderActions.show());
     const response = yield call(api.getKunjungan, payload.data.idPasien);
     if (response.status) {
       yield put(
@@ -140,10 +140,10 @@ function* getKunjunganRequestHandler({ meta, payload }) {
         actions.getKunjungan.requestFailure(meta.resource, response.message)
       );
     }
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
-    yield put(loaderActions.hide());
+    // yield put(loaderActions.hide());
   }
 }
 

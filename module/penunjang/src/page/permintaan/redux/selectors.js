@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 import { ready, select, } from './slice';
-import { staticConst } from '../static';
+import { staticConst } from '../../../static';
 
 // Untuk pengecekan status form
 const statusesElements = {

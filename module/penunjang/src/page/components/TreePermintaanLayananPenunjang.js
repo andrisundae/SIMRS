@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Modal, Icon, Grid, Segment, Input } from 'semantic-ui-react';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 
 import { useModuleTrans, CancelButton, SaveButton } from '@simrs/components';
@@ -12,19 +11,40 @@ import { useDebounceValue } from '@simrs/components/src/hook';
 import {
   usePermintaanLayanan,
   useCreatePermintaanPenunjang,
+  // usePenunjangDetail,
 } from '@simrs/billing/src/fetcher/penunjang';
 import Table from './Table';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
-import { postPermintaanSelector } from '../../redux/selectors';
+import { postPermintaanSelector } from '../permintaan/redux/selectors';
 
 const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
   const searchRef = useRef();
   const queryClient = useQueryClient();
   const t = useModuleTrans();
-  const history = useHistory();
+
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [search, setSearch] = useState('');
   const postPermintaan = useSelector(postPermintaanSelector);
+
+  // const {
+  //   data: penunjangDetails,
+  //   isLoading: penunjangDetailsLoading,
+  // } = usePenunjangDetail(data?.id);
+
+  // const tindakanIds = useMemo(() => {
+  //   if (!penunjangDetails) {
+  //     return [];
+  //   }
+  //   return Array.isArray(penunjangDetails)
+  //     ? penunjangDetails.map((row) => row.id_tindakan)
+  //     : [];
+  // }, [penunjangDetails]);
+
+  
+  // useEffect(() => {
+  //   setSelectedRowIds(tindakanIds)
+  // }, [tindakanIds])
+  
 
   const { data: dataPermintaan, isLoading } = usePermintaanLayanan({
     id_unit_layanan: postPermintaan?.id_unit_layanan,
@@ -59,11 +79,12 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
             '/billing/transaksi/penunjang/view',
             { id: postPermintaan?.id_kunjungan_unit },
           ]);
+          onHide();
           // history.go(
           //   `/billing/transaksi/penunjang/permintaan/${postPermintaan?.id_kunjungan_unit}`,
           //   { reload: true }
           // );
-          history.goBack();
+          // history.goBack();
         },
         onError: (error) => {
           toastr.warning(
@@ -72,13 +93,7 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
         },
       });
     }
-  }, [
-    history,
-    permintaanMutation,
-    postPermintaan,
-    queryClient,
-    selectedRowIds,
-  ]);
+  }, [onHide, permintaanMutation, postPermintaan, queryClient, selectedRowIds]);
 
   const formattedData = useMemo(() => {
     if (!dataPermintaan) {
@@ -274,7 +289,7 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
         {t('permintaan_layanan_penunjang')}
       </Modal.Header>
       <Modal.Content scrolling className="bg-gray-100 px-5 pb-8">
-        <Segment loading={isLoading} className="w-full">
+        <Segment loading={isLoading || permintaanMutation.isLoading} className="w-full">
           <Grid.Row className="mb-5">
             <Grid.Column>
               <Input

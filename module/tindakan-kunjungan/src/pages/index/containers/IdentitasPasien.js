@@ -25,6 +25,9 @@ const IdentitasPasienContainer = ({ t, resource }) => {
     if (e.which === 13) {
       e.preventDefault();
       if (e.target.value) {
+        // history.replace(
+        //   `/billing/transaksi/tindakan?route=${resource}&&norm=${e.target.value}`
+        // );
         dispatch(actions.getPasien.request(resource, { norm: e.target.value }));
       }
     }
@@ -52,7 +55,7 @@ const IdentitasPasienContainer = ({ t, resource }) => {
     ) {
       dispatch(actions.onToggleStatusFromAntrian(resource));
     }
-  }, [norm, statusForm, isFromAntrian, post.id_pasien]);
+  }, [norm, statusForm, isFromAntrian, post.id_pasien, dispatch, resource]);
   // Setelah itu isi norm dari antrian kunjungan
   React.useEffect(() => {
     if (isFromAntrian && statusForm === actionTypes.READY && !post.norm) {
@@ -60,7 +63,7 @@ const IdentitasPasienContainer = ({ t, resource }) => {
         actions.onChangeInputIdentitas(resource, { value: norm, name: 'norm' })
       );
     }
-  }, [norm, statusForm, post, isFromAntrian]);
+  }, [norm, statusForm, post, isFromAntrian, dispatch, resource]);
   // Cari data pasien berdasarkan norm antrian kunjungan
   React.useEffect(() => {
     if (
@@ -68,12 +71,20 @@ const IdentitasPasienContainer = ({ t, resource }) => {
       statusForm === actionTypes.READY &&
       post.norm &&
       !showCariKunjungan &&
-      !isRequestingPasien &&
+      // !isRequestingPasien &&
       !post.id_pasien
     ) {
       dispatch(actions.getPasien.request(resource, { norm: post.norm }));
     }
-  }, [statusForm, post, showCariKunjungan, isRequestingPasien, isFromAntrian]);
+  }, [
+    statusForm,
+    post,
+    showCariKunjungan,
+    // isRequestingPasien,
+    isFromAntrian,
+    dispatch,
+    resource,
+  ]);
   // Reset untuk tindakan kondisi normal
   React.useEffect(() => {
     if (
@@ -86,7 +97,16 @@ const IdentitasPasienContainer = ({ t, resource }) => {
       history.replace(`/billing/transaksi/tindakan?route=${resource}`);
       dispatch(actions.onToggleStatusFromAntrian(resource));
     }
-  }, [statusForm, isFromAntrian, post.id_pasien, norm, isRequestingPasien]);
+  }, [
+    statusForm,
+    isFromAntrian,
+    post.id_pasien,
+    norm,
+    isRequestingPasien,
+    history,
+    resource,
+    dispatch,
+  ]);
 
   return (
     <IdentitasPasien
