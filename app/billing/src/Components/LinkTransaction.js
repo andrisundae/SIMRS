@@ -32,11 +32,7 @@ const LinkTransaction = ({ idKunjunganUnit }) => {
           text="Permintaan Penunjang"
           onClick={clickPermintaanPenunjangHandler}
         />
-        <Dropdown.Item
-          icon="user outline"
-          text="Identitas Pasien"
-          onClick={() => {}}
-        />
+        <Dropdown.Item icon="user" text="Identitas Pasien" onClick={() => {}} />
         <Dropdown.Item icon="accessible" text="Konsul" onClick={() => {}} />
       </Dropdown.Menu>
     </Dropdown>

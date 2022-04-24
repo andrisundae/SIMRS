@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import dayjs from 'dayjs';
 import { Header, Content } from '@simrs/main/src/modules/components';
 import { useDebounceValue } from '@simrs/components/src/hook';
 import { useAppState } from '@simrs/components';
@@ -18,6 +19,8 @@ function Index() {
     id_dokter_tujuan_penunjang: '',
     nama_pasien: '',
     norm: '',
+    start_date: dayjs().toDate(),
+    end_date: dayjs().toDate(),
   });
 
   useEffect(() => {
@@ -44,6 +47,12 @@ function Index() {
         ? values.penjamin_id.value
         : '',
     };
+    if (!_.isEmpty(values.periode) && Array.isArray(values.periode)) {
+      if (values.periode[0] && values.periode[1]) {
+        newParams.start_date = values.periode[0];
+        newParams.end_date = values.periode[1];
+      }
+    }
     setParams(newParams);
   }, []);
 
@@ -58,7 +67,7 @@ function Index() {
     <>
       <Header title="Daftar Antrian Penunjang" icon="list" />
       <Content>
-        <Filter onSubmit={submitFilterHandler} />
+        <Filter params={params} onSubmit={submitFilterHandler} />
         <div className="mt-3 mb-2">
           <List params={formattedParams} />
         </div>

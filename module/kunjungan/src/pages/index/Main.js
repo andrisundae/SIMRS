@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 // import { Segment, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
-import { Content } from '@simrs/main/src/modules/components';
+// import { Content } from '@simrs/main/src/modules/components';
+import MainContent from '@simrs/billing/src/Components/MainContent';
 import Create from './containers/Create';
 import FooterActions from './containers/FooterActions';
 import PenjaminPasienFooterActions from './containers/PenjaminPasienFooterActions';
@@ -13,7 +14,7 @@ import MenggabungkanKunjunganIbuDanByi from './containers/MenggabungkanKunjungan
 import actions from './redux/actions';
 import { staticConst } from './static';
 
-// import '../../assets/css/styles.css';
+import '../../assets/css/styles.css';
 
 class Main extends PureComponent {
   componentDidMount() {
@@ -23,9 +24,13 @@ class Main extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Content>
-          <Create {...this.props} />
-        </Content>
+        <div className="fixed right-0 left-0 bg-white bottom-9 top-11">
+          <div className="grid h-full">
+            <div className="overflow-y-auto px-3 py-1 bg-gray-200">
+              <Create {...this.props} />
+            </div>
+          </div>
+        </div>
         {this.props.activeTabIndex === 0 ? (
           <FooterActions
             resource={this.props.resource}

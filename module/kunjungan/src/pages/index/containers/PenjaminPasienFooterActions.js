@@ -317,8 +317,8 @@ PenjamninPasienFooterActions.propTypes = {
   appContext: PropTypes.object,
   selectedRow: PropTypes.number,
   saveSuccess: PropTypes.bool,
-  idPasien: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
-  norm: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+  idPasien: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  norm: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default connect(

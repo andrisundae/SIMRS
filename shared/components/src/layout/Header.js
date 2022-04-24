@@ -5,7 +5,7 @@ import { Icon, Header as SmHeader } from 'semantic-ui-react';
 import { useAppState } from '@simrs/components';
 import MainMenu from './MainMenu';
 import RightMenu from './RightMenu';
-import 'xel/xel.min.js';
+import 'xel/xel.js';
 
 function Header({ logo, match, username, contexts, routers, history }) {
   const { disabledMainMenu } = useAppState();
@@ -25,6 +25,7 @@ function Header({ logo, match, username, contexts, routers, history }) {
         WebkitAppRegion: 'drag',
         paddingRight: 0,
       }}
+      size="small"
     >
       <div style={{ marginLeft: 10 }}>
         <SmHeader

@@ -40,11 +40,9 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
   //     : [];
   // }, [penunjangDetails]);
 
-  
   // useEffect(() => {
   //   setSelectedRowIds(tindakanIds)
   // }, [tindakanIds])
-  
 
   const { data: dataPermintaan, isLoading } = usePermintaanLayanan({
     id_unit_layanan: postPermintaan?.id_unit_layanan,
@@ -223,7 +221,7 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
                     />
                   )}
                 </div>
-                <span className={`${row.canExpand ? 'text-lg font-bold' : ''}`}>
+                <span className={`${row.canExpand ? 'font-bold' : ''}`}>
                   {row.values?.nama}
                 </span>
               </div>
@@ -289,7 +287,10 @@ const TreePermintaanLayananPenunjang = ({ show, onHide }) => {
         {t('permintaan_layanan_penunjang')}
       </Modal.Header>
       <Modal.Content scrolling className="bg-gray-100 px-5 pb-8">
-        <Segment loading={isLoading || permintaanMutation.isLoading} className="w-full">
+        <Segment
+          loading={isLoading || permintaanMutation.isLoading}
+          className="w-full"
+        >
           <Grid.Row className="mb-5">
             <Grid.Column>
               <Input

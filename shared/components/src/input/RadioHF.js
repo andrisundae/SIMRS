@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Form } from 'semantic-ui-react';
 import FormErrorMessage from '../FormErrorMessage';
@@ -28,4 +28,4 @@ const RadioHF = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   );
 });
 
-export default RadioHF;
+export default memo(RadioHF);

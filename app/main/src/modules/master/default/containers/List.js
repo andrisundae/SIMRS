@@ -106,7 +106,6 @@ class List extends Component {
       selectedRow,
       reloadType,
     } = this.props;
-    console.log(isReloadGrid);
     if (isReloadGrid && !prevProps.isReloadGrid) {
       this._reload(reloadType);
     } else {

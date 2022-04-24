@@ -4,6 +4,7 @@
   "homepage": ".",
   "scripts": {
     "linking": "yarn link react react-dom",
+    "build:style": "tailwindcss build src/static/css/index.css -o src/static/css/tailwind.css",
     "start": "craco start",
     "build": "craco build"
   },
@@ -22,10 +23,20 @@
       "last 1 safari version"
     ]
   },
+  "peerDependencies": {
+    "react-redux-toastr": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@babel/eslint-parser": "*"
+  },
   "devDependencies": {
-    "autoprefixer": "^9",
-    "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
-    "tailwindcss-pseudo-elements": "^2.0.0"
+    "autoprefixer": "^10.4.4",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.24",
+    "tailwindcss-pseudo-elements": "^2.0.0",
+    "react-redux-toastr": "^7.6.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/eslint-parser": "^7.17.0"
   }
 }

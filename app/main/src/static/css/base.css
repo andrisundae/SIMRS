@@ -89,8 +89,8 @@ li.dropdown-submenu:focus,
 
 .react-select__control {
   height: 28px !important;
-  min-height: 0px !important;
-  font-size: 11px;
+  min-height: 28px !important;
+  font-size: 12px;
   border: 1px solid #ccc !important;
 }
 
@@ -99,12 +99,12 @@ li.dropdown-submenu:focus,
 }
 
 .react-select__option-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .react-select__option-caption {
-  font-size: 11px;
+  font-size: 12px;
   color: #ccc;
 }
 
@@ -113,22 +113,22 @@ li.dropdown-submenu:focus,
   position: absolute !important;
 }
 
-.react-select__placeholder,
+/* .react-select__placeholder,
 .react-select__single-value {
   top: 12px !important;
-  /* vertical-align: middle !important; */
-}
+  vertical-align: middle !important;
+} */
 
-.react-select__indicator-separator {
-  /* margin-top: 4px !important; */
+/* .react-select__indicator-separator {
+  margin-top: 4px !important;
   margin-bottom: 5px !important;
   margin-top: 0px !important;
-}
+} */
 
-.react-select__dropdown-indicator,
+/* .react-select__dropdown-indicator,
 .react-select__clear-indicator {
   padding-top: 3px !important;
-}
+} */
 
 /* .react-select__indicator .react-select__clear-indicator {
     padding-top: 0px !important;
@@ -353,9 +353,9 @@ li.dropdown-submenu:focus,
 
 .ui .input input,
 .react-datepicker__input-container input {
-  height: 25px !important;
+  height: 28px !important;
   padding: 3px 6px !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
 }
 
 .ui .input input:disabled,
@@ -417,11 +417,11 @@ li.dropdown-submenu:focus,
 }
 
 /* .ui.dropdown .menu>.item {
-    font-size: 11px !important;
+    font-size: 12px !important;
 }
 
 .ui.search {
-    font-size: 11px !important;
+    font-size: 12px !important;
 } */
 
 .main-menu .ui.simple.active.dropdown > .menu,
@@ -430,8 +430,8 @@ li.dropdown-submenu:focus,
 }
 
 .ui.action.input button {
-  height: 25px !important;
-  padding-top: 6px !important;
+  height: 28px !important;
+  padding-top: 8px !important;
   font-size: 12px !important;
 }
 

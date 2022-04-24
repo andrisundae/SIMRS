@@ -13,11 +13,15 @@ function getPackageSources(relativePath) {
 }
 
 module.exports = {
-  style: {
-    postcss: {
-      plugins: [require('tailwindcss'), require('autoprefixer')],
-    },
-  },
+  // plugins: [{ plugin: require('@semantic-ui-react/craco-less') }],
+  // eslint: {
+  //   enable: false
+  // },
+  // style: {
+  //   postcss: {
+  //     plugins: [require('tailwindcss'), require('autoprefixer')],
+  //   },
+  // },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       const { isFound, match } = getLoader(

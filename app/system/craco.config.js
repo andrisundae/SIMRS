@@ -13,6 +13,9 @@ function getPackageSources(relativePath) {
 }
 
 module.exports = {
+  // eslint: {
+  //   enable: false
+  // },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       const { isFound, match } = getLoader(

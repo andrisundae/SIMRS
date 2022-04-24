@@ -104,6 +104,13 @@ class DataTableServerSide extends Component {
     }
   }
 
+  clearSelectedRow() {
+    if (this.gridApi) {
+      this.gridApi.deselectAll();
+      this.gridApi.clearFocusedCell();
+    }
+  }
+
   render() {
     const {
       data,

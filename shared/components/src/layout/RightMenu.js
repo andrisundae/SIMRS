@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { remote } from 'electron';
 import { Input } from 'semantic-ui-react';
+import { ReactComponent as MaximizeIcon } from '../static/svg/maximize.svg';
+import { ReactComponent as CloseIcon } from '../static/svg/close.svg';
+import { ReactComponent as MinusIcon } from '../static/svg/minus.svg';
+import { ReactComponent as MinimizeIcon } from '../static/svg/minimize.svg';
 
 const _window = remote.getCurrentWindow();
 function RightMenu({ username, disabled, routers, history }) {
@@ -45,49 +49,90 @@ function RightMenu({ username, disabled, routers, history }) {
       />
     </div>,
     <x-menuitem key="2" {...disabledProp}>
-      <x-icon name="face" />
+      <x-icon
+        name="person"
+        iconset="https://xel-toolkit.org/iconsets/fluent.svg"
+      />
       <x-label>{username}</x-label>
       <x-menu>
         <x-menuitem>
-          <x-icon name="account-circle" />
+          <x-icon
+            name="info"
+            iconset="https://xel-toolkit.org/iconsets/fluent.svg"
+          />
           <x-label>Profile</x-label>
         </x-menuitem>
         <x-menuitem onClick={changePasswordHandler}>
-          <x-icon name="lock" />
+          <x-icon
+            name="lock"
+            iconset="https://xel-toolkit.org/iconsets/fluent.svg"
+          />
           <x-label>Ganti Password</x-label>
         </x-menuitem>
         <x-menuitem onClick={_onExit}>
-          <x-icon name="close" />
+          <x-icon
+            name="logout"
+            iconset="https://xel-toolkit.org/iconsets/material.svg"
+          />
           <x-label>Keluar</x-label>
         </x-menuitem>
       </x-menu>
     </x-menuitem>,
-    <x-menuitem
-      class="app-window-button"
+    // <x-menuitem
+    //   class="app-window-button"
+    //   key="3"
+    //   onClick={_onMinimize}
+    //   title="Minimize"
+    // >
+    //   <x-icon name="remove" iconset="https://xel-toolkit.org/iconsets/fluent.svg" />
+    // </x-menuitem>,
+    // <x-menuitem
+    //   class="app-window-button"
+    //   key="4"
+    //   onClick={_onMaximize}
+    //   title={_window.isMaximized() ? 'Restore' : 'Maximize'}
+    // >
+    //   <x-icon
+    //     name={_window.isMaximized() ? 'filter-none' : 'check-box-outline-blank'} iconset="https://xel-toolkit.org/iconsets/fluent.svg"
+    //   />
+    // </x-menuitem>,
+    // <x-menuitem
+    //   class="app-window-button close"
+    //   key="5"
+    //   onClick={_onExit}
+    //   title="Keluar"
+    // >
+    //   {/* <x-icon name="logout" iconset="https://xel-toolkit.org/iconsets/fluent.svg" /> */}
+    //   <Icon name='window close outline' size='big' />
+    // </x-menuitem>,
+    <div
+      id="window-menu"
+      className="group ml-2 mr-3 z-50 flex items-center space-x-1"
       key="3"
-      onClick={_onMinimize}
-      title="Minimize"
     >
-      <x-icon name="indeterminate-check-box" />
-    </x-menuitem>,
-    <x-menuitem
-      class="app-window-button"
-      key="4"
-      onClick={_onMaximize}
-      title={_window.isMaximized() ? 'Restore' : 'Maximize'}
-    >
-      <x-icon
-        name={_window.isMaximized() ? 'filter-none' : 'check-box-outline-blank'}
-      />
-    </x-menuitem>,
-    <x-menuitem
-      class="app-window-button close"
-      key="5"
-      onClick={_onExit}
-      title="Keluar"
-    >
-      <x-icon name="close" />
-    </x-menuitem>,
+      <button
+        onClick={_onMinimize}
+        className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-yellow-500 rounded-full focus:shadow-outline cursor-pointer"
+      >
+        <MinusIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
+      </button>
+      <button
+        onClick={_onMaximize}
+        className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-green-600 rounded-full focus:shadow-outline cursor-pointer"
+      >
+        {_window.isMaximized() ? (
+          <MinimizeIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
+        ) : (
+          <MaximizeIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
+        )}
+      </button>
+      <button
+        onClick={_onExit}
+        className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-red-600 rounded-full focus:shadow-outline cursor-pointer"
+      >
+        <CloseIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
+      </button>
+    </div>,
   ];
 
   return menus;

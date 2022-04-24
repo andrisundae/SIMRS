@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Segment, } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 
 function Header({ title, icon, ...props }) {
   return (
@@ -10,8 +10,8 @@ function Header({ title, icon, ...props }) {
       {...props}
     >
       <div className="flex flex-row items-center">
-        <Icon name={icon} className="mb-1.5" />
-        <h3 className="text-lg font-bold text-black">{title}</h3>
+        {/* <Icon name={icon} className="mb-1.5" /> */}
+        <h3 className="text-lg font-bold">{title}</h3>
       </div>
     </Segment>
   );

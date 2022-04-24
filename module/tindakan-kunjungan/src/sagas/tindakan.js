@@ -103,7 +103,7 @@ function* populateForm({ meta }) {
 
 function* getPasienRequestHandler({ meta, payload }) {
   try {
-    // yield put(loaderActions.show());
+    yield put(loaderActions.show('Sedang mencari kunjungan aktif pasien...'));
     const response = yield call(api.getPasienByNorm, payload.data.norm);
     if (response.status) {
       const data = response.data;
@@ -120,30 +120,36 @@ function* getPasienRequestHandler({ meta, payload }) {
         message: response.message,
       });
     }
-    // yield put(loaderActions.hide());
+    yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
-    // yield put(loaderActions.hide());
+    yield put(loaderActions.hide());
   }
 }
 
 function* getKunjunganRequestHandler({ meta, payload }) {
   try {
-    // yield put(loaderActions.show());
+    yield put(loaderActions.show('Sedang mencari kunjungan aktif pasien...'));
     const response = yield call(api.getKunjungan, payload.data.idPasien);
     if (response.status) {
       yield put(
         actions.getKunjungan.requestSuccess(meta.resource, response.data)
       );
+      if (response.data?.length <= 0) {
+        messageBox({
+          title: 'Info',
+          message: response.message,
+        });
+      }
     } else {
       yield put(
         actions.getKunjungan.requestFailure(meta.resource, response.message)
       );
     }
-    // yield put(loaderActions.hide());
+    yield put(loaderActions.hide());
   } catch (error) {
     yield toastr.error(error.message);
-    // yield put(loaderActions.hide());
+    yield put(loaderActions.hide());
   }
 }
 
@@ -178,9 +184,10 @@ function* getPelaksanaKomponenRequestHandler({ meta, payload }) {
 
 function* getKunjunganRequestSuccessHandler({ meta, payload }) {
   const data = payload.data || [];
-  if (data.length > 1) {
+  const length = data.length;
+  if (length > 1) {
     yield put(actions.showCariKunjungan(meta.resource));
-  } else {
+  } else if (length === 1) {
     yield put(actions.onSelectKunjungan(meta.resource, data[0]));
   }
 }

@@ -1,8 +1,8 @@
-import 'semantic-ui-css/semantic.min.css';
+import './static/css/semantic.min.css';
 import './static/css/main-page.css';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import { i18n } from '@simrs/common';
@@ -13,4 +13,5 @@ i18n.init({
   ns: ['main'],
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const rootElement = document.getElementById('root');
+ReactDOM.createRoot(rootElement).render(<App />);

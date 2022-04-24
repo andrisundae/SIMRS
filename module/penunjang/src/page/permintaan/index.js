@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useRef,
+  // useRef,
   useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -11,9 +11,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQueryClient } from 'react-query';
 import {
-  DatatableServerSide,
   useModuleTrans,
-  useDatatable,
+  // useDatatable,
   SelectedButton,
   CancelButton,
   AddButton,
@@ -27,17 +26,19 @@ import {
   useListPenunjang,
   useDeletePermintaanPenunjang,
 } from '@simrs/billing/src/fetcher/penunjang';
+import ListPermintaan from '../components/ListPermintaan';
 import { staticConst } from '../../static';
+import { selectedSelector, disabledActionsSelector } from './redux/selectors';
 import {
-  selectedSelector,
-  disabledActionsSelector,
-} from './redux/selectors';
-import { select as onSelect, openForm as onOpenForm } from './redux/slice';
+  openForm as onOpenForm,
+  add as onAdd,
+  edit as onEdit,
+  reset as onReset,
+} from './redux/slice';
 import Create from './Create';
 
 const PermintaanPenunjang = ({ show }) => {
   const history = useHistory();
-  const tableRef = useRef();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const routeParams = useParams();
@@ -51,64 +52,36 @@ const PermintaanPenunjang = ({ show }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const t = useModuleTrans();
-  const { getRowNodeId } = useDatatable();
-  const [configuredTableReady, setConfiguredTableReady] = useState(false);
+
+  const reloadHandler = useCallback(() => {
+    queryClient.invalidateQueries([
+      '/billing/transaksi/penunjang/view',
+      params,
+    ]);
+  }, [params, queryClient]);
 
   const clickBackHandler = useCallback(() => history.goBack(), [history]);
-  const clickAddHandler = useCallback(() => setShowAddModal(true), []);
-  const clickEditHandler = useCallback(() => setShowEditModal(true), []);
+  const clickAddHandler = useCallback(() => {
+    dispatch(onAdd());
+    setShowAddModal(true);
+  }, []);
+  const clickEditHandler = useCallback(() => {
+    dispatch(onEdit());
+    setShowEditModal(true);
+  }, []);
 
   useEffect(() => {
     dispatch(onOpenForm(resource));
+    return () => {
+      dispatch(onReset({ resource }));
+    };
   }, [dispatch, resource]);
 
   const { data, isLoading } = useListPenunjang(params, {
     enabled: !!params?.id,
-    // onSuccess: successCallback,
   });
 
   const deleteMutation = useDeletePermintaanPenunjang();
-
-  const [columns] = useState([
-    {
-      headerName: t('tanggal_permintaan'),
-      field: 'tanggal',
-      sortable: true,
-      cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
-      cellRenderer: 'dateRenderer',
-      cellClass: 'ag-date-cell',
-    },
-    {
-      headerName: t('unit_layanan'),
-      field: 'nama_unit_layanan',
-    },
-    {
-      headerName: t('nama_pasien'),
-      field: 'nama_pasien',
-    },
-    {
-      headerName: t('total_permintaan'),
-      field: 'biaya',
-      cellRenderer: 'currencyRenderer',
-      cellClass: 'ag-number-cell',
-    },
-    {
-      headerName: t('status'),
-      field: 'st_status_penunjang',
-    },
-    {
-      headerName: t('dokter_perujuk'),
-      field: 'nama_dokter_peminta_penunjang',
-    },
-    {
-      headerName: t('unit_layanan_perujuk'),
-      field: 'nama_unit_asal',
-    },
-    {
-      headerName: t('dokter_tujuan'),
-      field: 'nama_dokter_tujuan_penunjang',
-    },
-  ]);
 
   const checkAction = useMemo(() => {
     return {
@@ -124,54 +97,10 @@ const PermintaanPenunjang = ({ show }) => {
     disableActions.finish,
   ]);
 
-  // React.useEffect(() => {
-  //   if (gridApi) {
-  //     if (isFetched && Array.isArray(data)) {
-  //       if (data.length === 0) {
-  //         gridApi.showNoRowsOverlay();
-  //       }
-  //     }
-  //   }
-  // }, [gridApi, data, isFetched]);
-
-  React.useEffect(() => {
-    if (tableRef.current) {
-      if (undefined === tableRef.current.gridApi && !configuredTableReady) {
-        setConfiguredTableReady(true);
-      } else {
-        const gridApi = tableRef.current.gridApi;
-        if (gridApi) {
-          if (isLoading) {
-            gridApi.showLoadingOverlay();
-          } else {
-            gridApi.hideOverlay();
-            if (Array.isArray(data)) {
-              gridApi.setDatasource({
-                rowCount: null,
-                getRows: (res) => {
-                  res.successCallback(data, data.length);
-                },
-              });
-            }
-          }
-        }
-      }
-    }
-  }, [configuredTableReady, isLoading, data]);
-
   const statusChangeHandler = useCallback(
     (value) =>
       setParams((prevState) => ({ ...prevState, st_status_penunjang: value })),
     []
-  );
-
-  const rowSelectedHandler = useCallback(
-    (params) => {
-      if (params.node.isSelected()) {
-        dispatch(onSelect(params.data));
-      }
-    },
-    [dispatch]
   );
 
   const deleteHandler = useCallback(() => {
@@ -187,7 +116,7 @@ const PermintaanPenunjang = ({ show }) => {
           { id: selected?.id },
           {
             onSuccess: () => {
-              toastr.success('Permintaan berhasil dilakukan.');
+              toastr.success('Permintaan berhasil dihapus.');
               queryClient.invalidateQueries([
                 '/billing/transaksi/penunjang/view',
                 params,
@@ -211,12 +140,12 @@ const PermintaanPenunjang = ({ show }) => {
 
   return (
     <Modal
-      dimmer="inverted"
+      // dimmer="inverted"
       open={show}
       onClose={clickBackHandler}
       closeOnEscape={false}
       closeOnDimmerClick={false}
-      size="large"
+      // size="small"
     >
       <Modal.Header className="p-3">
         <Icon name="phone volume" />
@@ -253,7 +182,7 @@ const PermintaanPenunjang = ({ show }) => {
               </Button>
             </Button.Group>
           </div>
-          <DatatableServerSide
+          {/* <DatatableServerSide
             ref={tableRef}
             columns={columns}
             name={staticConst.TABLE_PERMINTAAN_PENUNJANG}
@@ -266,18 +195,15 @@ const PermintaanPenunjang = ({ show }) => {
             getRowNodeId={getRowNodeId}
             sizeColumnsToFit={false}
             onRowSelected={rowSelectedHandler}
-            // onGridReady={onGridReady}
+            onGridReady={onGridReady}
+            rowModelType={constDatatable.rowModelType.clientSide}
+          /> */}
+          <ListPermintaan
+            data={data || []}
+            loading={isLoading}
+            onReload={reloadHandler}
           />
           <div className="flex w-full items-center justify-center mt-3">
-            {/* <Form>
-              <TextArea
-                disabled
-                style={{ width: 400 }}
-                rows={4}
-                placeholder="Catatan"
-                value={selected?.details}
-              />
-            </Form> */}
             <div className="h-32 w-102 shadow-md bg-gray-100 border border-gray-400 px-3 py-2 rounded">
               <p className="text-gray-700">{selected?.details}</p>
             </div>
@@ -303,6 +229,7 @@ const PermintaanPenunjang = ({ show }) => {
           onClose={hideEditModalHandler}
           show={showEditModal}
           data={selected}
+          onReload={reloadHandler}
         />
       )}
     </Modal>

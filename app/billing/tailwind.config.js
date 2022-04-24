@@ -1,9 +1,12 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: false,
-  // mode: 'jit',
+  content: [
+    '../../module/**/*.{js,jsx,ts,tsx}',
+    '../../shared/components/src/**/*.{js,jsx,ts,tsx}',
+    '../main/src/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
   theme: {
     fontFamily: {
       sans: ['Lato', 'Helvetica Neue', 'Arial', 'Helvetica', 'sans-serif'],
@@ -19,9 +22,6 @@ module.exports = {
       padding: {
         '1.2': '0.3rem',
       },
-      margin: {
-        '5px': '0px',
-      },
       spacing: {
         '98': '26rem',
         '100': '28rem',
@@ -29,12 +29,6 @@ module.exports = {
         '104': '32rem',
         '106': '34rem',
       },
-      colors: {
-        secondary: '#ecc94b'
-      },
-      height: {
-        '300px': '300px'
-      }
     },
   },
   important: true,

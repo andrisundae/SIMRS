@@ -140,7 +140,7 @@ export function usePenunjangDetail(idKunjunganUnit, options = {}) {
 }
 
 export function usePenunjangTindakan(idKunjunganUnit, options = {}) {
-  const queryKey = `/billing/transaksi/penunjang/${idKunjunganUnit}/tindakan`;
+  const queryKey = `/billing/transaksi/pemenuhanPenunjang/${idKunjunganUnit}/view`;
   return useQuery(
     queryKey,
     async () => {
@@ -163,25 +163,68 @@ export function usePenunjangTindakan(idKunjunganUnit, options = {}) {
 }
 
 export function useCreatePermintaanPenunjang() {
-  return useMutation((payload) => axios.post('/billing/transaksi/penunjang/tambah', payload));
+  return useMutation((payload) =>
+    axios.post('/billing/transaksi/penunjang/tambah', payload)
+  );
 }
 
 export function useDeletePermintaanPenunjang() {
-  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/hapus/${payload.id}`));
+  return useMutation((payload) =>
+    axios.post(`/billing/transaksi/penunjang/hapus/${payload.id}`)
+  );
 }
 
 export function useEditPermintaanPenunjang() {
-  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/koreksi/${payload.id}`, payload));
+  return useMutation((payload) =>
+    axios.post(`/billing/transaksi/penunjang/koreksi/${payload.id}`, payload)
+  );
 }
 
 export function useEditStatusPenunjang() {
-  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/status`, payload));
+  return useMutation((payload) =>
+    axios.post(
+      `/billing/transaksi/pemenuhanPenunjang/${payload.id}/status`,
+      payload
+    )
+  );
 }
 
 export function useResetPemenuhanPenunjang() {
-  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/resetPemenuhan`));
+  return useMutation((payload) =>
+    axios.post(
+      `/billing/transaksi/pemenuhanPenunjang/${payload.id}/resetPemenuhan`
+    )
+  );
 }
 
 export function usePenuhiSemuaPermintaanPenunjang() {
-  return useMutation((payload) => axios.post(`/billing/transaksi/penunjang/${payload.id}/penuhiSemuaPermintaan`));
+  return useMutation((payload) =>
+    axios.post(
+      `/billing/transaksi/pemenuhanPenunjang/${payload.id}/penuhiSemuaPermintaan`
+    )
+  );
+}
+
+export function useCreatePenunjangDetail() {
+  return useMutation((payload) =>
+    axios.post(
+      `/billing/transaksi/pemenuhanPenunjang/${payload.id_kunjungan_unit}/tambah`,
+      payload
+    )
+  );
+}
+
+export function useDeletePenunjangDetail() {
+  return useMutation((payload) =>
+    axios.post(`/billing/transaksi/pemenuhanPenunjang/hapus/${payload.id}`)
+  );
+}
+
+export function useEditPenunjangDetail() {
+  return useMutation((payload) =>
+    axios.post(
+      `/billing/transaksi/pemenuhanPenunjang/koreksi/${payload.id}`,
+      payload
+    )
+  );
 }

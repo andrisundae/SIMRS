@@ -6,14 +6,14 @@ const initialState = {
   selectedKunjungan: {},
   selected: {},
   focusElement: '',
-  postPermintaan: {}
+  postPermintaan: {},
 };
 
 const readyReducer = () => {
   return {
     ...initialState,
     statusForm: ready.type,
-    focusElement: 'norm',
+    focusElement: '',
   };
 };
 
@@ -29,6 +29,12 @@ const moduleSlice = createSlice({
       state.statusForm = type;
       state.focusElement = 'add';
     },
+    reset: (state, { type }) => {
+      state.statusForm = type;
+      state.selectedKunjungan = {};
+      state.selected = {};
+      state.focusElement = '';
+    },
     select: (state, { payload, type }) => {
       state.selected = payload;
       state.statusForm = type;
@@ -36,11 +42,11 @@ const moduleSlice = createSlice({
     },
     add: (state, { type }) => {
       state.statusForm = type;
-      state.focusElement = 'id_ruang';
+      state.focusElement = 'id_unit_layanan';
     },
     edit: (state, { type }) => {
       state.statusForm = type;
-      state.focusElement = 'id_ruang';
+      state.focusElement = 'id_dokter_peminta_penunjang';
     },
     savePermintaan: (state, { type, payload }) => {
       state.statusForm = type;
@@ -48,6 +54,18 @@ const moduleSlice = createSlice({
     },
     resetPostPermintaan: (state) => {
       state.postPermintaan = {};
+    },
+    focusElement: (state, { payload }) => {
+      state.focusElement = payload.focusElement;
+    },
+    cancel: (state) => {
+      if (state.statusForm === add.type) {
+        state.statusForm = ready.type;
+      } else if (state.statusForm === edit.type) {
+        state.statusForm = select.type;
+      }
+
+      state.focusElement = '';
     },
   },
 });
@@ -62,6 +80,9 @@ export const {
   finish,
   savePermintaan,
   resetPostPermintaan,
+  cancel,
+  reset,
+  focusElement,
 } = moduleSlice.actions;
 
 export default moduleSlice;

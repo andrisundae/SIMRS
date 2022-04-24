@@ -24,7 +24,7 @@ class Main extends Component {
         <Segment>
           <Grid
             className="content-grid"
-            style={{ marginTop: -8, marginBottom: -8 }}
+            // style={{ marginTop: -8, marginBottom: -8 }}
           >
             <Grid.Row>
               <Grid.Column>

@@ -8,8 +8,8 @@
     "build": "wsrun --exclude-missing build",
     "postbuild": "ncp app/billing/build app/main/build/billing && ncp app/farmasi/build app/main/build/farmasi && ncp app/system/build app/main/build/system && ncp app/rekam-medis/build app/main/build/rekam-medis && ncp app/billing/.env app/main/build/billing/.env && ncp app/farmasi/.env app/main/build/farmasi/.env && ncp app/system/.env app/main/build/system/.env && ncp app/rekam-medis/.env app/main/build/rekam-medis/.env",
     "desktop": "yarn workspace @simrs/main desktop",
-    "desktop:build": "yarn workspace @simrs/main desktop:build",
-    "predesktop:build": "yarn build",
+    "dist": "yarn workspace @simrs/main dist",
+    "predist": "yarn build",
     "storybook:start": "yarn workspace @simrs/components storybook:start",
     "storybook:build": "yarn workspace @simrs/components storybook:build"
   },
@@ -41,7 +41,9 @@
       "**/@babel",
       "**/@babel/**",
       "**/@storybook",
-      "**/@storybook/**"
+      "**/@storybook/**",
+      "**/webpack",
+      "**/webpack/**"
     ]
   },
   "husky": {

@@ -25,30 +25,36 @@ class Main extends Component {
 
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon
-              name={this.props.icon}
-              circular
-              color={isSocketConnected ? 'green' : 'red'}
-              inverted
-            />
-            <Header.Content>
-              {this.props.caption ||
-                this.props.t(`${this.props.resource}:title`)}
-              <Header.Subheader>
-                {this.props.t(`${this.props.resource}:sub.title`)}
-              </Header.Subheader>
-            </Header.Content>
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column>{this.props.import}</Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <div className="fixed right-0 left-0 bg-white bottom-9 top-11">
+          <div className="grid h-full">
+            <div className="overflow-y-auto px-3 py-1 bg-gray-200">
+              <Segment>
+                <Header as="h4">
+                  <Icon
+                    name={this.props.icon}
+                    circular
+                    color={isSocketConnected ? 'green' : 'red'}
+                    inverted
+                  />
+                  <Header.Content>
+                    {this.props.caption ||
+                      this.props.t(`${this.props.resource}:title`)}
+                    <Header.Subheader>
+                      {this.props.t(`${this.props.resource}:sub.title`)}
+                    </Header.Subheader>
+                  </Header.Content>
+                </Header>
+              </Segment>
+              <Segment>
+                <Grid className="content-grid">
+                  <Grid.Row>
+                    <Grid.Column>{this.props.import}</Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Segment>
+            </div>
+          </div>
+        </div>
         <FooterActions
           i18n={this.props.i18n}
           t={this.props.t}

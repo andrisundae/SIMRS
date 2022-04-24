@@ -69,6 +69,7 @@ const CariTindakan = ({
         width: 120,
         cellRenderer: 'currencyRenderer',
         cellClass: 'ag-number-cell',
+        headerClass: 'ag-right-aligned-header',
       },
       {
         headerName: t('tanggal_aktif'),
@@ -153,6 +154,14 @@ const CariTindakan = ({
     [onSelect]
   );
 
+  useEffect(() => {
+    if (searchInputRef.current) {
+      setTimeout(() => {
+        searchInputRef.current.focus();
+      }, 10);
+    }
+  }, []);
+
   return (
     <Modal
       dimmer="inverted"
@@ -223,9 +232,9 @@ CariTindakan.propTypes = {
   show: PropTypes.bool,
   onHide: PropTypes.func,
   onSelect: PropTypes.func,
-  idUnitLayanan: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-  idKelas: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-  idInstalasi: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+  idUnitLayanan: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  idKelas: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  idInstalasi: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default CariTindakan;

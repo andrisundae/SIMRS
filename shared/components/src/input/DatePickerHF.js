@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Form } from 'semantic-ui-react';
 import DatePicker from './DatePicker';
@@ -38,12 +38,10 @@ const DatePickerHF = React.forwardRef(
           {...props}
           onChange={changeHandler}
         />
-        {invalid && (
-          <FormErrorMessage message={error?.message} />
-        )}
+        {invalid && <FormErrorMessage message={error?.message} />}
       </Form.Field>
     );
   }
 );
 
-export default DatePickerHF;
+export default memo(DatePickerHF);

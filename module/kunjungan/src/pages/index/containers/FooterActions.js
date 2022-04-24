@@ -23,26 +23,26 @@ import { getPermissions } from '@simrs/main/src/modules/auth';
 import { isDisable } from '../redux/selectors';
 import actions from '../redux/actions';
 
-class ComponentToPrint extends React.PureComponent {
-  render() {
-    return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  }
-}
+// class ComponentToPrint extends React.PureComponent {
+//   render() {
+//     return (
+//       <table>
+//         <thead>
+//           <th>column 1</th>
+//           <th>column 2</th>
+//           <th>column 3</th>
+//         </thead>
+//         <tbody>
+//           <tr>
+//             <td>data 1</td>
+//             <td>data 2</td>
+//             <td>data 3</td>
+//           </tr>
+//         </tbody>
+//       </table>
+//     );
+//   }
+// }
 
 class FooterActions extends PureComponent {
   constructor(props) {
@@ -414,7 +414,7 @@ class FooterActions extends PureComponent {
               </Menu.Item>
             )}
           </Menu.Menu>
-          <ComponentToPrint ref={el => (this.print = el)} />
+          {/* <ComponentToPrint ref={el => (this.print = el)} /> */}
         </Fragment>
       </FooterActionsContainer>
     );

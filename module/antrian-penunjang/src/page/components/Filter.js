@@ -2,15 +2,18 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import { Grid, Form, Segment } from 'semantic-ui-react';
-import { useModuleTrans } from '@simrs/components';
+import { useModuleTrans, DateRangePickerHF } from '@simrs/components';
 import { useInitAntrianPenunjang } from '@simrs/billing/src/fetcher';
 import { Input, ReactSelect } from '@simrs/components';
 
 import UnitLayananSelector from './UnitLayananSelector';
-
-function Filter({ onSubmit, innerRef }) {
+function Filter({ onSubmit, innerRef, params = {} }) {
   const t = useModuleTrans();
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      periode: [params.start_date, params.end_date],
+    },
+  });
 
   // Hook untuk mencari pasien
   const { data } = useInitAntrianPenunjang();
@@ -35,7 +38,7 @@ function Filter({ onSubmit, innerRef }) {
   useEffect(() => {
     const subscription = methods.watch(() => methods.handleSubmit(onSubmit)());
     return () => subscription.unsubscribe();
-}, [methods, onSubmit]);
+  }, [methods, onSubmit]);
 
   return (
     <FormProvider {...methods}>
@@ -110,8 +113,19 @@ function Filter({ onSubmit, innerRef }) {
                     <Grid.Column width="4" className="field">
                       <label>{t('norm')}</label>
                     </Grid.Column>
-                    <Grid.Column width="6" className="field">
+                    <Grid.Column width="8" className="field">
                       <Input name="norm" />
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row className="form-row">
+                    <Grid.Column width="4" className="field">
+                      <label>{t('periode')}</label>
+                    </Grid.Column>
+                    <Grid.Column width="8" className="field">
+                      <DateRangePickerHF
+                        name="periode"
+                        placeholderText="Pilih range tanggal"
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

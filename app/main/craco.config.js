@@ -13,6 +13,10 @@ function getPackageSources(relativePath) {
 }
 
 module.exports = {
+  // plugins: [{ plugin: require('@semantic-ui-react/craco-less') }],
+  // eslint: {
+  //   enable: false
+  // },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       const { isFound, match } = getLoader(

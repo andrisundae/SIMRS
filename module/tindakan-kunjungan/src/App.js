@@ -29,7 +29,7 @@ function SwitchComponent({
     <>
       <Provider store={storeRedux}>
         <Switch location={background || location}>
-          <Route exact path="/">
+          <Route path="/">
             <Index
               {...props}
               resource={resource}

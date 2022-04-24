@@ -44,11 +44,10 @@ class Import extends Component {
 
     return (
       <Form id={this.formId} size="small">
-        <Divider hidden />
         <Grid>
           <Grid.Row>
             <Grid.Column width="10">
-              <Grid>
+              <Grid className="p-10">
                 <Grid.Row>
                   <Grid.Column width="4" className="required field">
                     <label>{t(this._getKey('label.field.file'))}</label>

@@ -13,7 +13,7 @@ const BiayaTindakan = ({ label }) => {
 };
 
 BiayaTindakan.propTypes = {
-  label: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 export default BiayaTindakan;

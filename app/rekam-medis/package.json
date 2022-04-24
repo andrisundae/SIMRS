@@ -31,12 +31,22 @@
     "@capacitor/device": "^0.6.2",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
-    "react-table": "~7.7.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "react-table": "~7.7.0"
+  },
+  "peerDependencies": {
+    "react-redux-toastr": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@babel/eslint-parser": "*"
   },
   "devDependencies": {
-    "autoprefixer": "^9",
-    "postcss": "^7",
-    "tailwindcss-pseudo-elements": "~1.5.1"
+    "autoprefixer": "^10.4.4",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.24",
+    "tailwindcss-pseudo-elements": "^2.0.0",
+    "react-redux-toastr": "^7.6.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/eslint-parser": "^7.17.0"
   }
 }

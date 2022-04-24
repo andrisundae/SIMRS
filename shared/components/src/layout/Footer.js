@@ -15,7 +15,7 @@ function Footer({ actionsPosition = 'left', watermark = null, ...props }) {
       {...props}
     >
       {actionsOnLeftPosition ? (
-        <Menu.Menu className='w-full' position="left" id="footer-actions" />
+        <Menu.Menu className="w-full" position="left" id="footer-actions" />
       ) : null}
       {watermark && (
         <Menu.Menu position={actionsOnLeftPosition ? 'right' : 'left'}>
@@ -29,7 +29,7 @@ function Footer({ actionsPosition = 'left', watermark = null, ...props }) {
   );
 }
 Footer.propsTypes = {
-  actionsPosition: PropTypes.oneOf(['left', 'right']),
+  actionsPosition: PropTypes.oneOfType(['left', 'right']),
 };
 
 export default Footer;

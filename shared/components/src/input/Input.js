@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Form, Input as SmInput } from 'semantic-ui-react';
 import FormErrorMessage from '../FormErrorMessage';
@@ -15,15 +15,10 @@ const Input = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   });
   return (
     <Form.Field error={invalid}>
-      <SmInput
-        {...inputProps}
-        ref={ref}
-        value={inputProps.value}
-        {...props}
-      />
+      <SmInput {...inputProps} ref={ref} value={inputProps.value} {...props} />
       {invalid && <FormErrorMessage message={error?.message} />}
     </Form.Field>
   );
 });
 
-export default Input;
+export default memo(Input);

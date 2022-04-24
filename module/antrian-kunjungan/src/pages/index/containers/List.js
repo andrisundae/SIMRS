@@ -177,7 +177,7 @@ class List extends Component {
   };
 
   doubleClickRowHandler = (params) => {
-    this.props.history.replace(
+    this.props.history.push(
       `/billing/transaksi/tindakan?route=${this.props.resource}&norm=${params.data.norm}`
     );
   };

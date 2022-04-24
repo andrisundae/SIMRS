@@ -10,3 +10,7 @@
   width: 4px !important;
   height: 4px !important;
 }
+
+.ag-theme-balham {
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', 'Helvetica', 'sans-serif' !important;
+}

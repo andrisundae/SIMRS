@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Form, Input, Segment, Divider, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { formatter } from '@simrs/common';
 
 const IdentitasPasien = ({
   t,
@@ -33,10 +34,7 @@ const IdentitasPasien = ({
       size="mini"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Segment
-        size="mini"
-        className="pt-0 pb-6 mb-1"
-      >
+      <Segment size="mini" className="pt-0 pb-6 mb-1">
         <Divider horizontal className="mt-3 mb-6">
           {t(getKey('identitas_pasien'))}
         </Divider>
@@ -54,7 +52,11 @@ const IdentitasPasien = ({
                       name="norm"
                       onKeyDown={onEnterNorm}
                       disabled={isDisabledNorm}
-                      value={data.norm}
+                      value={
+                        isDisabledNorm
+                          ? formatter.textSplitter(data.norm)
+                          : data.norm
+                      }
                       onChange={onChangeInput}
                       onFocus={(e) => {
                         if (e.target.value) {

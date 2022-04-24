@@ -1,12 +1,11 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { Modal, Icon } from 'semantic-ui-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 // import { useForm, FormProvider } from 'react-hook-form';
 import { useModuleTrans, CancelButton, SaveButton } from '@simrs/components';
-import { useQueryClient } from 'react-query';
 import { formatter, toastr } from '@simrs/common';
 import {
   useInitPermintaanPenunjang,
@@ -14,21 +13,38 @@ import {
 } from '@simrs/billing/src/fetcher/penunjang';
 import TreePermintaanLayananPenunjang from '../components/TreePermintaanLayananPenunjang';
 import FormPermintaanPenunjang from '../components/FormPermintaanPenunjang';
-import { savePermintaan, resetPostPermintaan } from './redux/slice';
+import {
+  savePermintaan,
+  resetPostPermintaan,
+  cancel as onCancel,
+  add,
+  edit,
+} from './redux/slice';
+import { focusElementSelector, statusFormSelector } from './redux/selectors';
 
-const Create = ({ innerRef, show, onClose, data, isAdd }) => {
+const Create = ({ innerRef, show, onClose, data, isAdd, onReload }) => {
   const dispatch = useDispatch();
   const params = useParams();
-  const queryClient = useQueryClient();
   // const methods = useForm();
   const [showTree, setShowTree] = useState(false);
   const t = useModuleTrans();
   const formRef = useRef();
+  const actionRefs = {
+    save: useRef(),
+    cancel: useRef(),
+  };
+  const focusElement = useSelector(focusElementSelector);
+  const statusForm = useSelector(statusFormSelector);
 
   const { data: init, isLoading: loadingInit } = useInitPermintaanPenunjang(
     params.idKunjunganUnit
   );
   const editMutation = useEditPermintaanPenunjang();
+
+  const cancelHandler = useCallback(() => {
+    dispatch(onCancel());
+    onClose();
+  }, []);
 
   // Untuk mentrigger form biar submit
   const submitTriggerHandler = useCallback(() => {
@@ -37,9 +53,9 @@ const Create = ({ innerRef, show, onClose, data, isAdd }) => {
 
   const hideTreeHandler = useCallback(() => {
     setShowTree(false);
-    onClose();
+    cancelHandler();
     dispatch(resetPostPermintaan());
-  }, [dispatch, onClose]);
+  }, [dispatch, cancelHandler]);
 
   const submitHandler = useCallback(
     (values) => {
@@ -76,11 +92,12 @@ const Create = ({ innerRef, show, onClose, data, isAdd }) => {
           {
             onSuccess: () => {
               toastr.success('Permintaan berhasil diubah.');
-              queryClient.invalidateQueries([
-                '/billing/transaksi/penunjang/view',
-                { id: params.idKunjunganUnit },
-              ]);
-              onClose();
+              // queryClient.invalidateQueries([
+              //   '/billing/transaksi/penunjang/view',
+              //   { id: params.idKunjunganUnit },
+              // ]);
+              onReload();
+              cancelHandler();
             },
             onError: (error) => {
               toastr.warning(
@@ -99,17 +116,28 @@ const Create = ({ innerRef, show, onClose, data, isAdd }) => {
       editMutation,
       init,
       isAdd,
-      onClose,
+      cancelHandler,
       params.idKunjunganUnit,
-      queryClient,
+      onReload,
     ]
   );
 
+  // Effect untuk focus element
+  useEffect(() => {
+    if (statusForm === add.type || statusForm === edit.type) {
+      if (focusElement) {
+        if (!_.isEmpty(actionRefs[focusElement]?.current)) {
+          actionRefs[focusElement]?.current.focus();
+        }
+      }
+    }
+  }, [focusElement, actionRefs, statusForm]);
+
   return (
     <Modal
-      dimmer="inverted"
+      // dimmer="inverted"
       open={show}
-      onClose={onClose}
+      onClose={cancelHandler}
       closeOnEscape={false}
       closeOnDimmerClick={false}
       // style={{ width: 500 }}
@@ -139,8 +167,9 @@ const Create = ({ innerRef, show, onClose, data, isAdd }) => {
           <SaveButton
             loading={editMutation.isLoading}
             onClick={submitTriggerHandler}
+            inputRef={actionRefs.save}
           />
-          <CancelButton onClick={onClose} />
+          <CancelButton onClick={cancelHandler} />
         </div>
       </Modal.Actions>
       {showTree && (

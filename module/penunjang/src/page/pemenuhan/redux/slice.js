@@ -7,6 +7,7 @@ const initialState = {
   selected: {},
   focusElement: '',
   postPermintaan: {},
+  loading: false,
 };
 
 const readyReducer = () => {
@@ -21,17 +22,17 @@ const moduleSlice = createSlice({
   name: 'module',
   initialState,
   reducers: {
-    openForm: (state, { type }) => {
+    openForm: (state) => {
       state.statusForm = 'module/fullfillmentConfirmation';
     },
     ready: readyReducer,
-    finish: (state, { payload, type }) => {
+    finish: (state, { type }) => {
       state.statusForm = type;
       state.selectedKunjungan = {};
       state.selected = {};
       state.focusElement = '';
     },
-    reset: (state, { payload, type }) => {
+    reset: (state, { type }) => {
       state.statusForm = type;
       state.selectedKunjungan = {};
       state.selected = {};
@@ -49,11 +50,12 @@ const moduleSlice = createSlice({
     },
     add: (state, { type }) => {
       state.statusForm = type;
-      state.focusElement = 'id_ruang';
+      state.focusElement = 'kode_panggil';
+      state.selected = {};
     },
     edit: (state, { type }) => {
       state.statusForm = type;
-      state.focusElement = 'id_ruang';
+      state.focusElement = 'kode_panggil';
     },
     savePermintaan: (state, { type, payload }) => {
       state.statusForm = type;
@@ -68,9 +70,15 @@ const moduleSlice = createSlice({
     willbefullfilled: (state, { type }) => {
       state.statusForm = type;
     },
-    cancel: (state) => {
-      state.statusForm = select.type;
-      // state.focusElement = 'id_ruang';
+    cancel: (state, { type }) => {
+      state.statusForm = type;
+      state.focusElement = '';
+    },
+    showLoader: (state) => {
+      state.loading = true;
+    },
+    hideLoader: (state) => {
+      state.loading = false;
     },
   },
 });
@@ -89,6 +97,8 @@ export const {
   willbefullfilled,
   reset,
   cancel,
+  showLoader,
+  hideLoader,
 } = moduleSlice.actions;
 
 export default moduleSlice;

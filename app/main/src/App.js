@@ -17,12 +17,26 @@ function App() {
   const [isOpenServer, openServer] = useState(false);
 
   useEffect(() => {
+    async function checkServer() {
+      try {
+        const response = await fetch(store.main.get('config.api'));
+        if (response.status) {
+          console.log('ok');
+        }
+      } catch (error) {
+        openServer(true);
+      }
+    }
+
     if (isEmpty(store.main.get('config.api'))) {
       openServer(true);
     } else {
       checkServer();
     }
-    bindShortCut();
+    MouseTrap.bind('mod+shift+c', function (e) {
+      e.preventDefault();
+      openServer(true);
+    });
 
     return () => {
       MouseTrap.unbind('mod+shift+c');
@@ -35,24 +49,6 @@ function App() {
 
   function _renderPortal(props) {
     return <Portal {...props} />;
-  }
-
-  function bindShortCut() {
-    MouseTrap.bindGlobal('mod+shift+c', function (e) {
-      e.preventDefault();
-      openServer(true);
-    });
-  }
-
-  async function checkServer() {
-    try {
-      const response = await fetch(store.main.get('config.api'));
-      if (response.status) {
-        console.log('ok');
-      }
-    } catch (error) {
-      openServer(true);
-    }
   }
 
   return (

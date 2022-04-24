@@ -1,6 +1,14 @@
-import React, { memo, useEffect, useState, useCallback, useRef } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import Mousetrap from 'mousetrap';
 import copy from 'copy-to-clipboard';
 import _ from 'lodash';
 import {
@@ -9,23 +17,39 @@ import {
   constDatatable,
   confirmation,
 } from '@simrs/components';
+import { useQueryClient } from 'react-query';
 import { useListAntrianPenunjang } from '@simrs/billing/src/fetcher';
-import { utils } from '@simrs/common';
+import { utils, formatter } from '@simrs/common';
 import { staticConst } from '../../static';
 // import { moduleSelector } from '../../redux/reducer/selector';
 // import { ready } from '../../redux/reducer';
 
-const List = ({ innerRef, params }) => {
+const List = ({ innerRef, params = {} }) => {
   const t = useModuleTrans();
   const history = useHistory();
+  const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState(false);
   // const { gridApi, emptySource, getRowNodeId, onGridReady } = useDatatable();
   const gridRef = useRef();
-  const {
-    data,
-    isLoading,
-    status,
-  } = useListAntrianPenunjang(utils.cleanBlankValue(params), { enabled });
+
+  const formattedParams = useMemo(() => {
+    return utils.cleanBlankValue({
+      ...params,
+      start_date: formatter.dateFormatDB(params.start_date),
+      end_date: formatter.dateFormatDB(params.end_date),
+    });
+  }, [params]);
+
+  const { data, isLoading, status } = useListAntrianPenunjang(formattedParams, {
+    enabled,
+  });
+
+  const reloadHandler = useCallback(() => {
+    queryClient.invalidateQueries([
+      '/billing/antrian/penunjang',
+      formattedParams,
+    ]);
+  }, [formattedParams, queryClient]);
 
   const getRowNodeId = useCallback((row) => row.id, []);
 
@@ -132,7 +156,7 @@ const List = ({ innerRef, params }) => {
 
   const doubleClickRowHandler = useCallback(
     (params) => {
-      const statusPenunjang = _.toUpper(params.data.st_status_penunjang)
+      const statusPenunjang = _.toUpper(params.data.st_status_penunjang);
       if (statusPenunjang === 'DIPENUHI') {
         confirmation({
           title: t(`common:dialog.confirmation.title`, false),
@@ -184,12 +208,34 @@ const List = ({ innerRef, params }) => {
   const getRowClass = useCallback(({ data }) => {
     const status = _.toUpper(data.st_status_penunjang);
     if (status === 'DIPENUHI') {
-      return 'bg-red-200';
+      return 'text-red-600';
     } else if (status === 'DITOLAK') {
-      return 'bg-green-200';
+      return 'text-green-600';
     }
     return '';
   }, []);
+
+  const selectedFirstRow = useCallback(() => {
+    if (gridRef.current) {
+      gridRef.current.setFirstRowSelected();
+    }
+  }, []);
+
+  useEffect(() => {
+    const key = process.platform === 'darwin' ? 'ctrl' : 'alt';
+    Mousetrap.bind(`${key}+r`, () => {
+      reloadHandler();
+    });
+
+    Mousetrap.bind('f2', () => {
+      selectedFirstRow();
+    });
+
+    return () => {
+      Mousetrap.unbind(`${key}+r`);
+      Mousetrap.unbind(`${key}+f2`);
+    };
+  }, [reloadHandler, selectedFirstRow]);
 
   return (
     <DatatableServerSide
@@ -203,7 +249,7 @@ const List = ({ innerRef, params }) => {
       // cacheBlockSize={100}
       containerHeight="330px"
       getRowNodeId={getRowNodeId}
-      sizeColumnsToFit={true}
+      // sizeColumnsToFit={true}
       // onGridReady={onGridReady}
       contextMenuItems={[
         {

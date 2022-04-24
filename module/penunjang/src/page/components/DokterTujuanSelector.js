@@ -4,7 +4,7 @@ import { useWatch } from 'react-hook-form';
 import { useModuleTrans, ReactSelect } from '@simrs/components';
 import { useDokterTujuan } from '@simrs/billing/src/fetcher/penunjang';
 
-const DokterTujuanSelect = ({ control, innerRef, ...props }) => {
+const DokterTujuanSelector = ({ control, innerRef, ...props }) => {
   const t = useModuleTrans();
   const selected = useWatch({
     control,
@@ -16,7 +16,7 @@ const DokterTujuanSelect = ({ control, innerRef, ...props }) => {
 
   return (
     <ReactSelect
-      ref={innerRef}
+      inputRef={innerRef}
       name="id_dokter_tujuan_penunjang"
       placeholder={t('dx')}
       options={data || []}
@@ -26,14 +26,14 @@ const DokterTujuanSelect = ({ control, innerRef, ...props }) => {
   );
 };
 
-DokterTujuanSelect.propTypes = {
+DokterTujuanSelector.propTypes = {
   control: PropTypes.object,
   innerRef: PropTypes.object,
 };
 
 const Component = React.forwardRef((props, ref) => {
   const innerRef = React.useRef();
-  return <DokterTujuanSelect innerRef={ref || innerRef} {...props} />;
+  return <DokterTujuanSelector innerRef={ref || innerRef} {...props} />;
 });
 
 export default Component;

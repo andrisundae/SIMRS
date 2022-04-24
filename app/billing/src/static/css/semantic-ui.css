@@ -93,3 +93,11 @@ body {
     1
   ) !important; /* untuk background pada child-menu */
 }
+
+#window-menu .outline {
+  outline-style: none !important;
+}
+
+#window-menu .ui.icon.button {
+  font-size: 9px;
+}

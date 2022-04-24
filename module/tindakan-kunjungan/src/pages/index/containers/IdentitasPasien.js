@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -20,22 +20,6 @@ const IdentitasPasienContainer = ({ t, resource }) => {
   const location = useLocation();
   const history = useHistory();
   const searchs = new URLSearchParams(location.search);
-
-  const noRmKeyDownHandler = (e) => {
-    if (e.which === 13) {
-      e.preventDefault();
-      if (e.target.value) {
-        // history.replace(
-        //   `/billing/transaksi/tindakan?route=${resource}&&norm=${e.target.value}`
-        // );
-        dispatch(actions.getPasien.request(resource, { norm: e.target.value }));
-      }
-    }
-  };
-  const changeInputHandler = (e) => {
-    const { value, name } = e.target;
-    dispatch(actions.onChangeInputIdentitas(resource, { value, name }));
-  };
   const post = useSelector((state) => postSelector(state));
   const focusElement = useSelector((state) => focusElementSelector(state));
   const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
@@ -107,6 +91,22 @@ const IdentitasPasienContainer = ({ t, resource }) => {
     resource,
     dispatch,
   ]);
+
+  const noRmKeyDownHandler = useCallback((e) => {
+    if (e.which === 13) {
+      e.preventDefault();
+      if (e.target.value) {
+        // history.replace(
+        //   `/billing/transaksi/tindakan?route=${resource}&&norm=${e.target.value}`
+        // );
+        dispatch(actions.getPasien.request(resource, { norm: e.target.value }));
+      }
+    }
+  }, []);
+  const changeInputHandler = useCallback((e) => {
+    const { value, name } = e.target;
+    dispatch(actions.onChangeInputIdentitas(resource, { value, name }));
+  }, []);
 
   return (
     <IdentitasPasien

@@ -198,7 +198,7 @@ export default (state = initialState, action) =>
         }
 
         if (payload.isTindakan) {
-          const selectedTindakan = state.post.id_tindakan;
+          const selectedTindakan = [...state.post.id_tindakan];
           let selectedData = null;
           if (payload.data) {
             selectedData = {
@@ -219,7 +219,7 @@ export default (state = initialState, action) =>
               selectedTindakan.splice(findIndex, 1);
             }
           } else {
-            selectedTindakan.push(selectedData);
+            selectedTindakan.push({ label: 'Karcis', value: 111 });
           }
           draft.post.id_tindakan = selectedTindakan;
         }

@@ -1,14 +1,33 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
-import { ready, select, add , edit} from './slice';
+import {
+  ready,
+  select,
+  add,
+  edit,
+  fullfillmentConfirmation,
+  willbefullfilled,
+} from './slice';
 import { staticConst } from '../../../static';
 
 // Untuk pengecekan status form
 const statusesElements = {
-  [ready.type]: ['add', staticConst.TABLE_PERMINTAAN_PENUNJANG],
+  [ready.type]: ['add', staticConst.TABLE_PENUNJANG, 'finish'],
+  [fullfillmentConfirmation.type]: [
+    'add',
+    staticConst.TABLE_PENUNJANG,
+    'finish',
+  ],
+  [willbefullfilled.type]: ['add', staticConst.TABLE_PENUNJANG, 'finish'],
   [add.type]: ['save', 'cancel', 'form-pemenuhan-penunjang'],
   [edit.type]: ['save', 'cancel', 'form-pemenuhan-penunjang'],
-  [select.type]: ['add', 'edit', 'delete', 'finish'],
+  [select.type]: [
+    'add',
+    'edit',
+    'delete',
+    'finish',
+    staticConst.TABLE_PENUNJANG,
+  ],
 };
 
 export const disabledElement = createSelector(
@@ -62,4 +81,14 @@ export const selectedKunjunganSelector = createSelector(
 export const statusFormSelector = createSelector(
   (state) => state.module.statusForm,
   (statusForm) => statusForm
+);
+
+export const loaderSelector = createSelector(
+  (state) => state.module.loading,
+  (loading) => loading
+);
+
+export const focusElementSelector = createSelector(
+  (state) => state.module.focusElement,
+  (focusElement) => focusElement
 );

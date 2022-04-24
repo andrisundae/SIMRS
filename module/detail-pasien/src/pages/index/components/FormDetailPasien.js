@@ -101,7 +101,11 @@ const FormDetailPasien = ({
                       name="norm"
                       onKeyDown={onEnterNorm}
                       disabled={isDisabledNorm}
-                      value={data.norm}
+                      value={
+                        isDisabledNorm
+                          ? formatter.textSplitter(data.norm)
+                          : data.norm
+                      }
                       onChange={onChangeInput}
                       onFocus={(e) => {
                         if (e.target.value) {

@@ -11,12 +11,12 @@
   padding-right: 8px !important;
 }
 
-#form-tindakan-kunjungan .ui .input input,
+/* #form-tindakan-kunjungan .ui .input input,
 #form-tindakan-kunjungan .react-datepicker__input-container input,
 #form-tindakan-kunjungan .react-select__control {
   height: 23px !important;
   font-size: 10px !important;
-}
+} */
 
 #form-tindakan-kunjungan .react-select__option-label {
   font-size: 12px;
@@ -34,24 +34,24 @@
   position: absolute !important;
 }
 
-#form-tindakan-kunjungan .react-select__placeholder,
+/* #form-tindakan-kunjungan .react-select__placeholder,
 .react-select__single-value {
   top: 10px !important;
-  /* vertical-align: middle !important; */
-}
+  vertical-align: middle !important;
+} */
 
-#form-tindakan-kunjungan .react-select__indicator-separator {
-  /* margin-top: 4px !important; */
+/* #form-tindakan-kunjungan .react-select__indicator-separator {
+  margin-top: 4px !important;
   margin-bottom: 7px !important;
   margin-top: 0px !important;
-}
+} */
 
-#form-tindakan-kunjungan .react-select__dropdown-indicator,
+/* #form-tindakan-kunjungan .react-select__dropdown-indicator,
 .react-select__clear-indicator {
   padding-top: 0px !important;
-}
+} */
 
-#form-tindakan-kunjungan .ui.action.input button {
+/* #form-tindakan-kunjungan .ui.action.input button {
   height: 23px !important;
   font-size: 10px !important;
-}
+} */

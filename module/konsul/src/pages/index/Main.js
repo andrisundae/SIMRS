@@ -21,7 +21,7 @@ import {
   dataSelector,
 } from '../index/redux/selector';
 import { actions } from '../index';
-import './assets/css/styles.css';
+// import './assets/css/styles.css';
 
 const Main = (props) => {
   const dispatch = useDispatch();

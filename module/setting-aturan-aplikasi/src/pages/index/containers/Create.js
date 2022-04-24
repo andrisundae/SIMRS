@@ -79,8 +79,9 @@ class Create extends Component {
           inputProps = {
             ...inputProps,
             options: aturan.pilihan_nilai.map((option) => {
-              option.label = option.value;
-              return option;
+              const newOption = { ...option };
+              newOption.label = option.value;
+              return newOption;
             }),
             onChange: (selected) =>
               this.handleSelectedChange(

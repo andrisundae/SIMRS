@@ -1,36 +1,20 @@
-import React, {
-  useRef,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useRef, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useForm, FormProvider } from 'react-hook-form';
 import _ from 'lodash';
-import { Grid, Form, Segment, Divider, Header } from 'semantic-ui-react';
-import { useModuleTrans, messageBox } from '@simrs/components';
-import { utils } from '@simrs/common';
-import { Input } from '@simrs/components';
+import { Grid, Form, Segment, Header, Divider } from 'semantic-ui-react';
+import { useModuleTrans, Input } from '@simrs/components';
+import { formatter } from '@simrs/common';
 // import { selectKunjungan, ready } from '../pemenuhan/redux/';
 // import { disabledElement, moduleSelector } from '../../red';
 
-function IdentitasPasien({ data, isPulang, penjaminPasien }) {
+function IdentitasPasien({ data = {}, isPulang = false, penjaminPasien }) {
   const t = useModuleTrans();
-  const dispatch = useDispatch();
-  const [norm, setNorm] = useState('');
-  // const isDisabledNorm = useSelector((state) => disabledElement(state, 'norm'));
   const isDisabledNorm = true;
-  // const { focusElement, statusForm, selectedKunjungan } = useSelector(
-  //   moduleSelector
-  // );
-  const focusElement = '';
-  const statusForm = '';
   const selectedKunjungan = {};
-  const formattedKunjunganAktifRawatInap = {};
   const defaultValues = useMemo(() => {
     return {
-      norm: data?.norm,
+      norm: formatter.textSplitter(data?.norm),
       nama: data?.nama,
       jenis_kelamin: data?.jenis_kelamin,
       nomor_ktp: data?.nomor_ktp,
@@ -54,13 +38,24 @@ function IdentitasPasien({ data, isPulang, penjaminPasien }) {
 
   return (
     <FormProvider {...methods}>
-      <Form
-        size="mini"
-        // onSubmit={methods.handleSubmit(onSubmit)}
-        ref={formRef}
-        // loading={isLoading}
-      >
-        <Segment size="mini" className="pt-0 pb-3 mb-0">
+      <Form size="mini" ref={formRef}>
+        <Segment raised size="mini" className="pt-0 pb-0 mb-0">
+          {/* <Label as="a" color="blue" ribbon>
+            {t('identitas_pasien')}
+          </Label>
+          {!_.isEmpty(penjaminPasien) && (
+            <Label
+              as="a"
+              color="green"
+              ribbon="right"
+              style={{ left: 'calc(92.5%)' }}
+            >
+              {isPulang
+                ? t('kunjungan_selesai')
+                : `${t('kunjungan_aktif')} - 
+              ${penjaminPasien}`}
+            </Label>
+          )} */}
           <Divider horizontal className="mt-3 mb-3">
             {t('identitas_pasien')}
           </Divider>
@@ -79,7 +74,6 @@ function IdentitasPasien({ data, isPulang, penjaminPasien }) {
                         rules={{ required: 'Harus diisi' }}
                         // onKeyDown={enterNormHanlder}
                         disabled={isDisabledNorm}
-                        // value={norm}
                         // onChange={onChangeInput}
                         // onFocus={focusNormHandler}
                       />
@@ -167,5 +161,11 @@ function IdentitasPasien({ data, isPulang, penjaminPasien }) {
     </FormProvider>
   );
 }
+
+IdentitasPasien.propTypes = {
+  data: PropTypes.object,
+  isPulang: PropTypes.bool,
+  penjaminPasien: PropTypes.string,
+};
 
 export default IdentitasPasien;

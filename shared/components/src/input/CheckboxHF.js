@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Form } from 'semantic-ui-react';
 import FormErrorMessage from '../FormErrorMessage';
@@ -18,7 +18,7 @@ const CheckboxHF = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
     <Form.Field error={invalid}>
       <Checkbox
         {...inputProps}
-        ref={ref}
+        inputRef={ref}
         value={inputProps.value}
         checked={inputProps.value ? true : false}
         {...props}
@@ -28,4 +28,4 @@ const CheckboxHF = React.forwardRef(({ name, rules = {}, ...props }, ref) => {
   );
 });
 
-export default CheckboxHF;
+export default memo(CheckboxHF);

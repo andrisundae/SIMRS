@@ -5,9 +5,15 @@ import _ from 'lodash';
 import { useLocation, useHistory, useParams } from 'react-router-dom';
 import { parse } from 'query-string';
 import { useQueryClient } from 'react-query';
-import { Header, Content } from '@simrs/main/src/modules/components';
+import { Header } from '@simrs/main/src/modules/components';
+import MainContent from '@simrs/billing/src/Components/MainContent';
 import { toastr } from '@simrs/common';
-import { useAppState, confirmation, useModuleTrans } from '@simrs/components';
+import {
+  useAppState,
+  confirmation,
+  useModuleTrans,
+  PageLoader,
+} from '@simrs/components';
 import {
   usePenunjangDetail,
   useEditStatusPenunjang,
@@ -17,7 +23,7 @@ import {
 import IdentitasPasien from '../components/IdentitasPasien';
 import ListPenunjang from '../components/ListPenunjang';
 import FormPenunjang from '../components/FormPenunjang';
-import FooterActions from '../components/FooterActions';
+// import FooterActions from '../components/FooterActions';
 import KeteranganKelasPasien from '../components/KeteranganKelasPasien';
 import {
   openForm,
@@ -25,7 +31,7 @@ import {
   willbefullfilled,
   reset,
 } from './redux/slice';
-import { statusFormSelector } from './redux/selectors';
+import { statusFormSelector, loaderSelector } from './redux/selectors';
 import { staticConst } from '../../static';
 
 function Pemenuhan() {
@@ -39,6 +45,7 @@ function Pemenuhan() {
   const t = useModuleTrans();
   const idKunjunganUnit = params?.idKunjunganUnit;
   const statusForm = useSelector(statusFormSelector);
+  const pageLoading = useSelector(loaderSelector);
   const enabled = useMemo(() => {
     let valid = false;
     if (idKunjunganUnit) {
@@ -57,9 +64,12 @@ function Pemenuhan() {
     }
     return valid;
   }, [idKunjunganUnit, searchs.st_status_penunjang, statusForm]);
-  const { data, isLoading } = usePenunjangDetail(idKunjunganUnit, {
-    enabled,
-  });
+  const { data, isLoading: loadingPenunjang } = usePenunjangDetail(
+    idKunjunganUnit,
+    {
+      enabled,
+    }
+  );
   const { data: details, isLoading: loadingDetail } = usePenunjangTindakan(
     idKunjunganUnit,
     {
@@ -69,37 +79,41 @@ function Pemenuhan() {
   const editStatusMutation = useEditStatusPenunjang();
   const penuhiSemuaPermintaanMutation = usePenuhiSemuaPermintaanPenunjang();
 
+  const reloadPenunjang = useCallback(() => {
+    queryClient.invalidateQueries(
+      `/billing/transaksi/penunjang/${idKunjunganUnit}`
+    );
+  }, [idKunjunganUnit, queryClient]);
+
+  const reloadTindakan = useCallback(() => {
+    queryClient.invalidateQueries(
+      `/billing/transaksi/penunjang/${idKunjunganUnit}/tindakan`
+    );
+  }, [idKunjunganUnit, queryClient]);
+
   const editStatus = useCallback(
     (status) => {
-      try {
-        editStatusMutation.mutate(
-          {
-            id: idKunjunganUnit,
-            st_status_penunjang: status,
+      editStatusMutation.mutate(
+        {
+          id: idKunjunganUnit,
+          st_status_penunjang: status,
+        },
+        {
+          onSuccess: ({ data }) => {
+            if (data.status) {
+              toastr.success('Status berhasil diubah.');
+              reloadPenunjang();
+            }
           },
-          {
-            onSuccess: ({ data }) => {
-              if (data.status) {
-                toastr.success('Status berhasil diubah.');
-                queryClient.invalidateQueries(
-                  `/billing/transaksi/penunjang/${idKunjunganUnit}`
-                );
-              }
-            },
-            onError: (error) => {
-              toastr.warning(
-                error && error.message
-                  ? error.message
-                  : 'Terjadi masalah server'
-              );
-            },
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+          onError: (error) => {
+            toastr.warning(
+              error && error.message ? error.message : 'Terjadi masalah server'
+            );
+          },
+        }
+      );
     },
-    [editStatusMutation, idKunjunganUnit, queryClient]
+    [editStatusMutation, idKunjunganUnit, reloadPenunjang]
   );
 
   const penuhiSemuaPermintaan = useCallback(() => {
@@ -119,12 +133,8 @@ function Pemenuhan() {
             onSuccess: ({ data }) => {
               if (data.status) {
                 toastr.success('Semua permintaan berhasil dipenuhi.');
-                queryClient.invalidateQueries(
-                  `/billing/transaksi/penunjang/${idKunjunganUnit}`
-                );
-                queryClient.invalidateQueries(
-                  `/billing/transaksi/penunjang/${idKunjunganUnit}/tindakan`
-                );
+                reloadPenunjang();
+                reloadTindakan();
               } else {
                 toastr.error(data.message);
               }
@@ -140,7 +150,13 @@ function Pemenuhan() {
         );
       },
     });
-  }, [idKunjunganUnit, penuhiSemuaPermintaanMutation, queryClient, t]);
+  }, [
+    idKunjunganUnit,
+    penuhiSemuaPermintaanMutation,
+    reloadPenunjang,
+    reloadTindakan,
+    t,
+  ]);
 
   useEffect(() => {
     dispatch(openForm({ resource }));
@@ -195,67 +211,86 @@ function Pemenuhan() {
   return (
     <>
       <Header title="Form Penunjang" icon="phone volume" />
-      <Content loading={isLoading || penuhiSemuaPermintaanMutation.isLoading}>
-        <IdentitasPasien
-          isPulang={data?.st_pulang}
-          penjaminPasien={data?.penjamin?.nama}
-          data={data?.pasien}
-        />
-        <Segment className="mt-2 pt-2">
-          <div className="flex items-center justify-between text-base mt-0 mb-2 font-semibold">
-            {!_.isEmpty(data) ? (
-              <KeteranganKelasPasien
-                kelas={data?.kelas?.nama}
-                hakKelas={data?.penjamin_pasien?.kelas?.nama}
-                penjaminId={data?.penjamin?.id}
-                penjaminPasien={data?.penjamin?.nama}
+      <MainContent>
+        <div className="grid h-full">
+          <div className="overflow-y-auto px-3 py-1 bg-gray-200">
+            <IdentitasPasien
+              isPulang={!!data?.st_pulang}
+              penjaminPasien={data?.penjamin?.nama}
+              data={data?.pasien}
+            />
+            <Segment className="mt-1 mb-1 pt-2">
+              <div className="flex items-center justify-between text-base mt-0 mb-2 font-semibold">
+                {!_.isEmpty(data) ? (
+                  <KeteranganKelasPasien
+                    kelas={data?.kelas?.nama}
+                    hakKelas={data?.penjamin_pasien?.kelas?.nama}
+                    penjaminId={data?.penjamin?.id}
+                    penjaminPasien={data?.penjamin?.nama}
+                  />
+                ) : (
+                  <div />
+                )}
+
+                <div className="my-1">
+                  <Button primary onClick={() => {}} size="mini">
+                    Dipublikasi
+                  </Button>
+                  <Button primary onClick={() => {}} size="mini">
+                    Permintaan Obat
+                  </Button>
+                  <Button primary onClick={() => {}} size="mini">
+                    Permintaan Penunjang
+                  </Button>
+                  <Button
+                    // loading={penuhiSemuaPermintaanMutation.isLoading}
+                    primary
+                    onClick={penuhiSemuaPermintaan}
+                    size="mini"
+                  >
+                    Penuhi Semua Permintaan
+                  </Button>
+                </div>
+              </div>
+
+              <ListPenunjang
+                idKunjunganUnit={idKunjunganUnit}
+                enabled={enabled}
+                unitLayanan={data?.unit_layanan?.nama}
+                statusPenunjang={data?.st_status_penunjang}
+                data={details}
+                loading={loadingDetail}
+                onReload={reloadTindakan}
               />
-            ) : (
-              <div />
-            )}
-
-            <div className="my-1">
-              <Button primary onClick={() => {}} size="mini">
-                Dipublikasi
-              </Button>
-              <Button primary onClick={() => {}} size="mini">
-                Permintaan Obat
-              </Button>
-              <Button primary onClick={() => {}} size="mini">
-                Permintaan Penunjang
-              </Button>
-              <Button
-                loading={penuhiSemuaPermintaanMutation.isLoading}
-                primary
-                onClick={penuhiSemuaPermintaan}
-                size="mini"
-              >
-                Penuhi Semua Permintaan
-              </Button>
-            </div>
+            </Segment>
+            <Segment className="mt-0 pt-0">
+              <FormPenunjang
+                kunjungan={data?.kunjungan}
+                kunjunganUnit={{
+                  id_unit_layanan: data?.id_unit_layanan,
+                  id_kelas: data?.id_kelas,
+                  id: idKunjunganUnit,
+                  total_biaya_penunjang: data?.total_biaya_tindakan,
+                }}
+                isResetStatusPemenuhan={isResetStatusPemenuhan}
+                pasien={data?.pasien}
+                onReloadPenunjang={reloadPenunjang}
+                onReloadTindakan={reloadTindakan}
+              />
+            </Segment>
           </div>
-
-          <ListPenunjang
-            idKunjunganUnit={idKunjunganUnit}
-            enabled={enabled}
-            unitLayanan={data?.unit_layanan?.nama}
-            statusPenunjang={data?.st_status_penunjang}
-            data={details}
-            loading={loadingDetail}
-          />
-          <FormPenunjang
-            kunjungan={data?.kunjungan}
-            kunjunganUnit={{
-              id_unit_layanan: data?.id_unit_layanan,
-              id_kelas: data?.id_kelas,
-            }}
-          />
-        </Segment>
-      </Content>
-      <FooterActions
-        isResetStatusPemenuhan={isResetStatusPemenuhan}
-        idKunjunganUnit={idKunjunganUnit}
+        </div>
+      </MainContent>
+      <PageLoader
+        active={
+          pageLoading ||
+          loadingPenunjang ||
+          penuhiSemuaPermintaanMutation.isLoading
+        }
       />
+      {/* <Content loading={isLoading || penuhiSemuaPermintaanMutation.isLoading}>
+        
+      </Content> */}
     </>
   );
 }

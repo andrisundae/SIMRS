@@ -7,56 +7,100 @@ import { Grid, Form, Dropdown, Button, Icon } from 'semantic-ui-react';
 import dayjs from 'dayjs';
 import {
   useModuleTrans,
-  ReactSelect,
   DatePickerHF,
   TimePickerHF,
+  useAppAction,
 } from '@simrs/components';
-// import { utils } from '@simrs/common';
+import { formatter, toastr } from '@simrs/common';
+import {
+  useCreatePenunjangDetail,
+  useEditPenunjangDetail,
+} from '@simrs/billing/src/fetcher/penunjang';
 import { Input } from '@simrs/components';
 import { TagihanPasien } from '@simrs/billing/src/Components';
-// import { useMutationKunjungan } from '@simrs/billing/src/fetcher/kunjungan';
 import {
   selectedSelector,
   disabledElement,
   statusFormSelector,
+  focusElementSelector,
 } from '../pemenuhan/redux/selectors';
-import { add } from '../pemenuhan/redux/slice';
+import {
+  add,
+  edit,
+  select,
+  showLoader,
+  hideLoader,
+  cancel,
+  fullfillmentConfirmation,
+} from '../pemenuhan/redux/slice';
 import CariTindakan from '../components/CariTindakan';
+import FooterActions from '../components/FooterActions';
+import PelaksanaSelector from '../components/PelaksanaSelector';
 
-function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
-  const t = useModuleTrans();
+function FormPenunjang({
+  innerRef,
+  kunjungan = {},
+  kunjunganUnit = {},
+  isResetStatusPemenuhan,
+  pasien = {},
+  onReloadPenunjang,
+  onReloadTindakan,
+}) {
   const dispatch = useDispatch();
+  const t = useModuleTrans();
+  const appActions = useAppAction();
+
   const [showCariTindakan, setShowCariTindakan] = useState(false);
+
   const disabledInput = useSelector((state) =>
     disabledElement(state, 'form-pemenuhan-penunjang')
   );
   const selected = useSelector(selectedSelector);
   const statusForm = useSelector(statusFormSelector);
-  const { reset, getValues, ...methods } = useForm();
+  const focusElement = useSelector(focusElementSelector);
+  const { reset, getValues, setValue, ...methods } = useForm({
+    defaultValues: {
+      jumlah: 0,
+      biaya: 0,
+      total_biaya: 0,
+      total_biaya_penunjang: 0,
+    },
+  });
   const inputRef = {
-    norm: React.useRef(),
+    kode_panggil: useRef(),
   };
-  // const mutation = useMutationKunjungan()
-  const onSubmit = useCallback((values) => {
-    // mutation.mutate(values, {onSuccess: (data) => {
-    //   console.log(data);
-    // }})
-    // console.log(values);
-  }, []);
 
+  // Mutation query
+  const createMutation = useCreatePenunjangDetail();
+  const editMutation = useEditPenunjangDetail();
+
+  // Effect untuk selected form
   useEffect(() => {
-    reset({
-      tanggal: dayjs(selected?.tanggal).toDate(),
-      kelas: selected?.kelas,
-      nama_layanan: selected?.nama_layanan,
-      total_biaya: selected?.total_biaya,
-      biaya: selected?.tarif,
-      kode_panggil: selected?.kode_panggil,
-      kelompok: selected?.kelompok,
-      jumlah: selected?.jumlah?.toString(),
-    });
+    if (!_.isEmpty(selected)) {
+      reset({
+        tanggal: dayjs(selected.tanggal).toDate(),
+        kelas: selected.kelas,
+        nama_layanan: selected.nama_layanan,
+        total_biaya: formatter.currency(selected.total_biaya),
+        biaya: formatter.currency(selected.tarif),
+        kode_panggil: selected.kode_panggil,
+        kelompok: selected.kelompok,
+        jumlah: selected.jumlah?.toString(),
+        total_biaya_penunjang: formatter.currency(
+          kunjunganUnit.total_biaya_penunjang
+        ),
+        id_pelaksana: !_.isEmpty(selected.pelaksana)
+          ? {
+              value: selected.pelaksana?.id,
+              label: selected.pelaksana?.nama,
+            }
+          : null,
+      });
+    }
   }, [
+    kunjunganUnit.total_biaya_penunjang,
     reset,
+    selected,
     selected.jumlah,
     selected.kelas,
     selected.kelompok,
@@ -66,6 +110,16 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
     selected.tarif,
     selected.total_biaya,
   ]);
+
+  // Effect untuk selected form
+  useEffect(() => {
+    if (!_.isEmpty(kunjunganUnit.total_biaya_penunjang)) {
+      setValue(
+        'total_biaya_penunjang',
+        formatter.currency(kunjunganUnit.total_biaya_penunjang)
+      );
+    }
+  }, [kunjunganUnit.total_biaya_penunjang, setValue]);
 
   const hideCariTindakanHandler = useCallback(
     () => setShowCariTindakan(false),
@@ -86,19 +140,114 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
         kelompok: selected.nama_kelompok,
         nama_layanan: selected.nama_layanan,
         biaya: selected.tarif,
+        jumlah: 1,
+        total_biaya: selected.tarif,
+        total_biaya_penunjang: selected.tarif,
+        id_tindakan: selected.id,
+        id_kelas: selected.id_kelas,
       });
       setShowCariTindakan(false);
     },
-    [getValues, reset]
+    [reset, getValues]
   );
+
+  const submitHandler = useCallback(
+    (values) => {
+      const jam = dayjs(values.jam).format('HH:mm');
+      const tanggal = formatter.dateFormatDB(
+        values.tanggal,
+        `YYYY-MM-DD ${jam}:ss`
+      );
+      const payload = {
+        id_tindakan: values.id_tindakan,
+        tgl: tanggal,
+        tgl_lahir: formatter.dateFormatDB(pasien.tgl_lahir),
+        id_unit_layanan: kunjunganUnit?.id_unit_layanan,
+        id_kelas: values.id_kelas,
+        jumlah: 1,
+        id_pelaksana: values.id_pelaksana?.value,
+        id_kunjungan_unit: kunjunganUnit.id,
+      };
+      const mutation = statusForm === add.type ? createMutation : editMutation;
+      if (statusForm === edit.type) {
+        payload.id = selected.id;
+      }
+      dispatch(showLoader());
+      mutation.mutate(payload, {
+        onSuccess: () => {
+          // console.log(response.data?.data?.data);
+          toastr.success(
+            statusForm === add.type
+              ? 'Tindakan berhasil ditambahkan.'
+              : 'Tindakan berhasil diubah.'
+          );
+          onReloadTindakan();
+          onReloadPenunjang();
+          appActions.activateMainMenu();
+        },
+        onError: (error) => {
+          toastr.warning(
+            error && error.message ? error.message : 'Terjadi masalah server'
+          );
+        },
+        onSettled: () => dispatch(hideLoader()),
+      });
+    },
+    [
+      appActions,
+      createMutation,
+      dispatch,
+      editMutation,
+      kunjunganUnit.id,
+      kunjunganUnit.id_unit_layanan,
+      onReloadPenunjang,
+      onReloadTindakan,
+      pasien.tgl_lahir,
+      selected.id,
+      statusForm,
+    ]
+  );
+
+  const keyDownKodePanggilHandler = (e) => {
+    e.preventDefault();
+    if (13 === e.which) {
+      showCariTindakanHandler();
+    }
+  };
+
+  // Effect untuk selected data ketika sesudah simpan
+  useEffect(() => {
+    if (createMutation.data && !createMutation.isLoading) {
+      if (createMutation.data.data?.status) {
+        dispatch(select(createMutation.data.data?.data));
+      }
+    }
+  }, [createMutation.data, createMutation.isLoading, dispatch]);
+
+  // Effect untuk focus element
+  useEffect(() => {
+    if (statusForm === add.type || statusForm === edit.type) {
+      if (focusElement) {
+        if (!_.isEmpty(inputRef[focusElement]?.current)) {
+          inputRef[focusElement]?.current.focus();
+        }
+      }
+    }
+  }, [focusElement, inputRef, statusForm]);
+
+  useEffect(() => {
+    if (statusForm === cancel.type && _.isEmpty(selected)) {
+      dispatch(fullfillmentConfirmation());
+    }
+  }, [dispatch, innerRef, selected, statusForm]);
 
   return (
     <>
-      <FormProvider {...methods}>
+      <FormProvider setValue={setValue} {...methods}>
         <Form
           id="form-pemenuhan-penunjang"
           size="mini"
-          onSubmit={methods.handleSubmit(onSubmit)}
+          onSubmit={methods.handleSubmit(submitHandler)}
           ref={innerRef}
         >
           <Grid columns="2" className="mt-3">
@@ -134,8 +283,8 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
                     <Grid.Column width="12" className="">
                       <Input
                         name="kode_panggil"
-                        // ref={inputRef.id_tindakan}
-                        // onKeyDown={keyDownKodePanggilHandler}
+                        ref={inputRef.kode_panggil}
+                        onKeyDown={keyDownKodePanggilHandler}
                         action={{
                           content: 'Cari',
                           onClick: showCariTindakanHandler,
@@ -144,6 +293,7 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
                           type: 'button',
                         }}
                         disabled={disabledInput}
+                        rules={{ required: 'Harus diisi' }}
                         // value={data.kode_panggil}
                         // onChange={this.inputChangeHandler}
                       />
@@ -182,12 +332,16 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
                       <label>{t('pelaksana')}</label>
                     </Grid.Column>
                     <Grid.Column width="12">
-                      <ReactSelect
+                      <PelaksanaSelector
+                        idUnitLayanan={kunjunganUnit?.id_unit_layanan}
+                        isDisabled={disabledInput}
+                      />
+                      {/* <ReactSelect
                         name="pelaksana"
                         placeholder={t('pelaksana')}
                         options={[]}
                         isDisabled={disabledInput}
-                      />
+                      /> */}
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row className="py-1">
@@ -306,6 +460,16 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
               </Grid.Column>
             </Grid.Row>
           </Grid>
+          <FooterActions
+            isResetStatusPemenuhan={isResetStatusPemenuhan}
+            idKunjunganUnit={kunjunganUnit.id}
+            onResetForm={reset}
+            getValues={getValues}
+            formRef={innerRef}
+            mutationLoading={createMutation.isLoading}
+            onReloadPenunjang={onReloadPenunjang}
+            onReloadTindakan={onReloadTindakan}
+          />
         </Form>
       </FormProvider>
       {showCariTindakan && (
@@ -324,7 +488,11 @@ function FormPenunjang({ innerRef, kunjungan = {}, kunjunganUnit = {} }) {
 FormPenunjang.propTypes = {
   kunjungan: PropTypes.object,
   kunjunganUnit: PropTypes.object,
+  pasien: PropTypes.object,
   innerRef: PropTypes.object,
+  isResetStatusPemenuhan: PropTypes.bool,
+  onReloadPenunjang: PropTypes.func,
+  onReloadTindakan: PropTypes.func,
 };
 
 const Component = React.forwardRef((props, ref) => {

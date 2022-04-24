@@ -285,7 +285,9 @@ export default function NoRowsOverlay({ message }) {
           fill="#2f2e41"
         />
       </svg>
-      <h3 className="font-semibold text-gray-400">{message || 'Tidak ada data yang ditampilkan'}</h3>
+      <h3 className="text-gray-400 text-base">
+        {message || 'Tidak ada data yang ditampilkan'}
+      </h3>
     </div>
   );
 }

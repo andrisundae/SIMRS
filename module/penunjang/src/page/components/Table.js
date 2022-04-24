@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useTable, useExpanded, useRowSelect } from 'react-table';
+import classNames from 'classnames';
 import { NoRowsOverlay } from '@simrs/components';
 
 function TreeTable({ columns: userColumns, data, onSelectedRow }) {
@@ -87,20 +88,25 @@ function TreeTable({ columns: userColumns, data, onSelectedRow }) {
   return (
     <div className="shadow relative w-full overflow-y-scroll border-b border-gray-200 sm:rounded-lg h-100 overflow-x-hidden">
       <table className="w-full" {...getTableProps()}>
-        <thead className="bg-gray-50 w-full">
+        <thead className="bg-gray-100 w-full">
           {headerGroups.map((headerGroup, key) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={key}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps()}
-                  key={index}
-                  // scope="row"
-                  className="bg-gray-50 sticky top-0 z-50 w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  align="center"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
+              {headerGroup.headers.map((column, index) => {
+                return (
+                  <th
+                    {...column.getHeaderProps()}
+                    key={index}
+                    // scope="row"
+                    className={classNames(
+                      'bg-gray-100 sticky top-0 z-50 w-1/4 px-6 py-3 font-semibold uppercase',
+                      column.className
+                    )}
+                    align={column.textAlign || 'left'}
+                  >
+                    {column.render('Header')}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>

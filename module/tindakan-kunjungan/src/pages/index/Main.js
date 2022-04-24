@@ -36,6 +36,9 @@ const Main = (props) => {
 
   React.useEffect(() => {
     dispatch(actions.openForm(props.resource));
+    return () => {
+      dispatch(actions.onReset({ resource: props.resource }));
+    };
   }, [dispatch, props.resource]);
 
   const getKey = (key) => {
@@ -96,7 +99,7 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <PageHeader title={props.t(getKey('title'))} icon="syringe" />
+      <PageHeader title={props.t(getKey('title'))} />
       <Content>
         <IdentitasPasien {...props} />
         {post.id > 0 && (

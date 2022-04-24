@@ -1,7 +1,8 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
 import { Form, Grid, Input } from 'semantic-ui-react';
 import { useForm, FormProvider } from 'react-hook-form';
 import {
@@ -11,7 +12,16 @@ import {
   TimePickerHF,
   CheckboxHF,
 } from '@simrs/components';
-import DokterTujuanSelect from './DokterTujuanSelect';
+import DokterTujuanSelector from './DokterTujuanSelector';
+import {
+  statusFormSelector,
+  focusElementSelector,
+} from '../permintaan/redux/selectors';
+import {
+  add,
+  edit,
+  focusElement as focusElementAction,
+} from '../permintaan/redux/slice';
 
 const now = dayjs();
 
@@ -25,6 +35,16 @@ const FormPermintaanPenunjang = ({
   diagnosa,
   isAdd,
 }) => {
+  const dispatch = useDispatch();
+  const inputRef = {
+    id_unit_layanan: useRef(),
+    id_dokter_peminta_penunjang: useRef(),
+    id_dokter_tujuan_penunjang: useRef(),
+    id_diagnosa: useRef(),
+    st_cito: useRef(),
+  };
+  const statusForm = useSelector(statusFormSelector);
+  const focusElement = useSelector(focusElementSelector);
   const findDiagnosa = useMemo(() => {
     return data && Array.isArray(diagnosa)
       ? diagnosa.find((row) => row.value === data?.id_diagnosa)
@@ -69,9 +89,35 @@ const FormPermintaanPenunjang = ({
     }
   }, [data, findDiagnosa, reset, defaultValues]);
 
+  // Effect untuk focus element
+  useEffect(() => {
+    if (statusForm === add.type || statusForm === edit.type) {
+      if (focusElement) {
+        if (!_.isEmpty(inputRef[focusElement]?.current)) {
+          inputRef[focusElement]?.current.focus();
+        }
+      }
+    }
+  }, [focusElement, inputRef, statusForm]);
+
+  const onFocusElement = (e, name) => {
+    e.preventDefault();
+    dispatch(focusElementAction({ focusElement: name }));
+  };
+
+  const submitErrorHandler = useCallback((errors) => {
+    const errorKeys = Object.keys(errors);
+    if (errorKeys[0]) {
+      dispatch(focusElementAction({ focusElement: errorKeys[0] }));
+    }
+  }, []);
+
   return (
     <FormProvider {...methods}>
-      <Form ref={innerRef} onSubmit={methods.handleSubmit(onSubmit)}>
+      <Form
+        ref={innerRef}
+        onSubmit={methods.handleSubmit(onSubmit, submitErrorHandler)}
+      >
         <Grid>
           <Grid.Row className="py-1 flex items-center">
             <Grid.Column width="5" className="">
@@ -106,6 +152,11 @@ const FormPermintaanPenunjang = ({
                 options={unitLayanan || []}
                 rules={{ required: 'Silahkan pilih unit layanan' }}
                 isDisabled={!isAdd}
+                inputRef={inputRef.id_unit_layanan}
+                onKeyDown={(e) =>
+                  onFocusElement(e, 'id_dokter_peminta_penunjang')
+                }
+                isClearable={false}
               />
             </Grid.Column>
           </Grid.Row>
@@ -127,6 +178,8 @@ const FormPermintaanPenunjang = ({
                 placeholder={t('yang_meminta')}
                 options={dokterPeminta || []}
                 rules={{ required: 'Silahkan pilih dokter' }}
+                inputRef={inputRef.id_dokter_peminta_penunjang}
+                onKeyDown={(e) => onFocusElement(e, 'id_diagnosa')}
               />
             </Grid.Column>
           </Grid.Row>
@@ -140,7 +193,10 @@ const FormPermintaanPenunjang = ({
                 placeholder={t('pilih_dx')}
                 options={diagnosa || []}
                 rules={{ required: 'Silahkan pilih diagnosa' }}
-                onAfterChange={(selected) => console.log(selected)}
+                inputRef={inputRef.id_diagnosa}
+                onKeyDown={(e) =>
+                  onFocusElement(e, 'id_dokter_tujuan_penunjang')
+                }
               />
             </Grid.Column>
           </Grid.Row>
@@ -149,9 +205,11 @@ const FormPermintaanPenunjang = ({
               <label>{t('dokter_tujuan')}</label>
             </Grid.Column>
             <Grid.Column width="11">
-              <DokterTujuanSelect
+              <DokterTujuanSelector
                 control={methods.control}
                 rules={{ required: 'Silahkan pilih dokter' }}
+                ref={inputRef.id_dokter_tujuan_penunjang}
+                onKeyDown={(e) => onFocusElement(e, 'st_cito')}
               />
             </Grid.Column>
           </Grid.Row>
@@ -160,7 +218,12 @@ const FormPermintaanPenunjang = ({
               {''}
             </Grid.Column>
             <Grid.Column width="11">
-              <CheckboxHF name="st_cito" label={t('st_cito')} />
+              <CheckboxHF
+                ref={inputRef.st_cito}
+                name="st_cito"
+                label={t('st_cito')}
+                onKeyDown={(e) => onFocusElement(e, 'save')}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
