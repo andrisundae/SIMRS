@@ -1,7 +1,12 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  content: ['../../module/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    '../../module/**/*.{js,jsx,ts,tsx}',
+    '../../shared/components/src/**/*.{js,jsx,ts,tsx}',
+    '../main/src/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
   // mode: 'jit',
   theme: {
     fontFamily: {

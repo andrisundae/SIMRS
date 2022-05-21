@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { Segment } from 'semantic-ui-react';
+// import { Segment } from 'semantic-ui-react';
 
 function Content(props) {
   return (
-    <Segment.Group
-      style={{ marginTop: 38, borderRadius: 'none', marginBottom: 0 }}
+    <div
+      className="fixed right-0 left-0 bottom-9 top-[40px] overflow-y-auto bg-gray-200"
+      // style={{ marginTop: 38, borderRadius: 'none', marginBottom: 0 }}
     >
       {props.children}
-    </Segment.Group>
+    </div>
     // <Sidebar.Pushable as={Segment.Group} raised style={{marginTop: 38}}>
     //     <Sidebar
     //         as={Menu}

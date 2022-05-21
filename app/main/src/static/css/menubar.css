@@ -2,6 +2,7 @@ x-menubar {
   padding-right: 0px !important;
 }
 
+#window-controls,
 x-menuitem,
 #right-menu-search input {
   -webkit-app-region: no-drag;

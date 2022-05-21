@@ -1,40 +1,40 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { remote } from 'electron';
-import { Input } from 'semantic-ui-react';
-import { ReactComponent as MaximizeIcon } from '../static/svg/maximize.svg';
-import { ReactComponent as CloseIcon } from '../static/svg/close.svg';
-import { ReactComponent as MinusIcon } from '../static/svg/minus.svg';
-import { ReactComponent as MinimizeIcon } from '../static/svg/minimize.svg';
+import { Input, Button } from 'semantic-ui-react';
+// import { ReactComponent as MaximizeIcon } from '../static/svg/maximize.svg';
+// import { ReactComponent as CloseIcon } from '../static/svg/close.svg';
+// import { ReactComponent as MinusIcon } from '../static/svg/minus.svg';
+// import { ReactComponent as MinimizeIcon } from '../static/svg/minimize.svg';
 
-const _window = remote.getCurrentWindow();
-function RightMenu({ username, disabled, routers, history }) {
+const currentWindow = remote.getCurrentWindow();
+const RightMenu = ({ username, disabled, routers, history }) => {
   const disabledProp = disabled ? { disabled: true } : {};
 
-  function _onExit() {
-    _window.close();
-  }
+  const closeHandler = useCallback(() => {
+    currentWindow.close();
+  }, []);
 
-  function _onMinimize() {
-    _window.minimize();
-  }
+  const minimizeHandler = useCallback(() => {
+    currentWindow.minimize();
+  }, []);
 
-  function _onMaximize() {
-    if (!_window.isMaximized()) {
-      _window.maximize();
+  const maximizedHandler = useCallback(() => {
+    if (!currentWindow.isMaximized()) {
+      currentWindow.maximize();
     } else {
-      _window.unmaximize();
+      currentWindow.unmaximize();
     }
-  }
+  }, []);
 
-  function changePasswordHandler() {
+  const changePasswordHandler = useCallback(() => {
     const keyMenu = '_system_portal_change_password';
     let router = routers.find((router) => router.key === keyMenu);
     if (router) {
       history.replace(`${router.path}?route=${keyMenu}`);
     }
-  }
+  }, [history, routers]);
 
   const menus = [
     <div
@@ -45,7 +45,7 @@ function RightMenu({ username, disabled, routers, history }) {
       <Input
         icon={{ name: 'search', link: true }}
         placeholder="Search users..."
-        size="mini"
+        // size="small"
       />
     </div>,
     <x-menuitem key="2" {...disabledProp}>
@@ -69,7 +69,7 @@ function RightMenu({ username, disabled, routers, history }) {
           />
           <x-label>Ganti Password</x-label>
         </x-menuitem>
-        <x-menuitem onClick={_onExit}>
+        <x-menuitem onClick={closeHandler}>
           <x-icon
             name="logout"
             iconset="https://xel-toolkit.org/iconsets/material.svg"
@@ -90,10 +90,10 @@ function RightMenu({ username, disabled, routers, history }) {
     //   class="app-window-button"
     //   key="4"
     //   onClick={_onMaximize}
-    //   title={_window.isMaximized() ? 'Restore' : 'Maximize'}
+    //   title={currentWindow.isMaximized() ? 'Restore' : 'Maximize'}
     // >
     //   <x-icon
-    //     name={_window.isMaximized() ? 'filter-none' : 'check-box-outline-blank'} iconset="https://xel-toolkit.org/iconsets/fluent.svg"
+    //     name={currentWindow.isMaximized() ? 'filter-none' : 'check-box-outline-blank'} iconset="https://xel-toolkit.org/iconsets/fluent.svg"
     //   />
     // </x-menuitem>,
     // <x-menuitem
@@ -106,37 +106,50 @@ function RightMenu({ username, disabled, routers, history }) {
     //   <Icon name='window close outline' size='big' />
     // </x-menuitem>,
     <div
-      id="window-menu"
-      className="group ml-2 mr-3 z-50 flex items-center space-x-1"
+      id="window-controls"
+      className="ml-2 mr-3 flex items-center h-full py-1"
       key="3"
     >
-      <button
-        onClick={_onMinimize}
+      <Button.Group basic size="tiny">
+        <Button onClick={minimizeHandler} icon="window minimize" />
+        <Button
+          onClick={maximizedHandler}
+          icon={
+            currentWindow.isMaximized() ? 'window restore' : 'window maximize'
+          }
+        />
+        <Button onClick={closeHandler} icon="window close" />
+      </Button.Group>
+      {/* <Button icon="window minimize" size="mini" />
+      <Button icon="window maximize" size="mini" />
+      <Button icon="window close" size="mini" /> */}
+      {/* <button
+        onClick={minimizeHandler}
         className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-yellow-500 rounded-full focus:shadow-outline cursor-pointer"
       >
         <MinusIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
       </button>
       <button
-        onClick={_onMaximize}
+        onClick={maximizedHandler}
         className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-green-600 rounded-full focus:shadow-outline cursor-pointer"
       >
-        {_window.isMaximized() ? (
+        {currentWindow.isMaximized() ? (
           <MinimizeIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
         ) : (
           <MaximizeIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
         )}
       </button>
       <button
-        onClick={_onExit}
+        onClick={closeHandler}
         className="inline-flex items-center justify-center w-5 h-5 text-slate-900 transition-colors duration-150 bg-red-600 rounded-full focus:shadow-outline cursor-pointer"
       >
         <CloseIcon className="hidden group-hover:block transition-all duration-150 h-3 w-3" />
-      </button>
+      </button> */}
     </div>,
   ];
 
   return menus;
-}
+};
 
 RightMenu.propTypes = {
   username: PropTypes.string.isRequired,

@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 import FilterableSettingList from './containers/FilterableSettingList';
 import FilterableSumberList from './containers/FilterableSumberList';
 import ActionButtons from './containers/ActionButtons';
@@ -42,55 +46,56 @@ class Main extends Component {
 
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name={this.props.icon} />
-            {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column>
-                <Segment padded>{this.props.filterSumberLain}</Segment>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={7}>
-                <FilterableSumberList
-                  resource={resource}
-                  sizeColumnsToFit={sizeColumnsToFitSumber}
-                  columnDefs={sumberColumns}
-                  t={t}
-                  i18n={i18n}
-                  containerHeight={containerHeightSumber}
-                  settings={settings}
-                />
-              </Grid.Column>
-              <Grid.Column width={2} verticalAlign="middle">
-                {dataSetting && (
-                  <div style={{ position: 'absolute', top: -125 }}>
-                    {dataSetting}
-                  </div>
-                )}
-                <ActionButtons resource={resource} />
-              </Grid.Column>
-              <Grid.Column width={7}>
-                <FilterableSettingList
-                  resource={resource}
-                  sizeColumnsToFit={sizeColumnsToFitSetting}
-                  columnDefs={settingColumns}
-                  t={t}
-                  i18n={i18n}
-                  containerHeight={containerHeightSetting}
-                  settings={settings}
-                  withColumnAktif={withColumnAktif}
-                  onAktifChanged={onAktifChanged}
-                />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          {/* <Grid className="content-grid">
+        <PageHeader
+          title={
+            this.props.caption || this.props.t(`${this.props.resource}:title`)
+          }
+          icon={this.props.icon}
+        />
+        <Content>
+          <Segment>
+            <Grid className="content-grid">
+              <Grid.Row>
+                <Grid.Column>
+                  <Segment padded>{this.props.filterSumberLain}</Segment>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={7}>
+                  <FilterableSumberList
+                    resource={resource}
+                    sizeColumnsToFit={sizeColumnsToFitSumber}
+                    columnDefs={sumberColumns}
+                    t={t}
+                    i18n={i18n}
+                    containerHeight={containerHeightSumber}
+                    settings={settings}
+                  />
+                </Grid.Column>
+                <Grid.Column width={2} verticalAlign="middle">
+                  {dataSetting && (
+                    <div style={{ position: 'absolute', top: -125 }}>
+                      {dataSetting}
+                    </div>
+                  )}
+                  <ActionButtons resource={resource} />
+                </Grid.Column>
+                <Grid.Column width={7}>
+                  <FilterableSettingList
+                    resource={resource}
+                    sizeColumnsToFit={sizeColumnsToFitSetting}
+                    columnDefs={settingColumns}
+                    t={t}
+                    i18n={i18n}
+                    containerHeight={containerHeightSetting}
+                    settings={settings}
+                    withColumnAktif={withColumnAktif}
+                    onAktifChanged={onAktifChanged}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+            {/* <Grid className="content-grid">
                         <Grid.Row>
                             <Grid.Column width={7}>
                                 <FilterableSumberList
@@ -124,7 +129,8 @@ class Main extends Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid> */}
-        </Segment>
+          </Segment>
+        </Content>
         <PageLoader
           active={this.props.isLoading}
           message={this.props.loaderMessage}

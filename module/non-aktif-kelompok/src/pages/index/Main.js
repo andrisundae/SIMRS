@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import Filter from './containers/Filter';
 import List from './containers/List';
@@ -14,27 +18,28 @@ class Main extends Component {
   render() {
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name="list" />
-            {this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column>
-                <Filter {...this.props} />
-              </Grid.Column>
-            </Grid.Row>
-            {/* <Divider style={{ marginBottom: 0, marginTop: 5 }} /> */}
-            <Grid.Row>
-              <Grid.Column>
-                <List {...this.props} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <PageHeader
+          title={this.props.t(`${this.props.resource}:title`)}
+          icon="list"
+        />
+        <Content>
+          <Segment>
+            <Grid className="content-grid">
+              <Grid.Row>
+                <Grid.Column>
+                  <Filter {...this.props} />
+                </Grid.Column>
+              </Grid.Row>
+              {/* <Divider style={{ marginBottom: 0, marginTop: 5 }} /> */}
+              <Grid.Row>
+                <Grid.Column>
+                  <List {...this.props} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Content>
+
         <PageLoader
           active={this.props.isLoading}
           message={this.props.loaderMessage}

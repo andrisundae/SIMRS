@@ -16740,10 +16740,9 @@ selfsigned@^2.0.1:
   dependencies:
     node-forge "^1"
 
-semantic-ui-css@^2.4.1, semantic-ui-css@~2.4.1:
+"semantic-ui-css@git+https://github.com/Semantic-Org/Semantic-UI-CSS.git", semantic-ui-css@~2.4.1:
   version "2.4.1"
-  resolved "https://registry.yarnpkg.com/semantic-ui-css/-/semantic-ui-css-2.4.1.tgz#f5aea39fafb787cbd905ec724272a3f9cba9004a"
-  integrity sha512-Pkp0p9oWOxlH0kODx7qFpIRYpK1T4WJOO4lNnpNPOoWKCrYsfHqYSKgk5fHfQtnWnsAKy7nLJMW02bgDWWFZFg==
+  resolved "git+https://github.com/Semantic-Org/Semantic-UI-CSS.git#01e4a5346496c284db3b19a102458731ccccd911"
   dependencies:
     jquery x.*
 

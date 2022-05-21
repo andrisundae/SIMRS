@@ -10,6 +10,7 @@ import { PageLoader } from '@simrs/components';
 import { store } from '@simrs/common';
 import createStore from './store';
 import { Portal, Login, Server } from './modules';
+import MedicineIcon from './static/svg/medicine.svg';
 
 const storeRedux = createStore();
 
@@ -56,8 +57,8 @@ function App() {
       <Suspense fallback={<PageLoader active={true} />}>
         <Container>
           <Grid columns={2} className="main-page">
-            <Grid.Row className="layout">
-              <Grid.Column className="logo">
+            <Grid.Row className="layout bg-gradient-to-r from-[#2c3e50] to-cyan-500">
+              <Grid.Column className="flex items-center justify-center">
                 <Segment color="teal" inverted>
                   <Label
                     color="red"
@@ -66,14 +67,18 @@ function App() {
                     content="RS. Kusta Sumberglagah"
                   />
                   <Image
-                    src="https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                    circular
-                    size="small"
+                    src={MedicineIcon}
+                    // circular
+                    className="h-48 mt-3"
                     centered
                   />
                 </Segment>
+                <div className="absolute bottom-5">
+                  2018 <span dangerouslySetInnerHTML={{ __html: '&copy;' }} />{' '}
+                  {process.env.REACT_APP_AUTHOR}
+                </div>
               </Grid.Column>
-              <Grid.Column className="main-content">
+              <Grid.Column className="main-content bg-[#2c3e50] flex items-center justify-center">
                 <Router>
                   <Switch>
                     <Route exact path="/" render={_renderLogin} />
@@ -86,10 +91,6 @@ function App() {
                     />
                   )}
                 </Router>
-                <div className="copyright">
-                  2018 <span dangerouslySetInnerHTML={{ __html: '&copy;' }} />{' '}
-                  {process.env.REACT_APP_AUTHOR}
-                </div>
               </Grid.Column>
             </Grid.Row>
           </Grid>

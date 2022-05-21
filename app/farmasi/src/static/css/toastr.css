@@ -1,3 +1,9 @@
 .redux-toastr .toastr .rrt-left-container .toastr-icon {
   display: unset;
 }
+
+.redux-toastr .top-center,
+.redux-toastr .top-left,
+.redux-toastr .top-right {
+  top: 30px;
+}

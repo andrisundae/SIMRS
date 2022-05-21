@@ -20,7 +20,7 @@ PageLoader.propTypes = {
 };
 
 PageLoader.defaultProps = {
-  size: 'small',
+  size: 'medium',
   message: '',
   active: false,
   inverted: true,

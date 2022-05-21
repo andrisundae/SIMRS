@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { Button, Icon, Segment } from 'semantic-ui-react';
+import { Button, Icon, Segment, Divider } from 'semantic-ui-react';
 import { remote } from 'electron';
 import isDev from 'electron-is-dev';
 import { connect } from 'react-redux';
@@ -95,55 +95,58 @@ class Main extends Component {
     const hasOpenedApp = 0 < store.main.get('user.openedApp');
 
     return (
-      <Fragment>
+      <div className="flex-1">
         <div className="form-title">
           <span className="form-title">{t('main:portal.title')}</span>
           <br />
           <span className="form-subtitle">{t('main:portal.subtitle')}</span>
         </div>
-        {this._renderContextsMenu()}
-        <div>
-          <small className="divider">atau</small>
+        <div className="grid grid-cols-2 gap-3">
+          {this._renderContextsMenu()}
+        </div>
+
+        <div className="mt-5">
+          <Divider inverted horizontal>
+            atau
+          </Divider>
           <Button
             type="button"
             fluid
             basic
             inverted
             loading={this.props.isLoading}
-            disabled={hasOpenedApp}
-            title={hasOpenedApp ? t('main:portal.action.exit.title') : null}
+            disabled={process.env.NODE_ENV === 'production' && hasOpenedApp}
+            title={
+              process.env.NODE_ENV === 'production' && hasOpenedApp
+                ? t('main:portal.action.exit.title')
+                : null
+            }
             onClick={this._logout}
           >
             KELUAR
           </Button>
         </div>
-      </Fragment>
+      </div>
     );
   }
 
   _renderContextsMenu() {
     return menu.getContexts().map((context, index) => {
       return (
-        <Segment
+        <Button
           key={index}
-          inverted
-          size="tiny"
-          color="black"
-          style={{ marginTop: 5, marginBottom: 5, padding: 5 }}
+          onClick={() => this._createWindow(context.key, index + 1)}
+          icon
+          labelPosition="right"
+          color={context.warna}
+          // inverted
+          size="large"
+          type="button"
+          className="text-[14px] flex h-14 items-center"
+          fluid
         >
-          <Button
-            onClick={() => this._createWindow(context.key, index + 1)}
-            icon
-            labelPosition="right"
-            color={context.warna}
-            inverted
-            size="tiny"
-            type="button"
-            fluid
-          >
-            <Icon name={context.icon} /> {context.nama}
-          </Button>
-        </Segment>
+          <Icon name={context.icon} /> <span>{context.nama}</span>
+        </Button>
       );
     });
   }

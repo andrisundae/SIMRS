@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Header as SmHeader } from 'semantic-ui-react';
@@ -9,6 +9,18 @@ import 'xel/xel.js';
 
 function Header({ logo, match, username, contexts, routers, history }) {
   const { disabledMainMenu } = useAppState();
+
+  const goToDashboardHandler = useCallback(() => {
+    let path = '/billing/dashboard';
+    if (logo === 'SISTEM') {
+      path = '/system/dashboard';
+    } else if (logo === 'FARMASI') {
+      path = '/farmasi/dashboard';
+    } else if (logo === 'REKAM_MEDIS') {
+      path = '/rekam_medis/dashboard';
+    }
+    history.push(path);
+  }, [history, logo]);
 
   return (
     <x-menubar
@@ -24,26 +36,29 @@ function Header({ logo, match, username, contexts, routers, history }) {
         margin: 0,
         WebkitAppRegion: 'drag',
         paddingRight: 0,
+        backgroundColor: 'white',
+        borderBottom: '1px solid #f3f4f5',
       }}
-      size="small"
     >
-      <div style={{ marginLeft: 10 }}>
-        <SmHeader
-          as="h6"
-          icon
-          style={{ marginTop: 7, marginBottom: 0, marginRight: 9 }}
-        >
-          {logo === 'BILLING' && (
-            <Icon name="bold" style={{ fontSize: '2em' }} />
-          )}
-          {logo === 'SISTEM' && (
-            <Icon name="stripe s" style={{ fontSize: '2em' }} />
-          )}
-          {logo === 'REKAM_MEDIS' && (
-            <Icon name="heartbeat" style={{ fontSize: '2em' }} />
-          )}
-        </SmHeader>
-      </div>
+      <SmHeader
+        onClick={goToDashboardHandler}
+        className={`my-0 mx-2 ${
+          logo === 'REKAM_MEDIS' ? 'mt-5' : 'mt-2'
+        } cursor-pointer`}
+        as="h6"
+        icon
+      >
+        {logo === 'BILLING' && <Icon name="bold" className="text-3xl" />}
+        {logo === 'SISTEM' && (
+          <Icon name="stripe s" style={{ fontSize: '2em' }} />
+        )}
+        {logo === 'FARMASI' && (
+          <Icon name="pills" style={{ fontSize: '2em' }} />
+        )}
+        {logo === 'REKAM_MEDIS' && (
+          <Icon name="heartbeat" style={{ fontSize: '2em' }} />
+        )}
+      </SmHeader>
       <MainMenu
         disabled={disabledMainMenu}
         contexts={contexts}

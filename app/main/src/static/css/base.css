@@ -347,9 +347,9 @@ li.dropdown-submenu:focus,
 }
 
 /*Form input*/
-#right-menu-search input {
+/* #right-menu-search input {
   height: 20px !important;
-}
+} */
 
 .ui .input input,
 .react-datepicker__input-container input {

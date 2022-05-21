@@ -1,4 +1,5 @@
-import './static/css/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css';
+import './static/css/tailwindcss.css';
 import './static/css/main-page.css';
 
 import React from 'react';

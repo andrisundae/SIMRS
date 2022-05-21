@@ -18,7 +18,7 @@ import {
   ModuleProvider,
 } from '@simrs/components';
 import { store, menu } from '@simrs/common';
-import {PemenuhanPenunjang} from '@module/penunjang';
+import { PemenuhanPenunjang } from '@module/penunjang';
 
 import Dashboard from './Dashboard';
 import rootRouters from './routers';

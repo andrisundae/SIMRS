@@ -15,7 +15,7 @@ import NumericInputRenderer from './NumericInputRenderer';
 import FooterPinnedRowRenderer from './FooterPinnedRowRenderer';
 import CheckboxRenderer from './CheckboxRenderer';
 import DropdownSelectRenderer from './DropdownSelectRenderer';
-import NoRowsOverlay from './NoRowsOverlay';
+// import NoRowsOverlay from './NoRowsOverlay';
 import imgLoading from '../../static/media/img/loading-spinner-grey.gif';
 
 import alias from '../const';
@@ -141,9 +141,9 @@ class DataTableServerSide extends Component {
         currencyRenderer: this._renderCurrency,
       },
       onModelUpdated: this._onModelUpdated,
-      // overlayNoRowsTemplate: this._renderNoRowsTemplate(),
+      overlayNoRowsTemplate: this._renderNoRowsTemplate(),
       overlayLoadingTemplate: this._renderLoadingTemplate(),
-      noRowsOverlayComponent: 'customNoRowsOverlay',
+      // noRowsOverlayComponent: 'customNoRowsOverlay',
     };
 
     if (navigateToSelect === true) {
@@ -160,7 +160,7 @@ class DataTableServerSide extends Component {
         footerPinnedRowRenderer: FooterPinnedRowRenderer,
         checkboxRenderer: CheckboxRenderer,
         dropdownSelectRenderer: DropdownSelectRenderer,
-        customNoRowsOverlay: NoRowsOverlay,
+        // customNoRowsOverlay: NoRowsOverlay,
         ...frameworkComponents,
       },
     };
@@ -314,6 +314,23 @@ class DataTableServerSide extends Component {
 
     if (this.props.autoSizeColumn) {
       this.autoSizeAll(params);
+    }
+
+    this.toggleNoRows();
+  }
+
+  toggleNoRows() {
+    if (
+      this.gridApi &&
+      this.props.rowModelType === alias.rowModelType.infinite
+    ) {
+      const rowData = [];
+      this.gridApi.forEachNode((node) => rowData.push(node.data));
+      if (rowData.length <= 0) {
+        this.gridApi.showNoRowsOverlay();
+      } else {
+        this.gridApi.hideOverlay();
+      }
     }
   }
 

@@ -50,6 +50,11 @@
     "semantic-ui-react": "^2.1.2",
     "xel": "^0.12.0"
   },
+  "peerDependencies": {
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@babel/eslint-parser": "*"
+  },
   "devDependencies": {
     "@babel/plugin-syntax-async-generators": "^7.8.4",
     "@storybook/addon-actions": "~5.3.19",
@@ -59,6 +64,9 @@
     "@storybook/preset-create-react-app": "~3.0.0",
     "@storybook/react": "~5.3.19",
     "@storybook/theming": "~5.3.19",
-    "react-is": "~16.13.1"
+    "react-is": "~16.13.1",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/eslint-parser": "^7.17.0"
   }
 }

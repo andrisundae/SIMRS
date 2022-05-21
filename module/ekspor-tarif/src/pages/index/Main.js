@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import { Segment, Icon, Header, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import Form from './containers/Form';
 import List from './containers/List';
@@ -15,29 +19,29 @@ class Main extends Component {
   render() {
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name="list" />
-            {this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid
-            className="content-grid"
-            // style={{ marginTop: -8, marginBottom: -8 }}
-          >
-            <Grid.Row>
-              <Grid.Column>
-                <Form {...this.props} />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <List {...this.props} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <PageHeader
+          title={this.props.t(`${this.props.resource}:title`)}
+          icon="list"
+        />
+        <Content>
+          <Segment>
+            <Grid
+              className="content-grid"
+              // style={{ marginTop: -8, marginBottom: -8 }}
+            >
+              <Grid.Row>
+                <Grid.Column>
+                  <Form {...this.props} />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <List {...this.props} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Content>
         <FooterActions {...this.props} />
         <PageLoader
           active={this.props.isLoading}

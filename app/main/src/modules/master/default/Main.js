@@ -45,7 +45,7 @@ class Main extends Component {
           }
           icon={this.props.icon}
         />
-        <Content className="pt-3">
+        <Content>
           <Segment>
             <Grid className="content-grid">
               <Grid.Row style={{ marginTop: 5 }}>
@@ -63,12 +63,12 @@ class Main extends Component {
               </Grid.Row>
             </Grid>
           </Segment>
+          {footer}
+          <PageLoader
+            active={this.props.isLoading}
+            message={this.props.loaderMessage}
+          />
         </Content>
-        {footer}
-        <PageLoader
-          active={this.props.isLoading}
-          message={this.props.loaderMessage}
-        />
       </Fragment>
     );
   }

@@ -25,7 +25,7 @@ class Main extends Component {
 
     return (
       <Fragment>
-        <div className="fixed right-0 left-0 bg-white bottom-9 top-11">
+        <div className="fixed right-0 left-0 bg-white bottom-9 top-14">
           <div className="grid h-full">
             <div className="overflow-y-auto px-3 py-1 bg-gray-200">
               <Segment>

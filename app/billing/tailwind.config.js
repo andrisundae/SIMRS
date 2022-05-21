@@ -29,6 +29,9 @@ module.exports = {
         '104': '32rem',
         '106': '34rem',
       },
+      colors: {
+        secondary: '#f3f4f5',
+      },
     },
   },
   important: true,

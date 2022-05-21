@@ -2,8 +2,11 @@ import React, { Component, createRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Segment, Icon, Header, Grid, Form } from 'semantic-ui-react';
-
+import { Segment, Grid, Form } from 'semantic-ui-react';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 import { TreeView, Select, PageLoader } from '@simrs/components';
 import actions from '../actions';
 import actionTypes from '../actionTypes';
@@ -39,66 +42,67 @@ class Create extends Component {
 
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name="settings" />
-            {this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column width="9">
-                <Segment>
-                  <Form size="small">
-                    <Grid>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="required field">
-                          <label>{t(this._getKey('label.field.grup'))}</label>
-                        </Grid.Column>
-                        <Grid.Column width="12" className="field">
-                          <Select
-                            name="grup"
-                            placeholder={t(
-                              this._getKey('placeholder.field.grup')
-                            )}
-                            inputRef={this.grup}
-                            value={selectedGrup}
-                            onChange={this._handleGrupChange}
-                            options={grup}
-                            isClearable={false}
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
-                  </Form>
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width="9">
-                <Segment size="mini">
-                  <TreeView
-                    ref={this.tree}
-                    className="myCls"
-                    showLine
-                    checkable
-                    navigation
-                    selectable
-                    onExpand={this._onExpand}
-                    onSelect={this._onSelect}
-                    onCheck={this._onCheck}
-                    treeData={menu}
-                    selectedKeys={selectedKeys}
-                    checkedKeys={checkedKeys}
-                    expandedKeys={expandedKeys}
-                    disabled={isDisableForm || !post.grup}
-                  />
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <PageHeader
+          title={this.props.t(`${this.props.resource}:title`)}
+          icon="settings"
+        />
+        <Content>
+          <Segment>
+            <Grid className="content-grid">
+              <Grid.Row>
+                <Grid.Column width="9">
+                  <Segment>
+                    <Form size="small">
+                      <Grid>
+                        <Grid.Row className="form-row">
+                          <Grid.Column width="4" className="required field">
+                            <label>{t(this._getKey('label.field.grup'))}</label>
+                          </Grid.Column>
+                          <Grid.Column width="12" className="field">
+                            <Select
+                              name="grup"
+                              placeholder={t(
+                                this._getKey('placeholder.field.grup')
+                              )}
+                              inputRef={this.grup}
+                              value={selectedGrup}
+                              onChange={this._handleGrupChange}
+                              options={grup}
+                              isClearable={false}
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Form>
+                  </Segment>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width="9">
+                  <Segment size="mini">
+                    <TreeView
+                      ref={this.tree}
+                      className="myCls"
+                      showLine
+                      checkable
+                      navigation
+                      selectable
+                      onExpand={this._onExpand}
+                      onSelect={this._onSelect}
+                      onCheck={this._onCheck}
+                      treeData={menu}
+                      selectedKeys={selectedKeys}
+                      checkedKeys={checkedKeys}
+                      expandedKeys={expandedKeys}
+                      disabled={isDisableForm || !post.grup}
+                    />
+                  </Segment>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Content>
+
         <PageLoader active={isLoading} message={loaderMessage} />
       </Fragment>
     );
@@ -140,7 +144,6 @@ class Create extends Component {
         if (!node.children) {
           leafKeys.push(node.id);
         }
-        
       }
     });
     this.props.action.onCheck(this.props.resource, { checkedKeys, leafKeys });

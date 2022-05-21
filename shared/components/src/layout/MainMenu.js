@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useAppAction } from '@simrs/components';
@@ -11,7 +11,7 @@ function MainMenu({ disabled, contexts, routers }) {
   function _onClickMenuItem(keyMenu) {
     let router = routers.find((router) => router.key === keyMenu);
     if (router) {
-      history.replace(`${router.path}?route=${keyMenu}`);
+      history.push(`${router.path}?route=${keyMenu}`);
       appAction.setResource(router.key);
     }
   }

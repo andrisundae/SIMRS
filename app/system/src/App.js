@@ -57,7 +57,7 @@ function Page() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <Layout
-            logo={'BILLING'}
+            logo="SISTEM"
             contexts={menu.getMenuAplikasi(process.env.REACT_APP_KEY)}
             routers={rootRouters}
             username={store.main.get('user.username')}
@@ -65,7 +65,7 @@ function Page() {
             <Suspense fallback={<PageLoader active={true} />}>
               <ModuleProvider>
                 <Switch>
-                  <Route path="/billing/dashboard">
+                  <Route path="/system/dashboard">
                     <Dashboard />
                   </Route>
                   {rootRouters.map((router, index) => {
@@ -96,7 +96,7 @@ function Page() {
                   <Route path="/permission-denied">
                     <PermissionDenied />
                   </Route>
-                  <Redirect to={'/billing/dashboard'} />
+                  <Redirect to={'/system/dashboard'} />
                 </Switch>
               </ModuleProvider>
             </Suspense>

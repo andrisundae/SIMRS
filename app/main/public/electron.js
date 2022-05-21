@@ -33,8 +33,8 @@ function createMainWindow() {
   store.set('user.isLogin', false);
 
   const window = new BrowserWindow({
-    width: 600,
-    height: 450,
+    width: 750,
+    height: 500,
     frame: false,
     show: false,
     backgroundColor: '#2C3E50',

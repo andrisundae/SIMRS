@@ -2,9 +2,13 @@ import React, { Component, createRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Segment, Icon, Header, Grid, Form, Input } from 'semantic-ui-react';
+import { Segment, Grid, Form, Input } from 'semantic-ui-react';
 
 import { TreeView, Checkbox, PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 import Details from './Details';
 import actions from '../actions';
 import actionTypes from '../actionTypes';
@@ -43,134 +47,141 @@ class Create extends Component {
 
     return (
       <Fragment>
-        <Segment secondary className="content-header">
-          <Header as="h4">
-            <Icon name="settings" />
-            {this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column width="9">
-                <Segment size="mini">
-                  <TreeView
-                    ref={this.tree}
-                    className="myCls"
-                    showLine
-                    navigation
-                    selectable
-                    onExpand={this._onExpand}
-                    onSelect={this._onSelect}
-                    treeData={menu}
-                    selectedKeys={selectedKeys}
-                    expandedKeys={expandedKeys}
-                    disabled={!isDisableForm}
-                  />
-                </Segment>
-              </Grid.Column>
-              <Grid.Column width="7">
-                <Segment>
-                  <Form size="small">
-                    <Grid>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="required field">
-                          <label>{t(this._getKey('label.field.nama'))}</label>
-                        </Grid.Column>
-                        <Grid.Column width="12" className="field">
-                          <Input
-                            name="nama"
-                            ref={this.nama}
-                            value={post.nama}
-                            disabled={isDisableForm}
-                            onChange={this._handleInputChange}
-                            onKeyDown={(e) =>
-                              this._onFocusElement(e, 'key_menu')
-                            }
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="required field">
-                          <label>
-                            {t(this._getKey('label.field.key_menu'))}
-                          </label>
-                        </Grid.Column>
-                        <Grid.Column width="12" className="field">
-                          <Input
-                            name="key_menu"
-                            ref={this.key_menu}
-                            value={post.key_menu}
-                            disabled={isDisableForm}
-                            onChange={this._handleInputChange}
-                            onKeyDown={(e) =>
-                              this._onFocusElement(e, 'kode_app')
-                            }
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="required field">
-                          <label>
-                            {t(this._getKey('label.field.kode_app'))}
-                          </label>
-                        </Grid.Column>
-                        <Grid.Column width="12" className="field">
-                          <Input
-                            name="kode_app"
-                            ref={this.kode_app}
-                            value={post.kode_app}
-                            disabled={isDisableForm}
-                            onChange={this._handleInputChange}
-                            onKeyDown={(e) => this._onFocusElement(e, 'urutan')}
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row className="form-row">
-                        <Grid.Column width="4" className="field">
-                          <label>{t(this._getKey('label.field.urutan'))}</label>
-                        </Grid.Column>
-                        <Grid.Column width="12" className="field">
-                          <Input
-                            name="urutan"
-                            ref={this.urutan}
-                            value={post.urutan}
-                            disabled={isDisableForm}
-                            onChange={this._handleInputChange}
-                            onKeyDown={(e) =>
-                              this._onFocusElement(e, 'default_action')
-                            }
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                      {statusForm === actionTypes.ADD && (
+        <PageHeader
+          title={this.props.t(`${this.props.resource}:title`)}
+          icon="settings"
+        />
+        <Content>
+          <Segment>
+            <Grid className="content-grid">
+              <Grid.Row>
+                <Grid.Column width="9">
+                  <Segment size="mini">
+                    <TreeView
+                      ref={this.tree}
+                      className="myCls"
+                      showLine
+                      navigation
+                      selectable
+                      onExpand={this._onExpand}
+                      onSelect={this._onSelect}
+                      treeData={menu}
+                      selectedKeys={selectedKeys}
+                      expandedKeys={expandedKeys}
+                      disabled={!isDisableForm}
+                    />
+                  </Segment>
+                </Grid.Column>
+                <Grid.Column width="7">
+                  <Segment>
+                    <Form size="small">
+                      <Grid>
                         <Grid.Row className="form-row">
-                          <Grid.Column width="4" className="field">
-                            <label>
-                              {t(this._getKey('label.field.default_action'))}
-                            </label>
+                          <Grid.Column width="4" className="required field">
+                            <label>{t(this._getKey('label.field.nama'))}</label>
                           </Grid.Column>
                           <Grid.Column width="12" className="field">
-                            <Checkbox
-                              value={post.default_action}
-                              name="default_action"
-                              checked={post.default_action ? true : false}
+                            <Input
+                              name="nama"
+                              ref={this.nama}
+                              value={post.nama}
                               disabled={isDisableForm}
                               onChange={this._handleInputChange}
-                              onKeyDown={(e) => this._onFocusElement(e, 'save')}
-                              inputRef={this.default_action}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'key_menu')
+                              }
                             />
                           </Grid.Column>
                         </Grid.Row>
-                      )}
-                    </Grid>
-                  </Form>
-                </Segment>
-                <Details resource={this.props.resource} t={t} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+                        <Grid.Row className="form-row">
+                          <Grid.Column width="4" className="required field">
+                            <label>
+                              {t(this._getKey('label.field.key_menu'))}
+                            </label>
+                          </Grid.Column>
+                          <Grid.Column width="12" className="field">
+                            <Input
+                              name="key_menu"
+                              ref={this.key_menu}
+                              value={post.key_menu}
+                              disabled={isDisableForm}
+                              onChange={this._handleInputChange}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'kode_app')
+                              }
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row className="form-row">
+                          <Grid.Column width="4" className="required field">
+                            <label>
+                              {t(this._getKey('label.field.kode_app'))}
+                            </label>
+                          </Grid.Column>
+                          <Grid.Column width="12" className="field">
+                            <Input
+                              name="kode_app"
+                              ref={this.kode_app}
+                              value={post.kode_app}
+                              disabled={isDisableForm}
+                              onChange={this._handleInputChange}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'urutan')
+                              }
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row className="form-row">
+                          <Grid.Column width="4" className="field">
+                            <label>
+                              {t(this._getKey('label.field.urutan'))}
+                            </label>
+                          </Grid.Column>
+                          <Grid.Column width="12" className="field">
+                            <Input
+                              name="urutan"
+                              ref={this.urutan}
+                              value={post.urutan}
+                              disabled={isDisableForm}
+                              onChange={this._handleInputChange}
+                              onKeyDown={(e) =>
+                                this._onFocusElement(e, 'default_action')
+                              }
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                        {statusForm === actionTypes.ADD && (
+                          <Grid.Row className="form-row">
+                            <Grid.Column width="4" className="field">
+                              <label>
+                                {t(this._getKey('label.field.default_action'))}
+                              </label>
+                            </Grid.Column>
+                            <Grid.Column width="12" className="field">
+                              <Checkbox
+                                value={post.default_action}
+                                name="default_action"
+                                checked={post.default_action ? true : false}
+                                disabled={isDisableForm}
+                                onChange={this._handleInputChange}
+                                onKeyDown={(e) =>
+                                  this._onFocusElement(e, 'save')
+                                }
+                                inputRef={this.default_action}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        )}
+                      </Grid>
+                    </Form>
+                  </Segment>
+                  <Details resource={this.props.resource} t={t} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Content>
+
         <PageLoader active={isLoading} message={loaderMessage} />
       </Fragment>
     );

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import dayjs from 'dayjs';
+import { Segment, Grid } from 'semantic-ui-react';
 import { Header, Content } from '@simrs/main/src/modules/components';
 import { useDebounceValue } from '@simrs/components/src/hook';
 import { useAppState } from '@simrs/components';
@@ -67,10 +68,20 @@ function Index() {
     <>
       <Header title="Daftar Antrian Penunjang" icon="list" />
       <Content>
-        <Filter params={params} onSubmit={submitFilterHandler} />
-        <div className="mt-3 mb-2">
-          <List params={formattedParams} />
-        </div>
+        <Segment>
+          <Grid className="content-grid">
+            <Grid.Row>
+              <Grid.Column>
+                <Filter params={params} onSubmit={submitFilterHandler} />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <List params={formattedParams} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
       </Content>
     </>
   );

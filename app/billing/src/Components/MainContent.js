@@ -1,13 +1,13 @@
 import React from 'react';
-import classNames from 'classnames';
 
-export default function MainContent({ children, className }) {
+export default function MainContent({ children, ...props }) {
   return (
     <div
-      className={classNames(
-        'fixed right-0 left-0 bg-white bottom-9 top-20',
-        className
-      )}
+      {...props}
+      // className={classNames(
+      //   'fixed right-0 left-0 bg-white bottom-9 top-[70px]',
+      //   className
+      // )}
     >
       {children}
     </div>

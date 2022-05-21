@@ -42,35 +42,33 @@ class Main extends Component {
 
     return (
       <div {...containerProps}>
-        <Segment
-          style={{ marginBottom: 0 }}
-          secondary
-          className="content-header"
-        >
-          <Header as="h4">
-            <Icon name={this.props.icon} />
-            {this.props.caption || this.props.t(`${this.props.resource}:title`)}
-          </Header>
-        </Segment>
-        <Segment style={{ marginTop: -1, minHeight: 550 }}>
-          <Grid className="content-grid">
-            <Grid.Row>
-              <Grid.Column>
-                <Segment padded>{this.props.filter}</Segment>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>{this.props.list}</Grid.Column>
-            </Grid.Row>
-            {this.props.create && (
+        <PageHeader
+          title={
+            this.props.caption || this.props.t(`${this.props.resource}:title`)
+          }
+          icon={this.props.icon}
+        />
+        <Content>
+          <Segment style={{ marginTop: -1, minHeight: 550 }}>
+            <Grid className="content-grid">
               <Grid.Row>
                 <Grid.Column>
-                  <Segment padded>{this.props.create}</Segment>
+                  <Segment padded>{this.props.filter}</Segment>
                 </Grid.Column>
               </Grid.Row>
-            )}
-          </Grid>
-        </Segment>
+              <Grid.Row>
+                <Grid.Column>{this.props.list}</Grid.Column>
+              </Grid.Row>
+              {this.props.create && (
+                <Grid.Row>
+                  <Grid.Column>
+                    <Segment padded>{this.props.create}</Segment>
+                  </Grid.Column>
+                </Grid.Row>
+              )}
+            </Grid>
+          </Segment>
+        </Content>
         {showFooterActions && this._renderFooterActions()}
         <PageLoader
           active={this.props.isLoading}

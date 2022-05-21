@@ -1,19 +1,17 @@
-import React, { Fragment } from 'react';
-import { Segment, Icon, Header } from 'semantic-ui-react';
+import React from 'react';
+import { Segment, Header as HeaderSm } from 'semantic-ui-react';
+import { Header } from '@simrs/main/src/modules/components';
 
 function Dashboard() {
   return (
-    <Fragment>
-      <Segment secondary>
-        <Header as="h4">
-          <Icon name="dashboard" />
-          Dashboard
-        </Header>
-      </Segment>
-      <Segment textAlign="center">
-        <Header as="h2">SIMRS-FARMASI</Header>
-      </Segment>
-    </Fragment>
+    <>
+      <Header title="Dashboard" icon="dashboard" />
+      <div>
+        <Segment textAlign="center">
+          <HeaderSm as="h2">SIMRS-FARMASI</HeaderSm>
+        </Segment>
+      </div>
+    </>
   );
 }
 

@@ -54,11 +54,10 @@ export const numFormatDb = (nominal) => {
 };
 
 export const textSplitter = (text, splitter = '.', len = 2) => {
-  text = text.toString();
-
   if (!text) {
     return '';
   }
+  text = text.toString();
 
   const split = text.match(/.{1,2}/g);
   if (!split) {

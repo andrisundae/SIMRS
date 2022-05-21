@@ -4,6 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Segment, Grid } from 'semantic-ui-react';
 
 import { PageLoader } from '@simrs/components';
+import {
+  Header as PageHeader,
+  Content,
+} from '@simrs/main/src/modules/components';
 
 import RiwayatKunjungan from './containers/RiwayatKunjungan';
 import FooterActions from './containers/FooterActions';
@@ -29,28 +33,29 @@ const Main = (props) => {
 
   return (
     <Fragment>
-      <Segment secondary className="content-header">
-        <Header title={props.t(getKey('title'))} />
-      </Segment>
-      <Segment style={{ backgroundColor: '#ECECEC' }}>
-        <Grid className="content-grid riwayat-kunjungan">
-          <Grid.Row>
-            <Grid.Column>
-              <IdentitasPasien />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <RiwayatKunjungan />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width="16">
-              <Summary />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
+      <PageHeader icon="user" title={props.t(getKey('title'))} />
+      <Content>
+        <Segment style={{ backgroundColor: '#ECECEC' }}>
+          <Grid className="content-grid riwayat-kunjungan">
+            <Grid.Row>
+              <Grid.Column>
+                <IdentitasPasien />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <RiwayatKunjungan />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width="16">
+                <Summary />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+      </Content>
+
       <PageLoader active={isLoading} message={loaderMessage} />
       <FooterActions {...props} />
     </Fragment>
