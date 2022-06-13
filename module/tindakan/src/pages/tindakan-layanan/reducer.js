@@ -28,6 +28,7 @@ export const moduleReducer = (state = moduleState, action) => {
           nama: label,
           tgl_aktif_tarif: new Date(tgl_aktif_tarif),
         };
+        draft.statusForm = moduleActionTypes.READY;
       });
 
     case actionTypes.GET_OPTIONS_KELAS_SUCCESS:
