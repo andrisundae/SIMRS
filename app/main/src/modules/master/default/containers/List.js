@@ -14,6 +14,14 @@ import { selectors, context } from '../../../setting/aturan-aplikasi';
 
 const MIN_CHAR_CONTEXT = context.MINCHARPENCARIANMASTER;
 
+const autonumberGetter = (params) => {
+  if (!params.data) {
+    return '';
+  }
+  const rowIndex = params?.node?.rowIndex || 0;
+  return rowIndex + 1;
+};
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -244,6 +252,7 @@ class List extends Component {
         sortable: false,
         width: 70,
         cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
+        valueGetter: autonumberGetter,
       },
       ...this.props.columnDefs,
     ];
