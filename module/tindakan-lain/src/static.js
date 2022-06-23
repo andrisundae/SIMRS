@@ -1,0 +1,6 @@
+const staticConst = {
+  TABLE_TINDAKAN_LAIN: 'TABLE_TINDAKAN_LAIN',
+  TABLE_TINDAKAN_LAIN_DETAIL: 'TABLE_TINDAKAN_LAIN_DETAIL',
+};
+
+export { staticConst };

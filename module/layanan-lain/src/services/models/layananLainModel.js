@@ -6,9 +6,15 @@ const validationRules = (resource) => {
   return {
     rules: {
       nama: { required: true },
+      nama_cetakan: { required: true },
+      tarif: { required: true },
     },
     messages: {
       nama: { required: i18n.t(`${resource}:validator.nama.required`) },
+      nama_cetakan: {
+        required: i18n.t(`${resource}:validator.nama_cetakan.required`),
+      },
+      tarif: { required: i18n.t(`${resource}:validator.tarif.required`) },
     },
   };
 };

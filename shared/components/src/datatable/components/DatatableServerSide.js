@@ -139,6 +139,7 @@ class DataTableServerSide extends Component {
         loadingRenderer: this._renderLoading,
         dateRenderer: this._renderDate,
         currencyRenderer: this._renderCurrency,
+        activeRenderer: this._activeRenderer,
       },
       onModelUpdated: this._onModelUpdated,
       overlayNoRowsTemplate: this._renderNoRowsTemplate(),
@@ -391,6 +392,13 @@ class DataTableServerSide extends Component {
     } else {
       return params.value;
     }
+  }
+
+  _activeRenderer(params) {
+    if (typeof params.value === 'undefined') {
+      return '';
+    }
+    return params.value ? 'Ya' : 'Tidak';
   }
 
   _renderNoRowsTemplate() {

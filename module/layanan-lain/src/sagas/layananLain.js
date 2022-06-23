@@ -35,12 +35,15 @@ function* loadAll({ payload, meta }) {
 }
 
 function* handleSave({ payload, meta }) {
-  let { resource } = meta;
+  const { resource } = meta;
   try {
     yield put(loaderActions.show('Proses simpan...'));
-    let { rules, messages } = api.validationRules(resource);
-    let post = payload.data;
-    let method = post.id ? 'koreksi' : 'tambah';
+    const { rules, messages } = api.validationRules(resource);
+    const post = payload.data;
+    if (post.detail_komponen && Array.isArray(post.detail_komponen)) {
+      post.detail_komponen = _.join(post.detail_komponen, ',');
+    }
+    const method = post.id ? 'koreksi' : 'tambah';
     let errors = validator(post, rules, messages);
     let isError = false;
 

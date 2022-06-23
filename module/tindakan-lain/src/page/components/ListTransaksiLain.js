@@ -3,34 +3,48 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import Mousetrap from 'mousetrap';
+import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
+import { useQueryClient } from 'react-query';
 import {
   DatatableServerSide,
   useModuleTrans,
   constDatatable,
 } from '@simrs/components';
-import { select as onSelect, cancel, add } from '../permintaan/redux/slice';
+import { useListTindakanLain } from '@simrs/billing/src/fetcher/tindakanLain';
+import { select as onSelect, cancel, add } from '../index/redux/slice';
 import {
   selectedSelector,
   statusFormSelector,
   disabledElement,
-} from '../permintaan/redux/selectors';
+} from '../index/redux/selectors';
 import { staticConst } from '../../static';
 
-const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
+const desaGetter = (params) => {
+  if (!params.data) {
+    return '';
+  }
+
+  return params.data?.desa?.nama;
+};
+
+const ListTransaksiLain = ({ innerRef }) => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const t = useModuleTrans();
   const selected = useSelector(selectedSelector);
   const statusForm = useSelector(statusFormSelector);
   const disabledGrid = useSelector((state) =>
-    disabledElement(state, staticConst.TABLE_PERMINTAAN_PENUNJANG)
+    disabledElement(state, staticConst.TABLE_TINDAKAN_LAIN)
   );
+
+  const { data, isLoading } = useListTindakanLain({});
 
   const getRowNodeId = useCallback((row) => row.id, []);
 
   const columns = useMemo(() => {
     return [
       {
-        headerName: t('tanggal_permintaan'),
+        headerName: t('tanggal'),
         field: 'tanggal',
         sortable: true,
         cellStyle: { 'text-align': 'center', 'background-color': '#f5f7f7' },
@@ -38,55 +52,64 @@ const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
         cellClass: 'ag-date-cell',
       },
       {
-        headerName: t('unit_layanan'),
-        field: 'nama_unit_layanan',
+        headerName: t('kode'),
+        field: 'kode',
       },
       {
-        headerName: t('nama_pasien'),
-        field: 'nama_pasien',
+        headerName: t('nama'),
+        field: 'nama',
       },
       {
-        headerName: t('total_permintaan'),
-        field: 'biaya',
+        headerName: t('alamat'),
+        field: 'alamat',
+      },
+      {
+        headerName: t('desa'),
+        field: 'desa',
+        valueGetter: desaGetter,
+      },
+      {
+        headerName: t('total_biaya'),
+        field: 'totalBiaya',
         cellRenderer: 'currencyRenderer',
         cellClass: 'ag-number-cell',
       },
       {
-        headerName: t('status'),
-        field: 'st_status_penunjang',
+        headerName: t('pembayaran'),
+        field: 'bayar',
+        cellRenderer: 'currencyRenderer',
+        cellClass: 'ag-number-cell',
       },
       {
-        headerName: t('dokter_perujuk'),
-        field: 'nama_dokter_peminta_penunjang',
-      },
-      {
-        headerName: t('unit_layanan_perujuk'),
-        field: 'nama_unit_asal',
-      },
-      {
-        headerName: t('dokter_tujuan'),
-        field: 'nama_dokter_tujuan_penunjang',
+        headerName: t('penerimaan'),
+        field: 'uangDiterima',
+        cellRenderer: 'currencyRenderer',
+        cellClass: 'ag-number-cell',
       },
     ];
   }, []);
 
+  const reloadHandler = useCallback(() => {
+    queryClient.invalidateQueries(['/billing/transaksi/tindakanLain/view', {}]);
+  }, [queryClient]);
+
   useEffect(() => {
     if (innerRef.current) {
-      if (loading) {
+      if (isLoading) {
         innerRef.current?.gridApi?.showLoadingOverlay();
       } else {
         innerRef.current?.gridApi?.hideOverlay();
       }
     }
-  }, [loading, innerRef]);
+  }, [isLoading, innerRef]);
 
   useEffect(() => {
     if (innerRef.current) {
-      if (!loading && _.isEmpty(data)) {
+      if (!isLoading && _.isEmpty(data?.data)) {
         innerRef.current?.gridApi?.showNoRowsOverlay();
       }
     }
-  }, [data, loading, innerRef]);
+  }, [data, isLoading, innerRef]);
 
   const rowSelectedHandler = useCallback(
     (params) => {
@@ -121,7 +144,7 @@ const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
     const key = process.platform === 'darwin' ? 'ctrl' : 'alt';
     Mousetrap.bindGlobal(`${key}+r`, (e) => {
       e.preventDefault();
-      onReload();
+      reloadHandler();
     });
 
     Mousetrap.bindGlobal('f2', (e) => {
@@ -133,7 +156,7 @@ const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
       Mousetrap.unbind(`${key}+r`);
       Mousetrap.unbind(`${key}+f2`);
     };
-  }, [onReload, selectedFirstRow]);
+  }, [reloadHandler, selectedFirstRow]);
 
   useEffect(() => {
     if (statusForm === cancel.type && !_.isEmpty(selected)) {
@@ -151,12 +174,12 @@ const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
     <DatatableServerSide
       ref={innerRef}
       columns={columns}
-      name={staticConst.TABLE_PERMINTAAN_PENUNJANG}
+      name={staticConst.TABLE_TINDAKAN_LAIN}
       navigateToSelect={true}
-      containerHeight="300px"
+      containerHeight="163px"
       getRowNodeId={getRowNodeId}
       rowModelType={constDatatable.rowModelType.clientSide}
-      rowData={data}
+      rowData={data?.data || []}
       onRowSelected={rowSelectedHandler}
       onModelUpdated={modelUpdatedHandler}
       disabled={disabledGrid}
@@ -164,16 +187,13 @@ const ListPermintaan = ({ innerRef, data = [], loading, onReload }) => {
   );
 };
 
-ListPermintaan.propTypes = {
+ListTransaksiLain.propTypes = {
   innerRef: PropTypes.object,
-  loading: PropTypes.bool,
-  data: PropTypes.array,
-  onReload: PropTypes.func,
 };
 
 const Component = React.forwardRef((props, ref) => {
   const innerRef = React.useRef();
-  return <ListPermintaan innerRef={ref || innerRef} {...props} />;
+  return <ListTransaksiLain innerRef={ref || innerRef} {...props} />;
 });
 
 export default memo(Component);

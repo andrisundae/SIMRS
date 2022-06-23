@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 const customStyles = {
-  control: (provided, state) => ({
+  control: (provided) => ({
     ...provided,
     minHeight: '28px',
     height: '28px',
   }),
 
-  valueContainer: (provided, state) => ({
+  valueContainer: (provided) => ({
     ...provided,
     height: '28px',
     padding: '0 4px',
   }),
 
-  input: (provided, state) => ({
+  input: (provided) => ({
     ...provided,
     margin: '0px',
   }),
@@ -29,7 +29,7 @@ const customStyles = {
     ...provided,
     padding: 2,
   }),
-  indicatorsContainer: (provided, state) => ({
+  indicatorsContainer: (provided) => ({
     ...provided,
     height: '28px',
   }),

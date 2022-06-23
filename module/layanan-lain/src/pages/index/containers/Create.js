@@ -9,22 +9,82 @@ import {
   moduleActions as actions,
   moduleActionTypes,
 } from '@simrs/main/src/modules/master/default';
-import { Checkbox } from '@simrs/components';
+import { Checkbox, CurrencyInput } from '@simrs/components';
+import KomponenTarifSelector from './KomponenTarifSelector';
 
 class Create extends Component {
   constructor(props) {
     super(props);
 
     this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleKomponenTarifChange = this._handleKomponenTarifChange.bind(
+      this
+    );
+    this._handleCurrencyChange = this._handleCurrencyChange.bind(this);
     this._onFocusElement = this._onFocusElement.bind(this);
 
     this.nama = createRef();
     this.nama_cetakan = createRef();
     this.tarif = createRef();
-    this.detailKomponen = createRef();
+    this.detail_komponen = createRef();
     this.aktif = createRef();
 
     this.formId = 'form-create';
+  }
+
+  componentDidUpdate() {
+    let { statusForm, focusElement } = this.props;
+
+    if (
+      statusForm === moduleActionTypes.ADD ||
+      statusForm === moduleActionTypes.EDIT
+    ) {
+      if (this[focusElement]) {
+        if (this[focusElement].current) {
+          if (focusElement === 'tarif') {
+            this[focusElement].current.theInput.focus();
+          } else {
+            this[focusElement].current.focus();
+          }
+        }
+      }
+    }
+  }
+
+  _handleInputChange(e) {
+    const { name, value, checked, type } = e.target;
+    let val = '';
+    if (type === 'checkbox') {
+      val = checked ? true : '';
+    } else {
+      val = value;
+    }
+    this.props.action.onChangeInput(this.props.resource, { name, value: val });
+  }
+
+  _handleCurrencyChange(e, maskedValue, floatValue) {
+    this.props.action.onChangeInput(this.props.resource, {
+      name: 'tarif',
+      value: floatValue,
+    });
+  }
+
+  _handleKomponenTarifChange(value) {
+    this.props.action.onChangeInput(this.props.resource, {
+      name: 'detail_komponen',
+      value,
+    });
+  }
+
+  _onFocusElement(e, nameRef) {
+    if (13 === e.which) {
+      e.preventDefault();
+      this.props.action.onFocusElement(this.props.resource, nameRef);
+    }
+  }
+
+  _getKey(key) {
+    return `${this.props.resource}:${key}`;
   }
 
   render() {
@@ -62,7 +122,7 @@ class Create extends Component {
                       value={post.nama_cetakan}
                       disabled={isDisableForm}
                       onChange={this._handleInputChange}
-                      onKeyDown={(e) => this._onFocusElement(e, 'aktif')}
+                      onKeyDown={(e) => this._onFocusElement(e, 'tarif')}
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -71,13 +131,15 @@ class Create extends Component {
                     <label>{t(this._getKey('label.field.tarif'))}</label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
-                    <Input
+                    <CurrencyInput
                       name="tarif"
-                      ref={this.tarif}
-                      value={post.tarif}
                       disabled={isDisableForm}
-                      onChange={this._handleInputChange}
-                      onKeyDown={(e) => this._onFocusElement(e, 'aktif')}
+                      value={post.tarif}
+                      onChangeEvent={this._handleCurrencyChange}
+                      onKeyDown={(e) =>
+                        this._onFocusElement(e, 'detail_komponen')
+                      }
+                      inputRef={this.tarif}
                     />
                   </Grid.Column>
                 </Grid.Row>
@@ -88,12 +150,12 @@ class Create extends Component {
                     </label>
                   </Grid.Column>
                   <Grid.Column width="12" className="field">
-                    <Input
+                    <KomponenTarifSelector
                       name="detail_komponen"
-                      ref={this.detailKomponen}
-                      value={post.detail_komponen}
-                      disabled={isDisableForm}
-                      onChange={this._handleInputChange}
+                      ref={this.detail_komponen}
+                      value={post.detail_komponen || []}
+                      isDisabled={isDisableForm}
+                      onChange={this._handleKomponenTarifChange}
                       onKeyDown={(e) => this._onFocusElement(e, 'aktif')}
                     />
                   </Grid.Column>
@@ -121,43 +183,6 @@ class Create extends Component {
         </Grid>
       </Form>
     );
-  }
-
-  componentDidUpdate() {
-    let { statusForm, focusElement } = this.props;
-
-    if (
-      statusForm === moduleActionTypes.ADD ||
-      statusForm === moduleActionTypes.EDIT
-    ) {
-      if (this[focusElement]) {
-        if (this[focusElement].current) {
-          this[focusElement].current.focus();
-        }
-      }
-    }
-  }
-
-  _handleInputChange(e) {
-    const { name, value, checked, type } = e.target;
-    let val = '';
-    if (type === 'checkbox') {
-      val = checked ? true : '';
-    } else {
-      val = value;
-    }
-    this.props.action.onChangeInput(this.props.resource, { name, value: val });
-  }
-
-  _onFocusElement(e, nameRef) {
-    if (13 === e.which) {
-      e.preventDefault();
-      this.props.action.onFocusElement(this.props.resource, nameRef);
-    }
-  }
-
-  _getKey(key) {
-    return `${this.props.resource}:${key}`;
   }
 }
 

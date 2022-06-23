@@ -15,3 +15,4 @@ export { default as TimePickerHF } from './TimePickerHF';
 export { default as CheckboxHF } from './CheckboxHF';
 export { default as RadioHF } from './RadioHF';
 export { default as DateRangePickerHF } from './DateRangePickerHF';
+export { default as CurrencyInputHF } from './CurrencyInputHF';

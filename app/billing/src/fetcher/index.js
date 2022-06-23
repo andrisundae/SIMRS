@@ -6,3 +6,5 @@ export * from './antrianPenunjang';
 export * from './setting';
 export * from './penunjang';
 export * from './tindakan';
+export * from './komponenTarif';
+export * from './tindakanLain';

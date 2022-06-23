@@ -250,6 +250,11 @@ const routers = [
     path: '/billing/master/layanan-lain',
     component: lazy(() => import('@module/layanan-lain')),
   },
+  {
+    key: '_billing_transaksi_tindakan_lain',
+    path: '/billing/transaksi/tindakan-lain',
+    component: lazy(() => import('@module/tindakan-lain')),
+  },
 ];
 
 export default routers;
